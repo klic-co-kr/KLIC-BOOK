@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>HTTP 세대별 스택 비교</title>
+  <desc>HTTP/1.1, HTTP/2, HTTP/3의 애플리케이션·압축·보안·전송 계층 스택을 비교하고 TCP, QUIC, TLS, QPACK의 위치를 보여준다.</desc>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">HTTP 세대별 스택 비교</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">같은 계층끼리 가로로 정렬하면 세대 간 차이가 드러난다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1000" y="80" width="22" height="22" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="1030" y="100">공통 계층</text>
+    <rect x="1180" y="80" width="22" height="22" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+    <text x="1210" y="100">세대 고유</text>
+    <rect x="1360" y="80" width="22" height="22" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2"/>
+    <text x="1390" y="100">바뀐 전송</text>
+  </g>
+
+  <g id="row-labels" font-size="24" fill="#7A8791" text-anchor="end">
+    <text x="280" y="245">응용</text>
+    <text x="280" y="375">압축</text>
+    <text x="280" y="505">보안</text>
+    <text x="280" y="635">전송</text>
+  </g>
+
+  <g id="row-baselines">
+    <line x1="300" y1="280" x2="1500" y2="280" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="300" y1="410" x2="1500" y2="410" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="300" y1="540" x2="1500" y2="540" stroke="#D8E1E2" stroke-width="2"/>
+  </g>
+
+  <g id="col-headers" font-size="30" fill="#142131" text-anchor="middle" font-weight="600">
+    <text x="540" y="170">HTTP/1.1</text>
+    <text x="900" y="170">HTTP/2</text>
+    <text x="1260" y="170">HTTP/3</text>
+  </g>
+
+  <g id="stack-http1">
+    <rect x="360" y="190" width="360" height="80" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="540" y="240" text-anchor="middle" font-size="26" fill="#142131">HTTP/1.1 메시지</text>
+    <rect x="360" y="320" width="360" height="80" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="540" y="370" text-anchor="middle" font-size="26" fill="#142131">텍스트 헤더 (압축 없음)</text>
+    <rect x="360" y="450" width="360" height="80" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="540" y="500" text-anchor="middle" font-size="26" fill="#142131">TLS</text>
+    <rect x="360" y="580" width="360" height="80" rx="12" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="540" y="630" text-anchor="middle" font-size="26" fill="#142131">TCP</text>
+  </g>
+
+  <g id="stack-http2">
+    <rect x="720" y="190" width="360" height="80" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="900" y="240" text-anchor="middle" font-size="26" fill="#142131">HTTP/2 프레임·스트림</text>
+    <rect x="720" y="320" width="360" height="80" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="900" y="370" text-anchor="middle" font-size="26" fill="#142131">HPACK 헤더 압축</text>
+    <rect x="720" y="450" width="360" height="80" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="900" y="500" text-anchor="middle" font-size="26" fill="#142131">TLS</text>
+    <rect x="720" y="580" width="360" height="80" rx="12" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="900" y="630" text-anchor="middle" font-size="26" fill="#142131">TCP</text>
+  </g>
+
+  <g id="stack-http3">
+    <rect x="1080" y="190" width="360" height="80" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1260" y="240" text-anchor="middle" font-size="26" fill="#142131">HTTP/3 프레임·스트림</text>
+    <rect x="1080" y="320" width="360" height="80" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="1260" y="370" text-anchor="middle" font-size="26" fill="#142131">QPACK 헤더 압축</text>
+    <rect x="1080" y="450" width="360" height="80" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="1260" y="500" text-anchor="middle" font-size="26" fill="#142131">TLS 1.3 (QUIC에 통합)</text>
+    <rect x="1080" y="580" width="360" height="80" rx="12" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="1260" y="630" text-anchor="middle" font-size="26" fill="#142131">QUIC (UDP 위)</text>
+  </g>
+
+  <g id="callouts" font-size="24" fill="#283541">
+    <text x="540" y="720" text-anchor="middle" font-size="22" fill="#7A8791">한 연결에 한 요청,</text>
+    <text x="540" y="752" text-anchor="middle" font-size="22" fill="#7A8791">병렬은 연결을 늘려 해결</text>
+    <text x="900" y="720" text-anchor="middle" font-size="22" fill="#7A8791">한 TCP 연결에</text>
+    <text x="900" y="752" text-anchor="middle" font-size="22" fill="#7A8791">여러 스트림 다중화</text>
+    <text x="1260" y="720" text-anchor="middle" font-size="22" fill="#7A8791">스트림 손실이</text>
+    <text x="1260" y="752" text-anchor="middle" font-size="22" fill="#7A8791">다른 스트림을 막지 않음</text>
+  </g>
+
+  <g id="reading-aid" font-size="22" fill="#7A8791">
+    <text x="70" y="830">전송 계층이 TCP에서 QUIC으로 바뀌면서 헤더 압축도 HPACK에서 QPACK으로, 보안은 TLS 위탁에서 통합으로 바뀐다.</text>
+  </g>
+</svg>

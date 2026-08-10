@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>일관성 모델 비교</title>
+  <desc>선형화 가능성, 순차 일관성, 인과 일관성, 세션 보장, 최종 일관성을 보장 강도와 비용 관점에서 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-mute" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="74" text-anchor="middle" font-size="36" font-weight="700" fill="#142131">일관성 모델: 보장이 강할수록 비용도 크다</text>
+  </g>
+
+  <g id="axis-guarantee">
+    <line x1="120" y1="180" x2="1480" y2="180" stroke="#7A8791" stroke-width="2.5" marker-end="url(#arrow-mute)"/>
+    <text x="120" y="150" font-size="24" fill="#7A8791">강한 보장</text>
+    <text x="1480" y="150" text-anchor="end" font-size="24" fill="#7A8791">약한 보장</text>
+  </g>
+
+  <g id="axis-cost">
+    <line x1="120" y1="740" x2="1480" y2="740" stroke="#7A8791" stroke-width="2.5" marker-end="url(#arrow-mute)"/>
+    <text x="120" y="784" font-size="24" fill="#7A8791">낮은 비용·높은 가용성</text>
+    <text x="1480" y="784" text-anchor="end" font-size="24" fill="#7A8791">높은 비용·낮은 가용성</text>
+  </g>
+
+  <line x1="800" y1="210" x2="800" y2="700" stroke="#D8E1E2" stroke-width="2.5"/>
+
+  <g id="models" font-size="28" fill="#142131">
+    <g id="m-linearizable">
+      <rect x="120" y="240" width="260" height="160" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+      <text x="250" y="304" text-anchor="middle" font-weight="700">선형화 가능성</text>
+      <text x="250" y="346" text-anchor="middle" font-size="22" fill="#7A8791">모든 읽기가 최신 쓰기</text>
+      <text x="250" y="376" text-anchor="middle" font-size="22" fill="#7A8791">관측 일관성</text>
+    </g>
+    <g id="m-sequential">
+      <rect x="410" y="290" width="260" height="160" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="540" y="354" text-anchor="middle" font-weight="700">순차 일관성</text>
+      <text x="540" y="396" text-anchor="middle" font-size="22" fill="#7A8791">동일 순서, 시간 불일치 허용</text>
+    </g>
+    <g id="m-causal">
+      <rect x="700" y="350" width="260" height="160" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="830" y="414" text-anchor="middle" font-weight="700">인과 일관성</text>
+      <text x="830" y="456" text-anchor="middle" font-size="22" fill="#7A8791">인과관계 있는 연산만 순서 보장</text>
+    </g>
+    <g id="m-session">
+      <rect x="990" y="410" width="260" height="160" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1120" y="474" text-anchor="middle" font-weight="700">세션 보장</text>
+      <text x="1120" y="516" text-anchor="middle" font-size="22" fill="#7A8791">한 클라이언트 안에서만 보장</text>
+    </g>
+    <g id="m-eventual">
+      <rect x="1280" y="470" width="260" height="160" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="3" stroke-dasharray="10 6"/>
+      <text x="1410" y="534" text-anchor="middle" font-weight="700" fill="#D39A2C">최종 일관성</text>
+      <text x="1410" y="576" text-anchor="middle" font-size="22" fill="#7A8791">시간이 지나면 수렴</text>
+    </g>
+  </g>
+
+  <g id="stair-line" fill="none" stroke="#142131" stroke-width="2.5" stroke-dasharray="4 6">
+    <path d="M380 320 L410 340"/>
+    <path d="M670 370 L700 410"/>
+    <path d="M960 430 L990 470"/>
+    <path d="M1250 490 L1280 530"/>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="120" y="840" width="22" height="14" rx="3" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="152" y="854">강한 보장(비용 큼)</text>
+    <rect x="380" y="840" width="22" height="14" rx="3" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="412" y="854">약한 보장(비용 작음)</text>
+    <text x="700" y="854" fill="#7A8791">오른쪽으로 갈수록 보장은 약해지고 지연·비용은 줄어든다</text>
+  </g>
+</svg>

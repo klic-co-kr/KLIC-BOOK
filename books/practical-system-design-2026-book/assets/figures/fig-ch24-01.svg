@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>Transactional Outbox 패턴</title>
+  <desc>서비스 트랜잭션이 업무 row와 outbox를 같이 커밋하고, CDC가 outbox를 잡아 Event Log로 보내면 Consumer Inbox가 중복 없이 수신한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="56" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">트랜잭션이 업무 row와 outbox를 함께 커밋하고 CDC·inbox로 전달한다</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1000" y1="92" x2="1080" y2="92" stroke="#283541" stroke-width="2.5"/><text x="1090" y="100">단일 트랜잭션</text>
+    <line x1="1300" y1="92" x2="1380" y2="92" stroke="#0F8790" stroke-width="2.5"/><text x="1390" y="100">비동기 전달</text>
+  </g>
+
+  <!-- Service DB with transaction -->
+  <g id="svc-db">
+    <rect x="60" y="200" width="500" height="500" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="310" y="244" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">Service DB</text>
+    <text x="310" y="276" text-anchor="middle" font-size="22" fill="#7A8791">서비스 로컬 트랜잭션</text>
+
+    <!-- Transaction bracket -->
+    <rect x="100" y="300" width="420" height="360" rx="12" fill="none" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <text x="120" y="328" font-size="22" font-weight="700" fill="#0F8790">BEGIN … COMMIT (원자적)</text>
+
+    <g font-size="24" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="140" y="360" width="340" height="110" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="310" y="385" font-size="20" fill="#7A8791" font-weight="400">업무 테이블</text><text x="310" y="425">업무 Row</text><text x="310" y="455" font-size="20" fill="#7A8791" font-weight="400">주문/상태 등</text></g>
+      <g><rect x="140" y="500" width="340" height="110" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="310" y="525" font-size="20" fill="#7A8791" font-weight="400">이벤트 테이블</text><text x="310" y="565">Outbox</text><text x="310" y="595" font-size="20" fill="#7A8791" font-weight="400">발행 대기 이벤트</text></g>
+    </g>
+  </g>
+
+  <!-- CDC -->
+  <g id="cdc">
+    <rect x="660" y="370" width="220" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="770" y="422" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">CDC</text>
+    <text x="770" y="462" text-anchor="middle" font-size="22" fill="#7A8791">outbox 관찰</text>
+  </g>
+
+  <!-- Event Log -->
+  <g id="event-log">
+    <rect x="960" y="370" width="220" height="140" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="1070" y="422" text-anchor="middle" font-size="26" font-weight="700" fill="#142131">Event Log</text>
+    <text x="1070" y="462" text-anchor="middle" font-size="22" fill="#7A8791">브로커</text>
+  </g>
+
+  <!-- Consumer Inbox -->
+  <g id="inbox">
+    <rect x="1260" y="200" width="280" height="500" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="1400" y="244" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">Consumer</text>
+    <text x="1400" y="276" text-anchor="middle" font-size="22" fill="#7A8791">수신 측 DB</text>
+    <g>
+      <rect x="1300" y="370" width="200" height="140" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1400" y="422" text-anchor="middle" font-size="26" font-weight="700" fill="#0F8790">Consumer</text>
+      <text x="1400" y="455" text-anchor="middle" font-size="26" font-weight="700" fill="#0F8790">Inbox</text>
+      <text x="1400" y="488" text-anchor="middle" font-size="20" fill="#7A8791">처리한 ID 기록</text>
+    </g>
+    <text x="1400" y="610" text-anchor="middle" font-size="22" fill="#7A8791">ID 중복 체크</text>
+    <text x="1400" y="644" text-anchor="middle" font-size="22" fill="#7A8791">멱등 보장</text>
+  </g>
+
+  <!-- Outbox → CDC -->
+  <path d="M560 540 C 610 540, 610 440, 660 440" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="610" y="495" text-anchor="middle" font-size="22" fill="#283541">행 감시</text>
+
+  <!-- CDC → Event Log -->
+  <path d="M880 440 L 960 440" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+  <text x="920" y="428" text-anchor="middle" font-size="22" fill="#0F8790">발행</text>
+
+  <!-- Event Log → Consumer Inbox -->
+  <path d="M1180 440 L 1300 440" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+  <text x="1240" y="428" text-anchor="middle" font-size="22" fill="#0F8790">전달</text>
+
+  <text x="800" y="800" text-anchor="middle" font-size="22" fill="#7A8791">업무 row와 outbox가 같은 트랜잭션이므로 이벤트 누락이나 이중 커밋이 발생하지 않는다</text>
+  <text x="800" y="838" text-anchor="middle" font-size="22" fill="#7A8791">Consumer Inbox가 이미 처리한 이벤트 ID를 기록해 중복 전달의 영향을 제거한다</text>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>Zero Trust 접근 경계</title>
+  <desc>사용자와 장치가 Identity Provider로 신원을 증명하고, Policy Engine의 결정을 Enforcement Point가 강제해 Resource에 접근하며, 그 과정을 Audit이 관찰하는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">Zero Trust 접근 경계</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">신원·장치·정책 결정·강제·자원의 경계와 감사</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1130" y1="90" x2="1200" y2="90" stroke="#283541" stroke-width="2.5"/>
+    <text x="1210" y="98">접근 요청</text>
+    <line x1="1340" y1="90" x2="1410" y2="90" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="3 6"/>
+    <text x="1420" y="98">감사 관찰</text>
+  </g>
+
+  <g id="principals">
+    <g id="user"><rect x="60" y="220" width="230" height="100" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="175" y="278" text-anchor="middle" font-size="30" fill="#142131">사용자</text></g>
+    <g id="device"><rect x="60" y="400" width="230" height="100" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="175" y="458" text-anchor="middle" font-size="30" fill="#142131">장치</text></g>
+  </g>
+
+  <g id="decision">
+    <g id="idp"><rect x="350" y="300" width="230" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="465" y="367" text-anchor="middle" font-size="26" fill="#142131">Identity Provider</text></g>
+    <g id="policy"><rect x="640" y="300" width="230" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="755" y="367" text-anchor="middle" font-size="26" fill="#142131">Policy Engine</text></g>
+    <g id="enforce"><rect x="930" y="300" width="230" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1045" y="367" text-anchor="middle" font-size="26" fill="#142131">Enforcement Point</text></g>
+    <g id="resource"><rect x="1220" y="300" width="230" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1335" y="367" text-anchor="middle" font-size="30" fill="#142131">Resource</text></g>
+  </g>
+
+  <g id="edges" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M290 270 L320 270 L320 340 L350 340" marker-end="url(#arrow)"/>
+    <path d="M290 450 L320 450 L320 380 L350 380" marker-end="url(#arrow)"/>
+    <path d="M580 360 L640 360" marker-end="url(#arrow)"/>
+    <path d="M870 360 L930 360" marker-end="url(#arrow)"/>
+    <path d="M1160 360 L1220 360" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="22" fill="#283541">
+    <text x="328" y="252">신원 증명</text>
+    <text x="328" y="478">장치 상태</text>
+    <text x="610" y="350" text-anchor="middle">결정 요청</text>
+    <text x="900" y="350" text-anchor="middle">결정 적용</text>
+    <text x="1190" y="350" text-anchor="middle">강제 통과</text>
+  </g>
+
+  <g id="audit">
+    <rect x="350" y="640" width="1100" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="900" y="700" text-anchor="middle" font-size="32" fill="#D39A2C" font-weight="700">Audit</text>
+  </g>
+  <g id="audit-observe" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="3 6" fill="none">
+    <path d="M755 420 L755 640" marker-end="url(#arrow-amb)"/>
+    <path d="M1045 420 L1045 640" marker-end="url(#arrow-amb)"/>
+    <path d="M1335 420 L1335 640" marker-end="url(#arrow-amb)"/>
+  </g>
+  <text x="900" y="608" text-anchor="middle" font-size="22" fill="#D39A2C">모든 결정·강제·접근을 기록</text>
+
+  <text x="70" y="820" font-size="22" fill="#7A8791">사용자와 장치의 신원을 Identity Provider로 확인하고, Policy Engine의 결정을 Enforcement Point가 강제해 Resource에 접근하며, 모든 단계를 Audit이 관찰한다.</text>
+</svg>

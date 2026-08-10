@@ -1,0 +1,527 @@
+terms:
+- term: 0-RTT
+  definition: 이전 연결 상태를 이용해 handshake 완료 전 application data를 보내는 방식으로 replay 위험이 있다.
+- term: ADR
+  definition: 하나의 중요한 결정을 맥락·상태·대안·결과와 함께 남기는 짧은 기록이다.
+- term: ANN index
+  definition: 정확한 전체 비교 대신 근사 최근접 탐색으로 latency와 recall을 교환한다.
+- term: API gateway
+  definition: 외부 API의 인증, quota, 버전, routing, 변환 같은 공통 경계를 제공한다.
+- term: Abuse screening
+  definition: phishing·malware·spam·open redirect 악용을 탐지·차단하는 경로다.
+- term: Access pattern
+  definition: 키 조회, 범위, join, graph traversal, full-text, vector search 같은 실제 읽기·쓰기 형태다.
+- term: Action plane
+  definition: CRM·ticket·refund 등 tool을 policy와 approval 아래 실행한다.
+- term: Active/Active
+  definition: 둘 이상의 region이 동시에 사용자 요청을 처리한다.
+- term: Active/Standby
+  definition: 한 region이 주 처리하고 다른 region이 대기한다.
+- term: Adaptive concurrency
+  definition: 관측된 지연·queue로 허용 동시성을 동적으로 조절한다.
+- term: Admission control
+  definition: 요청을 작업 큐에 넣기 전에 현재 자원과 정책으로 허용 여부를 결정한다.
+- term: Agent loop
+  definition: 관찰→계획/선택→도구 호출→결과 반영을 제한된 step 안에서 반복하는 실행 구조다.
+- term: Analyzer
+  definition: 텍스트를 token으로 분해·정규화하는 규칙이다.
+- term: Anycast
+  definition: 여러 위치가 같은 IP prefix를 광고해 네트워크 경로상 가까운 곳으로 라우팅한다.
+- term: Approval gate
+  definition: 고위험 action 전에 사용자 또는 정책 승인 증거를 요구하는 단계다.
+- term: At-least-once
+  definition: 유실을 줄이기 위해 확인 전 재전달하며 중복이 가능하다.
+- term: At-most-once
+  definition: 중복은 줄지만 실패 시 유실될 수 있는 전달 의미다.
+- term: Attestation/Provenance
+  definition: artifact가 어떤 source·builder·dependency로 생성됐는지 검증하는 증거다.
+- term: Authoritative DNS
+  definition: 도메인에 대한 권한 있는 레코드를 제공한다.
+- term: Authorization
+  definition: 결제 수단의 금액 사용 가능성을 승인하는 단계다.
+- term: Availability
+  definition: 분할 상황에서도 비실패 노드가 받은 모든 요청에 응답하는 성질을 의미한다.
+- term: B-tree index
+  definition: 정렬된 키 구조로 equality·range·order query를 지원한다.
+- term: Backoff
+  definition: 연속 실패 사이 대기 시간을 늘리는 정책이다.
+- term: Backpressure
+  definition: consumer가 감당할 수 있는 속도를 producer에게 전달하거나 수신을 늦추는 메커니즘이다.
+- term: Backup
+  definition: 운영 상태와 분리된 복구용 데이터 사본이다.
+- term: Bounded context
+  definition: 용어와 모델이 일관된 업무 경계다.
+- term: Bulkhead
+  definition: thread·connection·queue·tenant capacity를 분리해 실패 전파를 줄인다.
+- term: Burn rate
+  definition: error budget이 기준 속도보다 얼마나 빠르게 소진되는지 나타낸다.
+- term: CAP의 C
+  definition: 모든 성공한 연산이 하나의 원자적 순서로 보이는 선형화 가능성에 해당하는 강한 조건이다.
+- term: CDC
+  definition: database change log를 읽어 삽입·수정·삭제를 event stream으로 전달하는 방식이다.
+- term: CDN cache key
+  definition: 어떤 요청을 같은 객체로 취급할지 정하는 키다.
+- term: Cache-aside
+  definition: 애플리케이션이 cache를 먼저 읽고 miss 시 원본에서 가져와 채운다.
+- term: Candidate retrieval
+  definition: lexical·dense·hybrid 방식으로 상위 후보를 빠르게 찾는다.
+- term: Canonicalization
+  definition: URL의 scheme·host·encoding·fragment를 저장·비교하는 규칙이다.
+- term: Capture
+  definition: 승인된 금액을 실제 청구로 확정하는 단계다.
+- term: Cardinality
+  definition: label/attribute 값 조합의 수로 metric storage와 query 비용에 큰 영향을 준다.
+- term: Channel provider
+  definition: APNs/FCM/SMS/email 등 외부 전달 시스템이다.
+- term: Choreography
+  definition: 서비스들이 event에 반응해 분산적으로 다음 단계를 진행한다.
+- term: Chunking
+  definition: 문서를 검색·context 단위로 나누는 과정이며 구조·중첩·overlap이 품질과 비용에 영향을 준다.
+- term: Circuit breaker
+  definition: 실패율·지연이 임계치를 넘으면 일정 기간 호출을 빠르게 실패시키고 probe로 회복을 확인한다.
+- term: Collector
+  definition: telemetry를 수신·처리·batch·filter·export하는 구성 요소다.
+- term: Collision handling
+  definition: 생성한 code가 이미 존재할 때 재시도·예약·중앙 할당으로 해결한다.
+- term: Command
+  definition: 특정 수신자에게 작업 수행을 요청하며 거부될 수 있다.
+- term: Commit index
+  definition: 합의된 로그에서 안전하게 적용할 수 있는 위치다.
+- term: Compensation
+  definition: 이미 수행된 action을 상쇄하거나 수동 복구하는 후속 작업이다.
+- term: Connection ID
+  definition: IP·port 변경과 독립적으로 연결을 식별해 경로 변경을 지원한다.
+- term: Connection draining
+  definition: 배포·제거 중 신규 연결을 막고 기존 요청을 제한 시간 동안 마치는 절차다.
+- term: Connection session
+  definition: 한 장치의 WebSocket/SSE 연결과 heartbeat·auth 상태다.
+- term: Consistent hashing
+  definition: 노드 변화 시 이동하는 키 범위를 줄이기 위해 hash ring 또는 유사한 토큰 공간을 사용한다.
+- term: Consumer group
+  definition: partition을 consumer 집합에 할당해 병렬 처리한다.
+- term: Container image
+  definition: 애플리케이션과 runtime dependency를 immutable artifact로 묶는다.
+- term: Context propagation
+  definition: trace ID, baggage, deadline 같은 context를 hop 사이 전달하는 과정이다.
+- term: Continuous batching
+  definition: 완료된 요청을 batch에서 빼고 새 요청을 즉시 넣으며 decode iteration을 공유하는 scheduling이다.
+- term: Conversation memory
+  definition: 현재 대화의 최근 맥락으로 수명이 짧다.
+- term: Conversation plane
+  definition: session·message·summary·handoff 상태를 관리한다.
+- term: Conversation sequence
+  definition: 한 대화방 안에서 메시지 순서를 결정하는 증가 version이다.
+- term: Covering index
+  definition: 쿼리에 필요한 열을 index에서 충족해 table lookup을 줄인다.
+- term: Dead-letter
+  definition: 정책상 자동 재시도를 멈춘 메시지를 조사·수정·재처리하기 위한 격리 경로다.
+- term: Deadline
+  definition: 전체 요청이 완료돼야 하는 절대 시각 또는 남은 시간 예산이다.
+- term: Deadline propagation
+  definition: 상위 요청의 남은 시간을 하위 호출에 전달하는 계약이다.
+- term: Decode
+  definition: 기존 KV cache를 재사용하며 token을 하나씩 생성하는 단계다.
+- term: Denormalization
+  definition: 읽기 경로를 단순화하기 위해 데이터를 중복 저장하는 설계다.
+- term: Derived store
+  definition: 원본에서 다시 만들 수 있는 cache·search index·warehouse·feature store다.
+- term: Directory routing
+  definition: 별도 메타데이터가 키·tenant의 위치를 직접 가리킨다.
+- term: Distributed SQL
+  definition: 여러 노드에 partition·replication하면서 SQL transaction을 제공하는 계열이다.
+- term: Document model
+  definition: 중첩 field를 가진 문서를 aggregate 단위로 저장한다.
+- term: Domain event
+  definition: 도메인에서 이미 발생한 사실을 과거형으로 표현한 record다.
+- term: Drift
+  definition: 입력·문서·사용자·model 행동 분포가 기준에서 변하는 현상이다.
+- term: Durable log
+  definition: append된 record를 offset 순서로 보존하고 여러 consumer가 각자 읽는다.
+- term: Edge compute
+  definition: 사용자 가까이에서 제한된 요청 처리·정책·변환을 수행한다.
+- term: Effectively-once
+  definition: 중복 전달이 있어도 idempotency·transaction·dedup으로 업무 결과를 한 번처럼 만든다.
+- term: Embedding
+  definition: 문서나 query를 수치 vector로 표현한 값이다.
+- term: Error budget
+  definition: '`1 - SLO`에 해당하는 허용 실패량이다.'
+- term: Evaluation plane
+  definition: tenant별 golden set·online quality·safety·cost를 관리한다.
+- term: FIDO/WebAuthn
+  definition: 공개키 credential로 phishing-resistant 인증을 제공하는 웹 표준 계열이다.
+- term: Failback
+  definition: 비상 region에서 정상 배치로 돌아가며 데이터·트래픽을 다시 정렬하는 과정이다.
+- term: Failover
+  definition: 새 writer 선택, 트래픽 전환, 데이터 검증, 이전 writer 격리를 포함한 복구 과정이다.
+- term: Fan-out
+  definition: 한 메시지를 다수 참가자 connection·inbox로 전달하는 과정이다.
+- term: Fan-out 증폭
+  definition: 하나의 요청이 여러 하위 요청 중 가장 느린 결과를 기다리며 꼬리가 커지는 현상이다.
+- term: Fencing
+  definition: 이전 leader가 뒤늦게 쓰기를 계속하지 못하도록 epoch·term·token으로 차단하는 방법이다.
+- term: Fencing token
+  definition: 새 소유자가 더 큰 번호를 받아 하위 저장소가 오래된 소유자의 쓰기를 거부하게 하는 값이다.
+- term: FinOps
+  definition: engineering·finance·business가 기술 사용과 비용·가치를 함께 관리하는 운영 방식이다.
+- term: Freshness
+  definition: 원문 변경이 검색·답변에 반영되기까지의 시간이다.
+- term: GitOps
+  definition: version-controlled desired state와 자동 reconciliation을 운영 원칙으로 사용한다.
+- term: Golden dataset
+  definition: 입력, 기대 기준, segment, provenance를 가진 재현 가능한 평가 집합이다.
+- term: Graceful degradation
+  definition: 전체 실패 대신 비핵심 기능·정확도·신선도를 낮춰 핵심 여정을 유지한다.
+- term: GraphQL
+  definition: 클라이언트가 schema의 field를 선택해 query/mutation/subscription을 수행한다.
+- term: Groundedness
+  definition: 답변 claim이 제공된 evidence에 의해 지지되는 정도다.
+- term: Grounding
+  definition: 답변이 제공된 근거에 기반하도록 만드는 설계와 검증이다.
+- term: HTTP semantics
+  definition: method, status, field, representation 같은 의미는 HTTP 버전 간 공유된다.
+- term: Hash partition
+  definition: 키 hash 공간을 분할해 분포를 균등하게 만든다.
+- term: Head-of-line blocking
+  definition: 앞선 손실이나 작업 때문에 뒤의 독립 작업도 대기하는 현상이다.
+- term: Hot key
+  definition: 일부 key에 요청이 지나치게 집중되는 현상이다.
+- term: Hot link
+  definition: 소수 code에 redirect가 집중되는 분포다.
+- term: Human handoff
+  definition: AI가 중단·escalate할 때 evidence와 context를 상담원에게 전달한다.
+- term: Hybrid logical clock
+  definition: 물리 시간에 가까운 정렬성과 논리적 단조성을 결합한다.
+- term: ITL/TPOT
+  definition: 출력 token 사이 지연 또는 token당 시간이다.
+- term: IaC
+  definition: 인프라 resource와 policy를 선언형 코드·state로 관리한다.
+- term: Idempotency
+  definition: 같은 요청을 여러 번 수행해도 의도한 최종 효과가 한 번과 같도록 하는 성질이다.
+- term: Idempotency key
+  definition: 같은 업무 요청의 중복 효과를 막고 기존 결과를 찾는 키다.
+- term: Inference plane
+  definition: retrieval·rerank·model route·streaming을 수행한다.
+- term: Inventory reservation
+  definition: 특정 주문을 위해 수량을 일정 시간 묶는 기록이다.
+- term: Inverted index
+  definition: term에서 포함 document 목록으로 연결해 full-text 검색을 지원한다.
+- term: Jitter
+  definition: 재시도 시점을 무작위화해 동기화된 폭주를 줄인다.
+- term: KV cache
+  definition: attention의 과거 key/value를 요청·layer별로 보존해 반복 계산을 줄이는 메모리다.
+- term: Key-value model
+  definition: key로 opaque value를 저장·조회하며 partition과 cache에 적합하다.
+- term: Knowledge plane
+  definition: 문서 원장·ingestion·chunk·index·ACL을 제공한다.
+- term: Kubernetes control loop
+  definition: desired state와 actual state 차이를 반복 조정한다.
+- term: L4 load balancing
+  definition: IP·포트·연결 정보를 중심으로 전달한다.
+- term: L7 load balancing
+  definition: Host, path, method, header 등 애플리케이션 프로토콜 정보를 활용한다.
+- term: Lamport clock
+  definition: 인과 관계가 있으면 논리 시계 값도 증가하도록 만드는 단순한 순서 메타데이터다.
+- term: Lease
+  definition: 일정 시간 동안 권한이 유효하다는 계약이며 시계 오차와 지연 상한을 고려해야 한다.
+- term: Ledger entry
+  definition: 금액 증감의 이유·계정·currency·reference를 append-only로 기록한다.
+- term: Load shedding
+  definition: 처리 능력을 넘은 요청을 의도적으로 거부·축소하는 전략이다.
+- term: Log
+  definition: 특정 시점의 구조화된 사건 record다.
+- term: Log replication
+  definition: leader가 명령 순서를 복제하고 commit된 prefix를 모든 노드가 동일하게 적용하도록 한다.
+- term: Long-term memory
+  definition: 사용자 선호·사실·요약 등을 별도 승인과 provenance로 저장한 데이터다.
+- term: MTTR
+  definition: 장애 후 정상 서비스로 복구하는 데 걸리는 평균 시간이며 분포와 단계별 시간도 함께 봐야 한다.
+- term: MVCC
+  definition: 여러 버전의 행을 유지해 읽기 스냅샷과 동시 쓰기를 조정하는 방식이다.
+- term: Majority quorum
+  definition: 구성원 절반 초과가 참여한 겹치는 집합으로 두 개의 독립 leader 결정을 막는다.
+- term: Materialized view
+  definition: 원본 변경에서 파생해 특정 query를 위한 형태로 유지하는 데이터다.
+- term: Membership change
+  definition: 합의 그룹 구성원을 안전하게 추가·제거하는 절차다.
+- term: Message state
+  definition: accepted, persisted, delivered, read, failed 같은 단계다.
+- term: Metadata filter
+  definition: tenant·권한·날짜 같은 구조적 조건으로 검색 후보를 제한한다.
+- term: Metering
+  definition: token·retrieval·tool·storage·human review 사용량을 계약 단위로 집계한다.
+- term: Metric
+  definition: 시간에 따른 수치 집계로 rate·histogram·gauge 등을 표현한다.
+- term: Model router
+  definition: 요청 특성·품질·비용·capacity에 따라 model/endpoint를 선택한다.
+- term: Model-based judge
+  definition: 모델을 사용해 answer를 평가하는 방법이며 calibration과 독립 검증이 필요하다.
+- term: Multiplexing
+  definition: 한 연결에서 여러 요청·응답 스트림을 동시에 진행하는 방식이다.
+- term: Negative cache
+  definition: 존재하지 않음·오류 같은 결과를 제한 시간 저장해 반복 miss를 줄이는 방식이다.
+- term: Notification intent
+  definition: 메시지 자체와 분리된 “이 사용자에게 이 채널로 알림” 요청이다.
+- term: Object storage
+  definition: 큰 immutable 또는 versioned blob을 key로 저장하는 계층이다.
+- term: Offline cursor
+  definition: 마지막으로 동기화한 conversation 위치다.
+- term: Online experiment
+  definition: 실제 traffic 일부에서 변경을 비교하는 canary/A-B/shadow 방식이다.
+- term: Online schema change
+  definition: 오래 잠그지 않고 expand·backfill·switch·contract로 구조를 변경하는 방식이다.
+- term: Operational envelope
+  definition: 데이터 크기, latency, throughput, failure, 복구, 인력 범위에서 검증된 운영 영역이다.
+- term: Orchestration
+  definition: 중앙 coordinator가 다음 단계와 보상을 결정한다.
+- term: Order aggregate
+  definition: 상품 snapshot, 금액, 상태 전이를 소유한다.
+- term: Origin shield
+  definition: edge miss를 한 단계에서 모아 원본 fan-in과 burst를 줄인다.
+- term: Outlier detection
+  definition: 비정상 endpoint를 일시 격리하는 정책이다.
+- term: PITR
+  definition: log와 base snapshot을 이용해 특정 시점으로 복구하는 방식이다.
+- term: Partition
+  definition: 노드 간 메시지가 손실되거나 임의로 지연되는 조건이다.
+- term: Passive health
+  definition: 실제 요청 오류를 건강 판단에 반영하는 방식이다.
+- term: Platform engineering
+  definition: 개발자가 안전한 표준 경로로 build·deploy·observe할 수 있는 내부 제품을 만든다.
+- term: Prefill
+  definition: 입력 token 전체를 처리해 첫 KV 상태와 첫 출력 준비를 만드는 단계다.
+- term: Presence
+  definition: 사용자 장치의 최근 활동과 연결 상태에 대한 근사 정보다.
+- term: Property graph
+  definition: node·edge와 속성으로 관계를 표현하고 traversal을 수행한다.
+- term: Provenance
+  definition: 원문·version·위치·수집 시각·변환 이력을 추적하는 metadata다.
+- term: QPACK
+  definition: HTTP/3에서 field compression을 수행하며 동적 table 의존과 blocking 한계를 관리한다.
+- term: QUIC connection
+  definition: UDP 위에서 암호화·신뢰성·혼잡 제어·다중 스트림을 제공한다.
+- term: Query optimizer
+  definition: 통계와 비용 모델로 join 순서와 access path를 선택한다.
+- term: RAG
+  definition: 외부 지식을 검색해 생성 모델의 입력 context에 결합하는 구조다.
+- term: REST 스타일
+  definition: HTTP method와 resource representation을 활용하는 API 설계 방식이다.
+- term: RPO
+  definition: 복구 시 허용 가능한 데이터 손실 시점 목표다.
+- term: RTO
+  definition: 중단 후 허용 가능한 서비스 복구 시간 목표다.
+- term: Range partition
+  definition: 키 구간을 연속 범위로 나눈다.
+- term: Read replica
+  definition: 원장 변경을 복제해 읽기 부하를 분산한다.
+- term: Reconciliation
+  definition: 최종 상태와 원장 증거를 비교해 누락·불일치를 찾는 과정이다.
+- term: Recovery dependency
+  definition: DNS, IdP, KMS, CI, 연락망처럼 복구에 필요한 외부·제어 구성 요소다.
+- term: Recursive resolver
+  definition: 클라이언트를 대신해 DNS 계층을 조회하고 TTL 동안 캐시한다.
+- term: Redirect semantics
+  definition: 301/308 같은 영구 redirect와 302/307 같은 임시 redirect의 cache·method 의미를 선택한다.
+- term: Reindex
+  definition: 새 mapping·analyzer·model로 파생 index를 다시 만드는 작업이다.
+- term: Reranking
+  definition: 더 비싼 모델이나 규칙으로 후보 순서를 다시 평가한다.
+- term: Resume token
+  definition: 재연결 시 마지막으로 처리한 위치에서 이어받기 위한 cursor·event ID다.
+- term: Retry
+  definition: 실패한 작업을 다시 시도하는 행위다.
+- term: Retry budget
+  definition: 정상 요청 대비 추가 시도량 또는 전체 시간·횟수를 제한하는 예산이다.
+- term: Reverse proxy
+  definition: 서버 앞에서 연결 종료·라우팅·캐시·정책을 수행한다.
+- term: Run state
+  definition: 목표, 현재 step, 도구 결과, budget, terminal status를 가진 업무 상태다.
+- term: SLA
+  definition: 서비스 제공자와 고객 사이의 약속이며 위반 시 조치가 포함될 수 있다.
+- term: SLI
+  definition: 좋은 이벤트의 비율이나 지연 분포처럼 서비스 수준을 측정하는 지표다.
+- term: SLO
+  definition: 정해진 관측 창에서 SLI가 달성해야 하는 목표다.
+- term: SSE
+  definition: HTTP response를 유지하며 서버가 text event stream을 단방향 전송한다.
+- term: Safety evaluation
+  definition: 금지 행동, 데이터 노출, prompt injection, 도구 오용 같은 위험을 시험한다.
+- term: Saga
+  definition: 여러 local transaction과 보상 action을 순서·이벤트로 조정하는 장기 업무 과정이다.
+- term: Saga state
+  definition: 여러 local transaction의 진행·보상·timeout을 기록한다.
+- term: Sampling
+  definition: 전체 trace 중 일부를 선택하는 정책으로 head·tail·rule-based 방식이 있다.
+- term: Sandbox
+  definition: 파일·네트워크·프로세스 접근을 제한한 실행 환경이다.
+- term: Secret
+  definition: password, API key, private key처럼 노출되면 권한을 행사할 수 있는 값이다.
+- term: Semantic convention
+  definition: HTTP, DB, messaging 등 공통 attribute 이름과 의미를 정의하는 규칙이다.
+- term: Serverless
+  definition: 요청·event에 따라 공급자가 실행 환경과 scale을 관리하는 모델이다.
+- term: Service mesh
+  definition: 서비스 간 통신의 proxy와 control plane을 통해 보안·정책·관측을 제공하는 인프라 계층이다.
+- term: Short code
+  definition: 긴 URL을 가리키는 공개 식별자다.
+- term: Speculative decoding
+  definition: 작은 모델이 제안한 token을 큰 모델이 검증해 decode 속도를 높이는 계열의 방법이다.
+- term: Stale-while-revalidate
+  definition: 오래된 값을 잠시 제공하면서 백그라운드에서 갱신한다.
+- term: Stampede
+  definition: 인기 key가 만료되자 다수 요청이 동시에 원본을 조회하는 현상이다.
+- term: Strangler migration
+  definition: 기존 시스템 주변에서 기능을 단계적으로 새 경계로 옮기는 방식이다.
+- term: Supernode
+  definition: edge가 매우 많은 graph node로 traversal과 lock hotspot을 만든다.
+- term: System of record
+  definition: 업무상 진실의 원천과 승인된 상태를 소유하는 저장소다.
+- term: TTFT
+  definition: 요청부터 첫 token까지의 시간이다.
+- term: TTL
+  definition: 레코드를 재조회하기 전 캐시할 수 있는 시간이다.
+- term: Tail latency
+  definition: 분포의 상위 백분위에서 나타나는 느린 응답이다.
+- term: Task success
+  definition: 사용자가 의도한 업무를 완료했는지 평가하는 최종 지표다.
+- term: Tenant context
+  definition: 검증된 tenant ID, user, role, region, policy version을 가진 요청 범위다.
+- term: Tenant control plane
+  definition: 계약·region·quota·model policy·connector·retention을 관리한다.
+- term: Term/Epoch
+  definition: leader 세대를 증가시키는 논리 번호다.
+- term: Timeout
+  definition: 한 작업이나 I/O를 더 기다리지 않기로 정한 한도다.
+- term: Tombstone
+  definition: 삭제된 code가 다시 잘못 사용되지 않도록 상태를 보존하는 record다.
+- term: Tool contract
+  definition: 도구 이름, input/output schema, 권한, idempotency, timeout, side effect를 정의한다.
+- term: Trace
+  definition: 하나의 분산 작업을 span과 parent-child 관계로 표현한다.
+- term: Transactional outbox
+  definition: 업무 변경과 발행 record를 같은 DB transaction에 저장하는 패턴이다.
+- term: Unit cost
+  definition: 요청, token, 성공 업무, 승인된 답변 등 의미 있는 단위당 비용이다.
+- term: Unit economics
+  definition: 요청·고객·transaction·token 같은 단위당 비용과 가치다.
+- term: Vector clock
+  definition: 여러 노드의 진행 상태를 벡터로 기록해 인과와 동시성을 구분한다.
+- term: Virtual node
+  definition: 물리 노드 하나가 여러 작은 token 범위를 소유해 균형과 이동 단위를 개선한다.
+- term: WebSocket
+  definition: HTTP handshake 후 양방향 message channel을 제공한다.
+- term: Wide-column model
+  definition: partition 안의 정렬된 clustering row를 큰 sparse table처럼 저장한다.
+- term: Work queue
+  definition: 메시지 하나를 대개 한 consumer가 처리하도록 작업을 분배한다.
+- term: Working set
+  definition: 짧은 시간에 반복 접근되는 데이터 집합이다.
+- term: Workload identity
+  definition: 서비스 instance가 장기 공유 secret 없이 자신을 증명하는 identity다.
+- term: Write amplification
+  definition: 하나의 논리 쓰기가 복제·색인·compaction으로 여러 물리 쓰기를 만드는 정도다.
+- term: Write skew
+  definition: 서로 다른 행을 수정하지만 함께 보는 조건이 깨지는 이상 현상이다.
+- term: Write-behind
+  definition: cache가 먼저 변경을 받아 원본에 나중에 반영하며 데이터 손실·순서 위험이 있다.
+- term: Write-through
+  definition: 쓰기 경로가 cache와 원본을 함께 갱신한다.
+- term: Zero trust
+  definition: 위치나 소유만으로 신뢰하지 않고 접근마다 명시적 검증과 최소 권한을 적용하는 접근법이다.
+- term: gRPC
+  definition: IDL 기반 service/method와 unary·streaming RPC를 제공한다.
+- term: 가역성
+  definition: 낮은 비용으로 되돌리거나 교체할 수 있는 정도다.
+- term: 가용성
+  definition: 필요한 시점에 서비스를 사용할 수 있는 정도다.
+- term: 격리
+  definition: 동시 트랜잭션이 서로의 중간 상태를 어떻게 관찰하는지에 대한 성질이다.
+- term: 결정 드라이버
+  definition: 사업 목표, SLO, 규제, 팀 역량처럼 선택을 실제로 구속하는 기준이다.
+- term: 공통 원인 실패
+  definition: 중복된 구성 요소가 공유 의존성이나 같은 결함으로 동시에 실패하는 현상이다.
+- term: 관계형 제약
+  definition: PK, FK, UNIQUE, CHECK로 데이터 규칙을 DB가 검증한다.
+- term: 관측 창
+  definition: 최근 28일 같은 rolling window 또는 달력 월처럼 목표를 평가하는 기간이다.
+- term: 내구성
+  definition: 기록된 데이터가 손실되지 않고 보존되는 성질이다.
+- term: 논리 저장량
+  definition: 사용자가 의미 있게 생성한 데이터 크기다.
+- term: 단조 시계
+  definition: 한 프로세스 안에서 경과 시간을 측정하는 데 적합하며 절대 시각과는 다르다.
+- term: 대역폭
+  definition: 초당 전송 바이트다. 요청·응답·헤더·복제·리전 간 전송을 분리한다.
+- term: 동시성
+  definition: 동시에 자원을 점유하는 작업 수다. 대략 요청률 × 평균 체류 시간으로 추정할 수 있지만 꼬리 지연과 긴 연결을 따로 본다.
+- term: 마이크로서비스
+  definition: 독립 배포·소유·데이터 경계를 가진 작은 서비스 집합이다.
+- term: 모듈러 모놀리스
+  definition: 하나의 배포 단위 안에서 명시적 모듈 경계와 의존 규칙을 유지하는 구조다.
+- term: 물리 저장량
+  definition: 복제본, 색인, WAL·로그, 임시 공간, 스냅샷, 여유 용량을 포함한다.
+- term: 민감도
+  definition: 어떤 입력 가정이 결과를 가장 크게 흔드는지 나타낸다.
+- term: 벽시계
+  definition: 달력상의 시각을 나타내며 NTP 조정, leap second 처리, VM 일시정지 등으로 단조 증가하지 않을 수 있다.
+- term: 복제 계수 N
+  definition: 하나의 데이터 항목을 보유하는 replica 수다.
+- term: 복제 지연
+  definition: leader 커밋과 follower 적용 사이 시간이다.
+- term: 분산 ID
+  definition: 중앙 병목 없이 고유 식별자를 만들기 위한 UUID, 시간 정렬 ID, 구간 할당 등이다.
+- term: 분산 모놀리스
+  definition: 서비스 수는 많지만 데이터·배포·변경이 강하게 결합된 구조다.
+- term: 불변조건
+  definition: '어떤 장애나 재시도에서도 깨지면 안 되는 규칙이다. 예: 주문 총액은 승인된 항목 합과 일치해야 한다.'
+- term: 비목표
+  definition: 이번 시스템이 해결하지 않는 범위를 명시해 설계가 무한 확장되는 것을 막는다.
+- term: 샤드 키
+  definition: 요청을 어떤 파티션으로 라우팅할지 결정하는 값이다.
+- term: 선형화 가능성
+  definition: 각 연산이 호출과 응답 사이 한 시점에 즉시 일어난 것처럼 보이는 모델이다.
+- term: 세션
+  definition: 인증 상태를 일정 기간 유지하는 server/client 계약이다.
+- term: 세션 보장
+  definition: read-your-writes, monotonic reads/writes처럼 한 사용자 세션에서 필요한 보장이다.
+- term: 시스템 경계
+  definition: 책임지는 기능·데이터·운영 범위를 둘러싼 선이다. 조직도나 네트워크 구간과 항상 같지는 않다.
+- term: 신뢰성
+  definition: 요구된 조건에서 올바르게 동작하는 성질이다.
+- term: 실패 모델
+  definition: 프로세스 중단, 네트워크 지연, 중복 메시지, 부분 성공처럼 설계가 견뎌야 할 실패의 집합이다.
+- term: 쓰기 quorum W
+  definition: 성공 응답 전에 확인받아야 하는 replica 수다.
+- term: 옵션 가치
+  definition: 지금 모든 것을 확정하지 않고 미래 선택 가능성을 보존해 얻는 가치다.
+- term: 외부 계약
+  definition: API, 이벤트, 파일, 사용자 인터페이스처럼 경계를 넘는 약속이다. 버전·소유자·오류 의미가 필요하다.
+- term: 요청률
+  definition: 초당 요청 수(RPS) 또는 이벤트 수(EPS)다. 읽기·쓰기·배치·스트리밍을 분리해야 한다.
+- term: 원자성
+  definition: 트랜잭션의 변경이 모두 반영되거나 모두 반영되지 않는 성질이다.
+- term: 인가
+  definition: 검증된 주체가 특정 자원에 특정 action을 수행할 수 있는지 결정한다.
+- term: 인과 일관성
+  definition: 원인과 결과 관계가 있는 연산 순서는 모두가 동일하게 관찰하도록 보장한다.
+- term: 인증
+  definition: 사용자·서비스·장치가 주장한 identity를 검증한다.
+- term: 읽기 quorum R
+  definition: 읽기에서 조회하거나 비교하는 replica 수다.
+- term: 장애 도메인
+  definition: 한 원인으로 함께 실패할 수 있는 자원의 묶음이다.
+- term: 지연시간
+  definition: 작업 하나가 시작부터 완료까지 걸린 시간이다.
+- term: 직렬화 가능성
+  definition: 동시 실행 결과가 어떤 직렬 실행 순서와 동등하도록 보장하는 격리 수준이다.
+- term: 처리량
+  definition: 단위 시간에 완료한 작업 수다.
+- term: 최종 일관성
+  definition: 새 업데이트가 없으면 복제본이 언젠가 같은 값으로 수렴하는 성질이며 수렴 시간과 충돌 의미를 추가로 정의해야 한다.
+- term: 큐잉 지연
+  definition: 자원이 바빠 실제 처리를 시작하기 전 기다리는 시간이다.
+- term: 트레이드오프
+  definition: 한 속성을 얻기 위해 다른 속성이나 비용을 포기하는 관계다.
+- term: 파티션
+  definition: 데이터와 요청을 독립적으로 배치·복제·이동할 수 있는 단위다.
+- term: 합의
+  definition: 비동기 통신과 일부 실패가 있는 노드들이 하나의 값 또는 로그 순서에 동의하는 문제다.

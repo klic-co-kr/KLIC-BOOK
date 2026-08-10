@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>배포 중 드레인 순서</title>
+  <desc>Registry에서 새 버전을 받아 Load Balancer가 엔드포인트를 제외하고, 기존 연결은 Drain되며, 신규 요청은 새 버전으로 흐르고 데드라인 후 종료되는 순서를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-stop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">배포 중 드레인 순서</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">엔드포인트 제외 → 기존 연결 드레인 → 데드라인 대기 → 강제 종료</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1000" y1="92" x2="1080" y2="92" stroke="#283541" stroke-width="2.5"/>
+    <text x="1090" y="100">신규 요청</text>
+    <line x1="1230" y1="92" x2="1310" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1320" y="100">기존 연결</text>
+    <line x1="1430" y1="92" x2="1510" y2="92" stroke="#7A8791" stroke-width="2.5"/>
+    <text x="1520" y="100">종료</text>
+  </g>
+
+  <g id="nodes">
+    <g id="registry">
+      <rect x="70" y="180" width="220" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="180" y="228" text-anchor="middle" font-size="30" fill="#142131">Registry</text>
+      <text x="180" y="262" text-anchor="middle" font-size="22" fill="#7A8791">새 버전 보관</text>
+    </g>
+    <g id="lb">
+      <rect x="380" y="180" width="280" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="520" y="228" text-anchor="middle" font-size="30" fill="#142131">Load Balancer</text>
+      <text x="520" y="262" text-anchor="middle" font-size="22" fill="#7A8791">엔드포인트 제외</text>
+    </g>
+    <g id="old">
+      <rect x="740" y="430" width="260" height="120" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="870" y="478" text-anchor="middle" font-size="28" fill="#142131">기존 연결</text>
+      <text x="870" y="512" text-anchor="middle" font-size="22" fill="#7A8791">Drain 진행</text>
+    </g>
+    <g id="new">
+      <rect x="1100" y="430" width="260" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1230" y="478" text-anchor="middle" font-size="28" fill="#142131">신규 요청</text>
+      <text x="1230" y="512" text-anchor="middle" font-size="22" fill="#7A8791">새 버전으로</text>
+    </g>
+    <g id="drain">
+      <rect x="740" y="620" width="260" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+      <text x="870" y="664" text-anchor="middle" font-size="28" fill="#142131">Drain</text>
+      <text x="870" y="696" text-anchor="middle" font-size="22" fill="#7A8791">데드라인 대기</text>
+    </g>
+    <g id="stop">
+      <rect x="1100" y="620" width="260" height="100" rx="14" fill="#F4F8FA" stroke="#7A8791" stroke-width="2.5"/>
+      <text x="1230" y="664" text-anchor="middle" font-size="28" fill="#142131">종료</text>
+      <text x="1230" y="696" text-anchor="middle" font-size="22" fill="#7A8791">강제 SIGTERM</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M290 240 L380 240" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="335" y="228" text-anchor="middle" font-size="22" fill="#283541">배포 반영</text>
+
+    <path d="M520 300 L520 360 L870 360 L870 430" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="690" y="350" text-anchor="middle" font-size="22" fill="#D39A2C">기존 연결 유지·제외</text>
+
+    <path d="M660 220 L1100 220 L1100 430" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="880" y="208" text-anchor="middle" font-size="22" fill="#283541">새 엔드포인트 등록</text>
+
+    <path d="M870 550 L870 620" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="885" y="590" font-size="22" fill="#D39A2C">유휴 대기</text>
+
+    <path d="M1000 670 L1100 670" stroke="#7A8791" stroke-width="2.5" marker-end="url(#arrow-stop)"/>
+    <text x="1050" y="658" text-anchor="middle" font-size="22" fill="#7A8791">데드라인 도달</text>
+  </g>
+
+  <g id="timeline" font-size="22" fill="#7A8791">
+    <line x1="70" y1="800" x2="1360" y2="800" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="180" y="830" text-anchor="middle">① 배포</text>
+    <text x="520" y="830" text-anchor="middle">② 제외</text>
+    <text x="870" y="830" text-anchor="middle">③ 드레인</text>
+    <text x="1230" y="830" text-anchor="middle">④ 종료</text>
+  </g>
+</svg>

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>주문 처리 흐름과 실패 보상</title>
+  <desc>주문 생성, 재고 예약, 결제 승인, 확정의 정상 흐름과 결제 실패 시 수동 검토·재고 해제·결제 취소 보상 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="80">주문 생성 · 재고 예약 · 결제 승인 · 확정과 실패 보상</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1100" y="55" width="445" height="48" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1120" y1="79" x2="1180" y2="79" stroke="#283541" stroke-width="2.5"/>
+    <text x="1190" y="87">정상 흐름</text>
+    <line x1="1340" y1="79" x2="1400" y2="79" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1410" y="87">실패·보상</text>
+  </g>
+
+  <g id="band-labels" font-size="22" fill="#7A8791">
+    <text x="40" y="375" transform="rotate(-90 40 375)" text-anchor="middle">정상 경로</text>
+    <text x="40" y="695" transform="rotate(-90 40 695)" text-anchor="middle">보상 경로</text>
+  </g>
+
+  <g id="nodes-main">
+    <g id="order">
+      <rect x="70" y="300" width="240" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="190" y="375" text-anchor="middle" font-size="32" fill="#142131">Order</text>
+    </g>
+    <g id="inv-res">
+      <rect x="430" y="300" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="550" y="365" text-anchor="middle" font-size="28" fill="#142131"><tspan x="550" dy="0">Inventory</tspan><tspan x="550" dy="32">Reservation</tspan></text>
+    </g>
+    <g id="pay-auth">
+      <rect x="790" y="300" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="910" y="365" text-anchor="middle" font-size="28" fill="#142131"><tspan x="910" dy="0">Payment</tspan><tspan x="910" dy="32">Authorization</tspan></text>
+    </g>
+    <g id="confirm">
+      <rect x="1150" y="300" width="240" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1270" y="375" text-anchor="middle" font-size="32" fill="#142131">Confirm</text>
+    </g>
+  </g>
+
+  <g id="nodes-comp">
+    <g id="release">
+      <rect x="430" y="620" width="240" height="130" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="550" y="695" text-anchor="middle" font-size="30" fill="#142131">Release</text>
+    </g>
+    <g id="manual-review">
+      <rect x="790" y="620" width="240" height="130" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="910" y="695" text-anchor="middle" font-size="30" fill="#142131">Manual Review</text>
+    </g>
+    <g id="void-refund">
+      <rect x="1150" y="620" width="240" height="130" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="1270" y="695" text-anchor="middle" font-size="30" fill="#142131">Void/Refund</text>
+    </g>
+  </g>
+
+  <g id="edges-main" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M310 365 L430 365" marker-end="url(#arrow)"/>
+    <path d="M670 365 L790 365" marker-end="url(#arrow)"/>
+    <path d="M1030 365 L1150 365" marker-end="url(#arrow)"/>
+    <text x="370" y="350" text-anchor="middle" font-size="22" fill="#283541">주문</text>
+    <text x="730" y="350" text-anchor="middle" font-size="22" fill="#283541">예약</text>
+    <text x="1090" y="350" text-anchor="middle" font-size="22" fill="#283541">승인</text>
+  </g>
+
+  <g id="edges-comp" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none">
+    <path d="M910 430 L910 620" marker-end="url(#arrow-amb)"/>
+    <path d="M790 685 L670 685" marker-end="url(#arrow-amb)"/>
+    <path d="M1030 685 L1150 685" marker-end="url(#arrow-amb)"/>
+  </g>
+  <g id="edge-comp-labels" font-size="22" fill="#D39A2C">
+    <text x="930" y="525">승인 실패</text>
+    <text x="730" y="675" text-anchor="middle">재고 해제</text>
+    <text x="1090" y="675" text-anchor="middle">결제 취소</text>
+  </g>
+</svg>

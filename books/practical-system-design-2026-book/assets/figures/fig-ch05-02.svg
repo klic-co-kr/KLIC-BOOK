@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>fan-out과 꼬리 지연 확률</title>
+  <desc>fan-out 개수가 늘면 하나 이상의 느린 하위 호출을 만날 확률이 커진다. 전체 완료는 가장 느린 호출에 맞춰진다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <text x="100" y="60" font-size="26" font-weight="700" fill="#142131">fan-out이 많아질수록 느린 호출을 한 번이라도 만날 확률이 커진다</text>
+    <rect x="1180" y="84" width="28" height="14" rx="3" fill="#0F8790"/>
+    <text x="1218" y="98">빠른 응답</text>
+    <rect x="1350" y="84" width="28" height="14" rx="3" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <text x="1388" y="98">느린 응답</text>
+  </g>
+
+  <g id="request">
+    <rect x="70" y="390" width="220" height="140" rx="16" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+    <text x="180" y="448" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">요청</text>
+    <text x="180" y="494" text-anchor="middle" font-size="22" fill="#7A8791">하나의 작업</text>
+  </g>
+
+  <g id="parallel-calls" font-size="26" fill="#142131">
+    <text x="740" y="170" text-anchor="middle" font-size="28" font-weight="700">병렬 호출</text>
+    <g id="call-fast-1">
+      <rect x="540" y="200" width="400" height="78" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="740" y="250" text-anchor="middle">하위 호출 1 · 빠른 응답</text>
+    </g>
+    <g id="call-fast-2">
+      <rect x="540" y="296" width="400" height="78" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="740" y="346" text-anchor="middle">하위 호출 2 · 빠른 응답</text>
+    </g>
+    <g id="call-fast-3">
+      <rect x="540" y="392" width="400" height="78" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="740" y="442" text-anchor="middle">하위 호출 3 · 빠른 응답</text>
+    </g>
+    <g id="call-fast-4">
+      <rect x="540" y="488" width="400" height="78" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="740" y="538" text-anchor="middle">하위 호출 4 · 빠른 응답</text>
+    </g>
+    <g id="call-slow">
+      <rect x="540" y="584" width="400" height="78" rx="12" fill="#FFFFFF" stroke="#D39A2C" stroke-width="3" stroke-dasharray="10 6"/>
+      <text x="740" y="634" text-anchor="middle" fill="#D39A2C">하위 호출 5 · 느린 응답</text>
+    </g>
+  </g>
+
+  <g id="fanout-edges" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M290 440 C 380 440, 420 239, 540 239" marker-end="url(#arrow)"/>
+    <path d="M290 458 C 380 458, 420 335, 540 335" marker-end="url(#arrow)"/>
+    <path d="M290 476 C 380 476, 420 431, 540 431" marker-end="url(#arrow)"/>
+    <path d="M290 494 C 380 494, 420 527, 540 527" marker-end="url(#arrow)"/>
+    <path d="M290 512 C 380 512, 420 623, 540 623" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+  </g>
+
+  <g id="complete">
+    <rect x="1230" y="390" width="260" height="140" rx="16" fill="#0F8790" stroke="#142131" stroke-width="2.5"/>
+    <text x="1360" y="448" text-anchor="middle" font-size="32" font-weight="700" fill="#FFFFFF">전체 완료</text>
+    <text x="1360" y="494" text-anchor="middle" font-size="22" fill="#EFF5F4">가장 느린 호출 기준</text>
+  </g>
+
+  <g id="merge-edges" fill="none" stroke-width="2.5">
+    <path d="M940 239 C 1080 239, 1120 430, 1230 430" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <path d="M940 335 C 1080 335, 1120 446, 1230 446" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <path d="M940 431 C 1080 431, 1120 458, 1230 458" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <path d="M940 527 C 1080 527, 1120 470, 1230 470" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <path d="M940 623 C 1080 623, 1120 486, 1230 486" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+  </g>
+
+  <g id="annotation">
+    <rect x="1080" y="690" width="430" height="120" rx="14" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/>
+    <text x="1100" y="728" font-size="24" font-weight="700" fill="#142131">fan-out ↑ → 느린 호출 만날 확률 ↑</text>
+    <text x="1100" y="764" font-size="22" fill="#283541">단일 호출이 정상일 확률이 높아도,</text>
+    <text x="1100" y="794" font-size="22" fill="#283541">여러 개를 동시에 부르면 하나는 느리다.</text>
+  </g>
+</svg>

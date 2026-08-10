@@ -1,0 +1,7 @@
+WeasyPrint==68.0
+mistune>=3.2,<4
+PyYAML>=6.0,<7
+beautifulsoup4>=4.14,<5
+pypdf>=5.9,<6
+PyMuPDF>=1.26,<2
+Pillow>=11,<12

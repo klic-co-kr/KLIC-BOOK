@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>tenancy 격리 등급 비교</title>
+  <desc>shared · isolated data · dedicated 세 등급에서 tenant boundary와 gpu, index 자원이 어떻게 나뉘는지 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="60">shared · isolated data · dedicated tier의 자원·데이터·model 경계 비교</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1080" y="35" width="465" height="44" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1100" y1="57" x2="1160" y2="57" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="14 8"/>
+    <text x="1170" y="65">Tenant Boundary</text>
+    <line x1="1380" y1="57" x2="1440" y2="57" stroke="#283541" stroke-width="2.5"/>
+    <text x="1450" y="65">공유</text>
+  </g>
+
+  <g id="panel-shared">
+    <rect x="70" y="130" width="460" height="690" rx="16" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="300" y="185" text-anchor="middle" font-size="34" fill="#0F8790">Shared</text>
+    <text x="300" y="215" text-anchor="middle" font-size="22" fill="#7A8791">자원·데이터 모두 공유</text>
+    <rect x="95" y="250" width="410" height="550" rx="14" fill="none" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="14 8"/>
+    <rect x="115" y="240" width="200" height="34" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/>
+    <text x="215" y="263" text-anchor="middle" font-size="22" fill="#0F8790">Tenant Boundary</text>
+
+    <g id="s-tenants">
+      <rect x="130" y="305" width="140" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="200" y="342" text-anchor="middle" font-size="26" fill="#142131">테넌트 A</text>
+      <rect x="330" y="305" width="140" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="400" y="342" text-anchor="middle" font-size="26" fill="#142131">테넌트 B</text>
+    </g>
+    <g id="s-gpu">
+      <rect x="170" y="490" width="260" height="70" rx="10" fill="#EFF5F4" stroke="#142131" stroke-width="2.5"/>
+      <text x="300" y="535" text-anchor="middle" font-size="28" fill="#142131">GPU (공용)</text>
+    </g>
+    <g id="s-index">
+      <rect x="170" y="640" width="260" height="70" rx="10" fill="#EFF5F4" stroke="#142131" stroke-width="2.5"/>
+      <text x="300" y="685" text-anchor="middle" font-size="28" fill="#142131">Index (공용)</text>
+    </g>
+    <g id="s-edges" stroke="#283541" stroke-width="2.5" fill="none">
+      <path d="M200 365 L200 490" marker-end="url(#arrow)"/>
+      <path d="M400 365 L400 490" marker-end="url(#arrow)"/>
+      <path d="M200 560 L200 640" marker-end="url(#arrow)"/>
+      <path d="M400 560 L400 640" marker-end="url(#arrow)"/>
+    </g>
+  </g>
+
+  <g id="panel-iso">
+    <rect x="570" y="130" width="460" height="690" rx="16" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="800" y="185" text-anchor="middle" font-size="34" fill="#0F8790">Isolated Data</text>
+    <text x="800" y="215" text-anchor="middle" font-size="22" fill="#7A8791">데이터만 분리, 자원은 공유</text>
+    <rect x="595" y="250" width="410" height="550" rx="14" fill="none" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="14 8"/>
+    <rect x="615" y="240" width="200" height="34" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/>
+    <text x="715" y="263" text-anchor="middle" font-size="22" fill="#0F8790">Tenant Boundary</text>
+
+    <g id="i-tenants">
+      <rect x="630" y="305" width="140" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="700" y="342" text-anchor="middle" font-size="26" fill="#142131">테넌트 A</text>
+      <rect x="830" y="305" width="140" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="900" y="342" text-anchor="middle" font-size="26" fill="#142131">테넌트 B</text>
+    </g>
+    <g id="i-index">
+      <rect x="630" y="460" width="140" height="70" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="700" y="505" text-anchor="middle" font-size="26" fill="#142131">Index-A</text>
+      <rect x="830" y="460" width="140" height="70" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="900" y="505" text-anchor="middle" font-size="26" fill="#142131">Index-B</text>
+    </g>
+    <g id="i-gpu">
+      <rect x="670" y="640" width="260" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="685" text-anchor="middle" font-size="28" fill="#142131">GPU (공용)</text>
+    </g>
+    <g id="i-edges-data" stroke="#0F8790" stroke-width="2.5" fill="none">
+      <path d="M700 365 L700 460" marker-end="url(#arrow-accent)"/>
+      <path d="M900 365 L900 460" marker-end="url(#arrow-accent)"/>
+    </g>
+    <g id="i-edges-shared" stroke="#283541" stroke-width="2.5" fill="none">
+      <path d="M700 530 C 700 600, 760 610, 770 640" marker-end="url(#arrow)"/>
+      <path d="M900 530 C 900 600, 840 610, 830 640" marker-end="url(#arrow)"/>
+    </g>
+  </g>
+
+  <g id="panel-dedicated">
+    <rect x="1070" y="130" width="460" height="690" rx="16" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="1300" y="185" text-anchor="middle" font-size="34" fill="#0F8790">Dedicated</text>
+    <text x="1300" y="215" text-anchor="middle" font-size="22" fill="#7A8791">자원·데이터 모두 전용</text>
+
+    <g id="d-bound-a">
+      <rect x="1090" y="250" width="200" height="550" rx="14" fill="none" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="14 8"/>
+      <rect x="1110" y="240" width="170" height="34" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/>
+      <text x="1195" y="263" text-anchor="middle" font-size="20" fill="#0F8790">Tenant Boundary</text>
+      <rect x="1115" y="305" width="150" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1190" y="342" text-anchor="middle" font-size="26" fill="#142131">테넌트 A</text>
+      <rect x="1120" y="455" width="140" height="65" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1190" y="495" text-anchor="middle" font-size="26" fill="#142131">GPU-A</text>
+      <rect x="1120" y="610" width="140" height="65" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1190" y="650" text-anchor="middle" font-size="26" fill="#142131">Index-A</text>
+      <g stroke="#0F8790" stroke-width="2.5" fill="none">
+        <path d="M1190 365 L1190 455" marker-end="url(#arrow-accent)"/>
+        <path d="M1190 520 L1190 610" marker-end="url(#arrow-accent)"/>
+      </g>
+    </g>
+
+    <g id="d-bound-b">
+      <rect x="1310" y="250" width="200" height="550" rx="14" fill="none" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="14 8"/>
+      <rect x="1330" y="240" width="170" height="34" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/>
+      <text x="1415" y="263" text-anchor="middle" font-size="20" fill="#0F8790">Tenant Boundary</text>
+      <rect x="1335" y="305" width="150" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1410" y="342" text-anchor="middle" font-size="26" fill="#142131">테넌트 B</text>
+      <rect x="1340" y="455" width="140" height="65" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1410" y="495" text-anchor="middle" font-size="26" fill="#142131">GPU-B</text>
+      <rect x="1340" y="610" width="140" height="65" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1410" y="650" text-anchor="middle" font-size="26" fill="#142131">Index-B</text>
+      <g stroke="#0F8790" stroke-width="2.5" fill="none">
+        <path d="M1410 365 L1410 455" marker-end="url(#arrow-accent)"/>
+        <path d="M1410 520 L1410 610" marker-end="url(#arrow-accent)"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>최소 URL 단축 서비스</title>
+  <desc>단일 API·DB에서 시작하는 최소 URL 단축 서비스와 create/redirect 경로를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="header">
+    <text x="80" y="78" font-size="30" font-weight="700" fill="#142131">최소 URL 단축 서비스</text>
+    <text x="80" y="114" font-size="24" fill="#7A8791">단일 API·DB에서 시작하는 create/redirect 경로</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1130" y1="92" x2="1210" y2="92" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1222" y="100">Create (생성)</text>
+    <line x1="1380" y1="92" x2="1460" y2="92" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="1472" y="100">Redirect (전환)</text>
+  </g>
+
+  <g id="nodes">
+    <g id="user">
+      <rect x="80" y="380" width="240" height="140" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="200" y="440" text-anchor="middle" font-size="30" font-weight="600" fill="#142131">사용자</text>
+      <text x="200" y="478" text-anchor="middle" font-size="22" fill="#7A8791">브라우저·앱</text>
+    </g>
+
+    <g id="create-api">
+      <rect x="500" y="180" width="280" height="140" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="640" y="240" text-anchor="middle" font-size="30" font-weight="600" fill="#142131">Create API</text>
+      <text x="640" y="278" text-anchor="middle" font-size="22" fill="#7A8791">URL 검증·정책·저장</text>
+    </g>
+
+    <g id="redirect-api">
+      <rect x="500" y="580" width="280" height="140" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="640" y="640" text-anchor="middle" font-size="30" font-weight="600" fill="#142131">Redirect API</text>
+      <text x="640" y="678" text-anchor="middle" font-size="22" fill="#7A8791">code 조회·302 응답</text>
+    </g>
+
+    <g id="urldb">
+      <rect x="1040" y="380" width="280" height="140" rx="16" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1180" y="440" text-anchor="middle" font-size="30" font-weight="600" fill="#142131">URL DB</text>
+      <text x="1180" y="478" text-anchor="middle" font-size="22" fill="#7A8791">destination·code 원장</text>
+    </g>
+
+    <g id="shortcode">
+      <rect x="820" y="395" width="160" height="110" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+      <text x="900" y="440" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Short Code</text>
+      <text x="900" y="472" text-anchor="middle" font-size="22" fill="#7A8791">식별자</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M200 380 L200 280 L500 280" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="350" y="268" font-size="22" fill="#283541">① URL 제출</text>
+
+    <path d="M780 250 L900 250 L900 395" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="820" y="238" font-size="22" fill="#283541">② code 발급</text>
+
+    <path d="M980 450 L1040 450" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="985" y="438" font-size="22" fill="#283541">③ 저장</text>
+
+    <path d="M200 520 L200 650 L500 650" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="290" y="638" font-size="22" fill="#0F8790">④ short code 요청</text>
+
+    <path d="M780 650 L980 650 L980 505 L900 505" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="820" y="638" font-size="22" fill="#0F8790">⑤ code→destination</text>
+
+    <path d="M1040 478 L1000 478 L1000 505" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)" stroke-dasharray="6 6"/>
+  </g>
+
+  <g id="step-tag">
+    <rect x="80" y="810" width="280" height="50" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="220" y="843" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">STEP 1 · 단일 API·DB</text>
+  </g>
+</svg>

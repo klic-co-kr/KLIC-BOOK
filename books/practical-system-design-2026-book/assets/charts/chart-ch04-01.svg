@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>28일 SLO 예산 소진 시나리오</title>
+  <desc>정상 소진·3배 burn·20배 burn 시나리오에서 28일 관측 창 동안 남은 Error Budget이 감소하는 모습을 보여준다. 합성 예시 데이터.</desc>
+  <defs>
+    <marker id="dot-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="200" y="80" font-size="24" fill="#7A8791">예시(합성 데이터)</text>
+
+  <g id="axes" stroke="#142131" fill="none">
+    <line x1="200" y1="700" x2="1400" y2="700" stroke-width="2.5"/>
+    <line x1="200" y1="130" x2="200" y2="700" stroke-width="2.5"/>
+  </g>
+
+  <g id="gridlines" stroke="#D8E1E2" stroke-width="1.5">
+    <line x1="200" y1="557.5" x2="1400" y2="557.5"/>
+    <line x1="200" y1="415" x2="1400" y2="415"/>
+    <line x1="200" y1="272.5" x2="1400" y2="272.5"/>
+    <line x1="200" y1="130" x2="1400" y2="130"/>
+  </g>
+
+  <g id="y-labels" font-size="24" fill="#7A8791" text-anchor="end">
+    <text x="188" y="708">0</text>
+    <text x="188" y="566">25</text>
+    <text x="188" y="423">50</text>
+    <text x="188" y="281">75</text>
+    <text x="188" y="138">100</text>
+  </g>
+  <text x="188" y="106" font-size="22" fill="#7A8791" text-anchor="end">(%)</text>
+
+  <g id="x-labels" font-size="24" fill="#7A8791" text-anchor="middle">
+    <text x="200" y="738">0일</text>
+    <text x="500" y="738">7일</text>
+    <text x="800" y="738">14일</text>
+    <text x="1100" y="738">21일</text>
+    <text x="1400" y="738">28일</text>
+  </g>
+
+  <text x="800" y="800" text-anchor="middle" font-size="26" fill="#283541">관측 창 경과 시간 (일)</text>
+  <text x="80" y="415" text-anchor="middle" font-size="26" fill="#283541" transform="rotate(-90 80 415)">남은 Error Budget (%)</text>
+
+  <g id="series">
+    <polyline points="200,130 500,272.5 800,415 1100,557.5 1400,700" fill="none" stroke="#0F8790" stroke-width="3.5"/>
+    <g fill="#FFFFFF" stroke="#0F8790" stroke-width="3">
+      <circle cx="200" cy="130" r="7"/>
+      <circle cx="500" cy="272.5" r="7"/>
+      <circle cx="800" cy="415" r="7"/>
+      <circle cx="1100" cy="557.5" r="7"/>
+      <circle cx="1400" cy="700" r="7"/>
+    </g>
+
+    <polyline points="200,130 333,320 467,510 600,700 1400,700" fill="none" stroke="#D39A2C" stroke-width="3.5" stroke-dasharray="16 8"/>
+    <g fill="#FFFFFF" stroke="#D39A2C" stroke-width="3">
+      <rect x="327" y="314" width="12" height="12"/>
+      <rect x="461" y="504" width="12" height="12"/>
+      <rect x="594" y="694" width="12" height="12"/>
+    </g>
+
+    <polyline points="200,130 215,272.5 230,415 245,557.5 260,700 1400,700" fill="none" stroke="#142131" stroke-width="3.5" stroke-dasharray="3 7"/>
+    <g fill="#FFFFFF" stroke="#142131" stroke-width="3">
+      <polygon points="230,407 222,421 238,421"/>
+      <polygon points="260,692 252,706 268,706"/>
+    </g>
+  </g>
+
+  <g id="series-labels" font-size="26" font-weight="600">
+    <text x="900" y="388" fill="#0F8790">정상 소진</text>
+    <text x="560" y="470" fill="#D39A2C">3배 Burn</text>
+    <text x="330" y="395" fill="#142131">20배 Burn</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1060" y1="120" x2="1120" y2="120" stroke="#0F8790" stroke-width="3.5"/>
+    <circle cx="1090" cy="120" r="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1132" y="128">정상 소진 (1×)</text>
+
+    <line x1="1060" y1="156" x2="1120" y2="156" stroke="#D39A2C" stroke-width="3.5" stroke-dasharray="14 7"/>
+    <text x="1132" y="164">3배 Burn</text>
+
+    <line x1="1060" y1="192" x2="1120" y2="192" stroke="#142131" stroke-width="3.5" stroke-dasharray="3 6"/>
+    <text x="1132" y="200">20배 Burn</text>
+  </g>
+</svg>

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>모놀리스에서 서비스 분리로의 진화</title>
+  <desc>모놀리스에서 모듈 경계를 그어 데이터 소유권을 명확히 하고, 선택적으로 서비스를 분리해 독립 배포에 이르는 단계와, 각 단계를 되돌릴 수 있는 지점을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-rev" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">모놀리스에서 서비스 분리로</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">한 방향 진화가 아니라 되돌릴 수 있는 단계의 연속이다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1000" y1="92" x2="1080" y2="92" stroke="#283541" stroke-width="2.5"/>
+    <text x="1090" y="100">다음 단계로</text>
+    <line x1="1240" y1="92" x2="1320" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1330" y="100">되돌림</text>
+  </g>
+
+  <g id="stages">
+    <g id="stage1">
+      <rect x="70" y="220" width="380" height="380" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="260" y="270" text-anchor="middle" font-size="28" fill="#142131" font-weight="600">1단계</text>
+      <rect x="120" y="300" width="280" height="100" rx="10" fill="#F4F8FA" stroke="#142131" stroke-width="2"/>
+      <text x="260" y="358" text-anchor="middle" font-size="30" fill="#142131">모놀리스</text>
+      <text x="260" y="440" text-anchor="middle" font-size="24" fill="#283541">한 단위로 배포</text>
+      <text x="260" y="475" text-anchor="middle" font-size="22" fill="#7A8791">모든 코드가 같은 경계 안</text>
+      <text x="260" y="510" text-anchor="middle" font-size="22" fill="#7A8791">공유 저장소</text>
+    </g>
+
+    <g id="stage2">
+      <rect x="510" y="220" width="380" height="380" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="700" y="270" text-anchor="middle" font-size="28" fill="#142131" font-weight="600">2단계</text>
+      <rect x="540" y="300" width="320" height="100" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+      <text x="700" y="358" text-anchor="middle" font-size="28" fill="#142131">모듈 경계 + 데이터 소유권</text>
+      <text x="700" y="440" text-anchor="middle" font-size="24" fill="#283541">코드는 그대로, 경계만 그림</text>
+      <text x="700" y="475" text-anchor="middle" font-size="22" fill="#7A8791">모듈별 비공개 테이블</text>
+      <text x="700" y="510" text-anchor="middle" font-size="22" fill="#7A8791">다른 모듈 직접 접근 금지</text>
+    </g>
+
+    <g id="stage3">
+      <rect x="950" y="220" width="380" height="380" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1140" y="270" text-anchor="middle" font-size="28" fill="#142131" font-weight="600">3단계</text>
+      <rect x="980" y="300" width="320" height="100" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+      <text x="1140" y="358" text-anchor="middle" font-size="28" fill="#142131">서비스 분리 + 독립 배포</text>
+      <text x="1140" y="440" text-anchor="middle" font-size="24" fill="#283541">일부 모듈만 별도 프로세스로</text>
+      <text x="1140" y="475" text-anchor="middle" font-size="22" fill="#7A8791">나머지는 모놀리스에 잔류</text>
+      <text x="1140" y="510" text-anchor="middle" font-size="22" fill="#7A8791">개별 배포 일정 확보</text>
+    </g>
+
+    <g id="stage4">
+      <rect x="1390" y="220" width="140" height="380" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1460" y="290" text-anchor="middle" font-size="24" fill="#142131">선택적</text>
+      <text x="1460" y="320" text-anchor="middle" font-size="24" fill="#142131">확장</text>
+      <text x="1460" y="430" text-anchor="middle" font-size="22" fill="#7A8791">모든 모듈이</text>
+      <text x="1460" y="460" text-anchor="middle" font-size="22" fill="#7A8791">분리 대상은 아님</text>
+      <text x="1460" y="540" text-anchor="middle" font-size="22" fill="#7A8791">비용 대비 효과로</text>
+      <text x="1460" y="570" text-anchor="middle" font-size="22" fill="#7A8791">결정</text>
+    </g>
+  </g>
+
+  <g id="forward" fill="none">
+    <path d="M450 410 L510 410" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="480" y="398" text-anchor="middle" font-size="22" fill="#283541">경계 도입</text>
+    <path d="M890 410 L950 410" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="920" y="398" text-anchor="middle" font-size="22" fill="#283541">일부 추출</text>
+    <path d="M1330 410 L1390 410" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="rollback" fill="none">
+    <path d="M950 600 L950 660 L510 660 L510 600" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-rev)"/>
+    <text x="730" y="650" text-anchor="middle" font-size="22" fill="#D39A2C">되돌림 — 모듈을 다시 모놀리스로</text>
+    <path d="M1390 660 L950 660" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" stroke-opacity="0"/>
+  </g>
+
+  <g id="footnote" font-size="22" fill="#7A8791">
+    <text x="70" y="780">각 단계는 이전 상태로 되돌릴 수 있다. 2단계 경계가 튼튼해야 3단계 분리가 안전하고, 3단계에서 한 서비스를 다시 합치는 일도 설계상 열어둔다.</text>
+  </g>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>원장 변경이 다중 뷰로 전파되고 조정되는 흐름</title>
+  <desc>원장의 변경을 Change Stream이 잡아 Document View·Wide-column View·Graph View로 전달하고, Reconciliation이 파생 뷰를 원본과 맞춘다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="56" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">원장 변경이 여러 뷰로 전파되고 Reconciliation이 일치시킨다</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1080" y1="92" x2="1160" y2="92" stroke="#283541" stroke-width="2.5"/><text x="1170" y="100">정상 전파</text>
+    <line x1="1330" y1="92" x2="1410" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="1420" y="100">조정(Reconciliation)</text>
+  </g>
+
+  <g id="ledger">
+    <rect x="80" y="380" width="220" height="140" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="190" y="442" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">원장</text>
+    <text x="190" y="486" text-anchor="middle" font-size="22" fill="#7A8791">정규화 원본</text>
+  </g>
+
+  <g id="change-stream">
+    <rect x="380" y="380" width="220" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="490" y="442" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">Change Stream</text>
+    <text x="490" y="486" text-anchor="middle" font-size="22" fill="#7A8791">이벤트 스트림</text>
+  </g>
+
+  <g id="views" font-size="26" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="780" y="170" width="300" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="930" y="222">Document View</text><text x="930" y="260" font-size="22" font-weight="400" fill="#7A8791">중첩 문서</text></g>
+    <g><rect x="780" y="390" width="300" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="930" y="442">Wide-column View</text><text x="930" y="480" font-size="22" font-weight="400" fill="#7A8791">행·컬럼 패밀리</text></g>
+    <g><rect x="780" y="610" width="300" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="930" y="662">Graph View</text><text x="930" y="700" font-size="22" font-weight="400" fill="#7A8791">노드·간선</text></g>
+  </g>
+
+  <g id="recon">
+    <rect x="1240" y="380" width="280" height="140" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1380" y="442" text-anchor="middle" font-size="28" font-weight="700" fill="#D39A2C">Reconciliation</text>
+    <text x="1380" y="486" text-anchor="middle" font-size="22" fill="#7A8791">주기적 일치 점검</text>
+  </g>
+
+  <!-- Ledger → Change Stream -->
+  <path d="M300 450 L 380 450" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="340" y="438" text-anchor="middle" font-size="22" fill="#283541">쓰기</text>
+
+  <!-- Change Stream → 3 views (solid) -->
+  <g fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M600 420 C 680 420, 700 230, 780 230" marker-end="url(#arrow)"/>
+    <path d="M600 450 L 780 450" marker-end="url(#arrow)"/>
+    <path d="M600 480 C 680 480, 700 670, 780 670" marker-end="url(#arrow)"/>
+  </g>
+  <text x="700" y="200" text-anchor="middle" font-size="22" fill="#283541">denormalized 전파</text>
+
+  <!-- Views → Reconciliation (solid) -->
+  <g fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M1080 230 C 1180 230, 1200 410, 1240 420" marker-end="url(#arrow)"/>
+    <path d="M1080 450 L 1240 450" marker-end="url(#arrow)"/>
+    <path d="M1080 670 C 1180 670, 1200 490, 1240 480" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Reconciliation → Ledger (dashed feedback) -->
+  <g fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M1380 380 L 1380 90 L 190 90 L 190 380" marker-end="url(#arrow-amb)"/>
+  </g>
+  <text x="785" y="80" text-anchor="middle" font-size="24" font-weight="700" fill="#D39A2C">불일치 발견 시 원장 기준으로 뷰를 다시 맞춘다</text>
+
+  <text x="800" y="800" text-anchor="middle" font-size="22" fill="#7A8791">정상 경로는 원장 → 뷰 방향으로 빠르게 전달되고, Reconciliation은 드물게 역방향으로 일치를 점검한다</text>
+</svg>

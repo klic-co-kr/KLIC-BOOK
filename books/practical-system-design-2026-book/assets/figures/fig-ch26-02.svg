@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>Load Shedding 상태 전이</title>
+  <desc>정상, 압박, Load Shedding, Degraded 상태로 진행되는 악화 흐름과 Probe, 복구를 거쳐 정상으로 돌아오는 복구 흐름의 진입·복원 조건을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">Load Shedding 상태 전이</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">부하 악화와 회복 탐침이 만드는 진입·복원 조건</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1050" y1="90" x2="1120" y2="90" stroke="#283541" stroke-width="2.5"/>
+    <text x="1130" y="98">악화(정상 경로)</text>
+    <line x1="1330" y1="90" x2="1400" y2="90" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1410" y="98">복구</text>
+    <line x1="1050" y1="128" x2="1120" y2="128" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1130" y="136">실패 시 되돌림</text>
+  </g>
+
+  <g id="states">
+    <g id="normal"><rect x="280" y="160" width="240" height="110" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="400" y="225" text-anchor="middle" font-size="30" fill="#142131">정상</text></g>
+    <g id="pressure"><rect x="280" y="340" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="400" y="405" text-anchor="middle" font-size="30" fill="#142131">압박</text></g>
+    <g id="shed"><rect x="280" y="520" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="400" y="585" text-anchor="middle" font-size="30" fill="#142131">Load Shedding</text></g>
+    <g id="degraded"><rect x="280" y="700" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="400" y="765" text-anchor="middle" font-size="30" fill="#142131">Degraded</text></g>
+    <g id="probe"><rect x="1080" y="700" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/><text x="1200" y="765" text-anchor="middle" font-size="30" fill="#142131">Probe</text></g>
+    <g id="recover"><rect x="1080" y="520" width="240" height="110" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1200" y="585" text-anchor="middle" font-size="30" fill="#142131">복구</text></g>
+  </g>
+
+  <g id="edges-escalation" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M400 270 L400 340" marker-end="url(#arrow)"/>
+    <path d="M400 450 L400 520" marker-end="url(#arrow)"/>
+    <path d="M400 630 L400 700" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="22" fill="#283541">
+    <text x="416" y="312">부하 증가</text>
+    <text x="416" y="492">한계 초과</text>
+    <text x="416" y="672">지속 거부·기능 축소</text>
+  </g>
+
+  <g id="edges-recovery" stroke="#0F8790" stroke-width="2.5" fill="none">
+    <path d="M520 755 L1080 755" marker-end="url(#arrow-teal)"/>
+    <path d="M1200 700 L1200 630" marker-end="url(#arrow-teal)"/>
+    <path d="M1080 575 L400 575 L400 215 L280 215" stroke-dasharray="4 6" marker-end="url(#arrow-teal)"/>
+  </g>
+  <g font-size="22" fill="#0F8790">
+    <text x="800" y="744" text-anchor="middle">회복 탐침 시작</text>
+    <text x="1216" y="668">탐침 성공</text>
+    <text x="740" y="540" text-anchor="middle">정상화 확인되면 정상으로 복귀</text>
+  </g>
+
+  <g id="edges-fail">
+    <path d="M1080 735 L520 735" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none" marker-end="url(#arrow-amb)"/>
+    <text x="800" y="800" text-anchor="middle" font-size="22" fill="#D39A2C">탐침 실패 시 Degraded로 되돌림</text>
+  </g>
+</svg>

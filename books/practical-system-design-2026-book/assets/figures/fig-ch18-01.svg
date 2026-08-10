@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>저장소 결정 인자와 후보 저장소 매핑</title>
+  <desc>불변조건·조회 패턴·쓰기 패턴·규모·보존·복구 여섯 인자를 평가해 후보 저장소 유형으로 매핑한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="56" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">여섯 인자를 평가해 후보 저장소로 매핑한다</text>
+    <text x="320" y="118" text-anchor="middle" font-size="24" fill="#7A8791">결정 인자(입력)</text>
+    <text x="830" y="118" text-anchor="middle" font-size="24" fill="#7A8791">평가</text>
+    <text x="1280" y="118" text-anchor="middle" font-size="24" fill="#7A8791">후보 저장소(출력)</text>
+  </g>
+
+  <g id="inputs" font-size="28" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="80" y="170" width="260" height="100" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="210" y="230">불변조건</text></g>
+    <g><rect x="380" y="170" width="260" height="100" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="510" y="230">조회 패턴</text></g>
+    <g><rect x="80" y="310" width="260" height="100" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="210" y="370">쓰기 패턴</text></g>
+    <g><rect x="380" y="310" width="260" height="100" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="510" y="370">규모</text></g>
+    <g><rect x="80" y="450" width="260" height="100" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="210" y="510">보존</text></g>
+    <g><rect x="380" y="450" width="260" height="100" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="510" y="510">복구</text></g>
+  </g>
+
+  <g id="eval">
+    <ellipse cx="830" cy="365" rx="115" ry="105" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="830" y="358" text-anchor="middle" font-size="26" font-weight="700" fill="#0F8790">평가·매핑</text>
+    <text x="830" y="395" text-anchor="middle" font-size="22" fill="#7A8791">인자 가중합</text>
+  </g>
+
+  <g id="edges-in" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M340 220 C 500 220, 660 320, 720 340" marker-end="url(#arrow)"/>
+    <path d="M640 220 C 720 220, 730 320, 750 335" marker-end="url(#arrow)"/>
+    <path d="M340 360 L 715 360" marker-end="url(#arrow)"/>
+    <path d="M640 360 L 715 365" marker-end="url(#arrow)"/>
+    <path d="M340 500 C 500 500, 660 405, 720 390" marker-end="url(#arrow)"/>
+    <path d="M640 500 C 720 500, 730 405, 750 395" marker-end="url(#arrow)"/>
+  </g>
+
+  <path d="M945 365 L 1100 365" fill="none" stroke="#283541" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="1022" y="352" text-anchor="middle" font-size="22" fill="#283541">선택</text>
+
+  <g id="candidates">
+    <rect x="1100" y="180" width="430" height="380" rx="18" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1315" y="232" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">후보 저장소</text>
+    <line x1="1160" y1="252" x2="1470" y2="252" stroke="#D8E1E2" stroke-width="2"/>
+    <g font-size="24" fill="#283541" text-anchor="middle">
+      <text x="1315" y="300">관계형(행/컬럼)</text>
+      <text x="1315" y="345">Key-Value</text>
+      <text x="1315" y="390">Document</text>
+      <text x="1315" y="435">Wide-Column</text>
+      <text x="1315" y="480">Graph</text>
+      <text x="1315" y="525">Search Index</text>
+    </g>
+  </g>
+
+  <g id="note" font-size="22" fill="#7A8791">
+    <text x="800" y="700" text-anchor="middle">인자 가중합이 강조하는 후보가 다르다: 강한 불변조건은 관계형, 유연한 조회는 Search Index, 대규모 쓰기는 Key-Value·Wide-Column</text>
+    <text x="800" y="738" text-anchor="middle">보존·복구 요구가 강할수록 WAL·복제·아카이브를 갖춘 저장소가 유리하다</text>
+  </g>
+</svg>

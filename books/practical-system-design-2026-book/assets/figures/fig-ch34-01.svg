@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>평가·출시 파이프라인과 실패 피드백</title>
+  <desc>dataset·offline eval·safety test·release gate·canary·online telemetry·human review·failure set의 출시 흐름과 피드백 루프를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="34" font-weight="700" fill="#142131">평가·출시 파이프라인과 실패 피드백</text>
+    <text x="60" y="108" font-size="22" fill="#7A8791">오프라인 평가에서 카나리·온라인 관측까지, 그리고 실패 데이터가 평가로 돌아가는 루프</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="990" y1="68" x2="1070" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="1080" y="76">출시 흐름</text>
+    <line x1="1220" y1="68" x2="1300" y2="68" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1310" y="76">피드백 루프</text>
+  </g>
+
+  <g id="lane-labels" font-size="22" fill="#7A8791">
+    <text x="60" y="225">출시 파이프라인</text>
+    <text x="60" y="685">피드백/실패 처리</text>
+  </g>
+
+  <g id="pipeline">
+    <g id="eval-dataset">
+      <rect x="80" y="180" width="220" height="140" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="190" y="240" text-anchor="middle" font-size="24" fill="#142131">Evaluation</text>
+      <text x="190" y="272" text-anchor="middle" font-size="24" fill="#142131">Dataset</text>
+    </g>
+    <g id="offline-eval">
+      <rect x="324" y="180" width="220" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="434" y="240" text-anchor="middle" font-size="24" fill="#142131">Offline</text>
+      <text x="434" y="272" text-anchor="middle" font-size="24" fill="#142131">Eval</text>
+    </g>
+    <g id="safety-test">
+      <rect x="568" y="180" width="220" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="678" y="240" text-anchor="middle" font-size="24" fill="#142131">Safety</text>
+      <text x="678" y="272" text-anchor="middle" font-size="24" fill="#142131">Test</text>
+    </g>
+    <g id="release-gate">
+      <rect x="812" y="180" width="220" height="140" rx="14" fill="#FFF7E8" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="922" y="240" text-anchor="middle" font-size="24" fill="#142131">Release</text>
+      <text x="922" y="272" text-anchor="middle" font-size="24" fill="#142131">Gate</text>
+    </g>
+    <g id="canary">
+      <rect x="1056" y="180" width="220" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1166" y="258" text-anchor="middle" font-size="28" fill="#142131">Canary</text>
+    </g>
+    <g id="online-telemetry">
+      <rect x="1300" y="180" width="220" height="140" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1410" y="240" text-anchor="middle" font-size="24" fill="#142131">Online</text>
+      <text x="1410" y="272" text-anchor="middle" font-size="24" fill="#142131">Telemetry</text>
+    </g>
+  </g>
+
+  <g id="pipeline-edges" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M300 250 L324 250" marker-end="url(#arrow)"/>
+    <path d="M544 250 L568 250" marker-end="url(#arrow)"/>
+    <path d="M788 250 L812 250" marker-end="url(#arrow)"/>
+    <path d="M1032 250 L1056 250" marker-end="url(#arrow)"/>
+    <path d="M1276 250 L1300 250" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="feedback">
+    <g id="human-review">
+      <rect x="1160" y="640" width="280" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1300" y="700" text-anchor="middle" font-size="24" fill="#142131">Human</text>
+      <text x="1300" y="732" text-anchor="middle" font-size="24" fill="#142131">Review</text>
+    </g>
+    <g id="failure-set">
+      <rect x="80" y="640" width="240" height="140" rx="14" fill="#FFF7E8" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+      <text x="200" y="700" text-anchor="middle" font-size="24" fill="#142131">Failure</text>
+      <text x="200" y="732" text-anchor="middle" font-size="24" fill="#142131">Set</text>
+    </g>
+  </g>
+
+  <g id="feedback-edges" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M1410 320 L1410 500 L1300 500 L1300 640" marker-end="url(#arrow-amb)"/>
+    <text x="1180" y="488" font-size="22" fill="#D39A2C">이상 신호·회귀</text>
+
+    <path d="M1160 710 L320 710" marker-end="url(#arrow-amb)"/>
+    <text x="640" y="697" text-anchor="middle" font-size="22" fill="#D39A2C">실패 사례 이관</text>
+
+    <path d="M200 640 L200 400 L434 400 L434 320" marker-end="url(#arrow-amb)"/>
+    <text x="225" y="520" font-size="22" fill="#D39A2C">데이터 보강·재평가</text>
+  </g>
+</svg>

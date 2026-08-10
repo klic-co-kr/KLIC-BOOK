@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>남용 차단과 긴급 purge 흐름</title>
+  <desc>URL 생성 전·후 scan, blocklist, 긴급 purge, 신고 처리 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#142131"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="header">
+    <text x="80" y="78" font-size="30" font-weight="700" fill="#142131">남용 차단과 긴급 purge</text>
+    <text x="80" y="114" font-size="24" fill="#7A8791">생성 전·후 검증, blocklist, 긴급 purge, 신고 처리</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1010" y1="92" x2="1090" y2="92" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1102" y="100">정상 create</text>
+    <line x1="1250" y1="92" x2="1330" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1342" y="100">차단·purge</text>
+    <line x1="1430" y1="92" x2="1510" y2="92" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="3 5" marker-end="url(#arrow)"/>
+    <text x="1522" y="100">신고</text>
+  </g>
+
+  <g id="nodes">
+    <g id="user">
+      <rect x="80" y="420" width="180" height="100" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="170" y="478" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">사용자</text>
+    </g>
+
+    <g id="validate">
+      <rect x="330" y="400" width="240" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="450" y="455" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">URL 검증</text>
+      <text x="450" y="490" text-anchor="middle" font-size="22" fill="#7A8791">사전 정책·형식</text>
+    </g>
+
+    <g id="sandbox">
+      <rect x="640" y="400" width="260" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="770" y="455" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">Sandbox Scan</text>
+      <text x="770" y="490" text-anchor="middle" font-size="22" fill="#7A8791">사후 심층 분석</text>
+    </g>
+
+    <g id="stored">
+      <rect x="990" y="420" width="180" height="100" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1080" y="478" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">저장·캐시</text>
+    </g>
+
+    <g id="blocklist">
+      <rect x="330" y="200" width="240" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="450" y="250" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">Blocklist</text>
+      <text x="450" y="284" text-anchor="middle" font-size="22" fill="#7A8791">차단 목록 조회</text>
+    </g>
+
+    <g id="purge">
+      <rect x="640" y="620" width="260" height="120" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="770" y="670" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">긴급 Purge</text>
+      <text x="770" y="704" text-anchor="middle" font-size="22" fill="#7A8791">전 region 캐시 무효화</text>
+    </g>
+
+    <g id="report">
+      <rect x="1230" y="620" width="240" height="120" rx="14" fill="#FFFFFF" stroke="#7A8791" stroke-width="2.5"/>
+      <text x="1350" y="670" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">신고</text>
+      <text x="1350" y="704" text-anchor="middle" font-size="22" fill="#7A8791">사용자·운영자 신고</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M260 470 L330 470" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M570 470 L640 470" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M900 470 L990 470" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+    <path d="M450 320 L450 400" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="460" y="372" font-size="22" fill="#283541">정책 조회</text>
+
+    <path d="M570 230 L770 230 L770 400" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="660" y="218" font-size="22" fill="#D39A2C">위반 의심 → 사후 재검사</text>
+
+    <path d="M770 540 L770 620" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="780" y="590" font-size="22" fill="#D39A2C">악성 확정</text>
+
+    <path d="M900 680 L1080 680 L1080 520" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="980" y="668" font-size="22" fill="#D39A2C">캐시·원장 purge</text>
+
+    <path d="M1230 680 L900 680" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="3 5" marker-end="url(#arrow)"/>
+    <text x="1060" y="668" font-size="22" fill="#7A8791">신고 → 조사</text>
+
+    <path d="M1350 620 L1350 470 L1170 470" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="3 5" marker-end="url(#arrow)"/>
+    <text x="1230" y="456" font-size="22" fill="#7A8791">대상 식별</text>
+  </g>
+
+  <g id="step-tag">
+    <rect x="80" y="810" width="280" height="50" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="220" y="843" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">STEP 4 · 남용 차단·purge</text>
+  </g>
+</svg>

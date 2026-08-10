@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>append-only ledger와 balance 검증</title>
+  <desc>결제 계정·판매자 계정·수수료 계정과 환불·정산이 모두 append-only ledger entry로 기록되고, balance check가 합계 불변식을 검증하는 모습을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="80">결제 · 수수료 · 환불 · 정산이 append-only ledger entry와 balance 검증으로 연결</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1080" y="55" width="465" height="48" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1100" y1="79" x2="1160" y2="79" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="87">append 기록</text>
+    <line x1="1350" y1="79" x2="1410" y2="79" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1420" y="87">검증 회신</text>
+  </g>
+
+  <g id="band-labels" font-size="22" fill="#7A8791">
+    <text x="40" y="215" transform="rotate(-90 40 215)" text-anchor="middle">계정</text>
+    <text x="40" y="420" transform="rotate(-90 40 420)" text-anchor="middle">운영</text>
+    <text x="40" y="610" transform="rotate(-90 40 610)" text-anchor="middle">원장</text>
+    <text x="40" y="815" transform="rotate(-90 40 815)" text-anchor="middle">검증</text>
+  </g>
+
+  <g id="accounts">
+    <g id="pay-account">
+      <rect x="200" y="150" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="320" y="225" text-anchor="middle" font-size="30" fill="#142131">결제 계정</text>
+    </g>
+    <g id="seller-account">
+      <rect x="680" y="150" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="225" text-anchor="middle" font-size="30" fill="#142131">판매자 계정</text>
+    </g>
+    <g id="fee-account">
+      <rect x="1160" y="150" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1280" y="225" text-anchor="middle" font-size="30" fill="#142131">수수료 계정</text>
+    </g>
+  </g>
+
+  <g id="operations">
+    <g id="refund">
+      <rect x="200" y="370" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="320" y="430" text-anchor="middle" font-size="30" fill="#142131">환불</text>
+    </g>
+    <g id="settle">
+      <rect x="1160" y="370" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="1280" y="430" text-anchor="middle" font-size="30" fill="#142131">정산</text>
+    </g>
+  </g>
+
+  <g id="ledger">
+    <rect x="600" y="540" width="400" height="140" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="800" y="600" text-anchor="middle" font-size="32" fill="#142131">Ledger Entry</text>
+    <text x="800" y="645" text-anchor="middle" font-size="22" fill="#7A8791">append-only · 불변</text>
+  </g>
+
+  <g id="balance-check">
+    <rect x="640" y="760" width="320" height="110" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="800" y="825" text-anchor="middle" font-size="30" fill="#142131">Balance Check</text>
+  </g>
+
+  <g id="edges-post" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M320 280 C 320 420, 660 420, 660 540" marker-end="url(#arrow)"/>
+    <path d="M800 280 L800 540" marker-end="url(#arrow)"/>
+    <path d="M1280 280 C 1280 420, 940 420, 940 540" marker-end="url(#arrow)"/>
+    <path d="M320 470 C 470 470, 470 610, 600 610" marker-end="url(#arrow)"/>
+    <path d="M1280 470 C 1130 470, 1130 610, 1000 610" marker-end="url(#arrow)"/>
+    <path d="M800 680 L800 760" marker-end="url(#arrow)"/>
+  </g>
+  <g id="edge-post-labels" font-size="22" fill="#283541">
+    <text x="370" y="380">기록</text>
+    <text x="810" y="400">기록</text>
+    <text x="1170" y="380">기록</text>
+    <text x="395" y="555">환불 기록</text>
+    <text x="1080" y="555" text-anchor="end">정산 기록</text>
+    <text x="810" y="730">검증 대상</text>
+  </g>
+
+  <g id="edge-check" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8" fill="none">
+    <path d="M960 815 L1100 815 L1100 685 L1000 685" marker-end="url(#arrow-accent)"/>
+  </g>
+  <g id="edge-check-labels" font-size="22" fill="#0F8790">
+    <text x="1110" y="755">Σ balance = 0</text>
+  </g>
+</svg>

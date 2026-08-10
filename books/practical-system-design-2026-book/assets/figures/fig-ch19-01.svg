@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>SQL 처리 경로</title>
+  <desc>SQL Gateway에서 Optimizer·Index Scan·Join·Transaction·WAL을 거쳐 Replica에 도달하는 정상 경로와 WAL→Replica의 비동기 복제를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="56" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">SQL이 parse·optimize·탐색/조인·커밋·WAL을 거쳐 replica에 도달한다</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1120" y1="92" x2="1200" y2="92" stroke="#283541" stroke-width="2.5"/><text x="1210" y="100">정상 경로</text>
+    <line x1="1360" y1="92" x2="1440" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="1450" y="100">비동기 복제</text>
+  </g>
+
+  <g id="stage-labels" font-size="22" fill="#7A8791" text-anchor="middle">
+    <text x="115" y="350">접수</text>
+    <text x="345" y="350">계획</text>
+    <text x="575" y="350">탐색</text>
+    <text x="805" y="350">결합</text>
+    <text x="1035" y="350">커밋</text>
+    <text x="1265" y="350">내구성</text>
+    <text x="1495" y="350">복제</text>
+  </g>
+
+  <g id="nodes" font-size="26" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="25" y="385" width="180" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="115" y="442">SQL Gateway</text><text x="115" y="480" font-size="22" font-weight="400" fill="#7A8791">접수·인증</text></g>
+    <g><rect x="255" y="385" width="180" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="345" y="442">Optimizer</text><text x="345" y="480" font-size="22" font-weight="400" fill="#7A8791">실행계획</text></g>
+    <g><rect x="485" y="385" width="180" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="575" y="442">Index Scan</text><text x="575" y="480" font-size="22" font-weight="400" fill="#7A8791">인덱스 탐색</text></g>
+    <g><rect x="715" y="385" width="180" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="805" y="442">Join</text><text x="805" y="480" font-size="22" font-weight="400" fill="#7A8791">조인</text></g>
+    <g><rect x="945" y="385" width="180" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1035" y="442">Transaction</text><text x="1035" y="480" font-size="22" font-weight="400" fill="#7A8791">커밋 단위</text></g>
+    <g><rect x="1175" y="385" width="180" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="1265" y="442">WAL</text><text x="1265" y="480" font-size="22" font-weight="400" fill="#7A8791">선행 로그</text></g>
+    <g><rect x="1405" y="385" width="180" height="130" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="1495" y="442">Replica</text><text x="1495" y="480" font-size="22" font-weight="400" fill="#7A8791">읽기 복제</text></g>
+  </g>
+
+  <g id="edges-normal" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M205 450 L255 450" marker-end="url(#arrow)"/>
+    <path d="M435 450 L485 450" marker-end="url(#arrow)"/>
+    <path d="M665 450 L715 450" marker-end="url(#arrow)"/>
+    <path d="M895 450 L945 450" marker-end="url(#arrow)"/>
+    <path d="M1125 450 L1175 450" marker-end="url(#arrow)"/>
+  </g>
+
+  <path d="M1355 450 L1405 450" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+
+  <g id="note" font-size="22" fill="#7A8791">
+    <text x="800" y="640" text-anchor="middle">WAL이 디스크에 쓰히면 커밋이 완료된다. Replica는 WAL을 따라가며, 장애 시 약간의 손실 노출이 있다.</text>
+    <text x="800" y="678" text-anchor="middle">Optimizer가 Index Scan과 Join의 순서를 정하고, Transaction이 원자성 경계를 제공한다.</text>
+  </g>
+</svg>

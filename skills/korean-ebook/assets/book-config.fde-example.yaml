@@ -1,0 +1,397 @@
+book:
+  title: 포워드 디플로이드 엔지니어
+  metadata_title: '포워드 디플로이드 엔지니어: AI 시대의 고객 가치 전달 비법'
+  subtitle: AI 시대의 고객 가치 전달 비법
+  author: 판빙
+  language: ko-KR
+  short_title: FORWARD DEPLOYED ENGINEER
+  output_name: 시각편집_개정판
+  subject: 포워드 디플로이드 엔지니어 한국어판 시각 편집 PDF
+  keywords:
+    - FDE
+    - 포워드 디플로이드 엔지니어
+    - 실무서
+    - 시각 가이드
+  edition_label: 한국어판 · 비상업적 공유용 시각 편집본
+  copyright_notice: 이 책의 저작권은 저자 판빙에게 있다. 이 저장소의 내용은 저자 본인이 공개를 승인한 것으로, 독자가 무료로 읽고 비상업적으로 공유할 수 있다. 전재할 때는 반드시 출처와 저자를 표기한다. 모든 상업적 용도(출판, 교육, 유료 콘텐츠 각색 등을 포함하되 이에 국한되지 않음)는 사전에 저자의 서면 허락을 받아야 한다.
+  build_date: auto
+
+files:
+  include:
+    - '*.md'
+    - '**/*.md'
+  exclude:
+    - '**/node_modules/**'
+    - '**/.git/**'
+    - '**/output/**'
+    - '**/*_완료보고서.md'
+  front_matter_file: README.md
+  order: []
+  strip_front_matter_sections:
+    - 읽는 법
+    - 목차
+    - 저작권 안내
+  front_matter_drop_paragraphs:
+    - 판빙 지음 · 전문 무료 공개, 온라인 열람과 공유를 환영합니다
+    - 이 책이 도움이 되었다면 이 저장소에 Star을 남기거나, 필요한 사람에게 공유해 주기를 바란다.
+  chapter_file_pattern: ^[0-9]{2}[-_].*\.md$
+  strip_front_matter_leading_rules: true
+
+editorial:
+  preset: fde-midnight-visual
+  cover_theme: midnight
+  include_cover: true
+  include_title_page: true
+  include_editorial_note: true
+  include_generated_toc: true
+  include_chapter_openers: true
+  toc_depth: 2
+  toc_lead: 장과 절을 위에서 아래로 자연스럽게 훑을 수 있도록 1단 목차로 재편집했습니다.
+  section_list_depth: 2
+  cover_eyebrow: FORWARD DEPLOYED ENGINEERING
+  cover_watermark: FDE
+  title_page_quote: 모델은 더 이상 귀한 자원이 아니다. 모델을 고객의 실제 비즈니스에 끼워 넣을 수 있는 사람이 진짜 귀한 자원이다.
+  title_page_edition_label: 전문 무료 공개, 온라인 열람과 공유를 환영합니다
+  front_matter_header: ABOUT THIS BOOK
+  chapter_eyebrow: CHAPTER
+  appendix_eyebrow: APPENDIX
+  afterword_eyebrow: AFTERWORD
+  editorial_note_title: 시각 편집본 안내
+  editorial_note_paragraphs:
+    - 이 문서는 제공된 한국어 Markdown 원고 13개를 하나의 책으로 편집한 비공식 PDF 편집본입니다. 원문의 장·절 구조와 본문 내용을 유지했습니다.
+    - 목차는 읽기 흐름을 해치던 2단 구성을 폐기하고 1단으로 재설계했습니다. 각 장 앞에는 본문을 빠르게 파악할 수 있는 도형·흐름도·비교표를 추가했습니다.
+    - 새로 추가된 시각 페이지는 본문 제목과 핵심 문장을 재배열한 편집 요약입니다. 새로운 사실·수치·출처를 덧붙이지 않으며 원문을 대체하지 않습니다.
+  editorial_note_footer_paragraphs:
+    - 이 책이 도움이 되었다면 이 저장소에 Star을 남기거나, 필요한 사람에게 공유해 주기를 바란다.
+  build_date_format: korean
+  cover_process_chips:
+    - 문제
+    - 고객
+    - 배포
+    - 갱신
+    - 확대
+    - 복제
+
+style:
+  page_size: A4
+  body_font: NanumMyeongjo, Noto Serif CJK KR, serif
+  heading_font: NanumSquare, Noto Sans CJK KR, sans-serif
+  mono_font: NanumGothicCoding, Noto Sans Mono CJK KR, monospace
+  body_font_size_pt: 10.0
+  body_line_height: 1.72
+  colors:
+    navy: '#081827'
+    navy_alt: '#102B38'
+    cyan: '#36C7D0'
+    cyan_dark: '#0F8790'
+    amber: '#D39A2C'
+    ink: '#142131'
+    text: '#283541'
+    muted: '#7A8791'
+    line: '#D8E1E2'
+    wash: '#EFF5F4'
+    paper: '#FFFFFF'
+  margins_mm:
+    top: 18
+    right: 20
+    bottom: 17
+    left: 20
+  extra_css: |
+    /* FDE 시각 편집 개정판 */
+    .front-matter { font-size: 10.1pt; }
+    .front-matter p { margin-bottom: 4.1mm; }
+    .front-matter h2 { font-size: 21pt; }
+    .toc h1 { bookmark-level: 1; }
+    .chapter-body.chapter-07 { font-size: 10.15pt; line-height: 1.72; }
+    .chapter-body.chapter-12 { font-size: 9.25pt; line-height: 1.67; }
+    .chapter-body.chapter-12 h2 { font-size: 15.2pt; }
+    .chapter-body.chapter-12 h3 { font-size: 11.7pt; }
+    .chapter-body.chapter-12 h4 { font-size: 10.4pt; }
+    .chapter-body.chapter-12 ul,
+    .chapter-body.chapter-12 ol { margin-left: 4mm; padding-left: 4mm; }
+
+visuals:
+  enabled: true
+  auto_from_headings: false
+  default_kicker: VISUAL GUIDE
+  default_note: '편집 요약: 본문의 장·절 구조와 핵심 문장을 탐색하기 쉽게 재배열한 도식이며, 원문을 대체하지 않습니다.'
+  chapters:
+    '1장 FDE의 부상':
+      kicker: ROLE MAP
+      title: FDE가 메우는 가치의 간극
+      thesis: FDE는 제품이 할 수 있는 일과 고객이 실제로 필요로 하는 일 사이의 마지막 1킬로미터를 현장·코드·결과 책임으로 연결한다.
+      diagram:
+        layout: bridge
+        label: PRODUCT → FIELD → VALUE
+        left:
+          label: PRODUCT CAPABILITY
+          title: 제품 역량
+          text: 플랫폼 · 모델 · 공통 기능
+        center:
+          title: FDE
+          text: 현장 상주 · 코드 · 결과 책임
+        right:
+          label: CUSTOMER OUTCOME
+          title: 고객 가치
+          text: 워크플로 · 행동 변화 · 사업 성과
+        bands:
+          - 플랫폼 기반층
+          - AI 엔지니어링 층
+          - 데이터·통합 층
+          - 인도·협업 층
+          - 지식 응집 층
+      table:
+        title: 이 장의 판단 프레임
+        headers: [핵심 질문, 확인 기준, 실행 산출물]
+        rows:
+          - [간극은 어디에 있는가, 데이터·권한·워크플로·현장 관행을 함께 확인, 현장 배포 계획]
+          - [경험이 제품으로 돌아오는가, 공통 컴포넌트·매뉴얼·플랫폼 개선으로 환류, 제품화 백로그]
+          - [결과로 책임지는가, 착수 전 성공 척도와 고객 행동 변화를 합의, 가치 증거]
+
+    '2장 올바른 문제 풀기':
+      kicker: PROBLEM SELECTION
+      title: 문제를 고르는 것이 첫 번째 배포다
+      thesis: 잘못된 문제에 실행력을 쏟지 않도록 통점을 확인하고 PSF를 판단한 뒤, 최소 실행 가능 배포로 가치와 졸업 기준을 검증한다.
+      diagram:
+        layout: process
+        label: PROBLEM → PSF → MVD
+        steps:
+          - {title: 후보 문제 수집, text: 요청과 아이디어를 넓게 모은다}
+          - {title: 통점 확인, text: 현장에서 시간·돈·위험의 손실을 본다}
+          - {title: PSF 판단, text: 문제와 해결책의 적합성을 가른다}
+          - {title: MVD 설계, text: 가장 작은 실제 배포를 정한다}
+          - {title: 현장 검증, text: 진짜 데이터와 사용자 행동을 본다}
+          - {title: 배포 또는 거절, text: 졸업 기준으로 다음 행동을 결정한다}
+      table:
+        title: 검증 계약의 최소 요소
+        headers: [항목, 확인 질문, 남겨야 할 기록]
+        rows:
+          - [통점, 사용자가 실제로 시간을·돈·위험을 잃고 있는가, 현장 관찰 기록]
+          - [졸업 기준, 성공과 실패를 무엇으로 판정할 것인가, 합의된 검증 기준]
+          - [가치 증거, 측정 가능한 행동·성과 변화가 나타났는가, 배포 의사결정]
+
+    '3장 고객 따내기':
+      kicker: TRUST ENGINE
+      title: 고객 확보는 신뢰를 설계하는 일이다
+      thesis: 등대 고객을 선별하고 가장 무식한 현장 일부터 수행하며, 데이터·조직·구매 장벽을 넘어 반복 가능한 신뢰 자산을 만든다.
+      diagram:
+        layout: process
+        label: LIGHTHOUSE CUSTOMER JOURNEY
+        steps:
+          - {title: 등대 고객 선별, text: 계약액보다 전략·학습 가치를 본다}
+          - {title: 현장 일 시작, text: 가장 무식한 일부터 직접 해결한다}
+          - {title: 다섯 지도 작성, text: 데이터·프로세스·조직·시스템·정치를 읽는다}
+          - {title: 전문 신뢰 축적, text: 참호 관점 콘텐츠와 추천을 쌓는다}
+          - {title: 심사 통과, text: 구매·법무·보안을 설계 단계부터 다룬다}
+          - {title: 제안과 인도, text: 검증 방안과 하이브리드 경계를 명확히 한다}
+      table:
+        title: 고객 확보의 판단 기준
+        headers: [구간, 판단 기준, 산출물]
+        rows:
+          - [선별, 학습 가치·전략 가치·실제 통점, 우선순위 큐]
+          - [신뢰, 내부 지지자·현장 증거·인용 가능한 방법론, 사례와 추천]
+          - [진입, 보안·법무·구매 조건을 미리 반영, 승인 패키지]
+
+    '4장 배포 활성화':
+      kicker: ACTIVATION LOOP
+      title: 오픈이 아니라 사용 습관을 만든다
+      thesis: 활성화는 시스템을 켜는 일이 아니라 대상 사용자가 일상 업무에서 안정적으로 쓰도록 평가·통합·변화 관리·자동화를 순환시키는 일이다.
+      diagram:
+        layout: process
+        label: ACTIVATION FLYWHEEL
+        steps:
+          - {title: 오픈, text: 시스템과 대상 사용자를 연결한다}
+          - {title: 빠른 수정, text: 작은 핫픽스로 신뢰를 충전한다}
+          - {title: 평가 체계, text: 무엇이 좋은 출력인지 먼저 정의한다}
+          - {title: 데이터·통합, text: 모델보다 앞서 연결과 거버넌스를 푼다}
+          - {title: 변화 관리, text: 지지자·영향자·피해자를 함께 다룬다}
+          - {title: 자동화, text: 다음 배포를 위한 템플릿과 자산을 남긴다}
+      table:
+        title: 활성화 완료의 증거
+        headers: [관점, 확인 기준, 실패 신호]
+        rows:
+          - [사용, 대상 집단이 일상 업무에서 반복 사용, 계정만 있고 습관이 없음]
+          - [품질, 평가 체계가 정의한 좋음을 지속 통과, 데모는 좋지만 실무 출력이 흔들림]
+          - [독립성, FDE가 빠져도 시스템이 계속 쓰임, 공급자 없이는 운영 불가]
+
+    '5장 갱신 지키기':
+      kicker: CUSTOMER HEALTH
+      title: 갱신은 네 신호의 합성 결과다
+      thesis: 고객 건강도는 가치·사용·관계·비즈니스 신호를 함께 읽고, 경계선 아래로 떨어질 때 자동 개입해 의존이 아닌 자립을 남기는 구조다.
+      diagram:
+        layout: quadrant
+        label: HEALTH SCORE MODEL
+        cards:
+          - {title: 가치, text: 약속한 성과가 계속 확인되는가}
+          - {title: 사용, text: 핵심 사용자가 실제 워크플로에서 쓰는가}
+          - {title: 관계, text: 지지자가 여러 계층에 분산돼 있는가}
+          - {title: 비즈니스, text: 비용·계약·갱신 논리가 유지되는가}
+        center: 건강도 점수 → 경보 → 개입 → 갱신
+      table:
+        title: 주요 이탈 신호와 대응
+        headers: [신호, 의미, 우선 대응]
+        rows:
+          - [가치의 증발·품질의 표류, 성과가 흐려지고 신뢰가 깎임, 기준선·평가·운영 품질 재검증]
+          - [지지자의 이탈, 단일 접점 의존이 드러남, 관계를 여러 계층으로 그물망화]
+          - [비용의 역류·공급자 금단, 깊은 사용이 벌점이 되거나 자립이 막힘, 청구 투명화·지식 이전·퇴장 설계]
+
+    '6장 매출 확대':
+      kicker: REVENUE DESIGN
+      title: 매출은 가치가 만든 그림자다
+      thesis: 무료 검증에 종료 장치를 달고, 유료 전환과 가치 기반 정가를 설계한 뒤 기존 고객 안에서 횡적·종적·심층 확장을 증거로 추진한다.
+      diagram:
+        layout: process
+        label: VALIDATION → VALUE PRICING → EXPANSION
+        steps:
+          - {title: 무료 검증, text: 엔지니어링 투자로 학습을 남긴다}
+          - {title: 졸업 기준, text: 착수 전에 종료와 전환 조건을 합의한다}
+          - {title: 유료 전환, text: 무료에서 유료로 완만한 경사로를 만든다}
+          - {title: 가치 정가, text: 고객이 얻은 가치와 가격 단위를 맞춘다}
+          - {title: 3방향 확대, text: 횡적·종적·심층으로 확장한다}
+          - {title: 가치 측정, text: 갱신·제품·시장에 증거를 축적한다}
+      table:
+        title: 가격과 확장의 원칙
+        headers: [항목, 원칙, 산출물]
+        rows:
+          - [무료의 경계, 범위·기간·종료 조건을 밖으로 드러냄, 검증 계약]
+          - [가격 단위, 고객 가치에 가까울수록 정가 천장이 높아짐, 정가 모델]
+          - [확장, 영업 목표가 아니라 실제 사용과 성과가 끌어야 함, 확장 로드맵]
+
+    '7장 규모화 복제':
+      kicker: REPLICATION LEVERAGE
+      title: 다음 고객은 지난 고객보다 쉬워져야 한다
+      thesis: 현장 경험을 지식·컴포넌트·제품의 세 단계로 끌어올려 인도 비용을 줄이고, 실패와 정치까지 살아 있는 매뉴얼로 흡수한다.
+      diagram:
+        layout: ladder
+        label: THREE LEVELS OF LEVERAGE
+        steps:
+          - {title: 지식 복제, text: 시나리오별 전법 매뉴얼과 회고를 프로세스에 넣는다}
+          - {title: 컴포넌트 복제, text: 통합·평가·배포 도구와 코드를 재사용한다}
+          - {title: 제품 복제, text: 흔한 일을 플랫폼 능력으로 흡수한다}
+        outcome: 한 건의 고객 작업이 다음 고객의 비용과 시간을 줄이는 복리 구조
+      table:
+        title: 복제 가능성 점검표
+        headers: [레버리지, 확인 기준, 대표 지표]
+        rows:
+          - [지식, 매뉴얼이 기능이 아니라 시나리오로 조직되고 버전이 관리됨, 매뉴얼 갱신·회고 반영]
+          - [컴포넌트, 신규 프로젝트가 기존 자산을 실제로 재사용함, 인도 자산 재사용률]
+          - [제품, 고객이 늘수록 맞춤 작업량이 감소함, 커스터마이징 감소율]
+
+    '8장 완결 사례집':
+      kicker: CASE COMPARISON
+      title: 같은 FDE, 서로 다른 다섯 가지 변주
+      thesis: 사례별 현장 진입 방식과 운영 모델은 달라도, 올바른 문제·진짜 데이터·밀착 서비스·제품 환류라는 공통 구조가 반복된다.
+      diagram:
+        layout: matrix
+        label: CASE MATRIX
+        headers: [사례, 현장 진입, 차별적 운영, 제품 환류, 핵심 교훈]
+        rows:
+          - [Palantir, 상주·부트캠프, 현장 핫픽스와 결과 책임, 현장 기능을 플랫폼 표준으로, 무식한 방법을 해자로]
+          - [OpenAI, 글로벌 FDE, 고객 데이터와 업무 연결, 모델 회사에서 배포 회사로, 모델보다 배포 역량]
+          - [Anthropic · Sierra · Harvey, 응용 AI·에이전트 엔지니어, 감사 가능성·성과 과금·수직 전문성, 인도 경험 자체의 제품화, 시장별 FDE 변주]
+          - [중국 사례, 프로젝트제 현장, 현장 상주 외주와 경계 설정, 토착 패턴과 조직화, 비용 구조가 가장 큰 적]
+          - [180일 팀, 단계별 전장 선택, 한 문제와 일일 보고에 집중, 경험을 눈뭉치처럼 축적, 올바른 문제와 진짜 데이터]
+      table:
+        title: 사례를 읽는 네 가지 질문
+        headers: [질문, 읽을 포인트, 경계]
+        rows:
+          - [어떤 문제를 골랐는가, 전략 가치와 학습 가치, 계약액만으로 우선순위 결정]
+          - [어떻게 현장에 들어갔는가, 사용자·데이터·권한 접근 방식, 데모만 반복]
+          - [무엇이 제품으로 남았는가, 컴포넌트·플랫폼·매뉴얼 환류, 프로젝트별 일회성 작업]
+
+    '후기 FDE의 직업 윤리':
+      kicker: ETHICAL BOUNDARIES
+      title: 능력이 클수록 경계를 먼저 적는다
+      thesis: 고객의 깊은 데이터와 의사결정 권한에 접근하는 FDE는 결과보다 먼저 데이터·정직·자립·사람·거절·사회적 책임의 마지노선을 세워야 한다.
+      diagram:
+        layout: principles
+        label: SIX NON-NEGOTIABLES
+        cards:
+          - {title: 데이터 주권, text: 보지 않아도 되는 것은 보지 않고 고객의 데이터는 고객에게 남긴다}
+          - {title: 정직한 결과, text: 나쁜 소식과 실패도 같은 기준으로 보고한다}
+          - {title: 의존 금지, text: 고객을 강하게 만들고 중독시키지 않는다}
+          - {title: 대체되는 사람, text: 효율 뒤에서 운명이 바뀌는 사람을 비용 항목으로만 보지 않는다}
+          - {title: 해야 할 ‘아니오’, text: 고객 요구라도 해서는 안 되는 일에는 거절한다}
+          - {title: 기술의 얼굴, text: 배포자의 약속과 과장이 업계 전체의 신뢰를 만든다}
+      table:
+        title: 윤리를 운영 구조로 바꾸기
+        headers: [영역, 운영 원칙, 확인 장치]
+        rows:
+          - [권한, 최소 접근과 감사 가능성, 접근 로그·권한 검토]
+          - [책임, 좋은 결과와 나쁜 결과를 같은 방식으로 보고, 기준선·결과 기록]
+          - [퇴장, 고객 팀에 지식과 역량이 남도록 설계, 인계·교육·자립 점검]
+
+    '부록 A FDE가 주목해야 할 핵심 지표':
+      kicker: METRIC SYSTEM
+      title: 지표는 네 계층으로 읽는다
+      thesis: 고객 프로젝트마다 3~5개의 핵심 지표만 선택하고, 인도·고객·비즈니스·조직 계층을 함께 봐야 FDE 모델의 건강도를 왜곡 없이 판단할 수 있다.
+      diagram:
+        layout: dashboard
+        label: FOUR-LAYER METRIC DASHBOARD
+        cards:
+          - {kicker: DELIVERY, title: 인도 계층, text: TTV · POC 전환율 · 평가 통과율 · 배포/롤백 · 결함 유출}
+          - {kicker: CUSTOMER, title: 고객 계층, text: 활성화율 · 사용 깊이 · 건강도 · 지지자 커버리지 · 갱신 의사}
+          - {kicker: BUSINESS, title: 비즈니스 계층, text: NRR · 인도 매출이익률 · 커스터마이징 감소 · 영업 주기 · CAC/LTV}
+          - {kicker: ORGANIZATION, title: 조직 계층, text: 현장-제품 환류 · 자산 재사용 · 1인당 생산능력 · 팀 지속력}
+      table:
+        title: 프로젝트별 지표 선택 원칙
+        headers: [순서, 실행, 이유]
+        rows:
+          - [1, 가치 1개 + 사용 1개 + 관계 1개를 기본 조합으로 선택, 빈틈없는 대시보드보다 판단 가능한 소수 지표가 낫다]
+          - [2, 프로젝트 첫날 기준선 데이터를 수집, 나중에는 되돌릴 수 없는 비교 기준을 확보한다]
+          - [3, 고객과 함께 정의하고 반년마다 지표 자체를 정리, 갱신 협상에서 공동 증거로 쓴다]
+
+    '부록 B FDE 인물 및 팀 명단':
+      kicker: ECOSYSTEM MAP
+      title: 인물·팀·지식 원천의 연결 지도
+      thesis: FDE 방법론은 한 회사의 직무 설명이 아니라 창시자·모델 기업·에이전트 회사·수직 산업·중국 시장·공개 지식 원천이 연결된 생태계다.
+      diagram:
+        layout: network
+        label: FDE ECOSYSTEM
+        hub: FDE 방법론과 현장 배포
+        cards:
+          - {title: 창시자와 내부자, text: 샴 산카르 · 밥 맥그루 · 스티븐 코언 · 배리}
+          - {title: 모델 기업, text: OpenAI · Anthropic · Cohere · Google Cloud}
+          - {title: 에이전트 기업, text: Sierra · Decagon · Scale AI}
+          - {title: 수직 산업, text: Harvey · 금융 · 제조 · 법무}
+          - {title: 중국 시장, text: Volcengine Doubao · 토착 FDE 선구자}
+          - {title: 지식 원천, text: 팟캐스트 · 공식 블로그 · 리서치 · 커뮤니티}
+      table:
+        title: 읽기 우선순위
+        headers: [대상, 역할, 먼저 볼 포인트]
+        rows:
+          - [샴 산카르·밥 맥그루, 모델의 창시·체계화, 현장 맞춤을 제품 발견으로 보는 관점]
+          - [Palantir·OpenAI·Anthropic, 조직 운영 표본, 현장 팀과 플랫폼 팀의 환류 구조]
+          - [배리와 공개 커뮤니티, 비용과 번아웃의 경고, 실패 조건과 지속 가능성]
+
+    '부록 C 전체 사례 색인 및 자료 출처':
+      kicker: SOURCE NAVIGATION
+      title: 사례에서 원문까지 추적하는 읽기 지도
+      thesis: 부록 C는 숫자와 사례를 검증할 때 사례 색인에서 장별 출처로 이동하고, 보충 자료와 1차 자료를 교차 확인하도록 설계된 탐색 장치다.
+      diagram:
+        layout: process
+        label: CASE → SOURCE → PRIMARY EVIDENCE
+        steps:
+          - {title: 사례 색인, text: 장·절별 사례 위치를 찾는다}
+          - {title: 장별 출처, text: 해당 주장과 연결된 자료를 확인한다}
+          - {title: 보충 자료, text: 추가 맥락과 후속 사례를 읽는다}
+          - {title: 1차 자료, text: 공식 문서·인터뷰·공시를 우선한다}
+          - {title: 교차 검증, text: 수치와 해석이 일치하는지 비교한다}
+      table:
+        title: 부록 C 사용 시점
+        headers: [상황, 먼저 볼 곳, 확인할 것]
+        rows:
+          - [숫자를 인용할 때, 장별 출처와 1차 자료, 기준 시점·분모·정의]
+          - [사례를 재사용할 때, 전체 사례 색인, 맥락·조건·결과]
+          - [방법론을 확장할 때, 보충 자료와 원문, 저자의 해석과 원자료의 경계]
+
+quality:
+  require_a4: true
+  require_embedded_fonts: true
+  require_unicode_fonts: true
+  require_outline: true
+  allow_blank_pages: 0
+  paragraph_probe_min_chars: 36
+  paragraph_probe_limit: 1200
+  reference_ngram_words: 8
+  reference_ngram_min_chars: 44

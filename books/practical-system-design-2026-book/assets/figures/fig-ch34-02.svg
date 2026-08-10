@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>릴리스 스코어카드</title>
+  <desc>품질(task success·grounding·safety)·지연·비용을 segment별로 한 스코어카드에 모으고 threshold로 출시 판정을 내리는 구조를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="34" font-weight="700" fill="#142131">릴리스 스코어카드</text>
+    <text x="60" y="108" font-size="22" fill="#7A8791">segment별 지표와 threshold로 출시 가능 여부를 한눈에 보는 판정표</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="990" y="52" width="22" height="22" rx="4" fill="#0F8790"/>
+    <text x="1022" y="70">통과</text>
+    <rect x="1090" y="52" width="22" height="22" rx="4" fill="#D39A2C"/>
+    <text x="1122" y="70">임계 근접</text>
+    <line x1="1240" y1="63" x2="1300" y2="63" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="8 6"/>
+    <text x="1310" y="70">Threshold</text>
+  </g>
+
+  <g id="segment-node">
+    <rect x="60" y="360" width="240" height="160" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="180" y="432" text-anchor="middle" font-size="30" fill="#142131">Segment</text>
+    <text x="180" y="468" text-anchor="middle" font-size="22" fill="#7A8791">사용자 구분</text>
+  </g>
+
+  <g id="scorecard">
+    <rect x="360" y="160" width="1180" height="620" rx="18" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="390" y="205" font-size="26" font-weight="700" fill="#142131">Release Scorecard</text>
+  </g>
+
+  <g id="threshold-line">
+    <line x1="1180" y1="235" x2="1180" y2="660" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="8 6"/>
+    <text x="1180" y="225" text-anchor="middle" font-size="22" font-weight="700" fill="#D39A2C">Threshold</text>
+  </g>
+
+  <g id="metric-rows" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+    <g id="row-task-success">
+      <text x="390" y="290" font-size="26" fill="#142131">Task Success</text>
+      <rect x="640" y="268" width="720" height="34" rx="8" fill="#EFF5F4" stroke="#D8E1E2" stroke-width="2"/>
+      <rect x="640" y="268" width="612" height="34" rx="8" fill="#0F8790"/>
+      <circle cx="1460" cy="285" r="16" fill="#0F8790"/>
+    </g>
+    <g id="row-grounding">
+      <text x="390" y="380" font-size="26" fill="#142131">Grounding</text>
+      <rect x="640" y="358" width="720" height="34" rx="8" fill="#EFF5F4" stroke="#D8E1E2" stroke-width="2"/>
+      <rect x="640" y="358" width="526" height="34" rx="8" fill="#D39A2C"/>
+      <circle cx="1460" cy="375" r="16" fill="#D39A2C"/>
+    </g>
+    <g id="row-safety">
+      <text x="390" y="470" font-size="26" fill="#142131">Safety</text>
+      <rect x="640" y="448" width="720" height="34" rx="8" fill="#EFF5F4" stroke="#D8E1E2" stroke-width="2"/>
+      <rect x="640" y="448" width="648" height="34" rx="8" fill="#0F8790"/>
+      <circle cx="1460" cy="465" r="16" fill="#0F8790"/>
+    </g>
+    <g id="row-latency">
+      <text x="390" y="560" font-size="26" fill="#142131">Latency</text>
+      <rect x="640" y="538" width="720" height="34" rx="8" fill="#EFF5F4" stroke="#D8E1E2" stroke-width="2"/>
+      <rect x="640" y="538" width="634" height="34" rx="8" fill="#0F8790"/>
+      <circle cx="1460" cy="555" r="16" fill="#0F8790"/>
+    </g>
+    <g id="row-cost">
+      <text x="390" y="650" font-size="26" fill="#142131">Cost</text>
+      <rect x="640" y="628" width="720" height="34" rx="8" fill="#EFF5F4" stroke="#D8E1E2" stroke-width="2"/>
+      <rect x="640" y="628" width="590" height="34" rx="8" fill="#0F8790"/>
+      <circle cx="1460" cy="645" r="16" fill="#0F8790"/>
+    </g>
+  </g>
+
+  <g id="verdict">
+    <line x1="390" y1="700" x2="1510" y2="700" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="390" y="745" font-size="26" font-weight="700" fill="#142131">출시 판정</text>
+    <rect x="640" y="720" width="220" height="44" rx="10" fill="#0F8790"/>
+    <text x="750" y="750" text-anchor="middle" font-size="26" fill="#FFFFFF">통과</text>
+    <text x="900" y="750" font-size="22" fill="#7A8791">모든 지표가 segment 단위로 threshold 이상</text>
+  </g>
+
+  <g id="segment-edge" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M300 440 L360 440" marker-end="url(#arrow)"/>
+    <text x="305" y="425" font-size="22" fill="#283541">필터</text>
+  </g>
+</svg>

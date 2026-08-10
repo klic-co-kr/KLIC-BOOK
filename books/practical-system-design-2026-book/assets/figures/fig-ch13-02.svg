@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>캐시 수명 주기</title>
+  <desc>요청이 Cache Key로 조회되어 Hit, Miss, 재검증, Stale, Origin 경로로 갈라지고 Purge로 정리되는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-mut" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">캐시 수명 주기</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">Cache Key 한 개가 Hit·Miss·재검증·Stale로 갈라지는 흐름</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="980" y1="92" x2="1060" y2="92" stroke="#283541" stroke-width="2.5"/>
+    <text x="1070" y="100">정상 경로</text>
+    <line x1="1210" y1="92" x2="1290" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1300" y="100">검증·갱신</text>
+    <line x1="1400" y1="92" x2="1480" y2="92" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="4 6"/>
+    <text x="1490" y="100">Purge</text>
+  </g>
+
+  <g id="nodes">
+    <g id="request">
+      <rect x="70" y="400" width="180" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="160" y="448" text-anchor="middle" font-size="30" fill="#142131">요청</text>
+      <text x="160" y="482" text-anchor="middle" font-size="22" fill="#7A8791">수신</text>
+    </g>
+    <g id="key">
+      <rect x="320" y="400" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="430" y="448" text-anchor="middle" font-size="30" fill="#142131">Cache Key</text>
+      <text x="430" y="482" text-anchor="middle" font-size="22" fill="#7A8791">조회 키 생성</text>
+    </g>
+    <g id="hit">
+      <rect x="660" y="200" width="220" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="770" y="248" text-anchor="middle" font-size="30" fill="#142131">Hit</text>
+      <text x="770" y="282" text-anchor="middle" font-size="22" fill="#7A8791">즉시 응답</text>
+    </g>
+    <g id="revalidate">
+      <rect x="660" y="400" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="770" y="448" text-anchor="middle" font-size="30" fill="#142131">재검증</text>
+      <text x="770" y="482" text-anchor="middle" font-size="22" fill="#7A8791">유효기간 임박</text>
+    </g>
+    <g id="miss">
+      <rect x="660" y="600" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="770" y="648" text-anchor="middle" font-size="30" fill="#142131">Miss</text>
+      <text x="770" y="682" text-anchor="middle" font-size="22" fill="#7A8791">항목 없음</text>
+    </g>
+    <g id="stale">
+      <rect x="980" y="400" width="200" height="120" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="1080" y="448" text-anchor="middle" font-size="30" fill="#142131">Stale</text>
+      <text x="1080" y="482" text-anchor="middle" font-size="22" fill="#7A8791">만료 임시 사용</text>
+    </g>
+    <g id="origin">
+      <rect x="1260" y="400" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1370" y="448" text-anchor="middle" font-size="30" fill="#142131">Origin</text>
+      <text x="1370" y="482" text-anchor="middle" font-size="22" fill="#7A8791">원본 회원</text>
+    </g>
+    <g id="purge">
+      <rect x="1260" y="700" width="220" height="110" rx="14" fill="#F4F8FA" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="6 6"/>
+      <text x="1370" y="743" text-anchor="middle" font-size="28" fill="#283541">Purge</text>
+      <text x="1370" y="775" text-anchor="middle" font-size="22" fill="#7A8791">강제 제거</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M250 460 L320 460" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M540 440 L600 440 L600 260 L660 260" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="600" y="350" text-anchor="end" font-size="22" fill="#283541">Hit</text>
+    <path d="M540 460 L660 460" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="600" y="450" text-anchor="middle" font-size="22" fill="#D39A2C">Stale</text>
+    <path d="M540 480 L600 480 L600 660 L660 660" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="600" y="585" text-anchor="end" font-size="22" fill="#283541">Miss</text>
+
+    <path d="M880 460 L980 460" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <path d="M1180 460 L1260 460" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <path d="M880 660 L1180 660 L1180 520" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1020" y="650" text-anchor="middle" font-size="22" fill="#283541">원본에서 새로 채우기</text>
+
+    <path d="M1370 700 L1370 520" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="4 6" marker-end="url(#arrow-mut)"/>
+    <text x="1385" y="620" font-size="22" fill="#7A8791">무효화</text>
+  </g>
+</svg>

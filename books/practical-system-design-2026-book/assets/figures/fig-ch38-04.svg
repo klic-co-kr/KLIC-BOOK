@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>테넌트별 지표 집계 흐름</title>
+  <desc>quality · safety · latency · token · tool · human handoff 지표가 metering으로 수집되어 테넌트별로 집계되는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="60">테넌트별 품질·안전·latency·token·tool·human handoff 집계</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1170" y="35" width="375" height="44" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1190" y1="57" x2="1250" y2="57" stroke="#283541" stroke-width="2.5"/>
+    <text x="1260" y="65">지표 수집</text>
+    <line x1="1400" y1="57" x2="1460" y2="57" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1470" y="65">집계</text>
+  </g>
+
+  <g id="band-labels" font-size="22" fill="#7A8791">
+    <text x="40" y="400" transform="rotate(-90 40 400)" text-anchor="middle">지표</text>
+    <text x="950" y="105" text-anchor="middle" fill="#7A8791">집계</text>
+    <text x="1410" y="105" text-anchor="middle" fill="#7A8791">출력</text>
+  </g>
+
+  <g id="metrics-col1">
+    <g id="quality">
+      <rect x="100" y="165" width="220" height="110" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="210" y="232" text-anchor="middle" font-size="30" fill="#142131">Quality</text>
+    </g>
+    <g id="safety">
+      <rect x="100" y="345" width="220" height="110" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="210" y="412" text-anchor="middle" font-size="30" fill="#142131">Safety</text>
+    </g>
+    <g id="latency">
+      <rect x="100" y="525" width="220" height="110" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="210" y="592" text-anchor="middle" font-size="30" fill="#142131">Latency</text>
+    </g>
+  </g>
+
+  <g id="metrics-col2">
+    <g id="token">
+      <rect x="450" y="165" width="220" height="110" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="560" y="232" text-anchor="middle" font-size="30" fill="#142131">Token</text>
+    </g>
+    <g id="tool">
+      <rect x="450" y="345" width="220" height="110" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="560" y="412" text-anchor="middle" font-size="30" fill="#142131">Tool</text>
+    </g>
+    <g id="handoff">
+      <rect x="450" y="525" width="220" height="110" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="560" y="592" text-anchor="middle" font-size="28" fill="#142131"><tspan x="560" dy="0">Human</tspan><tspan x="560" dy="30">Handoff</tspan></text>
+    </g>
+  </g>
+
+  <g id="metering">
+    <rect x="790" y="260" width="320" height="280" rx="16" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="950" y="395" text-anchor="middle" font-size="34" fill="#142131">Metering</text>
+    <text x="950" y="435" text-anchor="middle" font-size="22" fill="#7A8791">테넌트 키로 분리</text>
+  </g>
+
+  <g id="tenants">
+    <g id="tenant-a">
+      <rect x="1290" y="165" width="240" height="110" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1410" y="220" text-anchor="middle" font-size="26" fill="#142131">테넌트 A</text>
+      <text x="1410" y="252" text-anchor="middle" font-size="22" fill="#7A8791">통계</text>
+    </g>
+    <g id="tenant-b">
+      <rect x="1290" y="345" width="240" height="110" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1410" y="400" text-anchor="middle" font-size="26" fill="#142131">테넌트 B</text>
+      <text x="1410" y="432" text-anchor="middle" font-size="22" fill="#7A8791">통계</text>
+    </g>
+    <g id="tenant-c">
+      <rect x="1290" y="525" width="240" height="110" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1410" y="580" text-anchor="middle" font-size="26" fill="#142131">테넌트 C</text>
+      <text x="1410" y="612" text-anchor="middle" font-size="22" fill="#7A8791">통계</text>
+    </g>
+  </g>
+
+  <g id="edges-collect" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M320 220 C 560 220, 620 300, 790 320" marker-end="url(#arrow)"/>
+    <path d="M320 400 L790 400" marker-end="url(#arrow)"/>
+    <path d="M320 580 C 560 580, 620 500, 790 480" marker-end="url(#arrow)"/>
+    <path d="M670 220 C 740 220, 740 300, 790 320" marker-end="url(#arrow)"/>
+    <path d="M670 400 L790 400" marker-end="url(#arrow)"/>
+    <path d="M670 580 C 740 580, 740 500, 790 480" marker-end="url(#arrow)"/>
+  </g>
+  <g id="edge-collect-labels" font-size="22" fill="#283541">
+    <text x="560" y="330" text-anchor="middle">지표</text>
+    <text x="560" y="470" text-anchor="middle">지표</text>
+  </g>
+
+  <g id="edges-aggregate" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8" fill="none">
+    <path d="M1110 320 C 1200 320, 1200 220, 1290 220" marker-end="url(#arrow-accent)"/>
+    <path d="M1110 400 L1290 400" marker-end="url(#arrow-accent)"/>
+    <path d="M1110 480 C 1200 480, 1200 580, 1290 580" marker-end="url(#arrow-accent)"/>
+  </g>
+  <g id="edge-aggregate-labels" font-size="22" fill="#0F8790">
+    <text x="1230" y="290">집계</text>
+    <text x="1230" y="510">집계</text>
+  </g>
+</svg>

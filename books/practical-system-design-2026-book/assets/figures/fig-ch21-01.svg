@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>검색 인덱스 생성 파이프라인</title>
+  <desc>Metadata DB와 Object Store의 원문에서 Parser·Chunk를 거쳐 Text Index와 Vector Index가 만들어지고, Search Coordinator가 양쪽을 조합한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="56" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">원문 object와 metadata에서 text/vector 인덱스가 만들어진다</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1080" y1="92" x2="1160" y2="92" stroke="#283541" stroke-width="2.5"/><text x="1170" y="100">색인 파이프라인</text>
+    <line x1="1400" y1="92" x2="1480" y2="92" stroke="#0F8790" stroke-width="2.5"/><text x="1490" y="100">질의 경로</text>
+  </g>
+
+  <g id="sources" font-size="26" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="60" y="180" width="240" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="180" y="232">Metadata DB</text><text x="180" y="270" font-size="22" font-weight="400" fill="#7A8791">속성·ACL</text></g>
+    <g><rect x="60" y="540" width="240" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="180" y="592">Object Store</text><text x="180" y="630" font-size="22" font-weight="400" fill="#7A8791">원문 바이너리</text></g>
+  </g>
+
+  <g id="parser">
+    <rect x="400" y="360" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="510" y="412" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">Parser</text>
+    <text x="510" y="450" text-anchor="middle" font-size="22" fill="#7A8791">텍스트 추출</text>
+  </g>
+
+  <g id="chunk">
+    <rect x="720" y="360" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="830" y="412" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">Chunk</text>
+    <text x="830" y="450" text-anchor="middle" font-size="22" fill="#7A8791">단위 분할</text>
+  </g>
+
+  <g id="indexes" font-size="26" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="1040" y="180" width="260" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="1170" y="232">Text Index</text><text x="1170" y="270" font-size="22" font-weight="400" fill="#7A8791">역색인</text></g>
+    <g><rect x="1040" y="540" width="260" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="1170" y="592">Vector Index</text><text x="1170" y="630" font-size="22" font-weight="400" fill="#7A8791">임베딩 유사도</text></g>
+  </g>
+
+  <g id="coordinator">
+    <rect x="1380" y="360" width="200" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1480" y="400" text-anchor="middle" font-size="24" font-weight="700" fill="#142131">Search</text>
+    <text x="1480" y="432" text-anchor="middle" font-size="24" font-weight="700" fill="#142131">Coordinator</text>
+    <text x="1480" y="465" text-anchor="middle" font-size="20" fill="#7A8791">조합·랭킹</text>
+  </g>
+
+  <!-- Sources → Parser -->
+  <g fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M300 240 C 350 240, 360 400, 400 400" marker-end="url(#arrow)"/>
+    <path d="M300 600 C 350 600, 360 440, 400 440" marker-end="url(#arrow)"/>
+  </g>
+  <text x="340" y="335" text-anchor="middle" font-size="22" fill="#7A8791">속성</text>
+  <text x="340" y="510" text-anchor="middle" font-size="22" fill="#7A8791">원문</text>
+
+  <!-- Parser → Chunk -->
+  <path d="M620 420 L 720 420" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Chunk → Indexes -->
+  <g fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M940 400 C 990 400, 1000 240, 1040 240" marker-end="url(#arrow)"/>
+    <path d="M940 440 C 990 440, 1000 600, 1040 600" marker-end="url(#arrow)"/>
+  </g>
+  <text x="990" y="335" text-anchor="middle" font-size="22" fill="#7A8791">토큰</text>
+  <text x="990" y="510" text-anchor="middle" font-size="22" fill="#7A8791">임베딩</text>
+
+  <!-- Indexes → Coordinator (query path, accent) -->
+  <g fill="none" stroke="#0F8790" stroke-width="2.5">
+    <path d="M1300 240 C 1340 240, 1360 400, 1380 400" marker-end="url(#arrow-acc)"/>
+    <path d="M1300 600 C 1340 600, 1360 440, 1380 440" marker-end="url(#arrow-acc)"/>
+  </g>
+  <text x="1360" y="335" text-anchor="middle" font-size="22" fill="#0F8790">질의</text>
+  <text x="1360" y="510" text-anchor="middle" font-size="22" fill="#0F8790">질의</text>
+
+  <text x="800" y="800" text-anchor="middle" font-size="22" fill="#7A8791">Metadata는 필터·ACL에, 원문은 본문 검색에 쓰인다. Chunk는 Text Index와 Vector Index의 공통 입력이다.</text>
+</svg>

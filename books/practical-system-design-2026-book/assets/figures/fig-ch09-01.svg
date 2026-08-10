@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>시계 비교</title>
+  <desc>벽시계, 단조 시계, Lamport Clock, Vector Clock, Hybrid Logical Clock의 목적을 비교한다.</desc>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="64" text-anchor="middle" font-size="34" font-weight="700" fill="#142131">다섯 가지 시계는 각각 다른 질문에 답한다</text>
+  </g>
+
+  <g id="group-physical">
+    <rect x="80" y="120" width="700" height="690" rx="20" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="430" y="170" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">물리 시계</text>
+    <text x="430" y="204" text-anchor="middle" font-size="22" fill="#7A8791">실제 시간을 기준</text>
+
+    <g id="clock-wall">
+      <rect x="110" y="240" width="640" height="240" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="430" y="298" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">벽시계</text>
+      <text x="430" y="344" text-anchor="middle" font-size="22" fill="#283541">목적: 사람이 읽는 절대 시각</text>
+      <text x="430" y="382" text-anchor="middle" font-size="22" fill="#7A8791">NTP로 조정 가능 · 역행·도약 발생</text>
+      <text x="430" y="418" text-anchor="middle" font-size="22" fill="#7A8791">순서 판단용으로는 위험</text>
+    </g>
+
+    <g id="clock-monotonic">
+      <rect x="110" y="510" width="640" height="240" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="430" y="568" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">단조 시계</text>
+      <text x="430" y="614" text-anchor="middle" font-size="22" fill="#283541">목적: 같은 프로세스 안 경과 시간 측정</text>
+      <text x="430" y="652" text-anchor="middle" font-size="22" fill="#7A8791">절대 시각 아님 · 절대 역행하지 않음</text>
+      <text x="430" y="688" text-anchor="middle" font-size="22" fill="#7A8791">타임아웃·경과 측정에 적합</text>
+    </g>
+  </g>
+
+  <g id="group-logical">
+    <rect x="820" y="120" width="700" height="690" rx="20" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1170" y="170" text-anchor="middle" font-size="28" font-weight="700" fill="#0F8790">논리 시계</text>
+    <text x="1170" y="204" text-anchor="middle" font-size="22" fill="#7A8791">이벤트 사이의 순서·인과를 표현</text>
+
+    <g id="clock-lamport">
+      <rect x="850" y="240" width="640" height="150" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1170" y="292" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Lamport Clock</text>
+      <text x="1170" y="334" text-anchor="middle" font-size="22" fill="#283541">목적: 모든 이벤트에 단조 증가 번호 부여</text>
+      <text x="1170" y="370" text-anchor="middle" font-size="22" fill="#7A8791">인과는 표현, 동시성은 구분 못 함</text>
+    </g>
+
+    <g id="clock-vector">
+      <rect x="850" y="410" width="640" height="150" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1170" y="462" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Vector Clock</text>
+      <text x="1170" y="504" text-anchor="middle" font-size="22" fill="#283541">목적: 노드별 카운터로 인과와 동시성 판별</text>
+      <text x="1170" y="540" text-anchor="middle" font-size="22" fill="#7A8791">충돌 감지 가능 · 노드 수만큼 커짐</text>
+    </g>
+
+    <g id="clock-hlc">
+      <rect x="850" y="580" width="640" height="150" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="3"/>
+      <text x="1170" y="632" text-anchor="middle" font-size="30" font-weight="700" fill="#0F8790">Hybrid Logical Clock</text>
+      <text x="1170" y="674" text-anchor="middle" font-size="22" fill="#283541">목적: 물리 시각과 논리 순서를 함께 보존</text>
+      <text x="1170" y="710" text-anchor="middle" font-size="22" fill="#7A8791">시간 기반 정렬과 인과 보장을 동시에</text>
+    </g>
+  </g>
+
+  <g id="legend">
+    <text x="800" y="858" text-anchor="middle" font-size="24" fill="#7A8791">물리 시계는 ‘언제’를, 논리 시계는 ‘어떤 순서로’를 답한다. 목적이 다르므로 함께 쓴다.</text>
+  </g>
+</svg>

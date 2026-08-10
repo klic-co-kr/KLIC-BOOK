@@ -1,0 +1,74 @@
+parts:
+- id: design-method
+  order: 1
+  title: 설계 문제를 푸는 방법
+  introduction_file: manuscript/01-design-method/00-part-introduction.md
+  chapters:
+  - ch01
+  - ch02
+  - ch03
+  - ch04
+- id: distributed-foundations
+  order: 2
+  title: 분산 시스템의 기본 원리
+  introduction_file: manuscript/02-distributed-foundations/00-part-introduction.md
+  chapters:
+  - ch05
+  - ch06
+  - ch07
+  - ch08
+  - ch09
+  - ch10
+  - ch11
+  - ch12
+- id: network-runtime
+  order: 3
+  title: 네트워크와 서비스 실행 구조
+  introduction_file: manuscript/03-network-runtime/00-part-introduction.md
+  chapters:
+  - ch13
+  - ch14
+  - ch15
+  - ch16
+  - ch17
+- id: data-events
+  order: 4
+  title: 데이터·캐시·이벤트
+  introduction_file: manuscript/04-data-events/00-part-introduction.md
+  chapters:
+  - ch18
+  - ch19
+  - ch20
+  - ch21
+  - ch22
+  - ch23
+  - ch24
+- id: production
+  order: 5
+  title: 프로덕션 시스템
+  introduction_file: manuscript/05-production/00-part-introduction.md
+  chapters:
+  - ch25
+  - ch26
+  - ch27
+  - ch28
+  - ch29
+  - ch30
+- id: ai-native
+  order: 6
+  title: AI 네이티브 시스템
+  introduction_file: manuscript/06-ai-native/00-part-introduction.md
+  chapters:
+  - ch31
+  - ch32
+  - ch33
+  - ch34
+- id: case-studies
+  order: 7
+  title: 단계별 종합 설계
+  introduction_file: manuscript/07-case-studies/00-part-introduction.md
+  chapters:
+  - ch35
+  - ch36
+  - ch37
+  - ch38

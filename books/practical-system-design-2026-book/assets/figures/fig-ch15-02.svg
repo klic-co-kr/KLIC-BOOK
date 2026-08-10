@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>패킷 손실 영향 비교</title>
+  <desc>HTTP/2는 단일 TCP 연결에서 패킷 손실이 발생하면 Stream A와 Stream B 모두가 재전송을 기다리지만, HTTP/3은 QUIC 스트림 단위라 Stream A 손실이 Stream B에 영향을 주지 않음을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">패킷 손실 영향 비교</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">HTTP/2는 손실 한 번에 연결 전체가 멈추고, HTTP/3은 해당 스트림만 멈춘다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1000" y1="92" x2="1080" y2="92" stroke="#283541" stroke-width="2.5"/>
+    <text x="1090" y="100">정상 흐름</text>
+    <line x1="1220" y1="92" x2="1300" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1310" y="100">재전송 대기</text>
+    <rect x="1440" y="80" width="22" height="22" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2"/>
+    <text x="1470" y="100">손실 패킷</text>
+  </g>
+
+  <g id="panel-h2">
+    <rect x="70" y="170" width="700" height="640" rx="16" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="420" y="220" text-anchor="middle" font-size="30" fill="#142131" font-weight="600">HTTP/2 — 단일 TCP 연결</text>
+    <text x="420" y="252" text-anchor="middle" font-size="22" fill="#7A8791">연결 하나에 스트림이 다중화됨</text>
+
+    <text x="120" y="320" font-size="24" fill="#283541">연결</text>
+    <line x1="200" y1="312" x2="730" y2="312" stroke="#142131" stroke-width="3"/>
+
+    <text x="120" y="400" font-size="26" fill="#142131">Stream A</text>
+    <rect x="240" y="375" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="330" y="375" width="80" height="50" rx="8" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="370" y="405" text-anchor="middle" font-size="22" fill="#D39A2C">손실</text>
+    <rect x="420" y="375" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="510" y="375" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="600" y="375" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+
+    <text x="120" y="510" font-size="26" fill="#142131">Stream B</text>
+    <rect x="240" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="330" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="420" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="510" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="600" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+
+    <rect x="120" y="565" width="600" height="56" rx="10" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2"/>
+    <text x="420" y="600" text-anchor="middle" font-size="24" fill="#D39A2C">영향 범위: 연결 전체가 순서를 기다림 (Stream A·B 모두 지연)</text>
+
+    <text x="120" y="680" font-size="22" fill="#283541">재전송</text>
+    <path d="M370 565 L370 650 L120 650" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="240" y="675" font-size="22" fill="#D39A2C">손실 복구까지 HOL 블로킹</text>
+  </g>
+
+  <g id="panel-h3">
+    <rect x="830" y="170" width="700" height="640" rx="16" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="1180" y="220" text-anchor="middle" font-size="30" fill="#142131" font-weight="600">HTTP/3 — QUIC 독립 스트림</text>
+    <text x="1180" y="252" text-anchor="middle" font-size="22" fill="#7A8791">스트림마다 손실 복구가 독립</text>
+
+    <text x="880" y="320" font-size="24" fill="#283541">연결</text>
+    <line x1="960" y1="312" x2="1490" y2="312" stroke="#142131" stroke-width="3"/>
+
+    <text x="880" y="400" font-size="26" fill="#142131">Stream A</text>
+    <rect x="1000" y="375" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="1090" y="375" width="80" height="50" rx="8" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="1130" y="405" text-anchor="middle" font-size="22" fill="#D39A2C">손실</text>
+    <rect x="1180" y="375" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="1270" y="375" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="1360" y="375" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+
+    <text x="880" y="510" font-size="26" fill="#142131">Stream B</text>
+    <rect x="1000" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="1090" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="1180" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="1270" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <rect x="1360" y="485" width="80" height="50" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+
+    <rect x="880" y="565" width="600" height="56" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="1180" y="600" text-anchor="middle" font-size="24" fill="#0F8790">영향 범위: Stream A만 지연, Stream B는 계속 전진</text>
+
+    <text x="880" y="680" font-size="22" fill="#283541">재전송</text>
+    <path d="M1130 565 L1130 650 L880 650" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="1000" y="675" font-size="22" fill="#D39A2C">해당 스트림만 재전송</text>
+  </g>
+
+  <g id="packet-loss-bar">
+    <text x="420" y="850" text-anchor="middle" font-size="22" fill="#7A8791">Packet Loss 한 패킷이 연결을 멈춤</text>
+    <text x="1180" y="850" text-anchor="middle" font-size="22" fill="#7A8791">Packet Loss 한 패킷이 한 스트림만 멈춤</text>
+  </g>
+</svg>

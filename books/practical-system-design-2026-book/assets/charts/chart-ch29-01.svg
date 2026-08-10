@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>재해 복구 전략의 상대 RTO와 정상 비용 비교(예시)</title>
+  <desc>Backup/Restore, Pilot Light, Warm Standby, Active/Active 전략을 상대 정상 운영 비용과 상대 RTO의 2차원 위치로 비교한다. 의사결정용 상대 합성 데이터.</desc>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">DR 전략 — 상대 RTO와 정상 비용(예시)</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">비용이 클수록 RTO는 짧아지는 상충 관계</text>
+  </g>
+
+  <g id="synthetic-note">
+    <rect x="1340" y="76" width="190" height="44" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="1.5"/>
+    <text x="1435" y="104" text-anchor="middle" font-size="22" fill="#7A8791">예시(합성 데이터)</text>
+  </g>
+
+  <g id="grid" stroke="#D8E1E2" stroke-width="1.5">
+    <line x1="250" y1="740" x2="1450" y2="740"/>
+    <line x1="250" y1="595" x2="1450" y2="595" stroke-dasharray="6 6"/>
+    <line x1="250" y1="450" x2="1450" y2="450" stroke-dasharray="6 6"/>
+    <line x1="250" y1="305" x2="1450" y2="305" stroke-dasharray="6 6"/>
+    <line x1="250" y1="160" x2="1450" y2="160" stroke-dasharray="6 6"/>
+    <line x1="550" y1="160" x2="550" y2="740" stroke-dasharray="6 6"/>
+    <line x1="850" y1="160" x2="850" y2="740" stroke-dasharray="6 6"/>
+    <line x1="1150" y1="160" x2="1150" y2="740" stroke-dasharray="6 6"/>
+  </g>
+
+  <g id="axes" stroke="#142131" stroke-width="2.5" fill="none">
+    <line x1="250" y1="160" x2="250" y2="740"/>
+    <line x1="250" y1="740" x2="1450" y2="740"/>
+  </g>
+
+  <g id="y-ticks" font-size="22" fill="#7A8791" text-anchor="end">
+    <text x="238" y="748">낮음</text>
+    <text x="238" y="313">높음</text>
+  </g>
+  <text x="100" y="450" font-size="24" fill="#142131" font-weight="700" transform="rotate(-90 100 450)" text-anchor="middle">상대 RTO (복구 시간)</text>
+
+  <g id="x-ticks" font-size="22" fill="#7A8791" text-anchor="middle">
+    <text x="270" y="784">낮음</text>
+    <text x="1430" y="784">높음</text>
+  </g>
+  <text x="850" y="828" font-size="26" fill="#142131" font-weight="700" text-anchor="middle">상대 정상 운영 비용</text>
+
+  <g id="tradeoff" fill="none">
+    <polyline points="370,218 550,334 910,508 1330,682" stroke="#7A8791" stroke-width="2" stroke-dasharray="8 8"/>
+  </g>
+
+  <g id="points">
+    <g id="backup">
+      <circle cx="370" cy="218" r="15" fill="#0F8790" stroke="#142131" stroke-width="2.5"/>
+      <text x="395" y="214" font-size="26" font-weight="700" fill="#142131">Backup/Restore</text>
+      <text x="395" y="244" font-size="22" fill="#7A8791">느린 복구 · 최저 비용</text>
+    </g>
+    <g id="pilot">
+      <rect x="534" y="318" width="32" height="32" fill="#0F8790" stroke="#142131" stroke-width="2.5"/>
+      <text x="578" y="334" font-size="26" font-weight="700" fill="#142131">Pilot Light</text>
+      <text x="578" y="364" font-size="22" fill="#7A8791">느린 복구 · 낮은 비용</text>
+    </g>
+    <g id="warm">
+      <polygon points="910,488 932,508 910,528 888,508" fill="#0F8790" stroke="#142131" stroke-width="2.5"/>
+      <text x="945" y="504" font-size="26" font-weight="700" fill="#142131">Warm Standby</text>
+      <text x="945" y="534" font-size="22" fill="#7A8791">보통 복구 · 보통 비용</text>
+    </g>
+    <g id="active">
+      <polygon points="1330,660 1356,696 1304,696" fill="#D39A2C" stroke="#142131" stroke-width="2.5"/>
+      <text x="1295" y="668" text-anchor="end" font-size="26" font-weight="700" fill="#142131">Active/Active</text>
+      <text x="1295" y="638" text-anchor="end" font-size="22" fill="#7A8791">빠른 복구 · 최고 비용</text>
+    </g>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <text x="270" y="866">전략별 점 — 모양으로 구분(● Backup · ■ Pilot · ◆ Warm · ▲ Active)</text>
+    <text x="1200" y="866" fill="#7A8791">합성 예시 · 실제 측정 아님</text>
+  </g>
+</svg>

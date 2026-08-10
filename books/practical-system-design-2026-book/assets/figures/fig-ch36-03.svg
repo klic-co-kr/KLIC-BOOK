@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>메시지 순서 보장과 중복 제거</title>
+  <desc>client message ID·conversation sequence·dedup·reorder buffer를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="header">
+    <text x="80" y="78" font-size="30" font-weight="700" fill="#142131">메시지 순서 보장과 중복 제거</text>
+    <text x="80" y="114" font-size="24" fill="#7A8791">client message ID로 dedup, conversation sequence로 순서 복원</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1060" y1="92" x2="1140" y2="92" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1152" y="100">전송</text>
+    <line x1="1240" y1="92" x2="1320" y2="92" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="1332" y="100">commit·ACK</text>
+    <line x1="1430" y1="92" x2="1510" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1522" y="100">재정렬</text>
+  </g>
+
+  <g id="nodes">
+    <g id="client">
+      <rect x="60" y="400" width="220" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="170" y="448" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Client</text>
+      <text x="170" y="488" text-anchor="middle" font-size="22" fill="#7A8791">각 메시지에 ID 부여</text>
+    </g>
+
+    <g id="client-msg-id">
+      <rect x="60" y="600" width="220" height="80" rx="10" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/>
+      <text x="170" y="650" text-anchor="middle" font-size="24" font-weight="600" fill="#142131">Client Message ID</text>
+    </g>
+
+    <g id="dedup">
+      <rect x="360" y="400" width="240" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="480" y="448" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Dedup</text>
+      <text x="480" y="488" text-anchor="middle" font-size="22" fill="#7A8791">UNIQUE 결과 재사용</text>
+    </g>
+
+    <g id="conv-seq">
+      <rect x="680" y="400" width="280" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="820" y="448" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Conversation Sequence</text>
+      <text x="820" y="488" text-anchor="middle" font-size="22" fill="#7A8791">대화별 단조 번호</text>
+    </g>
+
+    <g id="reorder">
+      <rect x="1040" y="400" width="260" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1170" y="448" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Reorder Buffer</text>
+      <text x="1170" y="488" text-anchor="middle" font-size="22" fill="#7A8791">도착 순서 재정렬</text>
+    </g>
+
+    <g id="ack">
+      <rect x="1380" y="400" width="160" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1460" y="448" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">ACK</text>
+      <text x="1460" y="488" text-anchor="middle" font-size="22" fill="#7A8791">원장 ID·seq</text>
+    </g>
+
+    <g id="seq-track">
+      <rect x="680" y="600" width="280" height="80" rx="10" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/>
+      <text x="820" y="650" text-anchor="middle" font-size="24" fill="#283541">seq 누락 추적 (gap marker)</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M280 460 L360 460" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="290" y="448" font-size="22" fill="#283541">① 전송</text>
+
+    <path d="M600 460 L680 460" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="610" y="448" font-size="22" fill="#283541">② 신규 확정</text>
+
+    <path d="M960 460 L1040 460" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="970" y="448" font-size="22" fill="#283541">③ seq 할당</text>
+
+    <path d="M1300 460 L1380 460" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="1300" y="448" font-size="22" fill="#0F8790">④ 순서 확정</text>
+
+    <path d="M1460 400 L1460 300 L170 300 L170 400" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#arrow-accent)"/>
+    <text x="800" y="288" text-anchor="middle" font-size="22" fill="#0F8790">⑤ ACK 회신 (원장 ID·seq)</text>
+
+    <path d="M1170 520 L1170 560 L820 560 L820 600" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="990" y="548" font-size="22" fill="#D39A2C">⑥ 빈 seq 회신</text>
+
+    <path d="M170 600 L170 520" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="180" y="572" font-size="22" fill="#283541">ID 첨부</text>
+  </g>
+
+  <g id="step-tag">
+    <rect x="60" y="810" width="340" height="50" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="230" y="843" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">STEP 3 · 순서 보장·중복 제거</text>
+  </g>
+</svg>

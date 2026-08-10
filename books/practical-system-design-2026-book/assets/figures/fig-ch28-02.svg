@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>공급망 서명과 출처 검증</title>
+  <desc>Source와 Dependency가 Builder에서 빌드되어 Provenance 증명을 만들고, Artifact Registry를 거쳐 Admission에서 서명과 출처가 검증된 뒤 Runtime에 배포되는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">공급망 서명과 출처 검증</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">source·dependency에서 runtime까지 서명과 provenance가 검증된다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1090" y1="90" x2="1160" y2="90" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="98">산출물 흐름</text>
+    <line x1="1330" y1="90" x2="1400" y2="90" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6"/>
+    <text x="1410" y="98">검증 통과</text>
+  </g>
+
+  <g id="sources">
+    <g id="source"><rect x="60" y="230" width="210" height="100" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="165" y="288" text-anchor="middle" font-size="30" fill="#142131">Source</text></g>
+    <g id="dep"><rect x="60" y="380" width="210" height="100" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="165" y="438" text-anchor="middle" font-size="30" fill="#142131">Dependency</text></g>
+  </g>
+
+  <g id="pipeline">
+    <g id="builder"><rect x="320" y="300" width="200" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="420" y="367" text-anchor="middle" font-size="30" fill="#142131">Builder</text></g>
+    <g id="provenance"><rect x="570" y="300" width="200" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="670" y="367" text-anchor="middle" font-size="28" fill="#142131">Provenance</text></g>
+    <g id="registry"><rect x="820" y="300" width="240" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="940" y="367" text-anchor="middle" font-size="26" fill="#142131">Artifact Registry</text></g>
+    <g id="admission"><rect x="1110" y="300" width="200" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1210" y="367" text-anchor="middle" font-size="30" fill="#142131">Admission</text></g>
+    <g id="runtime"><rect x="1360" y="300" width="200" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1460" y="367" text-anchor="middle" font-size="30" fill="#142131">Runtime</text></g>
+  </g>
+
+  <g id="edges" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M270 280 L295 280 L295 340 L320 340" marker-end="url(#arrow)"/>
+    <path d="M270 430 L295 430 L295 380 L320 380" marker-end="url(#arrow)"/>
+    <path d="M520 360 L570 360" marker-end="url(#arrow)"/>
+    <path d="M770 360 L820 360" marker-end="url(#arrow)"/>
+    <path d="M1060 360 L1110 360" marker-end="url(#arrow)"/>
+    <path d="M1310 360 L1360 360" marker-end="url(#arrow)" stroke="#0F8790" stroke-dasharray="4 6"/>
+  </g>
+  <g font-size="22" fill="#283541" text-anchor="middle">
+    <text x="545" y="349">빌드 + 서명</text>
+    <text x="795" y="349">출처 증명</text>
+    <text x="1085" y="349">배포 후보</text>
+    <text x="1335" y="349" fill="#0F8790">검증 통과</text>
+  </g>
+
+  <g id="verify-note">
+    <rect x="1110" y="470" width="200" height="84" rx="12" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2"/>
+    <text x="1210" y="503" text-anchor="middle" font-size="22" fill="#D39A2C" font-weight="700">서명·출처 검증</text>
+    <text x="1210" y="535" text-anchor="middle" font-size="22" fill="#283541">위변조 차단</text>
+    <path d="M1210 420 L1210 470" stroke="#D39A2C" stroke-width="2" stroke-dasharray="3 6" fill="none"/>
+  </g>
+
+  <text x="70" y="820" font-size="22" fill="#7A8791">Builder가 산출물에 서명하고 출처 증명을 만들면, Registry를 거쳐 Admission에서 서명과 provenance를 검증한 뒤에야 Runtime에 배포된다.</text>
+</svg>

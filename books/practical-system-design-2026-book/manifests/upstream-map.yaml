@@ -1,0 +1,197 @@
+upstream:
+  repository: https://github.com/donnemartin/system-design-primer
+  branch: master
+  revision: ae9bbd7
+  revision_date: '2026-03-20'
+  license: CC-BY-4.0
+mappings:
+- chapter: ch01
+  action: REWRITE
+  source_file: README.md
+  source_anchor: system-design-topics-start-here
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch02
+  action: REWRITE
+  source_file: README.md
+  source_anchor: back-of-the-envelope-calculations
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch03
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch04
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch05
+  action: REWRITE
+  source_file: README.md
+  source_anchor: latency-numbers-every-programmer-should-know
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch06
+  action: REWRITE
+  source_file: README.md
+  source_anchor: availability-in-nines
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch07
+  action: REWRITE
+  source_file: README.md
+  source_anchor: cap-theorem
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch08
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch09
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch10
+  action: REPLACE
+  source_file: README.md
+  source_anchor: replication
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch11
+  action: REWRITE
+  source_file: README.md
+  source_anchor: partitioning
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch12
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch13
+  action: REWRITE
+  source_file: README.md
+  source_anchor: domain-name-system
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch14
+  action: REWRITE
+  source_file: README.md
+  source_anchor: load-balancer
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch15
+  action: REPLACE
+  source_file: README.md
+  source_anchor: communication
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch16
+  action: REPLACE
+  source_file: README.md
+  source_anchor: application-layer
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch17
+  action: REPLACE
+  source_file: README.md
+  source_anchor: microservices
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch18
+  action: REWRITE
+  source_file: README.md
+  source_anchor: database
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch19
+  action: REWRITE
+  source_file: README.md
+  source_anchor: relational-database-management-system
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch20
+  action: REWRITE
+  source_file: README.md
+  source_anchor: nosql
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch21
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch22
+  action: REWRITE
+  source_file: README.md
+  source_anchor: cache
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch23
+  action: REWRITE
+  source_file: README.md
+  source_anchor: asynchronism
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch24
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch25
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch26
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch27
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch28
+  action: REPLACE
+  source_file: README.md
+  source_anchor: null
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch29
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch30
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch31
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch32
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch33
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch34
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch35
+  action: REWRITE
+  source_file: README.md
+  source_anchor: design-a-url-shortener
+  reason: 원문의 핵심 개념을 유지하되 용어·정확성·운영·보안·최신 구현을 다시 작성한다.
+- chapter: ch36
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch37
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.
+- chapter: ch38
+  action: ADD
+  source_file: null
+  source_anchor: null
+  reason: 2026년 실무 범위에 필요한 신규 장이다.

@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>NoSQL 데이터 모델 네 가지 비교</title>
+  <desc>Key-Value·Document·Wide-Column·Graph 모델의 데이터 형태와 대표 질의(Partition Key, Traversal)를 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="50" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">네 가지 NoSQL 데이터 모델: 형태와 대표 질의</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="900" y1="86" x2="980" y2="86" stroke="#0F8790" stroke-width="2.5"/><text x="990" y="94">주요 접근 키</text>
+    <line x1="1180" y1="86" x2="1260" y2="86" stroke="#142131" stroke-width="2.5" stroke-dasharray="4 4"/><text x="1270" y="94">연결(참조)</text>
+  </g>
+
+  <!-- Panel 1: Key-Value -->
+  <g id="panel-kv">
+    <rect x="40" y="120" width="740" height="330" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="70" y="162" font-size="26" font-weight="700" fill="#142131">Key-Value</text>
+    <text x="70" y="194" font-size="22" fill="#7A8791">키 하나로 값 전체를 조회</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="100" y="240" width="240" height="40" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/><text x="220" y="266" fill="#0F8790"> Partition Key </text></g>
+      <g><rect x="380" y="240" width="320" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="540" y="266"> Value(불투명 blob) </text></g>
+      <g><rect x="100" y="290" width="240" height="40" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/><text x="220" y="316" fill="#0F8790"> user:42 </text></g>
+      <g><rect x="380" y="290" width="320" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="540" y="316"> { … } </text></g>
+      <g><rect x="100" y="340" width="240" height="40" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/><text x="220" y="366" fill="#0F8790"> user:43 </text></g>
+      <g><rect x="380" y="340" width="320" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="540" y="366"> { … } </text></g>
+    </g>
+    <text x="70" y="425" font-size="22" fill="#7A8791">질의: get(partitionKey) → 값 전체</text>
+  </g>
+
+  <!-- Panel 2: Document -->
+  <g id="panel-doc">
+    <rect x="820" y="120" width="740" height="330" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="850" y="162" font-size="26" font-weight="700" fill="#142131">Document</text>
+    <text x="850" y="194" font-size="22" fill="#7A8791">중첩 필드 구조, 부분 갱신·필터 질의</text>
+    <g font-size="22" fill="#142131" font-family="'Noto Sans KR','NanumSquare',monospace">
+      <rect x="880" y="225" width="640" height="160" rx="8" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+      <text x="900" y="258">{ "id": "order-7",</text>
+      <text x="900" y="290">  "고객": { "이름": "홍", "등급": "A" },</text>
+      <text x="900" y="322">  "항목": [ { "sku": "X", "수량": 2 }, … ],</text>
+      <text x="900" y="354">  "배송": { "주소": "...", "상태": "준비" } }</text>
+    </g>
+    <text x="850" y="425" font-size="22" fill="#7A8791">질의: 필터(고객.등급=A) → 문서 전체·일부</text>
+  </g>
+
+  <!-- Panel 3: Wide-Column -->
+  <g id="panel-wide">
+    <rect x="40" y="480" width="740" height="330" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="70" y="522" font-size="26" font-weight="700" fill="#142131">Wide-Column</text>
+    <text x="70" y="554" font-size="22" fill="#7A8791">행키+컬럼 패밀리, 희소 행 저장</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <rect x="100" y="590" width="180" height="40" rx="6" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="190" y="616" fill="#0F8790">Partition Key</text>
+      <rect x="280" y="590" width="180" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="370" y="616">패밀리 A</text>
+      <rect x="460" y="590" width="180" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="550" y="616">패밀리 B</text>
+      <g font-weight="400">
+        <rect x="100" y="630" width="180" height="40" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/><text x="190" y="656" fill="#0F8790">user:42</text>
+        <rect x="280" y="630" width="180" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="370" y="656">a1</text>
+        <rect x="460" y="630" width="180" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="550" y="656">—</text>
+        <rect x="100" y="670" width="180" height="40" rx="6" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/><text x="190" y="696" fill="#0F8790">user:43</text>
+        <rect x="280" y="670" width="180" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="370" y="696">—</text>
+        <rect x="460" y="670" width="180" height="40" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="550" y="696">b1</text>
+      </g>
+    </g>
+    <text x="70" y="755" font-size="22" fill="#7A8791">질의: rowKey 범위 + 컬럼 패밀리 스캔</text>
+    <text x="70" y="790" font-size="22" fill="#7A8791">희소 행이 많아도 저장 비용이 작다</text>
+  </g>
+
+  <!-- Panel 4: Graph -->
+  <g id="panel-graph">
+    <rect x="820" y="480" width="740" height="330" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="850" y="522" font-size="26" font-weight="700" fill="#142131">Graph</text>
+    <text x="850" y="554" font-size="22" fill="#7A8791">노드·간선으로 구성, 이웃 확장 질의</text>
+    <g fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5">
+      <circle cx="980" cy="640" r="36"/>
+      <circle cx="1180" cy="600" r="36"/>
+      <circle cx="1180" cy="720" r="36"/>
+      <circle cx="1380" cy="640" r="36"/>
+      <circle cx="1080" cy="780" r="30"/>
+    </g>
+    <g font-size="20" fill="#142131" text-anchor="middle" font-weight="700">
+      <text x="980" y="647">A</text>
+      <text x="1180" y="607">B</text>
+      <text x="1180" y="727">C</text>
+      <text x="1380" y="647">D</text>
+      <text x="1080" y="787">E</text>
+    </g>
+    <g stroke="#142131" stroke-width="2" stroke-dasharray="4 4" fill="none">
+      <line x1="1016" y1="630" x2="1144" y2="610"/>
+      <line x1="1016" y1="650" x2="1144" y2="710"/>
+      <line x1="1216" y1="610" x2="1344" y2="630"/>
+      <line x1="1216" y1="710" x2="1344" y2="650"/>
+      <line x1="980" y1="676" x2="1060" y2="757"/>
+      <line x1="1180" y1="736" x2="1095" y2="772"/>
+    </g>
+    <text x="850" y="755" font-size="22" fill="#7A8791">질의: Traversal(노드 → 이웃 → 이웃의 이웃)</text>
+    <text x="850" y="790" font-size="22" fill="#7A8791">관계가 깊을수록 비용이 급격히 커진다</text>
+  </g>
+</svg>

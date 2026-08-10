@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>호출 깊이에 따른 최하위 시도 수(예시)</title>
+  <desc>계층당 재시도 횟수가 2회일 때와 3회일 때, 호출 깊이가 깊어지면서 최하위에서 발생하는 최대 시도 수가 2의 제곱, 3의 제곱으로 늘어나는 모습을 보여준다. 합성 예시 데이터.</desc>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">호출 깊이별 최하위 시도 수(예시)</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">계층당 재시도가 최하위 요청 수를 지수적으로 늘린다</text>
+  </g>
+
+  <g id="synthetic-note">
+    <rect x="1340" y="76" width="190" height="44" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="1.5"/>
+    <text x="1435" y="104" text-anchor="middle" font-size="22" fill="#7A8791">예시(합성 데이터)</text>
+  </g>
+
+  <g id="grid" stroke="#D8E1E2" stroke-width="1.5">
+    <line x1="200" y1="740" x2="1450" y2="740"/>
+    <line x1="200" y1="624" x2="1450" y2="624" stroke-dasharray="6 6"/>
+    <line x1="200" y1="508" x2="1450" y2="508" stroke-dasharray="6 6"/>
+    <line x1="200" y1="392" x2="1450" y2="392" stroke-dasharray="6 6"/>
+    <line x1="200" y1="276" x2="1450" y2="276" stroke-dasharray="6 6"/>
+    <line x1="200" y1="160" x2="1450" y2="160" stroke-dasharray="6 6"/>
+  </g>
+
+  <g id="axes" stroke="#142131" stroke-width="2.5" fill="none">
+    <line x1="200" y1="160" x2="200" y2="740"/>
+    <line x1="200" y1="740" x2="1450" y2="740"/>
+  </g>
+
+  <g id="y-ticks" font-size="22" fill="#283541" text-anchor="end">
+    <text x="188" y="748">0</text>
+    <text x="188" y="632">50</text>
+    <text x="188" y="516">100</text>
+    <text x="188" y="400">150</text>
+    <text x="188" y="284">200</text>
+    <text x="188" y="168">250</text>
+  </g>
+  <text x="84" y="450" font-size="24" fill="#142131" font-weight="700" transform="rotate(-90 84 450)" text-anchor="middle">최대 최하위 시도 수</text>
+
+  <g id="x-ticks" font-size="24" fill="#142131" text-anchor="middle">
+    <text x="340" y="784">1</text>
+    <text x="605" y="784">2</text>
+    <text x="870" y="784">3</text>
+    <text x="1135" y="784">4</text>
+    <text x="1400" y="784">5</text>
+  </g>
+  <text x="825" y="828" font-size="26" fill="#142131" font-weight="700" text-anchor="middle">호출 깊이</text>
+
+  <g id="series-2" fill="none">
+    <polyline points="340,735 605,731 870,721 1135,703 1400,666" stroke="#0F8790" stroke-width="3"/>
+    <g fill="#0F8790" stroke="#142131" stroke-width="2">
+      <circle cx="340" cy="735" r="9"/>
+      <circle cx="605" cy="731" r="9"/>
+      <circle cx="870" cy="721" r="9"/>
+      <circle cx="1135" cy="703" r="9"/>
+      <circle cx="1400" cy="666" r="9"/>
+    </g>
+  </g>
+
+  <g id="series-3" fill="none">
+    <polyline points="340,733 605,719 870,677 1135,552 1400,176" stroke="#D39A2C" stroke-width="3" stroke-dasharray="14 8"/>
+    <g fill="#FFFFFF" stroke="#142131" stroke-width="2.5">
+      <rect x="330" y="723" width="20" height="20"/>
+      <rect x="595" y="709" width="20" height="20"/>
+      <rect x="860" y="667" width="20" height="20"/>
+      <rect x="1125" y="542" width="20" height="20"/>
+      <rect x="1390" y="166" width="20" height="20"/>
+    </g>
+  </g>
+
+  <g id="direct-labels" font-size="24" font-weight="700">
+    <text x="1400" y="650" text-anchor="end" fill="#0F8790">계층당 2회  (2^깊이)</text>
+    <text x="1395" y="150" text-anchor="end" fill="#D39A2C">계층당 3회  (3^깊이)</text>
+  </g>
+
+  <g id="value-labels" font-size="20" fill="#283541" text-anchor="middle">
+    <text x="1400" y="690" fill="#0F8790">32</text>
+    <text x="1400" y="206" fill="#D39A2C">243</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="260" y1="858" x2="320" y2="858" stroke="#0F8790" stroke-width="3"/>
+    <circle cx="290" cy="858" r="7" fill="#0F8790" stroke="#142131" stroke-width="2"/>
+    <text x="332" y="866">계층당 2회</text>
+    <line x1="540" y1="858" x2="600" y2="858" stroke="#D39A2C" stroke-width="3" stroke-dasharray="14 8"/>
+    <rect x="560" y="848" width="20" height="20" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="612" y="866">계층당 3회</text>
+    <text x="900" y="866" fill="#7A8791">산식: 2^깊이, 3^깊이 · 합성 예시, 실제 측정값 아님</text>
+  </g>
+</svg>

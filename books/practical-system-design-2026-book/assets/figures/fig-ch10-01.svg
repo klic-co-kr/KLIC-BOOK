@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>동기 복제와 비동기 복제 비교</title>
+  <desc>리더와 세 개의 레플리카 사이에서 쓰기 로그, ACK, 커밋이 동기와 비동기로 어떻게 다르게 진행되는지 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <text x="100" y="50" font-size="28" font-weight="700" fill="#142131">동기 복제는 응답 전 ACK를 기다리고, 비동기 복제는 먼저 커밋한다</text>
+    <line x1="1130" y1="72" x2="1210" y2="72" stroke="#0F8790" stroke-width="2.5"/><text x="1220" y="80">정상(동기)</text>
+    <line x1="1340" y1="72" x2="1420" y2="72" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="1430" y="80">지연(비동기)</text>
+  </g>
+
+  <g id="panel-sync">
+    <rect x="60" y="100" width="1480" height="340" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="90" y="146" font-size="28" font-weight="700" fill="#142131">동기 복제</text>
+    <text x="90" y="180" font-size="22" fill="#7A8791">정족수 ACK를 받은 뒤에야 클라이언트에게 응답</text>
+
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="90" y="210" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="190" y="248">클라이언트</text></g>
+      <g><rect x="430" y="210" width="200" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="530" y="248">Leader</text></g>
+      <g><rect x="820" y="150" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="920" y="188">Replica 1</text></g>
+      <g><rect x="820" y="230" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="920" y="268">Replica 2</text></g>
+      <g><rect x="820" y="310" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="920" y="348">Replica 3</text></g>
+      <g><rect x="1240" y="210" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1340" y="248">쓰기 로그</text></g>
+    </g>
+
+    <g fill="none" stroke-width="2.5">
+      <path d="M290 240 L430 240" stroke="#283541" marker-end="url(#arrow)"/>
+      <text x="360" y="228" text-anchor="middle" font-size="22" fill="#283541">쓰기</text>
+
+      <path d="M630 220 C 720 220, 740 180, 820 180" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+      <path d="M630 240 L820 260" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+      <path d="M630 260 C 720 260, 740 340, 820 340" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+      <text x="720" y="208" text-anchor="middle" font-size="22" fill="#0F8790">복제</text>
+
+      <path d="M1020 180 C 1100 180, 1110 248, 1020 248" stroke="#283541" marker-end="url(#arrow)"/>
+      <path d="M1020 260 L1020 262" stroke="#283541"/>
+      <path d="M1020 340 C 1100 340, 1110 252, 1020 252" stroke="#283541" marker-end="url(#arrow)"/>
+      <text x="1180" y="232" text-anchor="middle" font-size="22" fill="#283541" font-weight="700">ACK (정족수 도달)</text>
+
+      <path d="M530 270 L530 308" stroke="#0F8790" stroke-width="3" marker-end="url(#arrow-acc)"/>
+      <rect x="430" y="310" width="200" height="40" rx="8" fill="#0F8790"/>
+      <text x="530" y="338" text-anchor="middle" font-size="22" font-weight="700" fill="#FFFFFF">Commit</text>
+
+      <path d="M430 240 L290 240" stroke="#283541" marker-end="url(#arrow)" stroke-dasharray="0"/>
+      <text x="360" y="372" text-anchor="middle" font-size="22" fill="#283541">응답(커밋 후)</text>
+    </g>
+  </g>
+
+  <g id="panel-async">
+    <rect x="60" y="470" width="1480" height="370" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="90" y="516" font-size="28" font-weight="700" fill="#D39A2C">비동기 복제</text>
+    <text x="90" y="550" font-size="22" fill="#7A8791">리더가 곧바로 커밋하고 응답; 레플리카는 이후에 복제(장애 시 손실 가능)</text>
+
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="90" y="580" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="190" y="618">클라이언트</text></g>
+      <g><rect x="430" y="580" width="200" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="530" y="618">Leader</text></g>
+      <g><rect x="820" y="540" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="920" y="578">Replica 1</text></g>
+      <g><rect x="820" y="620" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="920" y="658">Replica 2</text></g>
+      <g><rect x="820" y="700" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="920" y="738">Replica 3</text></g>
+      <g><rect x="1240" y="580" width="200" height="60" rx="10" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1340" y="618">쓰기 로그</text></g>
+    </g>
+
+    <g fill="none" stroke-width="2.5">
+      <path d="M290 610 L430 610" stroke="#283541" marker-end="url(#arrow)"/>
+      <text x="360" y="598" text-anchor="middle" font-size="22" fill="#283541">쓰기</text>
+
+      <path d="M530 640 L530 690" stroke="#0F8790" stroke-width="3" marker-end="url(#arrow-acc)"/>
+      <rect x="430" y="692" width="200" height="40" rx="8" fill="#0F8790"/>
+      <text x="530" y="720" text-anchor="middle" font-size="22" font-weight="700" fill="#FFFFFF">Commit(즉시)</text>
+
+      <path d="M430 610 L290 610" stroke="#283541" marker-end="url(#arrow)"/>
+      <text x="360" y="660" text-anchor="middle" font-size="22" fill="#283541">응답(복제 전)</text>
+
+      <path d="M630 590 C 720 590, 740 570, 820 570" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+      <path d="M630 610 L820 650" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+      <path d="M630 630 C 720 630, 740 730, 820 730" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+      <text x="740" y="800" text-anchor="middle" font-size="22" fill="#D39A2C">복제는 나중에(지연 구간 발생)</text>
+    </g>
+  </g>
+</svg>

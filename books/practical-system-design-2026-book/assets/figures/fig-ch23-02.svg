@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>Work Queue와 Durable Log 비교</title>
+  <desc>Work Queue는 경쟁 소비로 메시지를 삭제하고, Durable Log는 partition·offset으로 다중 consumer group이 독립적으로 읽고 replay할 수 있다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="50" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Work Queue는 경쟁 소비, Durable Log는 partition·offset·다중 consumer</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="60" y1="86" x2="140" y2="86" stroke="#283541" stroke-width="2.5"/><text x="150" y="94">전달·소비</text>
+    <line x1="320" y1="86" x2="400" y2="86" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="410" y="94">replay(과거 offset 재독)</text>
+  </g>
+
+  <!-- Panel 1: Work Queue -->
+  <g id="panel-wq">
+    <rect x="40" y="120" width="740" height="700" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="70" y="162" font-size="26" font-weight="700" fill="#142131">Work Queue</text>
+    <text x="70" y="194" font-size="22" fill="#7A8791">한 consumer가 받으면 메시지가 사라진다</text>
+
+    <g id="wq-queue">
+      <rect x="100" y="320" width="620" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="110" y="306" font-size="22" fill="#7A8791">큐(순서 메시지)</text>
+      <g font-size="22" fill="#283541" text-anchor="middle" font-weight="700">
+        <rect x="120" y="335" width="60" height="50" rx="6" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="150" y="368">m1</text>
+        <rect x="190" y="335" width="60" height="50" rx="6" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="220" y="368">m2</text>
+        <rect x="260" y="335" width="60" height="50" rx="6" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2" stroke-dasharray="4 3"/><text x="290" y="368" fill="#7A8791">m3</text>
+        <rect x="330" y="335" width="60" height="50" rx="6" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2" stroke-dasharray="4 3"/><text x="360" y="368" fill="#7A8791">m4</text>
+        <rect x="400" y="335" width="60" height="50" rx="6" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2" stroke-dasharray="4 3"/><text x="430" y="368" fill="#7A8791">m5</text>
+        <text x="555" y="368" fill="#7A8791" font-weight="400">…(삭제됨)</text>
+      </g>
+    </g>
+
+    <g id="wq-consumers" font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="120" y="560" width="200" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="220" y="608">Consumer A</text></g>
+      <g><rect x="340" y="560" width="200" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="440" y="608">Consumer B</text></g>
+      <g><rect x="560" y="560" width="200" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="660" y="608">Consumer C</text></g>
+      <text x="410" y="678" font-size="22" fill="#7A8791" font-weight="400">경쟁 소비(각 메시지 1곳만)</text>
+    </g>
+
+    <g fill="none" stroke="#283541" stroke-width="2.5">
+      <path d="M150 400 L 200 560" marker-end="url(#arrow)"/>
+      <path d="M220 400 L 440 560" marker-end="url(#arrow)"/>
+      <path d="M290 400 L 660 560" marker-end="url(#arrow)"/>
+    </g>
+    <text x="70" y="755" font-size="22" fill="#7A8791">ack 시점에 메시지가 제거된다</text>
+    <text x="70" y="790" font-size="22" fill="#7A8791">Replay 불가(과거 메시지 소실)</text>
+  </g>
+
+  <!-- Panel 2: Durable Log -->
+  <g id="panel-dl">
+    <rect x="820" y="120" width="740" height="700" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="850" y="162" font-size="26" font-weight="700" fill="#D39A2C">Durable Log</text>
+    <text x="850" y="194" font-size="22" fill="#7A8791">partition·offset을 보존하고 consumer마다 위치를 독립 유지</text>
+
+    <g id="dl-partitions">
+      <text x="850" y="220" font-size="22" fill="#7A8791">Partition A</text>
+      <text x="1490" y="220" font-size="22" font-weight="700" fill="#0F8790">Offset →</text>
+      <rect x="850" y="250" width="680" height="50" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+      <g font-size="20" fill="#283541" text-anchor="middle" font-weight="700">
+        <rect x="860" y="258" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="900" y="282">0</text>
+        <rect x="950" y="258" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="990" y="282">1</text>
+        <rect x="1040" y="258" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1080" y="282">2</text>
+        <rect x="1130" y="258" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1170" y="282">3</text>
+        <rect x="1220" y="258" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1260" y="282">4</text>
+        <rect x="1310" y="258" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1350" y="282">5</text>
+        <rect x="1400" y="258" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1440" y="282">6</text>
+      </g>
+      <text x="850" y="335" font-size="22" fill="#7A8791">Partition B</text>
+      <rect x="850" y="345" width="680" height="50" rx="6" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+      <g font-size="20" fill="#283541" text-anchor="middle" font-weight="700">
+        <rect x="860" y="353" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="900" y="377">0</text>
+        <rect x="950" y="353" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="990" y="377">1</text>
+        <rect x="1040" y="353" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1080" y="377">2</text>
+        <rect x="1130" y="353" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1170" y="377">3</text>
+        <rect x="1220" y="353" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1260" y="377">4</text>
+        <rect x="1310" y="353" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1350" y="377">5</text>
+        <rect x="1400" y="353" width="80" height="34" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="1440" y="377">6</text>
+      </g>
+    </g>
+
+    <g id="dl-consumers" font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="850" y="500" width="300" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1000" y="548">Consumer Group 1</text><text x="1000" y="572" font-size="20" font-weight="400" fill="#7A8791">offset=4까지 읽음</text></g>
+      <g><rect x="1230" y="500" width="300" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1380" y="548">Consumer Group 2</text><text x="1380" y="572" font-size="20" font-weight="400" fill="#7A8791">offset=2까지 읽음</text></g>
+    </g>
+
+    <g fill="none" stroke="#283541" stroke-width="2.5">
+      <path d="M1000 395 L 1000 500" marker-end="url(#arrow)"/>
+      <path d="M1380 395 L 1380 500" marker-end="url(#arrow)"/>
+    </g>
+
+    <!-- Replay arrow -->
+    <g fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+      <path d="M850 620 C 800 640, 800 670, 850 690 L 1500 690 C 1540 690, 1540 660, 1500 640" marker-end="url(#arrow-amb)"/>
+    </g>
+    <text x="1175" y="725" text-anchor="middle" font-size="24" font-weight="700" fill="#D39A2C">Replay: offset을 과로 되돌려 다시 읽는다</text>
+    <text x="850" y="770" font-size="22" fill="#7A8791">로그는 보존 기간 동안 삭제되지 않는다</text>
+    <text x="850" y="800" font-size="22" fill="#7A8791">동일 데이터를 여러 consumer group이 독립적으로 소비</text>
+  </g>
+</svg>

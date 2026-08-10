@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>effect·ack·crash 순서에 따른 유실·중복 시나리오 세 가지</title>
+  <desc>Producer가 Broker를 통해 Consumer에게 보내고 DB/API에 effect를 일으킬 때, ACK와 crash의 순서에 따라 정상·유실·중복이 발생하는 세 시나리오를 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="50" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">effect·ACK·crash 순서가 유실과 중복을 만든다</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="60" y1="86" x2="140" y2="86" stroke="#283541" stroke-width="2.5"/><text x="150" y="94">정상 단계</text>
+    <line x1="320" y1="86" x2="400" y2="86" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="410" y="94">재전송</text>
+    <line x1="560" y1="86" x2="640" y2="86" stroke="#7A8791" stroke-width="2.5"/><text x="650" y="94">crash/유실</text>
+  </g>
+
+  <!-- Panel 1: ideal -->
+  <g id="panel-ideal">
+    <rect x="40" y="120" width="1520" height="220" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="70" y="162" font-size="26" font-weight="700" fill="#142131">시나리오 1 · 정상(effect → ACK)</text>
+    <text x="70" y="194" font-size="22" fill="#7A8791">effect를 먼저 일으키고 성공하면 ACK. 손실·중복 없음</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="80" y="240" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="160" y="284">Producer</text></g>
+      <g><rect x="430" y="240" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="510" y="284">Broker</text></g>
+      <g><rect x="780" y="240" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="860" y="284">Consumer</text></g>
+      <g><rect x="1130" y="240" width="160" height="70" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1210" y="284">DB/API</text></g>
+      <g><rect x="1380" y="240" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="1460" y="284" fill="#0F8790">정상</text></g>
+    </g>
+    <g fill="none" stroke="#283541" stroke-width="2.5">
+      <path d="M240 275 L 430 275" marker-end="url(#arrow)"/>
+      <path d="M590 275 L 780 275" marker-end="url(#arrow)"/>
+      <path d="M940 275 L 1130 275" marker-end="url(#arrow)"/>
+      <text x="335" y="262" text-anchor="middle" font-size="22" fill="#283541">① 전달</text>
+      <text x="685" y="262" text-anchor="middle" font-size="22" fill="#283541">② 수신</text>
+      <text x="1035" y="262" text-anchor="middle" font-size="22" fill="#283541">③ effect</text>
+      <path d="M1130 295 L 240 295" marker-end="url(#arrow)" stroke-dasharray="0"/>
+      <text x="685" y="320" text-anchor="middle" font-size="22" fill="#283541">④ ACK (역방향)</text>
+    </g>
+  </g>
+
+  <!-- Panel 2: 유실 -->
+  <g id="panel-lost">
+    <rect x="40" y="360" width="1520" height="220" rx="16" fill="#FFFFFF" stroke="#7A8791" stroke-width="2.5"/>
+    <text x="70" y="402" font-size="26" font-weight="700" fill="#7A8791">시나리오 2 · 유실(ACK 먼저 → effect 전 crash)</text>
+    <text x="70" y="434" font-size="22" fill="#7A8791">ACK를 먼저 보내고 effect를 일으키기 전에 Consumer가 죽으면 메시지가 영영 사라진다</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="80" y="480" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="160" y="524">Producer</text></g>
+      <g><rect x="430" y="480" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="510" y="524">Broker</text></g>
+      <g><rect x="780" y="480" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="8 4"/><text x="860" y="524" fill="#7A8791">Consumer</text></g>
+      <g><rect x="1130" y="480" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="1210" y="524">DB/API</text></g>
+      <g><rect x="1380" y="480" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1460" y="524" fill="#7A8791">유실</text></g>
+    </g>
+    <g fill="none" stroke="#283541" stroke-width="2.5">
+      <path d="M240 515 L 430 515" marker-end="url(#arrow)"/>
+      <path d="M590 515 L 780 515" marker-end="url(#arrow)"/>
+      <text x="335" y="502" text-anchor="middle" font-size="22" fill="#283541">① 전달</text>
+      <text x="685" y="502" text-anchor="middle" font-size="22" fill="#283541">② 수신</text>
+      <path d="M780 535 L 240 535" marker-end="url(#arrow)"/>
+      <text x="510" y="560" text-anchor="middle" font-size="22" fill="#283541">③ ACK 먼저</text>
+    </g>
+    <g fill="none" stroke="#7A8791" stroke-width="2.5">
+      <path d="M860 555 L 860 575" stroke-dasharray="6 4"/>
+      <text x="990" y="565" font-size="22" fill="#7A8791">④ Crash → effect 안 함</text>
+    </g>
+  </g>
+
+  <!-- Panel 3: 중복 -->
+  <g id="panel-dup">
+    <rect x="40" y="600" width="1520" height="240" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="70" y="642" font-size="26" font-weight="700" fill="#D39A2C">시나리오 3 · 중복(effect → ACK 지연/유실 → 재전송)</text>
+    <text x="70" y="674" font-size="22" fill="#7A8791">effect는 일으켰으나 ACK가 늦거나 유실되면 Producer가 재전송하고 effect가 두 번 일어난다</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="80" y="720" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="160" y="764">Producer</text></g>
+      <g><rect x="430" y="720" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="510" y="764">Broker</text></g>
+      <g><rect x="780" y="720" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="860" y="764">Consumer</text></g>
+      <g><rect x="1130" y="720" width="160" height="70" rx="10" fill="#EFF5F4" stroke="#D39A2C" stroke-width="2.5"/><text x="1210" y="764">DB/API</text></g>
+      <g><rect x="1380" y="720" width="160" height="70" rx="10" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2"/><text x="1460" y="764" fill="#D39A2C">중복</text></g>
+    </g>
+    <g fill="none" stroke-width="2.5">
+      <path d="M240 755 L 430 755" stroke="#283541" marker-end="url(#arrow)"/>
+      <path d="M590 755 L 780 755" stroke="#283541" marker-end="url(#arrow)"/>
+      <path d="M940 755 L 1130 755" stroke="#283541" marker-end="url(#arrow)"/>
+      <text x="335" y="742" text-anchor="middle" font-size="22" fill="#283541">① 전달</text>
+      <text x="685" y="742" text-anchor="middle" font-size="22" fill="#283541">② 수신</text>
+      <text x="1035" y="742" text-anchor="middle" font-size="22" fill="#283541">③ effect(1회)</text>
+      <path d="M1130 775 L 240 775" stroke="#7A8791" stroke-dasharray="6 4"/>
+      <text x="685" y="800" text-anchor="middle" font-size="22" fill="#7A8791">④ ACK 지연/유실</text>
+      <path d="M240 795 C 320 825, 380 825, 430 795" stroke="#D39A2C" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+      <text x="335" y="828" text-anchor="middle" font-size="22" fill="#D39A2C">⑤ 재전송 → effect 2회</text>
+    </g>
+  </g>
+</svg>

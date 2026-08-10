@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "book": {
+    "id": "practical-system-design-2026-ko",
+    "title": "실전 시스템 설계 2026",
+    "subtitle": "AI 시대의 아키텍처, 운영, 신뢰성, 그리고 확장성",
+    "language": "ko-KR",
+    "edition": "2026.1-draft",
+    "manuscript_format": "markdown",
+    "license": "CC-BY-4.0",
+    "status": "complete-first-draft",
+    "manuscript": "BOOK.md"
+  },
+  "upstream": {
+    "name": "The System Design Primer",
+    "creator": "Donne Martin",
+    "repository": "https://github.com/donnemartin/system-design-primer",
+    "branch": "master",
+    "revision": "ae9bbd7",
+    "revision_date": "2026-03-20",
+    "observed_at": "2026-08-06",
+    "license": "CC-BY-4.0",
+    "adaptation_notice_required": true,
+    "endorsement_disclaimer_required": true
+  },
+  "outputs": [
+    "pdf",
+    "epub",
+    "html"
+  ],
+  "manifests": {
+    "parts": "manifests/parts.yaml",
+    "chapters": "manifests/chapters.yaml",
+    "assets": "manifests/assets.yaml",
+    "sources": "manifests/sources.yaml",
+    "upstream_map": "manifests/upstream-map.yaml",
+    "benchmarks": "manifests/benchmarks.yaml",
+    "glossary": "manifests/glossary.yaml"
+  },
+  "freshness_policy": {
+    "durable_review_months": 24,
+    "current_review_months": 6,
+    "volatile_review_months": 3
+  },
+  "visual_budget": {
+    "technical_svg": 88,
+    "image2_0": 19,
+    "charts": 12,
+    "total": 119
+  },
+  "quality_gates": {
+    "require_citation_for_factual_claims": true,
+    "require_alt_text": true,
+    "require_caption": true,
+    "require_asset_review_before_release": true,
+    "prohibit_unlicensed_assets": true,
+    "prohibit_external_raster_in_svg": true,
+    "prohibit_unverified_generated_citations": true
+  },
+  "draft_boundaries": {
+    "technical_editorial_review_required": true,
+    "actual_visual_binaries_generated": false,
+    "publication_ready": false,
+    "current_and_volatile_sources_must_be_reverified": true
+  }
+}

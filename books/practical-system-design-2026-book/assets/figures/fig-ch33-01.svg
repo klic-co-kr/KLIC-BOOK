@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>에이전트 제어 루프</title>
+  <desc>사용자 목표·run state·model·policy engine·approval·tool gateway·audit로 이어지는 제어 루프를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="34" font-weight="700" fill="#142131">에이전트 제어 루프</text>
+    <text x="60" y="108" font-size="22" fill="#7A8791">목표→상태→모델→정책·승인→도구 실행 루프와 감사(audit) 기록</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1080" y1="68" x2="1160" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="76">제어 흐름</text>
+    <line x1="1310" y1="68" x2="1390" y2="68" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1400" y="76">감사 기록</text>
+  </g>
+
+  <g id="goal">
+    <rect x="80" y="150" width="280" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="220" y="218" text-anchor="middle" font-size="28" fill="#142131">사용자 목표</text>
+  </g>
+
+  <g id="run-state">
+    <rect x="80" y="390" width="280" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="220" y="462" text-anchor="middle" font-size="28" fill="#142131">Run State</text>
+  </g>
+
+  <g id="model">
+    <rect x="640" y="380" width="320" height="150" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+    <text x="800" y="462" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">Model</text>
+  </g>
+
+  <g id="policy">
+    <rect x="1060" y="200" width="280" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="1200" y="268" text-anchor="middle" font-size="28" fill="#142131">Policy Engine</text>
+  </g>
+
+  <g id="approval">
+    <rect x="1300" y="400" width="240" height="120" rx="14" fill="#FFF7E8" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="1420" y="468" text-anchor="middle" font-size="28" fill="#142131">Approval</text>
+  </g>
+
+  <g id="tool-gateway">
+    <rect x="1060" y="600" width="280" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="1200" y="673" text-anchor="middle" font-size="28" fill="#142131">Tool Gateway</text>
+  </g>
+
+  <g id="audit">
+    <rect x="400" y="760" width="900" height="110" rx="14" fill="#F4F8FA" stroke="#7A8791" stroke-width="2.5"/>
+    <text x="850" y="822" text-anchor="middle" font-size="30" fill="#142131">Audit</text>
+    <text x="850" y="852" text-anchor="middle" font-size="22" fill="#7A8791">모든 단계의 결정·도구 호출·결과 기록</text>
+  </g>
+
+  <g id="control-edges" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M220 270 L220 390" marker-end="url(#arrow)"/>
+    <text x="235" y="335" font-size="22" fill="#283541">초기화</text>
+
+    <path d="M360 455 L640 455" marker-end="url(#arrow)"/>
+    <text x="450" y="440" font-size="22" fill="#283541">상태 주입</text>
+
+    <path d="M920 420 L1000 420 L1000 260 L1060 260" marker-end="url(#arrow)"/>
+    <text x="1015" y="350" font-size="22" fill="#283541">행동 제안</text>
+
+    <path d="M1200 320 L1200 380 L1420 380 L1420 400" marker-end="url(#arrow)"/>
+    <text x="1240" y="365" font-size="22" fill="#283541">고위험 시</text>
+
+    <path d="M1420 520 L1420 560 L1200 560 L1200 600" marker-end="url(#arrow)"/>
+    <text x="1280" y="548" font-size="22" fill="#283541">승인 실행</text>
+
+    <path d="M1060 665 L800 665 L800 530" marker-end="url(#arrow)"/>
+    <text x="845" y="650" font-size="22" fill="#283541">결과 반환·루프</text>
+  </g>
+
+  <g id="audit-edges" fill="none" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M700 530 L700 760" marker-end="url(#arrow-muted)"/>
+    <path d="M1200 730 L1200 760" marker-end="url(#arrow-muted)"/>
+    <path d="M220 520 L220 720 L500 720 L500 760" marker-end="url(#arrow-muted)"/>
+    <text x="610" y="705" font-size="22" fill="#7A8791">각 단계 → 감사 로그</text>
+  </g>
+</svg>

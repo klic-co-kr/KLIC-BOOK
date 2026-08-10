@@ -1,0 +1,143 @@
+book:
+  title: 포워드 디플로이드 엔지니어
+  metadata_title: '포워드 디플로이드 엔지니어: AI 시대의 고객 가치 전달 비법'
+  subtitle: AI 시대의 고객 가치 전달 비법
+  author: 판빙
+  language: ko-KR
+  short_title: FORWARD DEPLOYED ENGINEER
+  output_name: 최종편집본
+  subject: 포워드 디플로이드 엔지니어 한국어판 PDF 편집본
+  keywords:
+  - FDE
+  - 포워드 디플로이드 엔지니어
+  edition_label: 한국어판 · 비상업적 공유용 PDF 편집본
+  copyright_notice: 이 책의 저작권은 저자 판빙에게 있다. 이 저장소의 내용은 저자 본인이 공개를 승인한 것으로, 독자가 무료로 읽고 비상업적으로 공유할 수 있다. 전재할 때는 반드시 출처와 저자를 표기한다. 모든 상업적 용도(출판, 교육, 유료 콘텐츠 각색 등을 포함하되 이에 국한되지 않음)는 사전에 저자의 서면 허락을 받아야 한다.
+  build_date: auto
+files:
+  include:
+  - '*.md'
+  - '**/*.md'
+  exclude:
+  - '**/node_modules/**'
+  - '**/.git/**'
+  - '**/output/**'
+  - '**/*_완료보고서.md'
+  front_matter_file: README.md
+  order: []
+  strip_front_matter_sections:
+  - 읽는 법
+  - 목차
+  - 저작권 안내
+  front_matter_drop_paragraphs:
+  - 판빙 지음 · 전문 무료 공개, 온라인 열람과 공유를 환영합니다
+  - 이 책이 도움이 되었다면 이 저장소에 Star을 남기거나, 필요한 사람에게 공유해 주기를 바란다.
+  chapter_file_pattern: ^[0-9]{2}[-_].*\.md$
+  strip_front_matter_leading_rules: true
+editorial:
+  preset: fde-midnight
+  cover_theme: midnight
+  include_cover: true
+  include_title_page: true
+  include_editorial_note: true
+  include_generated_toc: true
+  include_chapter_openers: true
+  toc_depth: 2
+  section_list_depth: 2
+  cover_eyebrow: FORWARD DEPLOYED ENGINEERING
+  cover_watermark: FDE
+  title_page_quote: 모델은 더 이상 귀한 자원이 아니다. 모델을 고객의 실제 비즈니스에 끼워 넣을 수 있는 사람이 진짜 귀한 자원이다.
+  title_page_edition_label: 전문 무료 공개, 온라인 열람과 공유를 환영합니다
+  front_matter_header: ABOUT THIS BOOK
+  chapter_eyebrow: CHAPTER
+  appendix_eyebrow: APPENDIX
+  afterword_eyebrow: AFTERWORD
+  editorial_note_title: PDF 편집본 안내
+  editorial_note_paragraphs:
+  - 이 문서는 제공된 한국어 Markdown 원고 13개를 하나의 책으로 편집한 비공식 PDF 편집본입니다. 원문의 장·절 구조와 본문 내용을 유지했습니다.
+  - 표지, 목차, 장 표제, 머리말·꼬리말, 링크와 인용문 스타일은 읽기와 탐색을 돕도록 재구성했습니다. 원고의 사실 관계와 출처 표기는 저자의 부록 C를 따릅니다.
+  editorial_note_footer_paragraphs:
+  - 이 책이 도움이 되었다면 이 저장소에 Star을 남기거나, 필요한 사람에게 공유해 주기를 바란다.
+  build_date_format: korean
+  cover_process_chips:
+  - 문제
+  - 고객
+  - 배포
+  - 갱신
+  - 확대
+  - 복제
+style:
+  page_size: A4
+  body_font: NanumMyeongjo, Noto Serif CJK KR, serif
+  heading_font: NanumSquare, Noto Sans CJK KR, sans-serif
+  mono_font: NanumGothicCoding, Noto Sans Mono CJK KR, monospace
+  body_font_size_pt: 10.0
+  body_line_height: 1.72
+  colors:
+    navy: '#081827'
+    navy_alt: '#102B38'
+    cyan: '#36C7D0'
+    cyan_dark: '#0F8790'
+    amber: '#D39A2C'
+    ink: '#142131'
+    text: '#283541'
+    muted: '#7A8791'
+    line: '#D8E1E2'
+    wash: '#EFF5F4'
+    paper: '#FFFFFF'
+  margins_mm:
+    top: 18
+    right: 20
+    bottom: 17
+    left: 20
+  extra_css: '
+
+    /* FDE 한국어판 108쪽·1단 목차 본문 중심 회귀 프로필 */
+
+    .front-matter { font-size: 10.1pt; }
+
+    .front-matter p { margin-bottom: 4.1mm; }
+
+    .front-matter h2 { font-size: 21pt; }
+
+    .toc h1 { bookmark-level: 1; }
+
+    .toc h1 { font-size: 27pt; }
+
+    .toc-item > a { font-size: 9.4pt; }
+
+    .toc-item > a::after { font-family: NanumSquare, Noto Sans CJK KR, sans-serif; font-size: 7.5pt; white-space: nowrap; }
+
+    .toc-sections li { font-size: 7.8pt; }
+
+    .toc-sections a::after { font-family: NanumSquare, Noto Sans CJK KR, sans-serif; font-size: 7.5pt; white-space: nowrap; }
+
+    .chapter-body.chapter-07 { font-size: 10.15pt; line-height: 1.72; }
+
+    .chapter-body.chapter-12 { font-size: 9.25pt; line-height: 1.67; }
+
+    .chapter-body.chapter-12 h2 { font-size: 15.2pt; }
+
+    .chapter-body.chapter-12 h3 { font-size: 11.7pt; }
+
+    .chapter-body.chapter-12 h4 { font-size: 10.4pt; }
+
+    .chapter-body.chapter-12 ul,
+
+    .chapter-body.chapter-12 ol { margin-left: 4mm; padding-left: 4mm; }
+
+    '
+visuals:
+  enabled: false
+  auto_from_headings: false
+  chapters: {}
+
+quality:
+  require_a4: true
+  require_embedded_fonts: true
+  require_unicode_fonts: true
+  require_outline: true
+  allow_blank_pages: 0
+  paragraph_probe_min_chars: 36
+  paragraph_probe_limit: 1200
+  reference_ngram_words: 8
+  reference_ngram_min_chars: 44

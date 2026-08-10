@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>전역 요청 경로</title>
+  <desc>클라이언트가 Resolver와 Authoritative DNS로 주소를 해석한 뒤 Edge PoP, Origin Shield, 리전을 거쳐 데이터 소유 리전에 도달하는 전역 요청 경로를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-mut" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">전역 요청 경로</text>
+    <text x="70" y="104">주소 해석 단계와 데이터 전송 단계를 분리해 본다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1080" y1="92" x2="1160" y2="92" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="100">데이터 경로</text>
+    <line x1="1320" y1="92" x2="1400" y2="92" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="8 8"/>
+    <text x="1410" y="100">주소 해석</text>
+  </g>
+
+  <g id="lanes">
+    <text x="70" y="250" font-size="22" fill="#7A8791" letter-spacing="2">주소 해석</text>
+    <line x1="70" y1="266" x2="1530" y2="266" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="70" y="540" font-size="22" fill="#7A8791" letter-spacing="2">데이터 경로</text>
+    <line x1="70" y1="556" x2="1530" y2="556" stroke="#D8E1E2" stroke-width="2"/>
+  </g>
+
+  <g id="nodes">
+    <g id="client">
+      <rect x="70" y="410" width="200" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="170" y="458" text-anchor="middle" font-size="30" fill="#142131">클라이언트</text>
+      <text x="170" y="492" text-anchor="middle" font-size="22" fill="#7A8791">요청 시작</text>
+    </g>
+    <g id="resolver">
+      <rect x="330" y="170" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="440" y="218" text-anchor="middle" font-size="30" fill="#142131">Resolver</text>
+      <text x="440" y="252" text-anchor="middle" font-size="22" fill="#7A8791">재귀 질의</text>
+    </g>
+    <g id="authdns">
+      <rect x="610" y="170" width="260" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="740" y="218" text-anchor="middle" font-size="30" fill="#142131">Authoritative DNS</text>
+      <text x="740" y="252" text-anchor="middle" font-size="22" fill="#7A8791">권한 응답</text>
+    </g>
+    <g id="edge">
+      <rect x="610" y="470" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="720" y="518" text-anchor="middle" font-size="30" fill="#142131">Edge PoP</text>
+      <text x="720" y="552" text-anchor="middle" font-size="22" fill="#7A8791">가까운 진입점</text>
+    </g>
+    <g id="shield">
+      <rect x="880" y="470" width="240" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1000" y="518" text-anchor="middle" font-size="30" fill="#142131">Origin Shield</text>
+      <text x="1000" y="552" text-anchor="middle" font-size="22" fill="#7A8791">원본 보호</text>
+    </g>
+    <g id="region">
+      <rect x="1170" y="470" width="180" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1260" y="518" text-anchor="middle" font-size="30" fill="#142131">리전</text>
+      <text x="1260" y="552" text-anchor="middle" font-size="22" fill="#7A8791">처리 위치</text>
+    </g>
+    <g id="owner">
+      <rect x="1390" y="410" width="140" height="190" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1460" y="498" text-anchor="middle" font-size="26" fill="#142131">데이터</text>
+      <text x="1460" y="534" text-anchor="middle" font-size="26" fill="#142131">소유 리전</text>
+    </g>
+  </g>
+
+  <g id="edges-dns" fill="none">
+    <path d="M200 410 L200 320 L330 320 L330 290" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="8 8" marker-end="url(#arrow-mut)"/>
+    <path d="M550 230 L610 230" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="8 8" marker-end="url(#arrow-mut)"/>
+    <path d="M720 290 L720 350 L440 350 L440 290" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="8 8" marker-end="url(#arrow-mut)"/>
+    <text x="565" y="340" text-anchor="middle" font-size="22" fill="#7A8791">해석 결과 회신</text>
+  </g>
+
+  <g id="edges-data" fill="none">
+    <path d="M270 510 L610 510 L610 530" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="430" y="498" text-anchor="middle" font-size="22" fill="#283541">해석된 주소로 접속</text>
+    <path d="M830 530 L880 530" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M1120 530 L1170 530" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M1350 530 L1390 530" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="footnote" font-size="22" fill="#7A8791">
+    <text x="70" y="800">데이터 경로 위에 주소 해석이 겹치지 않도록 두 단계로 나누면 전역 흐름이 한눈에 보인다.</text>
+  </g>
+</svg>

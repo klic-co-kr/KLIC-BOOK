@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>동기 재시도와 분산 재시도 비교</title>
+  <desc>여러 client가 같은 시점에 재시도해 실패가 몰리는 현상과, Backoff와 Jitter, Retry Budget을 적용해 재시도를 분산시킨 모습을 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="60" font-size="34" font-weight="700" fill="#142131">동기 재시도 vs Jitter 적용 분산 재시도</text>
+    <text x="70" y="96" font-size="24" fill="#7A8791">같은 시점에 몰리는 재시도가 실패를 키우고, 분산이 회복을 돕는다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1110" y1="88" x2="1180" y2="88" stroke="#283541" stroke-width="2.5"/>
+    <text x="1190" y="96">동기화된 재시도</text>
+    <line x1="1370" y1="88" x2="1440" y2="88" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="3 6"/>
+    <text x="1450" y="96">분산 재시도</text>
+  </g>
+
+  <g id="panel-a">
+    <rect x="50" y="130" width="1500" height="320" rx="16" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="78" y="170" font-size="26" font-weight="700" fill="#142131">동기 재시도 — 함께 몰리는 재시도</text>
+
+    <g id="a-clients">
+      <g><rect x="90" y="200" width="210" height="64" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="195" y="241" text-anchor="middle" font-size="26" fill="#142131">Client 1</text></g>
+      <g><rect x="90" y="280" width="210" height="64" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="195" y="321" text-anchor="middle" font-size="26" fill="#142131">Client 2</text></g>
+      <g><rect x="90" y="360" width="210" height="64" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="195" y="401" text-anchor="middle" font-size="26" fill="#142131">Client 3</text></g>
+    </g>
+
+    <g id="a-waves" stroke="#283541" stroke-width="2.5" fill="none">
+      <path d="M300 232 L1240 232" marker-end="url(#arrow)"/>
+      <path d="M300 312 L1240 312" marker-end="url(#arrow)"/>
+      <path d="M300 392 L1240 392" marker-end="url(#arrow)"/>
+      <path d="M300 252 L1240 252" marker-end="url(#arrow)"/>
+      <path d="M300 332 L1240 332" marker-end="url(#arrow)"/>
+      <path d="M300 412 L1240 412" marker-end="url(#arrow)"/>
+    </g>
+    <g font-size="22" fill="#7A8791" text-anchor="middle">
+      <text x="770" y="196">같은 시점에 재시도 →</text>
+    </g>
+
+    <g id="a-fail">
+      <rect x="1240" y="210" width="240" height="200" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="3"/>
+      <text x="1360" y="300" text-anchor="middle" font-size="34" font-weight="700" fill="#D39A2C">실패</text>
+      <text x="1360" y="346" text-anchor="middle" font-size="22" fill="#283541">과부하로 동시 실패</text>
+    </g>
+  </g>
+
+  <g id="panel-b">
+    <rect x="50" y="470" width="1500" height="380" rx="16" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="78" y="510" font-size="26" font-weight="700" fill="#142131">Backoff + Jitter + Retry Budget — 분산된 재시도</text>
+
+    <g id="b-clients">
+      <g><rect x="90" y="560" width="210" height="64" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="195" y="601" text-anchor="middle" font-size="26" fill="#142131">Client 1</text></g>
+      <g><rect x="90" y="640" width="210" height="64" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="195" y="681" text-anchor="middle" font-size="26" fill="#142131">Client 2</text></g>
+      <g><rect x="90" y="720" width="210" height="64" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="195" y="761" text-anchor="middle" font-size="26" fill="#142131">Client 3</text></g>
+    </g>
+
+    <g id="controls">
+      <g><rect x="420" y="560" width="220" height="64" rx="12" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/><text x="530" y="601" text-anchor="middle" font-size="26" fill="#142131">Backoff</text></g>
+      <g><rect x="420" y="640" width="220" height="64" rx="12" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/><text x="530" y="681" text-anchor="middle" font-size="26" fill="#142131">Jitter</text></g>
+      <g><rect x="420" y="720" width="220" height="64" rx="12" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/><text x="530" y="761" text-anchor="middle" font-size="26" fill="#142131">Retry Budget</text></g>
+    </g>
+
+    <g id="b-edges" stroke="#0F8790" stroke-width="2.5" fill="none">
+      <path d="M300 592 L420 592" marker-end="url(#arrow-teal)"/>
+      <path d="M300 672 L420 672" marker-end="url(#arrow-teal)"/>
+      <path d="M300 752 L420 752" marker-end="url(#arrow-teal)"/>
+      <path d="M640 592 C820 592, 900 592, 1080 592" stroke-dasharray="3 6" marker-end="url(#arrow-teal)"/>
+      <path d="M640 672 C820 660, 900 660, 1080 660" stroke-dasharray="3 6" marker-end="url(#arrow-teal)"/>
+      <path d="M640 752 C820 770, 900 770, 1080 770" stroke-dasharray="3 6" marker-end="url(#arrow-teal)"/>
+    </g>
+    <g font-size="22" fill="#7A8791">
+      <text x="312" y="546">재시도</text>
+      <text x="710" y="546" text-anchor="middle">시간차 분산</text>
+    </g>
+
+    <g id="b-target">
+      <rect x="1080" y="560" width="240" height="224" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1200" y="640" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">Downstream</text>
+      <text x="1200" y="686" text-anchor="middle" font-size="22" fill="#283541">재시도가 퍼져서</text>
+      <text x="1200" y="716" text-anchor="middle" font-size="22" fill="#283541">과부하 완화</text>
+    </g>
+    <text x="1360" y="760" font-size="22" fill="#0F8790">회복 도모</text>
+  </g>
+</svg>

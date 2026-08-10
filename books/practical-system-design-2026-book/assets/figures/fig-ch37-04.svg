@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>중복 주문·결제 timeout·결과 조회·webhook 재조정</title>
+  <desc>중복 주문을 idempotency key로 단일화하고, 결제 timeout으로 unknown outcome이 발생하면 result lookup과 webhook로 재조정하는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="80">중복 주문·결제 timeout·결과 조회·webhook reconciliation</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="960" y="55" width="585" height="48" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="980" y1="79" x2="1040" y2="79" stroke="#283541" stroke-width="2.5"/>
+    <text x="1050" y="87">정상 흐름</text>
+    <line x1="1190" y1="79" x2="1250" y2="79" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1260" y="87">timeout·불명</text>
+    <line x1="1420" y1="79" x2="1480" y2="79" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6"/>
+    <text x="1490" y="87">재조정</text>
+  </g>
+
+  <g id="band-labels" font-size="22" fill="#7A8791">
+    <text x="40" y="325" transform="rotate(-90 40 325)" text-anchor="middle">정상 경로</text>
+    <text x="40" y="645" transform="rotate(-90 40 645)" text-anchor="middle">timeout 복구</text>
+  </g>
+
+  <g id="nodes-main">
+    <g id="client">
+      <rect x="70" y="260" width="240" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="190" y="335" text-anchor="middle" font-size="30" fill="#142131">클라이언트</text>
+    </g>
+    <g id="idem">
+      <rect x="420" y="260" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="540" y="335" text-anchor="middle" font-size="28" fill="#142131"><tspan x="540" dy="0">Idempotency</tspan><tspan x="540" dy="32">Key</tspan></text>
+    </g>
+    <g id="pay-call">
+      <rect x="790" y="260" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="910" y="335" text-anchor="middle" font-size="28" fill="#142131"><tspan x="910" dy="0">주문·결제</tspan><tspan x="910" dy="32">호출</tspan></text>
+    </g>
+    <g id="done">
+      <rect x="1200" y="260" width="240" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <rect x="1208" y="268" width="224" height="114" rx="10" fill="none" stroke="#0F8790" stroke-width="1.5"/>
+      <text x="1320" y="335" text-anchor="middle" font-size="30" fill="#142131">결제 완료</text>
+    </g>
+  </g>
+
+  <g id="nodes-recovery">
+    <g id="timeout">
+      <rect x="300" y="580" width="240" height="130" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="420" y="655" text-anchor="middle" font-size="30" fill="#142131">Timeout</text>
+    </g>
+    <g id="unknown">
+      <rect x="600" y="580" width="240" height="130" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="720" y="655" text-anchor="middle" font-size="28" fill="#142131"><tspan x="720" dy="0">Unknown</tspan><tspan x="720" dy="32">Outcome</tspan></text>
+    </g>
+    <g id="lookup">
+      <rect x="900" y="580" width="240" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1020" y="655" text-anchor="middle" font-size="28" fill="#142131"><tspan x="1020" dy="0">Result</tspan><tspan x="1020" dy="32">Lookup</tspan></text>
+    </g>
+    <g id="webhook">
+      <rect x="1200" y="580" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1320" y="655" text-anchor="middle" font-size="30" fill="#142131">Webhook</text>
+    </g>
+  </g>
+
+  <g id="edges-main" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M310 305 L420 305"/>
+    <path d="M310 345 L420 345" marker-end="url(#arrow)"/>
+    <path d="M660 325 L790 325" marker-end="url(#arrow)"/>
+    <path d="M1030 325 L1200 325" marker-end="url(#arrow)"/>
+  </g>
+  <g id="edge-main-labels" font-size="22" fill="#283541">
+    <text x="365" y="280" text-anchor="middle">중복 요청</text>
+    <text x="725" y="315" text-anchor="middle">단일화</text>
+    <text x="1115" y="315" text-anchor="middle">정상 승인</text>
+  </g>
+
+  <g id="edges-fail" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none">
+    <path d="M910 390 C 910 500, 420 500, 420 580" marker-end="url(#arrow-amb)"/>
+    <path d="M540 645 L600 645" marker-end="url(#arrow-amb)"/>
+    <path d="M840 645 L900 645" marker-end="url(#arrow-amb)"/>
+  </g>
+  <g id="edge-fail-labels" font-size="22" fill="#D39A2C">
+    <text x="660" y="495" text-anchor="middle">응답 지연</text>
+    <text x="570" y="635" text-anchor="middle">상태 불명</text>
+    <text x="870" y="635" text-anchor="middle">조회</text>
+  </g>
+
+  <g id="edges-recover" stroke="#0F8790" stroke-width="2.5" fill="none">
+    <path d="M1200 645 L1140 645" marker-end="url(#arrow-accent)"/>
+  </g>
+  <g id="edge-recover-solid-labels" font-size="22" fill="#0F8790">
+    <text x="1170" y="635" text-anchor="middle">비동기 수신</text>
+  </g>
+
+  <g id="edges-reconcile" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6" fill="none">
+    <path d="M1020 580 C 1020 470, 1320 470, 1320 390" marker-end="url(#arrow-accent)"/>
+  </g>
+  <g id="edge-reconcile-labels" font-size="22" fill="#0F8790">
+    <text x="1170" y="455" text-anchor="middle">재조정 완료</text>
+  </g>
+</svg>

@@ -1,0 +1,163 @@
+book:
+  title: "실전 시스템 설계 2026"
+  metadata_title: "실전 시스템 설계 2026: AI 시대의 아키텍처, 운영, 신뢰성, 그리고 확장성"
+  subtitle: "AI 시대의 아키텍처, 운영, 신뢰성, 그리고 확장성"
+  author: "원작 Donne Martin · 한국어 개정 KLIC"
+  language: "ko-KR"
+  short_title: "PRACTICAL SYSTEM DESIGN 2026"
+  output_name: "practical-system-design-2026-ko"
+  subject: "실전 시스템 설계 2026 한국어 PDF 편집본"
+  keywords:
+    - 시스템 설계
+    - 분산 시스템
+    - 아키텍처
+    - 가용성
+    - AI 네이티브
+    - System Design Primer
+  edition_label: "2026.1 초고 · 한국어 PDF 편집본"
+  copyright_notice: "이 책의 일부 구조와 학습 주제는 Donne Martin의 The System Design Primer(CC BY 4.0)를 자료원으로 번역·재구성·수정했다. 원저자는 이 개정 초안을 보증하거나 후원하지 않는다. 자체 작성 본문·명세는 CC BY 4.0 배포를 전제로 하며, 최종 출판 조건과 제3자 인용 범위는 출판 전 법률 검토가 필요하다. 본 판본은 38장 1차 초고로 기술·편집·시각자료 최종 검수 전이다."
+  build_date: "auto"
+
+files:
+  include:
+    - "*.md"
+    - "**/*.md"
+  exclude:
+    - "**/node_modules/**"
+    - "**/.git/**"
+    - "**/output/**"
+    - "**/build/**"
+    - "**/*_완료보고서.md"
+  # 단일 BOOK.md 입력: 스킬이 H1 단위로 분할. 책제목 블록·목차는 자동 스킵.
+  front_matter_file: ""
+  order: []
+  strip_front_matter_sections:
+    - "목차"
+  front_matter_drop_paragraphs: []
+  strip_front_matter_leading_rules: true
+  chapter_file_pattern: ".*\\.md$"
+
+editorial:
+  preset: "fde-midnight"
+  cover_theme: "slate"
+  # 제공된 표지 이미지를 우선 사용(없으면 slate 테마 자동 생성 표지로 폴백).
+  cover_image: "books/practical-system-design-2026-book/assets/cover/title.png"
+  include_cover: true
+  include_title_page: true
+  include_editorial_note: true
+  include_generated_toc: true
+  include_chapter_openers: true
+  toc_depth: 2
+  section_list_depth: 2
+  cover_eyebrow: "PRACTICAL SYSTEM DESIGN"
+  cover_watermark: "SD"
+  title_page_quote: "auto"
+  title_page_edition_label: "38장 전체 1차 초고 · 기술/편집/시각자료 검수 전"
+  front_matter_header: "ABOUT THIS BOOK"
+  chapter_eyebrow: "CHAPTER"
+  part_eyebrow: "PART"
+  appendix_eyebrow: "APPENDIX"
+  afterword_eyebrow: "AFTERWORD"
+  editorial_note_title: "PDF 편집본 안내"
+  editorial_note_paragraphs:
+    - "이 문서는 제공된 한국어 Markdown 원고(7부 38장·부록)를 하나의 책으로 편집한 PDF 편집본이다. 원문의 장·절 구조와 본문 내용을 유지했다."
+    - "표지, 제목 페이지, 목차, 장 표제지, 머리말·꼬리말, 링크와 인용문 스타일은 읽기와 탐색을 돕도록 재구성했다. 원고의 사실 관계와 출처 표기는 원문을 따른다."
+    - "원고의 일부 구조와 주제는 Donne Martin의 The System Design Primer(CC BY 4.0)를 자료원으로 삼아 번역·재구성·수정했다. 원저자는 이 개정 초안을 보증하거나 후원하지 않는다."
+  editorial_note_footer_paragraphs:
+    - "이 판본은 38장 1차 초고로, 기술·편집·시각자료에 대한 최종 검수를 앞두고 있다."
+  build_date_format: "iso"
+  cover_process_chips:
+    - 설계 방법
+    - 분산 기초
+    - 네트워크
+    - 데이터
+    - 프로덕션
+    - AI
+    - 종합 설계
+
+visuals:
+  enabled: true
+  auto_from_headings: true
+  default_kicker: "CHAPTER MAP"
+  default_title: "이 장의 흐름"
+  default_note: "편집 요약: 본문의 장·절 구조와 핵심 문장을 재배열한 도식이며, 원문을 대체하지 않습니다."
+  chapters: {}
+
+style:
+  page_size: "A4"
+  body_font: "Noto Sans KR, Noto Sans CJK KR, Malgun Gothic, sans-serif"
+  heading_font: "Noto Sans KR, Noto Sans CJK KR, Malgun Gothic, sans-serif"
+  mono_font: "DejaVu Sans Mono, monospace"
+  body_font_size_pt: 9.8
+  body_line_height: 1.72
+  colors:
+    navy: "#081827"
+    navy_alt: "#102B38"
+    cyan: "#36C7D0"
+    cyan_dark: "#0F8790"
+    amber: "#D39A2C"
+    ink: "#142131"
+    text: "#283541"
+    muted: "#7A8791"
+    line: "#D8E1E2"
+    wash: "#EFF5F4"
+    paper: "#FFFFFF"
+  margins_mm:
+    top: 18
+    right: 20
+    bottom: 17
+    left: 20
+  extra_css: |
+
+    /* 실전 시스템 설계 2026 — 본문 중심 회귀 프로필(다량 표·코드 고밀도 보정) */
+
+    .front-matter { font-size: 10.0pt; }
+    .front-matter p { margin-bottom: 4.0mm; }
+    .front-matter h2 { font-size: 18pt; }
+    .kind-frontmatter .fm-eyebrow { color: var(--cyan-dark); font-size: 8pt; letter-spacing: 2pt; margin-bottom: 6mm; }
+
+    /* 표지 이미지: 제공된 title.png 를 풀블리드 */
+    .cover.cover-image { padding: 0 !important; }
+    .cover.cover-image::before, .cover.cover-image::after { content: none !important; }
+    .cover.cover-image img { width: 210mm; height: 297mm; object-fit: cover; display: block; }
+
+    .toc h1 { bookmark-level: 1; font-size: 26pt; }
+    .toc-item > a { font-size: 9.2pt; }
+    .toc-item > a::after { font-family: "Noto Sans KR", sans-serif; font-size: 7.4pt; white-space: nowrap; }
+    .toc-sections li { font-size: 7.6pt; }
+    .toc-sections a::after { font-family: "Noto Sans KR", sans-serif; font-size: 7.4pt; white-space: nowrap; }
+
+    /* 표·코드가 많은 기술서: 본문·표 폰트 약간 축소, 줄바꿈 안정화 */
+    table { font-size: 8.4pt; line-height: 1.5; }
+    table th { font-size: 8.6pt; }
+    pre, code { font-size: 8.3pt; line-height: 1.5; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+
+    .chapter-body h2 { font-size: 15.6pt; }
+    .chapter-body h3 { font-size: 12.0pt; }
+    .chapter-body h4 { font-size: 10.4pt; }
+
+    /* 시각 요약(process) 카드 가독성 보정 */
+    .diagram-shell { min-height: 70mm; }
+
+    /* 본문 인라인 시각자료(figure-spec → SVG 임베드 / 미생성 시 자리표시자) */
+    .book-figure { margin: 6mm 0 7mm; break-inside: avoid; text-align: center; }
+    .book-figure img { width: 100%; max-width: 168mm; height: auto; border: .5pt solid var(--line); border-radius: 2mm; }
+    .book-figure figcaption { font-size: 8pt; color: var(--muted); margin-top: 2.5mm; line-height: 1.5; }
+    .book-figure-pending { border: .6pt dashed var(--line); border-radius: 2mm; padding: 6mm; background: var(--wash); }
+    .book-figure-pending img { display: none; }
+    .book-figure-pending .figure-pending { text-align: center; }
+    .figure-pending-mark { display: inline-block; font-size: 7pt; letter-spacing: 1.5pt; color: var(--cyan-dark); border: .5pt solid var(--cyan-dark); border-radius: 1mm; padding: .6mm 2mm; margin-bottom: 2mm; }
+    .figure-pending-caption { display: block; font-size: 9pt; color: var(--text); }
+    .figure-pending-note { color: var(--muted); }
+
+quality:
+  require_a4: true
+  require_embedded_fonts: true
+  require_unicode_fonts: true
+  require_outline: true
+  allow_blank_pages: 0
+  paragraph_probe_min_chars: 36
+  paragraph_probe_limit: 1200
+  reference_ngram_words: 8
+  reference_ngram_min_chars: 44

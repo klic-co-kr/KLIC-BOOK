@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>동시 miss가 single-flight·stale·jitter로 하나로 합쳐지는 흐름</title>
+  <desc>동시 요청이 만료된 캐시를 만났을 때 Single Flight로 원본 요청을 하나로 합치고, 나머지는 Stale 응답으로 처리하며, TTL Jitter가 동시 만료를 분산시킨다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="56" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">동시 miss가 Single Flight·Stale·TTL Jitter로 원본 한 요청으로 합쳐진다</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="900" y1="92" x2="980" y2="92" stroke="#283541" stroke-width="2.5"/><text x="990" y="100">정상 요청</text>
+    <line x1="1180" y1="92" x2="1260" y2="92" stroke="#0F8790" stroke-width="2.5"/><text x="1270" y="100">Single Flight(1건)</text>
+    <line x1="1420" y1="92" x2="1480" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="1490" y="100">Stale</text>
+  </g>
+
+  <!-- Concurrent requests -->
+  <g id="clients" font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="60" y="180" width="180" height="80" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="150" y="227">요청 1</text></g>
+    <g><rect x="60" y="290" width="180" height="80" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="150" y="337">요청 2</text></g>
+    <g><rect x="60" y="400" width="180" height="80" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="150" y="447">요청 3</text></g>
+    <text x="150" y="528" font-size="22" fill="#7A8791" font-weight="400">동시 요청</text>
+  </g>
+
+  <!-- Cache (expired) -->
+  <g id="cache">
+    <rect x="380" y="270" width="240" height="180" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="500" y="338" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Cache</text>
+    <text x="500" y="378" text-anchor="middle" font-size="24" font-weight="700" fill="#D39A2C">만료</text>
+    <text x="500" y="412" text-anchor="middle" font-size="22" fill="#7A8791">(TTL 지남)</text>
+  </g>
+
+  <!-- Single Flight node -->
+  <g id="single-flight">
+    <rect x="740" y="290" width="260" height="140" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="870" y="345" text-anchor="middle" font-size="26" font-weight="700" fill="#0F8790">Single Flight</text>
+    <text x="870" y="385" text-anchor="middle" font-size="22" fill="#7A8791">한 건만 원본으로</text>
+    <text x="870" y="415" text-anchor="middle" font-size="22" fill="#7A8791">나머지는 대기</text>
+  </g>
+
+  <!-- Origin -->
+  <g id="origin">
+    <rect x="1120" y="290" width="220" height="140" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="1230" y="345" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Origin</text>
+    <text x="1230" y="385" text-anchor="middle" font-size="22" fill="#7A8791">1회 호출</text>
+  </g>
+
+  <!-- Stale responses back to other requests -->
+  <g id="stale-respond">
+    <rect x="740" y="540" width="260" height="120" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="870" y="590" text-anchor="middle" font-size="26" font-weight="700" fill="#D39A2C">Stale 응답</text>
+    <text x="870" y="628" text-anchor="middle" font-size="22" fill="#7A8791">이전 값으로 즉시 반환</text>
+  </g>
+
+  <!-- TTL Jitter -->
+  <g id="jitter">
+    <rect x="60" y="640" width="240" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="180" y="688" text-anchor="middle" font-size="26" font-weight="700" fill="#142131">TTL Jitter</text>
+    <text x="180" y="724" text-anchor="middle" font-size="22" fill="#7A8791">만료 시각 분산</text>
+  </g>
+
+  <!-- Edges: clients → cache -->
+  <g fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M240 220 L 380 320" marker-end="url(#arrow)"/>
+    <path d="M240 330 L 380 360" marker-end="url(#arrow)"/>
+    <path d="M240 440 L 380 400" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Cache → Single Flight -->
+  <path d="M620 360 L 740 360" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <!-- Single Flight → Origin (1 request, accent) -->
+  <path d="M1000 360 L 1120 360" fill="none" stroke="#0F8790" stroke-width="3" marker-end="url(#arrow-acc)"/>
+  <text x="1060" y="348" text-anchor="middle" font-size="22" font-weight="700" fill="#0F8790">1건</text>
+
+  <!-- Single Flight → Stale response (for others) -->
+  <path d="M870 430 L 870 540" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+  <text x="930" y="490" text-anchor="middle" font-size="22" font-weight="700" fill="#D39A2C">나머지</text>
+
+  <!-- Origin → Single Flight back (filled cache) -->
+  <path d="M1120 380 L 1000 380" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+  <text x="1060" y="402" text-anchor="middle" font-size="20" fill="#0F8790">갱신</text>
+
+  <!-- Jitter → Cache (prevents synchronized expiry) -->
+  <path d="M300 700 C 400 700, 380 460, 380 420" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="380" y="580" text-anchor="middle" font-size="22" fill="#7A8791">만료 찰나 분산</text>
+</svg>

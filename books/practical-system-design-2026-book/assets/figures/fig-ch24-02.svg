@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>주문·재고·결제 Saga 상태 전이</title>
+  <desc>주문에서 재고 예약·결제 승인을 거쳐 완료되는 정상 경로와, timeout 발생 시 보상을 거쳐 수동 개입으로 빠지는 실패 경로의 상태 전이를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="50" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">주문·재고·결제 단계의 성공 경로와 timeout·보상·수동 개입</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="900" y1="86" x2="980" y2="86" stroke="#283541" stroke-width="2.5"/><text x="990" y="94">정상 전이(성공)</text>
+    <line x1="1220" y1="86" x2="1300" y2="86" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="1310" y="94">실패·보상</text>
+  </g>
+
+  <!-- Happy path states (top row) -->
+  <g id="happy" font-size="28" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="40" y="200" width="220" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="150" y="252">주문</text><text x="150" y="290" font-size="22" font-weight="400" fill="#7A8791">시작 상태</text></g>
+    <g><rect x="340" y="200" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="450" y="252">재고 예약</text><text x="450" y="290" font-size="22" font-weight="400" fill="#7A8791">예약 성공</text></g>
+    <g><rect x="640" y="200" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="750" y="252">결제 승인</text><text x="750" y="290" font-size="22" font-weight="400" fill="#7A8791">승인 성공</text></g>
+    <g><rect x="940" y="200" width="220" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1050" y="252">완료</text><text x="1050" y="290" font-size="22" font-weight="400" fill="#7A8791">종료(성공)</text></g>
+  </g>
+
+  <!-- Happy arrows -->
+  <g fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M260 260 L 340 260" marker-end="url(#arrow)"/>
+    <path d="M560 260 L 640 260" marker-end="url(#arrow)"/>
+    <path d="M860 260 L 940 260" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="22" fill="#283541" text-anchor="middle">
+    <text x="300" y="248">예약 OK</text>
+    <text x="600" y="248">승인 OK</text>
+    <text x="900" y="248">커밋</text>
+  </g>
+
+  <!-- Failure branch: Timeout under each happy state -->
+  <g id="timeouts" font-size="26" fill="#D39A2C" text-anchor="middle" font-weight="700">
+    <g><rect x="40" y="500" width="220" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="150" y="544">Timeout</text><text x="150" y="578" font-size="20" font-weight="400" fill="#7A8791">예약 지연</text></g>
+    <g><rect x="340" y="500" width="220" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="450" y="544">Timeout</text><text x="450" y="578" font-size="20" font-weight="400" fill="#7A8791">결제 지연</text></g>
+    <g><rect x="640" y="500" width="220" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="750" y="544">Timeout</text><text x="750" y="578" font-size="20" font-weight="400" fill="#7A8791">승인 응답 없음</text></g>
+  </g>
+
+  <!-- Timeout arrows from each happy state downward -->
+  <g fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M150 320 L 150 500" marker-end="url(#arrow-amb)"/>
+    <path d="M450 320 L 450 500" marker-end="url(#arrow-amb)"/>
+    <path d="M750 320 L 750 500" marker-end="url(#arrow-amb)"/>
+  </g>
+
+  <!-- Compensation row -->
+  <g id="compensation" font-size="26" fill="#D39A2C" text-anchor="middle" font-weight="700">
+    <g><rect x="340" y="660" width="220" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="450" y="704">보상</text><text x="450" y="738" font-size="20" font-weight="400" fill="#7A8791">예약 취소</text></g>
+    <g><rect x="640" y="660" width="220" height="100" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="750" y="704">보상</text><text x="750" y="738" font-size="20" font-weight="400" fill="#7A8791">결제 취소·환불</text></g>
+  </g>
+
+  <!-- Timeout → 보상 (leftward, reverse order) -->
+  <g fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M340 550 L 260 550 L 260 710 L 340 710" marker-end="url(#arrow-amb)"/>
+    <path d="M640 550 L 560 550 L 560 710 L 640 710" marker-end="url(#arrow-amb)"/>
+    <path d="M750 600 L 750 660" marker-end="url(#arrow-amb)"/>
+  </g>
+
+  <!-- 수동 개입 state -->
+  <g id="manual">
+    <rect x="1240" y="660" width="300" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="1390" y="710" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">수동 개입</text>
+    <text x="1390" y="748" text-anchor="middle" font-size="22" fill="#7A8791">운영자 확인 대기</text>
+  </g>
+
+  <!-- 보상 → 수동 개입 -->
+  <g fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M860 710 L 1240 710" marker-end="url(#arrow-amb)"/>
+  </g>
+  <text x="1050" y="698" text-anchor="middle" font-size="22" fill="#D39A2C">보상 실패/불가</text>
+
+  <text x="800" y="838" text-anchor="middle" font-size="22" fill="#7A8791">각 단계의 timeout은 이전 단계를 되돌리는 보상으로 연쇄되고, 보상마저 실패하면 수동 개입으로 넘어간다</text>
+</svg>

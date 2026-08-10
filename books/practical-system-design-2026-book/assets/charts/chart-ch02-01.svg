@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>시나리오별 정규화 자원 요구량</title>
+  <desc>동일한 용량 산정 식에서 요청률·저장량·대역폭이 낮음·기준·높음 시나리오에서 어떻게 달라지는지 비교한다. 합성 예시 데이터.</desc>
+  <defs>
+    <pattern id="hatch" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+      <rect width="10" height="10" fill="#FFFFFF"/>
+      <line x1="0" y1="0" x2="0" y2="10" stroke="#142131" stroke-width="3"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="200" y="80" font-size="24" fill="#7A8791">예시(합성 데이터)</text>
+
+  <g id="legend" font-size="24" fill="#283541">
+    <rect x="1060" y="60" width="26" height="20" fill="#0F8790" stroke="#142131" stroke-width="2"/>
+    <text x="1096" y="78">요청률</text>
+    <rect x="1200" y="60" width="26" height="20" fill="url(#hatch)" stroke="#142131" stroke-width="2"/>
+    <text x="1236" y="78">저장량</text>
+    <rect x="1340" y="60" width="26" height="20" fill="#F4F8FA" stroke="#142131" stroke-width="2.5" stroke-dasharray="5 3"/>
+    <text x="1376" y="78">대역폭</text>
+  </g>
+
+  <g id="axes" stroke="#142131" fill="none">
+    <line x1="200" y1="700" x2="1400" y2="700" stroke-width="2.5"/>
+    <line x1="200" y1="130" x2="200" y2="700" stroke-width="2.5"/>
+  </g>
+
+  <g id="gridlines" stroke="#D8E1E2" stroke-width="1.5">
+    <line x1="200" y1="537" x2="1400" y2="537"/>
+    <line x1="200" y1="374" x2="1400" y2="374"/>
+    <line x1="200" y1="211" x2="1400" y2="211"/>
+  </g>
+
+  <g id="y-labels" font-size="24" fill="#7A8791" text-anchor="end">
+    <text x="188" y="708">0</text>
+    <text x="188" y="545">100</text>
+    <text x="188" y="382">200</text>
+    <text x="188" y="219">300</text>
+  </g>
+
+  <g id="x-labels" font-size="28" fill="#142131" text-anchor="middle">
+    <text x="400" y="740">낮음</text>
+    <text x="800" y="740">기준</text>
+    <text x="1200" y="740">높음</text>
+  </g>
+
+  <text x="800" y="800" text-anchor="middle" font-size="26" fill="#283541">시나리오</text>
+  <text x="90" y="415" text-anchor="middle" font-size="26" fill="#283541" transform="rotate(-90 90 415)">정규화된 자원 요구량 (%)</text>
+
+  <g id="bars">
+    <rect x="255" y="651" width="90" height="49" fill="#0F8790" stroke="#142131" stroke-width="2"/>
+    <rect x="355" y="627" width="90" height="73" fill="url(#hatch)" stroke="#142131" stroke-width="2"/>
+    <rect x="455" y="659" width="90" height="41" fill="#F4F8FA" stroke="#142131" stroke-width="2.5" stroke-dasharray="5 3"/>
+
+    <rect x="655" y="537" width="90" height="163" fill="#0F8790" stroke="#142131" stroke-width="2"/>
+    <rect x="755" y="537" width="90" height="163" fill="url(#hatch)" stroke="#142131" stroke-width="2"/>
+    <rect x="855" y="537" width="90" height="163" fill="#F4F8FA" stroke="#142131" stroke-width="2.5" stroke-dasharray="5 3"/>
+
+    <rect x="1055" y="244" width="90" height="456" fill="#0F8790" stroke="#142131" stroke-width="2"/>
+    <rect x="1155" y="342" width="90" height="358" fill="url(#hatch)" stroke="#142131" stroke-width="2"/>
+    <rect x="1255" y="195" width="90" height="505" fill="#F4F8FA" stroke="#142131" stroke-width="2.5" stroke-dasharray="5 3"/>
+  </g>
+
+  <g id="value-labels" font-size="22" fill="#142131" text-anchor="middle">
+    <text x="300" y="640">30</text>
+    <text x="400" y="616">45</text>
+    <text x="500" y="648">25</text>
+
+    <text x="700" y="526">100</text>
+    <text x="800" y="526">100</text>
+    <text x="900" y="526">100</text>
+
+    <text x="1100" y="233">280</text>
+    <text x="1200" y="331">220</text>
+    <text x="1300" y="184">310</text>
+  </g>
+</svg>

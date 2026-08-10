@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>RAG 품질 퍼널</title>
+  <desc>candidate recall·rerank precision·context coverage·grounding·citation·abstention으로 이어지는 품질 단계를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="34" font-weight="700" fill="#142131">RAG 품질 퍼널</text>
+    <text x="60" y="108" font-size="22" fill="#7A8791">후보 recall에서 인용까지 단계별 정제 과정과 보류(abstention) 경로</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1080" y1="68" x2="1160" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="76">정상 정제</text>
+    <line x1="1300" y1="68" x2="1380" y2="68" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1390" y="76">근거 부족 시</text>
+  </g>
+
+  <g id="funnel-label">
+    <text x="60" y="200" font-size="22" fill="#7A8791">후보 수(개념적)</text>
+    <line x1="60" y1="216" x2="220" y2="216" stroke="#7A8791" stroke-width="2"/>
+  </g>
+
+  <g id="funnel-bars" fill="#EFF5F4" stroke="#0F8790" stroke-width="2">
+    <rect x="90" y="230" width="220" height="100" rx="6"/>
+    <rect x="390" y="265" width="220" height="65"  rx="6"/>
+    <rect x="690" y="295" width="220" height="35"  rx="6"/>
+    <rect x="990" y="315" width="220" height="15"  rx="6"/>
+    <rect x="1290" y="325" width="220" height="5" rx="6"/>
+  </g>
+
+  <g id="stages">
+    <g id="recall">
+      <rect x="90" y="370" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="200" y="442" text-anchor="middle" font-size="28" fill="#142131">Recall@k</text>
+    </g>
+    <g id="reranker">
+      <rect x="390" y="370" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="500" y="442" text-anchor="middle" font-size="28" fill="#142131">Reranker</text>
+    </g>
+    <g id="coverage">
+      <rect x="690" y="370" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="432" text-anchor="middle" font-size="26" fill="#142131">Context</text>
+      <text x="800" y="465" text-anchor="middle" font-size="26" fill="#142131">Coverage</text>
+    </g>
+    <g id="grounding">
+      <rect x="990" y="370" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1100" y="442" text-anchor="middle" font-size="28" fill="#142131">Grounding</text>
+    </g>
+    <g id="citation">
+      <rect x="1290" y="370" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1400" y="442" text-anchor="middle" font-size="28" fill="#142131">Citation</text>
+    </g>
+  </g>
+
+  <g id="abstention">
+    <rect x="820" y="700" width="240" height="120" rx="14" fill="#FFF7E8" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="940" y="767" text-anchor="middle" font-size="28" fill="#142131">Abstention</text>
+  </g>
+
+  <g id="stage-edges" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M310 435 L390 435" marker-end="url(#arrow)"/>
+    <path d="M610 435 L690 435" marker-end="url(#arrow)"/>
+    <path d="M910 435 L990 435" marker-end="url(#arrow)"/>
+    <path d="M1210 435 L1290 435" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="abstention-edges" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M800 500 L800 640 L880 640 L880 700" marker-end="url(#arrow-amb)"/>
+    <path d="M1100 500 L1100 640 L1000 640 L1000 700" marker-end="url(#arrow-amb)"/>
+    <text x="710" y="625" font-size="22" fill="#D39A2C">문맥 미충족</text>
+    <text x="1115" y="625" font-size="22" fill="#D39A2C">근거 미충족</text>
+  </g>
+</svg>

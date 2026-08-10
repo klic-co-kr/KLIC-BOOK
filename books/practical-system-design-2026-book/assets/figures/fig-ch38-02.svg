@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>사용자 메시지 end-to-end 흐름</title>
+  <desc>사용자 메시지가 tenant gateway · rag · model router · citation check를 거치고, 필요시 tool approval과 human handoff로 분기하는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="60">사용자 메시지 → tenant gateway · rag · model · citation · tool approval · human handoff</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="980" y="35" width="565" height="44" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1000" y1="57" x2="1060" y2="57" stroke="#283541" stroke-width="2.5"/>
+    <text x="1070" y="65">정상 흐름</text>
+    <line x1="1230" y1="57" x2="1290" y2="57" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1300" y="65">분기·에스컬레이션</text>
+    <line x1="1480" y1="57" x2="1510" y2="57" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6"/>
+  </g>
+  <g id="legend-note" font-size="22" fill="#0F8790">
+    <text x="1000" y="100">- -  응답 회신</text>
+  </g>
+
+  <g id="nodes-main">
+    <g id="user">
+      <rect x="80" y="300" width="220" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="190" y="375" text-anchor="middle" font-size="30" fill="#142131">사용자</text>
+    </g>
+    <g id="gateway">
+      <rect x="385" y="300" width="220" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="495" y="375" text-anchor="middle" font-size="28" fill="#142131"><tspan x="495" dy="0">Tenant</tspan><tspan x="495" dy="30">Gateway</tspan></text>
+    </g>
+    <g id="rag">
+      <rect x="690" y="300" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="375" text-anchor="middle" font-size="30" fill="#142131">RAG</text>
+    </g>
+    <g id="model">
+      <rect x="995" y="300" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1105" y="375" text-anchor="middle" font-size="28" fill="#142131"><tspan x="1105" dy="0">Model</tspan><tspan x="1105" dy="30">Router</tspan></text>
+    </g>
+    <g id="citation">
+      <rect x="1300" y="300" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1410" y="375" text-anchor="middle" font-size="28" fill="#142131"><tspan x="1410" dy="0">Citation</tspan><tspan x="1410" dy="30">Check</tspan></text>
+    </g>
+  </g>
+
+  <g id="nodes-branch">
+    <g id="tool">
+      <rect x="995" y="580" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="1105" y="655" text-anchor="middle" font-size="28" fill="#142131"><tspan x="1105" dy="0">Tool</tspan><tspan x="1105" dy="30">Approval</tspan></text>
+    </g>
+    <g id="handoff">
+      <rect x="1300" y="580" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="1410" y="655" text-anchor="middle" font-size="28" fill="#142131"><tspan x="1410" dy="0">Human</tspan><tspan x="1410" dy="30">Handoff</tspan></text>
+    </g>
+  </g>
+
+  <g id="edges-main" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M300 365 L385 365" marker-end="url(#arrow)"/>
+    <path d="M605 365 L690 365" marker-end="url(#arrow)"/>
+    <path d="M910 365 L995 365" marker-end="url(#arrow)"/>
+    <path d="M1215 365 L1300 365" marker-end="url(#arrow)"/>
+  </g>
+  <g id="edge-main-labels" font-size="22" fill="#283541">
+    <text x="342" y="355" text-anchor="middle">인증</text>
+    <text x="647" y="355" text-anchor="middle">검색</text>
+    <text x="952" y="355" text-anchor="middle">생성</text>
+    <text x="1257" y="355" text-anchor="middle">검증</text>
+  </g>
+
+  <g id="edges-branch" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none">
+    <path d="M1085 430 L1085 580" marker-end="url(#arrow-amb)"/>
+    <path d="M1410 430 L1410 580" marker-end="url(#arrow-amb)"/>
+  </g>
+  <g id="edge-branch-labels" font-size="22" fill="#D39A2C">
+    <text x="1000" y="510" text-anchor="end">도구 필요</text>
+    <text x="1325" y="510" text-anchor="end">위험·불확실</text>
+  </g>
+
+  <g id="edges-reply" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6" fill="none">
+    <path d="M1125 580 L1125 430" marker-end="url(#arrow-accent)"/>
+    <path d="M1410 300 C 1410 200, 190 200, 190 300" marker-end="url(#arrow-accent)"/>
+    <path d="M1410 710 C 1410 820, 190 820, 190 430" marker-end="url(#arrow-accent)"/>
+  </g>
+  <g id="edge-reply-labels" font-size="22" fill="#0F8790">
+    <text x="1135" y="510">승인됨</text>
+    <text x="800" y="190" text-anchor="middle">응답</text>
+    <text x="800" y="845" text-anchor="middle">사람 응답</text>
+  </g>
+</svg>

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>실시간 연결 재개 흐름</title>
+  <desc>실시간 연결이 끊긴 뒤 클라이언트가 재연결하고, Realtime Gateway가 Cursor로 Event Log에서 Replay 범위를 읽어 중복 제거와 함께 이어받는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-ctrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">실시간 연결 재개 흐름</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">단절 이후 Cursor·Replay·중복 제거로 같은 시점부터 이어받는다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="980" y1="92" x2="1060" y2="92" stroke="#283541" stroke-width="2.5"/>
+    <text x="1070" y="100">정상 스트림</text>
+    <line x1="1220" y1="92" x2="1300" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1310" y="100">재연결·Replay</text>
+    <line x1="1440" y1="92" x2="1520" y2="92" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1530" y="100">Cursor</text>
+  </g>
+
+  <g id="nodes">
+    <g id="client">
+      <rect x="70" y="380" width="220" height="140" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="180" y="432" text-anchor="middle" font-size="30" fill="#142131">클라이언트</text>
+      <text x="180" y="468" text-anchor="middle" font-size="22" fill="#7A8791">마지막 수신 시점</text>
+      <text x="180" y="498" text-anchor="middle" font-size="22" fill="#7A8791">기억 중</text>
+    </g>
+    <g id="gateway">
+      <rect x="430" y="320" width="280" height="260" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="570" y="370" text-anchor="middle" font-size="30" fill="#142131">Realtime Gateway</text>
+      <rect x="460" y="395" width="220" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+      <text x="570" y="432" text-anchor="middle" font-size="26" fill="#0F8790">Cursor 보관</text>
+      <rect x="460" y="470" width="220" height="60" rx="10" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2"/>
+      <text x="570" y="507" text-anchor="middle" font-size="26" fill="#D39A2C">Replay</text>
+      <rect x="460" y="545" width="220" height="50" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+      <text x="570" y="577" text-anchor="middle" font-size="24" fill="#142131">중복 제거</text>
+    </g>
+    <g id="eventlog">
+      <rect x="850" y="350" width="220" height="200" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="960" y="402" text-anchor="middle" font-size="30" fill="#142131">Event Log</text>
+      <rect x="880" y="420" width="160" height="36" rx="6" fill="#EFF5F4" stroke="#D8E1E2" stroke-width="1.5"/>
+      <text x="960" y="445" text-anchor="middle" font-size="22" fill="#7A8791">이벤트 N</text>
+      <rect x="880" y="462" width="160" height="36" rx="6" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="1.5"/>
+      <text x="960" y="487" text-anchor="middle" font-size="22" fill="#7A8791">이벤트 N+1</text>
+      <rect x="880" y="504" width="160" height="36" rx="6" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="1.5"/>
+      <text x="960" y="529" text-anchor="middle" font-size="22" fill="#7A8791">이벤트 N+2</text>
+    </g>
+    <g id="reconnect-note">
+      <rect x="70" y="200" width="220" height="80" rx="12" fill="#F4F8FA" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+      <text x="180" y="240" text-anchor="middle" font-size="26" fill="#D39A2C">재연결</text>
+      <text x="180" y="268" text-anchor="middle" font-size="22" fill="#7A8791">단절 감지</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M180 380 L180 280" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="195" y="335" font-size="22" fill="#D39A2C">연결 끊김</text>
+
+    <path d="M290 240 L430 240 L430 320" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="360" y="228" text-anchor="middle" font-size="22" fill="#D39A2C">이전 Cursor로 재접속</text>
+
+    <path d="M710 425 L850 425" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-ctrl)"/>
+    <text x="780" y="412" text-anchor="middle" font-size="22" fill="#0F8790">Cursor 위치 전달</text>
+
+    <path d="M850 500 L710 500" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="780" y="538" text-anchor="middle" font-size="22" fill="#D39A2C">Replay 범위 인출</text>
+
+    <path d="M570 595 L570 650 L180 650 L180 520" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="375" y="640" text-anchor="middle" font-size="22" fill="#283541">중복 제거 후 송신</text>
+  </g>
+
+  <g id="footnote" font-size="22" fill="#7A8791">
+    <text x="70" y="780">Cursor가 없으면 처음부터, 너무 오래되면 Replay 창 밖이어서 전체 동기화로 넘어간다. 중복 제거는 클라이언트가 이미 본 이벤트를 다시 보내지 않는다.</text>
+  </g>
+</svg>

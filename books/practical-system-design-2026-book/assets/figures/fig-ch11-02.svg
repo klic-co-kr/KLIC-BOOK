@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>샤드 재조정 단계</title>
+  <desc>Source Shard에서 Target Shard로 복사, 변경 로그 동기화, 검증, Ownership Epoch 전환하는 단계를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="60" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">샤드 이동: 복사 → 변경 동기화 → 검증 → 소유권 전환</text>
+    <text x="800" y="98" text-anchor="middle" font-size="24" fill="#7A8791">서비스 중단 없이 데이터와 쓰기 소유권을 안전하게 넘긴다</text>
+  </g>
+
+  <g id="source">
+    <rect x="80" y="200" width="300" height="500" rx="16" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+    <text x="230" y="252" text-anchor="middle" font-size="30" font-weight="700" fill="#0F8790">Source Shard</text>
+    <text x="230" y="294" text-anchor="middle" font-size="22" fill="#7A8791">현재 쓰기 소유</text>
+    <g font-size="22" fill="#142131" text-anchor="middle">
+      <rect x="110" y="340" width="240" height="60" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="230" y="378">데이터</text>
+    </g>
+    <rect x="110" y="420" width="240" height="60" rx="8" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2" stroke-dasharray="8 5"/>
+    <text x="230" y="458" text-anchor="middle" font-size="24" font-weight="700" fill="#D39A2C">변경 로그</text>
+    <text x="230" y="520" text-anchor="middle" font-size="22" fill="#7A8791">이동 중 계속 쌓임</text>
+  </g>
+
+  <g id="target">
+    <rect x="1220" y="200" width="300" height="500" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="1370" y="252" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Target Shard</text>
+    <text x="1370" y="294" text-anchor="middle" font-size="22" fill="#7A8791">새 쓰기 소유자(예정)</text>
+    <g font-size="22" fill="#142131" text-anchor="middle">
+      <rect x="1250" y="340" width="240" height="60" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1370" y="378">데이터(복사본)</text>
+    </g>
+    <rect x="1250" y="420" width="240" height="60" rx="8" fill="#0F8790"/>
+    <text x="1370" y="458" text-anchor="middle" font-size="24" font-weight="700" fill="#FFFFFF">Ownership Epoch</text>
+    <text x="1370" y="520" text-anchor="middle" font-size="22" fill="#7A8791">전환 후 새 쓰기 주인</text>
+  </g>
+
+  <g id="steps" font-size="24" fill="#142131">
+    <g>
+      <rect x="450" y="180" width="240" height="80" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="570" y="218" text-anchor="middle" font-weight="700">Snapshot</text>
+      <text x="570" y="248" text-anchor="middle" font-size="20" fill="#7A8791">시점 복사</text>
+    </g>
+    <g>
+      <rect x="730" y="180" width="240" height="80" rx="12" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="8 5"/>
+      <text x="850" y="218" text-anchor="middle" font-weight="700" fill="#D39A2C">변경 로그</text>
+      <text x="850" y="248" text-anchor="middle" font-size="20" fill="#7A8791">이후 변경 동기화</text>
+    </g>
+    <g>
+      <rect x="1000" y="180" width="200" height="80" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1100" y="218" text-anchor="middle" font-weight="700">검증</text>
+      <text x="1100" y="248" text-anchor="middle" font-size="20" fill="#7A8791">행 수·체크섬</text>
+    </g>
+  </g>
+
+  <g id="flow-arrows" fill="none" stroke-width="2.5">
+    <path d="M380 360 L450 360 L450 260" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <text x="395" y="345" font-size="22" fill="#0F8790">1) 스냅샷 전송</text>
+
+    <path d="M690 220 L730 220" stroke="#283541" marker-end="url(#arrow)"/>
+    <path d="M970 220 L1000 220" stroke="#283541" marker-end="url(#arrow)"/>
+
+    <path d="M1200 220 C 1230 220, 1230 360, 1220 360" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <text x="1170" y="332" text-anchor="middle" font-size="22" fill="#0F8790">2) 타겟 적재</text>
+
+    <path d="M350 430 C 500 430, 700 460, 850 460" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow)"/>
+    <path d="M850 260 L850 420" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow)"/>
+    <text x="600" y="500" text-anchor="middle" font-size="22" fill="#D39A2C">3) 스냅샷 이후 변경분을 타겟으로</text>
+
+    <path d="M970 260 C 990 320, 1100 320, 1100 420" stroke="#283541" marker-end="url(#arrow)"/>
+    <path d="M1100 260 L1100 180" stroke="#283541"/>
+    <text x="1180" y="556" text-anchor="middle" font-size="22" fill="#283541">4) 검증 후</text>
+
+    <path d="M1200 460 C 1210 460, 1210 460, 1220 460" stroke="#0F8790" stroke-width="3" marker-end="url(#arrow-acc)"/>
+    <text x="1100" y="588" text-anchor="middle" font-size="22" fill="#0F8790">5) Ownership Epoch 전환</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="450" y1="800" x2="530" y2="800" stroke="#0F8790" stroke-width="2.5"/><text x="540" y="808">데이터 흐름</text>
+    <line x1="680" y1="800" x2="760" y2="800" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="770" y="808">이동 중 발생한 변경 동기화</text>
+    <text x="800" y="852" text-anchor="middle" fill="#7A8791">전환 순간을 Ownership Epoch로 표시해 이중 쓰기를 막는다</text>
+  </g>
+</svg>

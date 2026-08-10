@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>비동기 failover에서 복제 지연이 키우는 손실 노출</title>
+  <desc>쓰기율과 복제 지연이 커질수록 비동기 failover 시 손실에 노출되는 record 수가 선형으로 늘어난다. 예시 합성 데이터.</desc>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="58" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">손실 노출 = 쓰기율 × 복제 지연</text>
+  </g>
+  <g id="synthetic-note">
+    <rect x="1240" y="92" width="240" height="44" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="1.5"/>
+    <text x="1360" y="120" text-anchor="middle" font-size="22" fill="#7A8791">예시(합성 데이터)</text>
+  </g>
+
+  <g id="grid" stroke="#D8E1E2" stroke-width="1.5">
+    <line x1="140" y1="760" x2="1480" y2="760"/>
+    <line x1="140" y1="653" x2="1480" y2="653" stroke-dasharray="6 6"/>
+    <line x1="140" y1="547" x2="1480" y2="547" stroke-dasharray="6 6"/>
+    <line x1="140" y1="440" x2="1480" y2="440" stroke-dasharray="6 6"/>
+    <line x1="140" y1="333" x2="1480" y2="333" stroke-dasharray="6 6"/>
+    <line x1="140" y1="227" x2="1480" y2="227" stroke-dasharray="6 6"/>
+    <line x1="140" y1="120" x2="1480" y2="120" stroke-dasharray="6 6"/>
+  </g>
+
+  <g id="axes" stroke="#142131" stroke-width="2.5">
+    <line x1="140" y1="120" x2="140" y2="760"/>
+    <line x1="140" y1="760" x2="1480" y2="760"/>
+  </g>
+
+  <g id="y-ticks" font-size="22" fill="#283541" text-anchor="end">
+    <text x="128" y="768">0</text>
+    <text x="128" y="661">50k</text>
+    <text x="128" y="555">100k</text>
+    <text x="128" y="448">150k</text>
+    <text x="128" y="341">200k</text>
+    <text x="128" y="235">250k</text>
+    <text x="128" y="128">300k</text>
+  </g>
+  <text x="46" y="440" font-size="24" fill="#142131" transform="rotate(-90 46 440)" text-anchor="middle">손실 노출 record 수</text>
+
+  <g id="x-ticks" font-size="22" fill="#283541" text-anchor="middle">
+    <text x="140" y="794">0</text>
+    <text x="363" y="794">5</text>
+    <text x="587" y="794">10</text>
+    <text x="810" y="794">15</text>
+    <text x="1033" y="794">20</text>
+    <text x="1257" y="794">25</text>
+    <text x="1480" y="794">30</text>
+  </g>
+  <text x="810" y="836" font-size="24" fill="#142131" text-anchor="middle">복제 지연(초)</text>
+
+  <g id="series-1k">
+    <polyline points="140,760 363,749 587,739 810,728 1033,717 1257,707 1480,696" fill="none" stroke="#0F8790" stroke-width="3.5"/>
+    <g fill="#0F8790" stroke="#FFFFFF" stroke-width="2">
+      <circle cx="140" cy="760" r="7"/><circle cx="363" cy="749" r="7"/><circle cx="587" cy="739" r="7"/><circle cx="810" cy="728" r="7"/><circle cx="1033" cy="717" r="7"/><circle cx="1257" cy="707" r="7"/><circle cx="1480" cy="696" r="7"/>
+    </g>
+  </g>
+
+  <g id="series-10k">
+    <polyline points="140,760 363,653 587,547 810,440 1033,333 1257,227 1480,120" fill="none" stroke="#283541" stroke-width="3.5" stroke-dasharray="14 8"/>
+    <g fill="#FFFFFF" stroke="#283541" stroke-width="2.5">
+      <rect x="133" y="753" width="14" height="14"/><rect x="356" y="646" width="14" height="14"/><rect x="580" y="540" width="14" height="14"/><rect x="803" y="433" width="14" height="14"/><rect x="1026" y="326" width="14" height="14"/><rect x="1250" y="220" width="14" height="14"/><rect x="1473" y="113" width="14" height="14"/>
+    </g>
+  </g>
+
+  <g id="direct-labels" font-size="26" font-weight="700">
+    <text x="1280" y="668" fill="#0F8790" text-anchor="end">1k writes/s</text>
+    <text x="1460" y="180" fill="#283541" text-anchor="end">10k writes/s</text>
+  </g>
+
+  <g id="annotation">
+    <text x="600" y="300" font-size="24" fill="#7A8791">지연이 30초면 10k 쓰기/s에서 300,000 record가 손실 노출</text>
+    <line x1="600" y1="312" x2="820" y2="430" stroke="#7A8791" stroke-width="2"/>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="500" y1="858" x2="580" y2="858" stroke="#0F8790" stroke-width="3.5"/>
+    <circle cx="540" cy="858" r="7" fill="#0F8790"/>
+    <text x="590" y="866">1k writes/s(완만)</text>
+    <line x1="880" y1="858" x2="960" y2="858" stroke="#283541" stroke-width="3.5" stroke-dasharray="14 8"/>
+    <rect x="913" y="851" width="14" height="14" fill="#FFFFFF" stroke="#283541" stroke-width="2.5"/>
+    <text x="970" y="866">10k writes/s(급격)</text>
+    <text x="1230" y="866" fill="#7A8791">산식: loss = writes/s × lag</text>
+  </g>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>관측 파이프라인 흐름</title>
+  <desc>애플리케이션의 Instrumentation이 SDK를 통해 Collector로 신호를 보내고, Collector가 Metrics, Logs, Traces 백엔드로 분배하며, Metrics에서 SLO Alert이 발생하는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">관측 파이프라인 흐름</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">Instrumentation에서 수집·가공을 거쳐 세 종류의 백엔드로 간다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1090" y1="90" x2="1160" y2="90" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="98">신호 흐름</text>
+    <line x1="1300" y1="90" x2="1370" y2="90" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1380" y="98">경보</text>
+  </g>
+
+  <g id="pipeline">
+    <g id="instrumentation"><rect x="70" y="430" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="180" y="504" text-anchor="middle" font-size="28" fill="#142131">Instrumentation</text></g>
+    <g id="sdk"><rect x="380" y="430" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="490" y="504" text-anchor="middle" font-size="30" fill="#142131">SDK</text></g>
+    <g id="collector"><rect x="690" y="430" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="800" y="504" text-anchor="middle" font-size="30" fill="#142131">Collector</text></g>
+  </g>
+
+  <g id="backends">
+    <g id="metrics"><rect x="1060" y="240" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1180" y="305" text-anchor="middle" font-size="30" fill="#142131">Metrics</text></g>
+    <g id="logs"><rect x="1060" y="440" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1180" y="505" text-anchor="middle" font-size="30" fill="#142131">Logs</text></g>
+    <g id="traces"><rect x="1060" y="640" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1180" y="705" text-anchor="middle" font-size="30" fill="#142131">Traces</text></g>
+  </g>
+
+  <g id="alert">
+    <rect x="1400" y="240" width="170" height="110" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="3"/>
+    <text x="1485" y="305" text-anchor="middle" font-size="26" fill="#D39A2C" font-weight="700">SLO Alert</text>
+  </g>
+
+  <g id="edges" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M290 495 L380 495" marker-end="url(#arrow)"/>
+    <path d="M600 495 L690 495" marker-end="url(#arrow)"/>
+    <path d="M910 470 C990 470, 990 295, 1060 295" marker-end="url(#arrow)"/>
+    <path d="M910 495 L1060 495" marker-end="url(#arrow)"/>
+    <path d="M910 520 C990 520, 990 695, 1060 695" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="22" fill="#283541" text-anchor="middle">
+    <text x="335" y="484">신호 송출</text>
+    <text x="645" y="484">수집·가공</text>
+    <text x="990" y="372">메트릭</text>
+    <text x="985" y="484">로그</text>
+    <text x="990" y="612">트레이스</text>
+  </g>
+
+  <g id="alert-edge">
+    <path d="M1300 295 L1400 295" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none" marker-end="url(#arrow-amb)"/>
+    <text x="1350" y="282" text-anchor="middle" font-size="22" fill="#D39A2C">임계 초과</text>
+  </g>
+
+  <text x="70" y="820" font-size="22" fill="#7A8791">SDK가 신호를 표준 형식으로 내보내면 Collector가 가공해 세 백엔드로 분배하고, Metrics의 SLO 위반이 경보를 만든다.</text>
+</svg>

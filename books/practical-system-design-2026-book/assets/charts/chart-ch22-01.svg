@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>Cache Hit Ratio와 Origin QPS의 관계</title>
+  <desc>총 요청률이 10,000 RPS로 고정일 때 hit ratio가 낮아질수록 origin QPS가 선형으로 증가한다. 다만 체감 부하 증가는 비선형으로, 높은 hit ratio 구간에서의 작은 하락이 origin 부하를 크게 키운다. 예시 합성 데이터.</desc>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="58" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">Hit Ratio가 낮아질수록 Origin QPS가 급증한다</text>
+  </g>
+  <g id="synthetic-note">
+    <rect x="1240" y="92" width="240" height="44" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="1.5"/>
+    <text x="1360" y="120" text-anchor="middle" font-size="22" fill="#7A8791">예시(합성 데이터)</text>
+  </g>
+
+  <g id="grid" stroke="#D8E1E2" stroke-width="1.5">
+    <line x1="140" y1="760" x2="1480" y2="760"/>
+    <line x1="140" y1="632" x2="1480" y2="632" stroke-dasharray="6 6"/>
+    <line x1="140" y1="504" x2="1480" y2="504" stroke-dasharray="6 6"/>
+    <line x1="140" y1="376" x2="1480" y2="376" stroke-dasharray="6 6"/>
+    <line x1="140" y1="248" x2="1480" y2="248" stroke-dasharray="6 6"/>
+    <line x1="140" y1="120" x2="1480" y2="120" stroke-dasharray="6 6"/>
+  </g>
+
+  <g id="axes" stroke="#142131" stroke-width="2.5">
+    <line x1="140" y1="120" x2="140" y2="760"/>
+    <line x1="140" y1="760" x2="1480" y2="760"/>
+  </g>
+
+  <g id="y-ticks" font-size="22" fill="#283541" text-anchor="end">
+    <text x="128" y="768">0</text>
+    <text x="128" y="640">2,000</text>
+    <text x="128" y="512">4,000</text>
+    <text x="128" y="384">6,000</text>
+    <text x="128" y="256">8,000</text>
+    <text x="128" y="128">10,000</text>
+  </g>
+  <text x="46" y="440" font-size="24" fill="#142131" transform="rotate(-90 46 440)" text-anchor="middle">Origin QPS</text>
+
+  <g id="x-ticks" font-size="22" fill="#283541" text-anchor="middle">
+    <text x="140" y="794">0</text>
+    <text x="408" y="794">20</text>
+    <text x="676" y="794">40</text>
+    <text x="944" y="794">60</text>
+    <text x="1212" y="794">80</text>
+    <text x="1480" y="794">100</text>
+  </g>
+  <text x="810" y="836" font-size="24" fill="#142131" text-anchor="middle">Cache Hit Ratio(%)</text>
+
+  <g id="series-10k">
+    <polyline points="140,120 274,184 408,248 542,312 676,376 810,440 944,504 1078,568 1212,632 1346,696 1413,728 1467,754 1480,760" fill="none" stroke="#0F8790" stroke-width="3.5"/>
+    <g fill="#0F8790" stroke="#FFFFFF" stroke-width="2">
+      <circle cx="140" cy="120" r="7"/>
+      <circle cx="274" cy="184" r="7"/>
+      <circle cx="408" cy="248" r="7"/>
+      <circle cx="542" cy="312" r="7"/>
+      <circle cx="676" cy="376" r="7"/>
+      <circle cx="810" cy="440" r="7"/>
+      <circle cx="944" cy="504" r="7"/>
+      <circle cx="1078" cy="568" r="7"/>
+      <circle cx="1212" cy="632" r="7"/>
+      <circle cx="1346" cy="696" r="7"/>
+      <circle cx="1413" cy="728" r="7"/>
+      <circle cx="1467" cy="754" r="7"/>
+      <circle cx="1480" cy="760" r="7"/>
+    </g>
+  </g>
+
+  <g id="direct-labels" font-size="24" font-weight="700" fill="#0F8790">
+    <text x="540" y="392">총 10,000 RPS · Origin QPS = 10,000 × (1 − hit ratio)</text>
+  </g>
+
+  <g id="annotation">
+    <line x1="1346" y1="696" x2="1180" y2="580" stroke="#7A8791" stroke-width="2"/>
+    <line x1="1467" y1="754" x2="1290" y2="620" stroke="#7A8791" stroke-width="2"/>
+    <rect x="160" y="540" width="640" height="120" rx="10" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2"/>
+    <text x="180" y="580" font-size="24" font-weight="700" fill="#D39A2C">체감 비선형성: 99% → 90% (9%p 하락) = Origin 10배</text>
+    <text x="180" y="614" font-size="22" fill="#283541">높은 hit ratio 구간에서의 작은 하락이 origin 부하를 크게 키운다</text>
+    <text x="180" y="644" font-size="22" fill="#7A8791">예: 99%에서 100 QPS, 90%에서 1,000 QPS</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="500" y1="858" x2="580" y2="858" stroke="#0F8790" stroke-width="3.5"/>
+    <circle cx="540" cy="858" r="7" fill="#0F8790"/>
+    <text x="590" y="866">총 10,000 RPS 고정 시 origin 부하</text>
+    <text x="1050" y="866" fill="#7A8791">산식: origin_qps = total_rps × (1 − hit_ratio)</text>
+  </g>
+</svg>

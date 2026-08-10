@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>fan-out 전략 비교</title>
+  <desc>fan-out-on-write, fan-out-on-read, 대형 broadcast 하이브리드를 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="header">
+    <text x="80" y="78" font-size="30" font-weight="700" fill="#142131">fan-out 전략 비교</text>
+    <text x="80" y="114" font-size="24" fill="#7A8791">소규모는 write fan-out, 대형 방은 read fan-out 하이브리드</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="980" y1="92" x2="1060" y2="92" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="1072" y="100">Fan-out on Write</text>
+    <line x1="1280" y1="92" x2="1360" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1372" y="100">Fan-out on Read</text>
+  </g>
+
+  <g id="write-track">
+    <rect x="60" y="200" width="740" height="280" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="90" y="244" font-size="24" font-weight="600" fill="#0F8790">소규모 대화 · 일반 채팅</text>
+
+    <g id="write-msg">
+      <rect x="100" y="320" width="200" height="100" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="200" y="380" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Message Log</text>
+    </g>
+
+    <g id="write-fanout">
+      <rect x="380" y="320" width="200" height="100" rx="12" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="480" y="365" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">Fan-out on Write</text>
+      <text x="480" y="395" text-anchor="middle" font-size="20" fill="#7A8791">보낼 때 갱신</text>
+    </g>
+
+    <g id="write-inbox">
+      <rect x="640" y="320" width="140" height="100" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="710" y="380" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Inbox</text>
+    </g>
+  </g>
+
+  <g id="read-track">
+    <rect x="820" y="200" width="740" height="280" rx="16" fill="#FFF8EC" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="850" y="244" font-size="24" font-weight="600" fill="#D39A2C">대형 방 · broadcast</text>
+
+    <g id="read-room">
+      <rect x="860" y="320" width="200" height="100" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="960" y="380" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">대형 방</text>
+    </g>
+
+    <g id="read-fanout">
+      <rect x="1140" y="320" width="220" height="100" rx="12" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="1250" y="365" text-anchor="middle" font-size="22" font-weight="600" fill="#D39A2C">Fan-out on Read</text>
+      <text x="1250" y="395" text-anchor="middle" font-size="20" fill="#7A8791">읽을 때 조합</text>
+    </g>
+
+    <g id="read-inbox">
+      <rect x="1410" y="320" width="120" height="100" rx="12" fill="#FFFFFF" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="6 6"/>
+      <text x="1470" y="372" text-anchor="middle" font-size="22" fill="#7A8791">Inbox</text>
+      <text x="1470" y="400" text-anchor="middle" font-size="20" fill="#7A8791">(생략)</text>
+    </g>
+  </g>
+
+  <g id="comparison">
+    <rect x="60" y="560" width="1500" height="200" rx="16" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2.5"/>
+    <text x="90" y="606" font-size="24" font-weight="600" fill="#142131">하이브리드 기준</text>
+
+    <g id="cmp-rows" font-size="22" fill="#283541">
+      <text x="90" y="650">· 일반 대화는 write fan-out으로 inbox를 미리 갱신 → 읽기가 빠름</text>
+      <text x="90" y="690">· 대형 방은 write fan-out 비용이 커 message log만 저장, 읽을 때 조합</text>
+      <text x="90" y="730">· 두 경로는 대화 크기·수신자 수 임계값으로 자동 전환된다</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M300 370 L380 370" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <path d="M580 370 L640 370" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+
+    <path d="M1060 370 L1140 370" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <path d="M1360 370 L1410 370" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+  </g>
+
+  <g id="step-tag">
+    <rect x="60" y="810" width="300" height="50" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="210" y="843" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">STEP 4 · fan-out 전략 비교</text>
+  </g>
+</svg>

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>서비스 메시의 책임 범위</title>
+  <desc>애플리케이션이 Sidecar/Data Plane과 짝을 이루어 통신하고, Control Plane이 정책을 내려보내며, Platform이 그 아래를 지탱한다. mTLS는 Sidecar가 책임지고 업무 트랜잭션은 메시가 다루지 않음을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-ctrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-tx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">서비스 메시의 책임 범위</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">통신은 메시가 맡고, 업무 트랜잭션은 여전히 애플리케이션이 쥔다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="980" y1="92" x2="1060" y2="92" stroke="#283541" stroke-width="2.5"/>
+    <text x="1070" y="100">앱 호출</text>
+    <line x1="1170" y1="92" x2="1250" y2="92" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1260" y="100">제어 신호</text>
+    <line x1="1380" y1="92" x2="1460" y2="92" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="1470" y="100">mTLS</text>
+  </g>
+
+  <g id="platform">
+    <rect x="70" y="690" width="1460" height="130" rx="14" fill="#F4F8FA" stroke="#7A8791" stroke-width="2.5"/>
+    <text x="120" y="740" font-size="30" fill="#142131">Platform</text>
+    <text x="120" y="775" font-size="22" fill="#7A8791">컨테이너·스케줄링·저장소·네트워크</text>
+    <text x="800" y="775" font-size="22" fill="#7A8791">메시 아래에서 모두를 지탱하는 기반</text>
+  </g>
+
+  <g id="control-plane">
+    <rect x="70" y="560" width="1460" height="110" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="120" y="610" font-size="30" fill="#142131">Control Plane</text>
+    <text x="120" y="645" font-size="22" fill="#7A8791">정책·인증서·라우팅 규칙·관측 설정을 Sidecar로 반영</text>
+    <text x="800" y="645" font-size="22" fill="#7A8791">데이터 경로가 아닌 구성 경로</text>
+  </g>
+
+  <g id="pair-a">
+    <rect x="120" y="260" width="520" height="270" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="160" y="300" font-size="24" fill="#7A8791">서비스 1</text>
+    <g id="app-a">
+      <rect x="150" y="320" width="220" height="190" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2"/>
+      <text x="260" y="375" text-anchor="middle" font-size="28" fill="#142131">애플리케이션</text>
+      <text x="260" y="410" text-anchor="middle" font-size="22" fill="#7A8791">비즈니스 로직</text>
+      <text x="260" y="450" text-anchor="middle" font-size="22" fill="#7A8791">업무 트랜잭션</text>
+      <text x="260" y="485" text-anchor="middle" font-size="22" fill="#D39A2C" font-weight="600">→ 메시 밖</text>
+    </g>
+    <g id="sidecar-a">
+      <rect x="390" y="320" width="220" height="190" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+      <text x="500" y="370" text-anchor="middle" font-size="24" fill="#142131">Sidecar</text>
+      <text x="500" y="400" text-anchor="middle" font-size="22" fill="#283541">/Data Plane</text>
+      <text x="500" y="438" text-anchor="middle" font-size="22" fill="#7A8791">재시도·회로 차단</text>
+      <text x="500" y="468" text-anchor="middle" font-size="22" fill="#7A8791">관측·라우팅</text>
+      <text x="500" y="498" text-anchor="middle" font-size="22" fill="#0F8790">mTLS 종결</text>
+    </g>
+  </g>
+
+  <g id="pair-b">
+    <rect x="900" y="260" width="520" height="270" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="940" y="300" font-size="24" fill="#7A8791">서비스 2</text>
+    <g id="app-b">
+      <rect x="930" y="320" width="220" height="190" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2"/>
+      <text x="1040" y="375" text-anchor="middle" font-size="28" fill="#142131">애플리케이션</text>
+      <text x="1040" y="410" text-anchor="middle" font-size="22" fill="#7A8791">비즈니스 로직</text>
+      <text x="1040" y="450" text-anchor="middle" font-size="22" fill="#7A8791">업무 트랜잭션</text>
+      <text x="1040" y="485" text-anchor="middle" font-size="22" fill="#D39A2C" font-weight="600">→ 메시 밖</text>
+    </g>
+    <g id="sidecar-b">
+      <rect x="1170" y="320" width="220" height="190" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+      <text x="1280" y="370" text-anchor="middle" font-size="24" fill="#142131">Sidecar</text>
+      <text x="1280" y="400" text-anchor="middle" font-size="22" fill="#283541">/Data Plane</text>
+      <text x="1280" y="438" text-anchor="middle" font-size="22" fill="#7A8791">재시도·회로 차단</text>
+      <text x="1280" y="468" text-anchor="middle" font-size="22" fill="#7A8791">관측·라우팅</text>
+      <text x="1280" y="498" text-anchor="middle" font-size="22" fill="#0F8790">mTLS 종결</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M260 320 L260 230 L1280 230 L1280 320" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="770" y="218" text-anchor="middle" font-size="22" fill="#283541">애플리케이션 → 상대 Sidecar로 호출 (로컬 프록시 경유)</text>
+
+    <path d="M500 510 L500 540 L1280 540 L1280 510" stroke="#D39A2C" stroke-width="2.5" marker-end="url(#arrow-tx)"/>
+    <text x="890" y="530" text-anchor="middle" font-size="22" fill="#D39A2C">mTLS — Sidecar 간 암호화 통로</text>
+
+    <path d="M260 560 L260 240" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-ctrl)"/>
+    <path d="M1280 560 L1280 240" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1380" y="540" font-size="22" fill="#0F8790">정책·인증서 배포</text>
+  </g>
+
+  <g id="footnote" font-size="22" fill="#7A8791">
+    <text x="70" y="855">메시는 통신만 맡는다. 애플리케이션의 업무 트랜잭션(ACID 보장·보상·결제 일관성)은 메시 밖에서 코드가 직접 책임진다.</text>
+  </g>
+</svg>

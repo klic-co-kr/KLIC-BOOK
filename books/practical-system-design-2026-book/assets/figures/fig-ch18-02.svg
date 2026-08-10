@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>CDC로 파생 저장소를 만드는 흐름과 재구축 경계</title>
+  <desc>원장 DB의 변경을 CDC가 잡아 Cache·Search Index·Analytics로 전달한다. 손상 시 재구축 경로로 원본에서 다시 채운다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="56" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">원장 DB의 변경을 CDC로 파생 저장소에 전달한다</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1120" y1="92" x2="1200" y2="92" stroke="#283541" stroke-width="2.5"/><text x="1210" y="100">정상 전파</text>
+    <line x1="1370" y1="92" x2="1450" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="1460" y="100">재구축</text>
+  </g>
+
+  <g id="source-db">
+    <rect x="100" y="380" width="240" height="140" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="220" y="442" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">원장 DB</text>
+    <text x="220" y="486" text-anchor="middle" font-size="22" fill="#7A8791">단일 진실 원본</text>
+  </g>
+
+  <g id="cdc">
+    <rect x="460" y="380" width="240" height="140" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="580" y="442" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">CDC</text>
+    <text x="580" y="486" text-anchor="middle" font-size="22" fill="#7A8791">변경 로그 캡처</text>
+  </g>
+
+  <g id="targets" font-size="28" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="920" y="170" width="300" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="1070" y="222">Cache</text><text x="1070" y="260" font-size="22" font-weight="400" fill="#7A8791">빠른 읽기</text></g>
+    <g><rect x="920" y="390" width="300" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="1070" y="442">Search Index</text><text x="1070" y="480" font-size="22" font-weight="400" fill="#7A8791">전문 검색</text></g>
+    <g><rect x="920" y="610" width="300" height="120" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="1070" y="662">Analytics</text><text x="1070" y="700" font-size="22" font-weight="400" fill="#7A8791">집계·분석</text></g>
+  </g>
+
+  <g id="edges-normal" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M340 450 L460 450" marker-end="url(#arrow)"/>
+    <text x="400" y="438" text-anchor="middle" font-size="22" fill="#283541">쓰기</text>
+    <path d="M700 420 C 800 420, 820 230, 920 230" marker-end="url(#arrow)"/>
+    <path d="M700 450 L 920 450" marker-end="url(#arrow)"/>
+    <path d="M700 480 C 800 480, 820 670, 920 670" marker-end="url(#arrow)"/>
+  </g>
+  <text x="830" y="200" text-anchor="middle" font-size="22" fill="#283541">변경 이벤트</text>
+
+  <g id="edges-rebuild" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M220 520 L 220 820 L 1480 820 L 1480 230 L 1220 230" marker-end="url(#arrow-amb)"/>
+    <path d="M1480 450 L 1220 450" marker-end="url(#arrow-amb)"/>
+    <path d="M1480 670 L 1220 670" marker-end="url(#arrow-amb)"/>
+  </g>
+  <text x="850" y="808" text-anchor="middle" font-size="24" font-weight="700" fill="#D39A2C">재구축: 손상 시 원본에서 다시 채운다(드물게, 정상 전파와 분리)</text>
+</svg>

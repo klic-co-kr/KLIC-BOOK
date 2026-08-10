@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>입력 길이에 따른 자원/지연 추이(합성)</title>
+  <desc>입력 sequence 길이가 늘어날 때 KV cache 점유·TTFT·단위 비용이 어떻게 증가하는지 개념적으로 보여주는 합성 추이 차트.</desc>
+  <defs>
+    <marker id="arrow-axis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="32" font-weight="700" fill="#142131">입력 길이에 따른 자원/지연 추이</text>
+    <text x="60" y="106" font-size="22" fill="#7A8791">Input Token 길이가 증가할 때 KV cache·TTFT·단위 비용의 개념적 증가</text>
+  </g>
+
+  <g id="synthetic-note">
+    <rect x="1280" y="130" width="270" height="44" rx="8" fill="#FFF7E8" stroke="#D39A2C" stroke-width="2"/>
+    <text x="1415" y="159" text-anchor="middle" font-size="22" fill="#D39A2C">예시(합성 데이터)</text>
+  </g>
+
+  <g id="axes" stroke="#283541" fill="none" stroke-width="2.5">
+    <line x1="200" y1="140" x2="200" y2="680"/>
+    <line x1="200" y1="680" x2="1460" y2="680" marker-end="url(#arrow-axis)"/>
+  </g>
+
+  <g id="y-grid" stroke="#D8E1E2" stroke-width="1.5" stroke-dasharray="4 4">
+    <line x1="200" y1="545" x2="1460" y2="545"/>
+    <line x1="200" y1="410" x2="1460" y2="410"/>
+    <line x1="200" y1="275" x2="1460" y2="275"/>
+    <line x1="200" y1="140" x2="1460" y2="140"/>
+  </g>
+
+  <g id="y-ticks" font-size="22" fill="#283541">
+    <text x="185" y="688" text-anchor="end">0</text>
+    <text x="185" y="553" text-anchor="end">0.25</text>
+    <text x="185" y="418" text-anchor="end">0.50</text>
+    <text x="185" y="283" text-anchor="end">0.75</text>
+    <text x="185" y="148" text-anchor="end">1.0</text>
+  </g>
+
+  <g id="x-ticks" font-size="22" fill="#283541">
+    <line x1="280" y1="680" x2="280" y2="688" stroke="#283541" stroke-width="2"/>
+    <line x1="545" y1="680" x2="545" y2="688" stroke="#283541" stroke-width="2"/>
+    <line x1="810" y1="680" x2="810" y2="688" stroke="#283541" stroke-width="2"/>
+    <line x1="1075" y1="680" x2="1075" y2="688" stroke="#283541" stroke-width="2"/>
+    <line x1="1340" y1="680" x2="1340" y2="688" stroke="#283541" stroke-width="2"/>
+    <text x="280" y="718" text-anchor="middle">1×</text>
+    <text x="545" y="718" text-anchor="middle">2×</text>
+    <text x="810" y="718" text-anchor="middle">4×</text>
+    <text x="1075" y="718" text-anchor="middle">8×</text>
+    <text x="1340" y="718" text-anchor="middle">16×</text>
+  </g>
+
+  <g id="axis-titles" font-size="24" fill="#142131">
+    <text x="830" y="780" text-anchor="middle">Input Token 길이(상대적)</text>
+    <text x="80" y="410" text-anchor="middle" transform="rotate(-90 80 410)">정규화된 자원/지연(0–1)</text>
+  </g>
+
+  <g id="series-kv" fill="none" stroke="#0F8790" stroke-width="3.5">
+    <polyline points="280,653 545,583 810,475 1075,313 1340,168"/>
+    <g fill="#0F8790" stroke="none">
+      <circle cx="280" cy="653" r="8"/>
+      <circle cx="545" cy="583" r="8"/>
+      <circle cx="810" cy="475" r="8"/>
+      <circle cx="1075" cy="313" r="8"/>
+      <circle cx="1340" cy="168" r="8"/>
+    </g>
+    <text x="1360" y="172" font-size="24" font-weight="700" fill="#0F8790" stroke="none">KV Cache</text>
+  </g>
+
+  <g id="series-ttft" fill="none" stroke="#142131" stroke-width="3.5" stroke-dasharray="10 6">
+    <polyline points="280,626 545,561 810,486 1075,399 1340,302"/>
+    <g fill="#FFFFFF" stroke="#142131" stroke-width="2.5">
+      <rect x="273" y="619" width="14" height="14"/>
+      <rect x="538" y="554" width="14" height="14"/>
+      <rect x="803" y="479" width="14" height="14"/>
+      <rect x="1068" y="392" width="14" height="14"/>
+      <rect x="1333" y="295" width="14" height="14"/>
+    </g>
+    <text x="1360" y="306" font-size="24" font-weight="700" fill="#142131" stroke="none">TTFT</text>
+  </g>
+
+  <g id="series-cost" fill="none" stroke="#D39A2C" stroke-width="3.5" stroke-dasharray="3 6">
+    <polyline points="280,599 545,529 810,453 1075,367 1340,281"/>
+    <g fill="#D39A2C" stroke="none">
+      <polygon points="280,589 290,606 270,606"/>
+      <polygon points="545,519 555,536 535,536"/>
+      <polygon points="810,443 820,460 800,460"/>
+      <polygon points="1075,357 1085,374 1065,374"/>
+      <polygon points="1340,271 1350,288 1330,288"/>
+    </g>
+    <text x="1360" y="250" font-size="24" font-weight="700" fill="#D39A2C" stroke="none">단위 비용</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <text x="280" y="850">선 모양 + marker + 직접 라벨로 계열 구분(색상 외에도 식별 가능)</text>
+  </g>
+</svg>

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>주문 상태 전이</title>
+  <desc>pending · reserved · authorized · confirmed · cancelled · manual review 상태 전이와 정상 전이, 실패·취소, 복구 경로를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="80">주문 상태 전이: pending · reserved · authorized · confirmed · cancelled · manual review</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="990" y="55" width="555" height="48" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1010" y1="79" x2="1070" y2="79" stroke="#283541" stroke-width="2.5"/>
+    <text x="1080" y="87">정상 전이</text>
+    <line x1="1220" y1="79" x2="1280" y2="79" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1290" y="87">실패·취소</text>
+    <line x1="1420" y1="79" x2="1480" y2="79" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6"/>
+    <text x="1490" y="87">복구</text>
+  </g>
+
+  <g id="nodes-main">
+    <g id="pending">
+      <rect x="70" y="440" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="190" y="515" text-anchor="middle" font-size="30" fill="#142131">Pending</text>
+    </g>
+    <g id="reserved">
+      <rect x="420" y="440" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="540" y="515" text-anchor="middle" font-size="30" fill="#142131">Reserved</text>
+    </g>
+    <g id="authorized">
+      <rect x="790" y="440" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="910" y="515" text-anchor="middle" font-size="30" fill="#142131">Authorized</text>
+    </g>
+    <g id="confirmed">
+      <rect x="1200" y="440" width="240" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <rect x="1208" y="448" width="224" height="114" rx="10" fill="none" stroke="#0F8790" stroke-width="1.5"/>
+      <text x="1320" y="515" text-anchor="middle" font-size="30" fill="#142131">Confirmed</text>
+    </g>
+  </g>
+
+  <g id="nodes-side">
+    <g id="manual-review">
+      <rect x="610" y="210" width="240" height="130" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="730" y="285" text-anchor="middle" font-size="30" fill="#142131">Manual Review</text>
+    </g>
+    <g id="cancelled">
+      <rect x="610" y="660" width="240" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <rect x="618" y="668" width="224" height="114" rx="10" fill="none" stroke="#142131" stroke-width="1.5"/>
+      <text x="730" y="735" text-anchor="middle" font-size="30" fill="#142131">Cancelled</text>
+    </g>
+  </g>
+
+  <g id="start">
+    <circle cx="40" cy="505" r="8" fill="#283541"/>
+    <path d="M48 505 L70 505" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="edges-happy" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M310 505 L420 505" marker-end="url(#arrow)"/>
+    <path d="M660 505 L790 505" marker-end="url(#arrow)"/>
+    <path d="M1030 505 L1200 505" marker-end="url(#arrow)"/>
+  </g>
+  <g id="edge-happy-labels" font-size="22" fill="#283541">
+    <text x="365" y="495" text-anchor="middle">재고 예약</text>
+    <text x="725" y="495" text-anchor="middle">결제 승인</text>
+    <text x="1115" y="495" text-anchor="middle">확정</text>
+  </g>
+
+  <g id="edges-fail" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none">
+    <path d="M190 570 C 190 720, 610 720, 610 720" marker-end="url(#arrow-amb)"/>
+    <path d="M540 440 C 540 390, 730 390, 730 340" marker-end="url(#arrow-amb)"/>
+    <path d="M910 440 C 910 390, 730 390, 730 340" marker-end="url(#arrow-amb)"/>
+    <path d="M730 340 L730 660" marker-end="url(#arrow-amb)"/>
+  </g>
+  <g id="edge-fail-labels" font-size="22" fill="#D39A2C">
+    <text x="210" y="660">재고 부족</text>
+    <text x="450" y="395">이상</text>
+    <text x="990" y="395" text-anchor="end">리스크</text>
+    <text x="745" y="500">취소</text>
+  </g>
+
+  <g id="edges-recover" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6" fill="none">
+    <path d="M850 290 C 1180 290, 1320 380, 1320 440" marker-end="url(#arrow-accent)"/>
+  </g>
+  <g id="edge-recover-labels" font-size="22" fill="#0F8790">
+    <text x="1120" y="280" text-anchor="middle">수동 확인 후 복구</text>
+  </g>
+</svg>

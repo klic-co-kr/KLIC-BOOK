@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 40 880 480" width="880" height="480" style="background:#ffffff">
+<defs><marker id="ah" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto"><polygon points="0 0, 12 4, 0 8" fill="#333333"/></marker><marker id="ah-light" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto"><polygon points="0 0, 12 4, 0 8" fill="#999999"/></marker></defs>
+<rect x="20" y="55" width="840" height="195" rx="6" fill="#ffffff" stroke="#333333" stroke-width="2" stroke-dasharray="8,4"/>
+<text x="60" y="78" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="20" fill="#333333" text-anchor="start" dominant-baseline="central" font-weight="bold">훈련 패러다임 (엄격한 동기 시퀀스)</text>
+<rect x="680" y="64" width="160" height="28" rx="14" fill="#999999" stroke="#333333" stroke-width="2"/>
+<text x="760.0" y="78.0" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="16" fill="#ffffff" text-anchor="middle" dominant-baseline="central" font-weight="normal">API 강제 제약</text>
+<rect x="47.0" y="100" width="180" height="55" rx="6" fill="#d0d0d0" stroke="#333333" stroke-width="2"/>
+<text x="137.0" y="120" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="16" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">Observation</text>
+<text x="137.0" y="142" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">사용자: 베이징 날씨 조회</text>
+<line x1="229.0" y1="128" x2="247.0" y2="128" stroke="#333333" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="249.0" y="100" width="180" height="55" rx="6" fill="#f0f0f0" stroke="#333333" stroke-width="2"/>
+<text x="339.0" y="120" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="16" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">Thinking</text>
+<text x="339.0" y="142" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">날씨 도구 호출 필요</text>
+<line x1="431.0" y1="128" x2="449.0" y2="128" stroke="#333333" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="451.0" y="100" width="180" height="55" rx="6" fill="#d0d0d0" stroke="#333333" stroke-width="2"/>
+<text x="541.0" y="120" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="16" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">Action</text>
+<text x="541.0" y="142" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">get_weather(Beijing)</text>
+<line x1="633.0" y1="128" x2="651.0" y2="128" stroke="#333333" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="653.0" y="100" width="180" height="55" rx="6" fill="#f0f0f0" stroke="#333333" stroke-width="2"/>
+<text x="743.0" y="120" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="16" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">Observation</text>
+<text x="743.0" y="142" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">22°C, 맑음</text>
+<rect x="47.0" y="170" width="786" height="30" rx="4" fill="#f5f5f5" stroke="#999999" stroke-width="2"/>
+<text x="57.0" y="185" font-family="'Courier New', Courier, monospace" font-size="14" fill="#333333" text-anchor="start" dominant-baseline="central">tool_call → 다음은 반드시 tool_result, 아니면 API 오류</text>
+<line x1="20" y1="262" x2="860" y2="262" stroke="#999999" stroke-width="2" stroke-dasharray="8,4"/>
+<text x="440.0" y="280" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="20" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="bold">모순</text>
+<rect x="20" y="295" width="840" height="210" rx="6" fill="#ffffff" stroke="#333333" stroke-width="2" stroke-dasharray="8,4"/>
+<text x="60" y="318" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="20" fill="#333333" text-anchor="start" dominant-baseline="central" font-weight="bold">배포 현실 (비동기 이벤트 삽입)</text>
+<rect x="680" y="304" width="160" height="28" rx="14" fill="#999999" stroke="#333333" stroke-width="2"/>
+<text x="760.0" y="318.0" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="16" fill="#ffffff" text-anchor="middle" dominant-baseline="central" font-weight="normal">형식 충돌!</text>
+<rect x="50.0" y="340" width="156.0" height="50" rx="4" fill="#d0d0d0" stroke="#333333" stroke-width="2"/>
+<text x="128.0" y="355" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">Assistant</text>
+<text x="128.0" y="372" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">tool_call:</text>
+<text x="128.0" y="386" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">get_weather(Beijing)</text>
+<rect x="221.6" y="340" width="218.4" height="50" rx="4" fill="#f5f5f5" stroke="#333333" stroke-width="2"/>
+<text x="330.8" y="355" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">대기 중...</text>
+<text x="330.8" y="372" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">도구 실행 ~5s</text>
+<rect x="362.0" y="340" width="117.00000000000006" height="50" rx="4" fill="#999999" stroke="#333333" stroke-width="2"/>
+<text x="420.5" y="355" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" dominant-baseline="central" font-weight="bold">User 중단</text>
+<text x="420.5" y="372" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#ffffff" text-anchor="middle" dominant-baseline="central" font-weight="normal">&quot;됐어,</text>
+<text x="420.5" y="386" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#ffffff" text-anchor="middle" dominant-baseline="central" font-weight="normal">상하이 조회&quot;</text>
+<rect x="494.59999999999997" y="340" width="163.8" height="50" rx="4" fill="#f5f5f5" stroke="#333333" stroke-width="2"/>
+<text x="576.5" y="355" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">???</text>
+<text x="576.5" y="372" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">tool_result 언제 도착?</text>
+<text x="576.5" y="386" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">형식 어떻게 보장?</text>
+<rect x="674.0" y="340" width="156.0" height="50" rx="4" fill="#f0f0f0" stroke="#333333" stroke-width="2"/>
+<text x="752.0" y="355" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">자리표시자</text>
+<text x="752.0" y="372" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">[도구 여전히 실행,</text>
+<text x="752.0" y="386" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="11" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">중단 우선 처리]</text>
+<rect x="50" y="410" width="780" height="40" rx="4" fill="#f5f5f5" stroke="#999999" stroke-width="2"/>
+<text x="60" y="430" font-family="'Courier New', Courier, monospace" font-size="14" fill="#333333" text-anchor="start" dominant-baseline="central">해결: 자리표시자로 형식 복구 + 비긴급 이벤트 큐 행 + 진짜 긴급일 때만 중단</text>
+<rect x="140" y="465" width="600" height="40" rx="6" fill="#999999" stroke="#333333" stroke-width="2"/>
+<text x="440.0" y="485" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="16" fill="#ffffff" text-anchor="middle" dominant-baseline="central" font-weight="bold">근본 해법: 차세대 모델은 비동기 환경에서 RL 훈련 필요</text>
+</svg>

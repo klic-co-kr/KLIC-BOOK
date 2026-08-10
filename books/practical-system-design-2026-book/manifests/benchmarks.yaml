@@ -1,0 +1,74 @@
+policy: 초안에는 임의 실측 benchmark를 넣지 않는다. 차트는 synthetic 또는 산식 기반이며 실측 교체 시 환경과 원자료를 필수 기록한다.
+charts:
+- id: chart-ch02-01
+  chapter: ch02
+  synthetic: true
+  title: 낮음·기준·높음 용량 시나리오
+  purpose: 동일한 계산식에서 RPS, 저장량, 대역폭 입력의 낮음·기준·높음 가정이 결과를 어떻게 바꾸는지 비교한다.
+  note: 예시 입력으로 생성하는 synthetic chart. 실제 벤치마크가 아니다.
+- id: chart-ch04-01
+  chapter: ch04
+  synthetic: true
+  title: Error budget과 burn rate
+  purpose: 28일 SLO 예산이 정상·느린 소진·빠른 소진 시나리오에서 시간에 따라 감소하는 모습을 보여준다.
+  note: SLO 개념 설명용 synthetic chart.
+- id: chart-ch05-01
+  chapter: ch05
+  synthetic: true
+  title: 평균과 꼬리 지연 분포
+  purpose: 같은 평균을 가져도 p99가 다른 두 latency 분포를 histogram/ECDF로 비교한다.
+  note: 분포 원리를 설명하는 synthetic chart.
+- id: chart-ch06-01
+  chapter: ch06
+  synthetic: true
+  title: 직렬·병렬 구성의 단순 가용성
+  purpose: 독립 가정을 전제로 구성 요소 가용성이 직렬·병렬 연결에서 어떻게 합성되는지 비교한다.
+  note: 독립 실패라는 제한된 가정을 명시한 계산 예시.
+- id: chart-ch10-01
+  chapter: ch10
+  synthetic: true
+  title: 복제 지연과 데이터 손실 노출 창
+  purpose: 쓰기율과 복제 지연 증가가 비동기 failover 시 손실 가능 record 수를 어떻게 늘리는지 보여준다.
+  note: 산식 기반 synthetic chart.
+- id: chart-ch11-01
+  chapter: ch11
+  synthetic: true
+  title: 샤드 부하 불균형
+  purpose: 평균 QPS는 같아도 hot tenant 때문에 상위 shard가 과부하되는 분포를 보여준다.
+  note: 파티션 skew 설명용 synthetic chart.
+- id: chart-ch22-01
+  chapter: ch22
+  synthetic: true
+  title: 캐시 적중률과 원본 부하
+  purpose: 전체 요청률이 고정일 때 hit ratio가 낮아질수록 origin QPS가 비선형적으로 체감상 커지는 관계를 보여준다.
+  note: Origin QPS = Total RPS × (1 - hit ratio) 계산.
+- id: chart-ch25-01
+  chapter: ch25
+  synthetic: true
+  title: 계층별 재시도 증폭
+  purpose: 호출 깊이와 계층별 시도 횟수가 최하위 요청 수를 지수적으로 늘리는 모습을 보여준다.
+  note: 최악 경로를 설명하는 계산 chart.
+- id: chart-ch27-01
+  chapter: ch27
+  synthetic: true
+  title: Metric cardinality와 비용
+  purpose: label dimension을 추가할 때 조합 가능한 time series 수가 곱셈으로 증가하는 모습을 보여준다.
+  note: Cardinality 원리를 설명하는 synthetic chart.
+- id: chart-ch29-01
+  chapter: ch29
+  synthetic: true
+  title: DR 전략의 RTO·비용 비교
+  purpose: backup/restore, pilot light, warm standby, active-active를 상대 RTO와 정상 비용으로 비교한다.
+  note: 정량 벤치마크가 아닌 의사결정용 상대 chart.
+- id: chart-ch32-01
+  chapter: ch32
+  synthetic: true
+  title: Sequence 길이와 KV Cache·TTFT
+  purpose: 입력 sequence 길이 증가가 KV cache 점유와 TTFT·unit cost를 어떻게 키우는지 개념적으로 보여준다.
+  note: 하드웨어·모델별 실제 값이 아닌 synthetic trend chart.
+- id: chart-ch34-01
+  chapter: ch34
+  synthetic: true
+  title: AI 품질·지연·비용 Pareto
+  purpose: 여러 model/routing 정책을 품질, latency, accepted outcome당 비용으로 비교하고 지배되는 선택을 표시한다.
+  note: 실제 측정값을 넣기 전 사용하는 chart template.

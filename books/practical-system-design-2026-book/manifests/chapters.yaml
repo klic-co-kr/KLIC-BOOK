@@ -1,0 +1,830 @@
+chapters:
+- id: ch01
+  part: design-method
+  order: 1
+  title: 요구사항에서 시스템 경계까지
+  file: manuscript/01-design-method/ch01-requirements-and-boundaries.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites: []
+  figures:
+  - fig-ch01-01
+  - fig-ch01-02
+  source_refs:
+  - iso-42010
+  - upstream-primer
+  upstream_action: REWRITE
+- id: ch02
+  part: design-method
+  order: 2
+  title: 트래픽·저장공간·대역폭 계산
+  file: manuscript/01-design-method/ch02-capacity-estimation.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch01
+  figures:
+  - chart-ch02-01
+  - fig-ch02-01
+  - fig-ch02-02
+  source_refs:
+  - upstream-primer
+  - dean-tail-at-scale
+  upstream_action: REWRITE
+- id: ch03
+  part: design-method
+  order: 3
+  title: 트레이드오프와 Architecture Decision Record
+  file: manuscript/01-design-method/ch03-tradeoffs-and-adr.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch01
+  - ch02
+  figures:
+  - fig-ch03-01
+  - fig-ch03-02
+  source_refs:
+  - iso-42010
+  - adr-nygard
+  upstream_action: ADD
+- id: ch04
+  part: design-method
+  order: 4
+  title: SLI·SLO·SLA와 Error Budget
+  file: manuscript/01-design-method/ch04-sli-slo-sla-error-budget.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch01
+  - ch02
+  figures:
+  - chart-ch04-01
+  - fig-ch04-01
+  - fig-ch04-02
+  source_refs:
+  - google-sre-slo
+  - google-sre-error-budget
+  - google-sre-book
+  upstream_action: ADD
+- id: ch05
+  part: distributed-foundations
+  order: 5
+  title: 지연시간·처리량·동시성과 Tail Latency
+  file: manuscript/02-distributed-foundations/ch05-latency-throughput-tail.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch02
+  figures:
+  - chart-ch05-01
+  - fig-ch05-01
+  - fig-ch05-02
+  source_refs:
+  - dean-tail-at-scale
+  - google-sre-overload
+  - google-sre-book
+  upstream_action: REWRITE
+- id: ch06
+  part: distributed-foundations
+  order: 6
+  title: 가용성·신뢰성·내구성과 장애 도메인
+  file: manuscript/02-distributed-foundations/ch06-availability-reliability-durability.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch04
+  - ch05
+  figures:
+  - chart-ch06-01
+  - fig-ch06-01
+  - fig-ch06-02
+  source_refs:
+  - google-sre-book
+  - nist-contingency
+  upstream_action: REWRITE
+- id: ch07
+  part: distributed-foundations
+  order: 7
+  title: CAP를 넘어선 일관성 모델
+  file: manuscript/02-distributed-foundations/ch07-consistency-beyond-cap.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch05
+  - ch06
+  figures:
+  - fig-ch07-01
+  - fig-ch07-02
+  source_refs:
+  - gilbert-lynch-cap
+  - vogels-eventual
+  - dynamo-paper
+  upstream_action: REWRITE
+- id: ch08
+  part: distributed-foundations
+  order: 8
+  title: 트랜잭션·격리 수준·MVCC
+  file: manuscript/02-distributed-foundations/ch08-transactions-isolation-mvcc.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch07
+  figures:
+  - fig-ch08-01
+  - fig-ch08-02
+  source_refs:
+  - postgres-transaction-iso
+  - postgres-mvcc
+  upstream_action: ADD
+- id: ch09
+  part: distributed-foundations
+  order: 9
+  title: 시간·순서·논리 시계·분산 ID
+  file: manuscript/02-distributed-foundations/ch09-time-ordering-distributed-id.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch05
+  - ch07
+  figures:
+  - fig-ch09-01
+  - fig-ch09-02
+  source_refs:
+  - lamport-time
+  - rfc9562
+  - dynamo-paper
+  upstream_action: ADD
+- id: ch10
+  part: distributed-foundations
+  order: 10
+  title: 복제·Quorum·Failover
+  file: manuscript/02-distributed-foundations/ch10-replication-quorum-failover.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch06
+  - ch07
+  - ch09
+  figures:
+  - chart-ch10-01
+  - fig-ch10-01
+  - fig-ch10-02
+  source_refs:
+  - raft-paper
+  - dynamo-paper
+  - spanner-paper
+  upstream_action: REPLACE
+- id: ch11
+  part: distributed-foundations
+  order: 11
+  title: 파티셔닝·Sharding·Consistent Hashing
+  file: manuscript/02-distributed-foundations/ch11-partitioning-sharding.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch02
+  - ch07
+  - ch10
+  figures:
+  - chart-ch11-01
+  - fig-ch11-01
+  - fig-ch11-02
+  source_refs:
+  - consistent-hashing
+  - dynamo-paper
+  - bigtable-paper
+  upstream_action: REWRITE
+- id: ch12
+  part: distributed-foundations
+  order: 12
+  title: Consensus·Leader Election·Fencing
+  file: manuscript/02-distributed-foundations/ch12-consensus-leader-fencing.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch06
+  - ch09
+  - ch10
+  figures:
+  - fig-ch12-01
+  - fig-ch12-02
+  source_refs:
+  - raft-paper
+  - paxos-made-simple
+  - chubby-paper
+  upstream_action: ADD
+- id: ch13
+  part: network-runtime
+  order: 13
+  title: DNS·CDN·Edge와 전역 트래픽
+  file: manuscript/03-network-runtime/ch13-dns-cdn-edge.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch05
+  - ch06
+  figures:
+  - fig-ch13-01
+  - fig-ch13-02
+  source_refs:
+  - rfc1034
+  - rfc1035
+  - rfc9111
+  upstream_action: REWRITE
+- id: ch14
+  part: network-runtime
+  order: 14
+  title: L4/L7 Load Balancing·Proxy·Gateway
+  file: manuscript/03-network-runtime/ch14-load-balancing-proxy-gateway.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch05
+  - ch13
+  figures:
+  - fig-ch14-01
+  - fig-ch14-02
+  source_refs:
+  - rfc9110
+  - rfc9112
+  - google-sre-overload
+  upstream_action: REWRITE
+- id: ch15
+  part: network-runtime
+  order: 15
+  title: HTTP/1.1·HTTP/2·HTTP/3와 QUIC
+  file: manuscript/03-network-runtime/ch15-http3-quic.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch05
+  - ch13
+  - ch14
+  figures:
+  - fig-ch15-01
+  - fig-ch15-02
+  source_refs:
+  - rfc9110
+  - rfc9112
+  - rfc9113
+  - rfc9000
+  - rfc9114
+  - rfc9204
+  upstream_action: REPLACE
+- id: ch16
+  part: network-runtime
+  order: 16
+  title: REST·gRPC·GraphQL·WebSocket·SSE
+  file: manuscript/03-network-runtime/ch16-api-and-streaming-protocols.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch14
+  - ch15
+  figures:
+  - fig-ch16-01
+  - fig-ch16-02
+  source_refs:
+  - rfc9110
+  - grpc-core
+  - graphql-spec
+  - rfc6455
+  - html-sse
+  upstream_action: REPLACE
+- id: ch17
+  part: network-runtime
+  order: 17
+  title: 모듈러 모놀리스·마이크로서비스·Service Mesh
+  file: manuscript/03-network-runtime/ch17-monolith-microservices-mesh.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch01
+  - ch14
+  - ch16
+  figures:
+  - fig-ch17-01
+  - fig-ch17-02
+  source_refs:
+  - kubernetes-concepts
+  - istio-architecture
+  - iso-42010
+  upstream_action: REPLACE
+- id: ch18
+  part: data-events
+  order: 18
+  title: 워크로드에서 저장소 선택하기
+  file: manuscript/04-data-events/ch18-choosing-data-store.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch01
+  - ch02
+  - ch07
+  - ch08
+  figures:
+  - fig-ch18-01
+  - fig-ch18-02
+  source_refs:
+  - postgres-transaction-iso
+  - dynamo-paper
+  - bigtable-paper
+  upstream_action: REWRITE
+- id: ch19
+  part: data-events
+  order: 19
+  title: 관계형 DB·분산 SQL·인덱스
+  file: manuscript/04-data-events/ch19-relational-distributed-sql-indexes.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch08
+  - ch10
+  - ch11
+  - ch18
+  figures:
+  - fig-ch19-01
+  - fig-ch19-02
+  source_refs:
+  - postgres-indexes
+  - postgres-transaction-iso
+  - spanner-paper
+  upstream_action: REWRITE
+- id: ch20
+  part: data-events
+  order: 20
+  title: Key-Value·Document·Wide-column·Graph
+  file: manuscript/04-data-events/ch20-kv-document-widecolumn-graph.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch11
+  - ch18
+  figures:
+  - fig-ch20-01
+  - fig-ch20-02
+  source_refs:
+  - dynamo-paper
+  - bigtable-paper
+  - mongodb-data-model
+  - neo4j-graph-modeling
+  upstream_action: REWRITE
+- id: ch21
+  part: data-events
+  order: 21
+  title: Object Storage·Search·Vector Store
+  file: manuscript/04-data-events/ch21-object-search-vector.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch18
+  - ch20
+  figures:
+  - fig-ch21-01
+  - fig-ch21-02
+  source_refs:
+  - s3-consistency
+  - lucene-docs
+  - hnsw-paper
+  upstream_action: ADD
+- id: ch22
+  part: data-events
+  order: 22
+  title: 캐시·무효화·Stampede·Hot Key
+  file: manuscript/04-data-events/ch22-cache-invalidation-stampede.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch05
+  - ch18
+  figures:
+  - chart-ch22-01
+  - fig-ch22-01
+  - fig-ch22-02
+  source_refs:
+  - rfc9111
+  - redis-cache
+  - memcached-docs
+  upstream_action: REWRITE
+- id: ch23
+  part: data-events
+  order: 23
+  title: Queue·Durable Log·Delivery Semantics
+  file: manuscript/04-data-events/ch23-queue-log-delivery.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch08
+  - ch09
+  - ch18
+  figures:
+  - fig-ch23-01
+  - fig-ch23-02
+  source_refs:
+  - kafka-docs
+  - rabbitmq-reliability
+  - kafka-transactions
+  upstream_action: REWRITE
+- id: ch24
+  part: data-events
+  order: 24
+  title: Event Streaming·CDC·Outbox·Saga
+  file: manuscript/04-data-events/ch24-streaming-cdc-outbox-saga.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch08
+  - ch23
+  figures:
+  - fig-ch24-01
+  - fig-ch24-02
+  source_refs:
+  - debezium-docs
+  - kafka-docs
+  - saga-paper
+  upstream_action: ADD
+- id: ch25
+  part: production
+  order: 25
+  title: Timeout·Deadline·Retry·Backoff·Jitter
+  file: manuscript/05-production/ch25-timeout-deadline-retry.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch05
+  - ch16
+  - ch23
+  figures:
+  - chart-ch25-01
+  - fig-ch25-01
+  - fig-ch25-02
+  source_refs:
+  - aws-timeouts-retries
+  - google-sre-overload
+  - stripe-idempotency
+  upstream_action: ADD
+- id: ch26
+  part: production
+  order: 26
+  title: Circuit Breaker·Bulkhead·Backpressure·Load Shedding
+  file: manuscript/05-production/ch26-resilience-overload-control.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch05
+  - ch25
+  figures:
+  - fig-ch26-01
+  - fig-ch26-02
+  source_refs:
+  - google-sre-overload
+  - aws-timeouts-retries
+  upstream_action: ADD
+- id: ch27
+  part: production
+  order: 27
+  title: Metrics·Logs·Traces와 OpenTelemetry
+  file: manuscript/05-production/ch27-observability-opentelemetry.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch04
+  - ch05
+  figures:
+  - chart-ch27-01
+  - fig-ch27-01
+  - fig-ch27-02
+  source_refs:
+  - otel-spec
+  - w3c-trace-context
+  - google-sre-slo
+  upstream_action: ADD
+- id: ch28
+  part: production
+  order: 28
+  title: 인증·인가·Zero Trust·Secrets·공급망 보안
+  file: manuscript/05-production/ch28-identity-zero-trust-supply-chain.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch01
+  - ch14
+  - ch27
+  figures:
+  - fig-ch28-01
+  - fig-ch28-02
+  source_refs:
+  - nist-zero-trust
+  - rfc9700
+  - webauthn3
+  - slsa12
+  upstream_action: REPLACE
+- id: ch29
+  part: production
+  order: 29
+  title: Multi-region·Backup·재해 복구
+  file: manuscript/05-production/ch29-multi-region-disaster-recovery.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch06
+  - ch10
+  - ch13
+  figures:
+  - chart-ch29-01
+  - fig-ch29-01
+  - fig-ch29-02
+  source_refs:
+  - nist-contingency
+  - google-sre-book
+  upstream_action: ADD
+- id: ch30
+  part: production
+  order: 30
+  title: Container·Kubernetes·Serverless·IaC·GitOps·FinOps
+  file: manuscript/05-production/ch30-cloud-native-platform-finops.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch03
+  - ch17
+  - ch27
+  - ch28
+  figures:
+  - fig-ch30-01
+  - fig-ch30-02
+  source_refs:
+  - kubernetes-concepts
+  - opengitops
+  - finops-framework
+  - cncf-platforms
+  - slsa12
+  upstream_action: ADD
+- id: ch31
+  part: ai-native
+  order: 31
+  title: RAG 데이터 파이프라인과 Retrieval 품질
+  file: manuscript/06-ai-native/ch31-rag-pipeline-retrieval.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch21
+  - ch24
+  - ch27
+  - ch28
+  figures:
+  - fig-ch31-01
+  - fig-ch31-02
+  source_refs:
+  - rag-paper
+  - dpr-paper
+  - beir-paper
+  - hnsw-paper
+  - owasp-llm
+  upstream_action: ADD
+- id: ch32
+  part: ai-native
+  order: 32
+  title: LLM Inference·Batching·KV Cache·Model Routing
+  file: manuscript/06-ai-native/ch32-llm-serving-routing.md
+  status: draft
+  freshness: volatile
+  last_verified: '2026-08-06'
+  review_due: '2026-11-06'
+  prerequisites:
+  - ch05
+  - ch21
+  - ch27
+  - ch30
+  figures:
+  - chart-ch32-01
+  - fig-ch32-01
+  - fig-ch32-02
+  source_refs:
+  - vllm-paper
+  - orca-paper
+  - nist-genai-profile
+  upstream_action: ADD
+- id: ch33
+  part: ai-native
+  order: 33
+  title: Agent 상태·메모리·도구 실행·승인 경계
+  file: manuscript/06-ai-native/ch33-agent-state-tools-approval.md
+  status: draft
+  freshness: volatile
+  last_verified: '2026-08-06'
+  review_due: '2026-11-06'
+  prerequisites:
+  - ch24
+  - ch28
+  - ch31
+  - ch32
+  figures:
+  - fig-ch33-01
+  - fig-ch33-02
+  source_refs:
+  - react-paper
+  - toolformer-paper
+  - nist-ai-rmf
+  - owasp-llm
+  upstream_action: ADD
+- id: ch34
+  part: ai-native
+  order: 34
+  title: AI 평가·관측 가능성·보안·비용
+  file: manuscript/06-ai-native/ch34-ai-evaluation-observability.md
+  status: draft
+  freshness: volatile
+  last_verified: '2026-08-06'
+  review_due: '2026-11-06'
+  prerequisites:
+  - ch04
+  - ch27
+  - ch28
+  - ch31
+  - ch32
+  - ch33
+  figures:
+  - chart-ch34-01
+  - fig-ch34-01
+  - fig-ch34-02
+  source_refs:
+  - nist-ai-rmf
+  - nist-genai-profile
+  - owasp-llm
+  - ragas-paper
+  upstream_action: ADD
+- id: ch35
+  part: case-studies
+  order: 35
+  title: 'URL 단축 서비스: 단일 노드에서 전역 서비스까지'
+  file: manuscript/07-case-studies/ch35-url-shortener.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch02
+  - ch10
+  - ch11
+  - ch13
+  - ch22
+  - ch25
+  figures:
+  - fig-ch35-01
+  - fig-ch35-02
+  - fig-ch35-03
+  - fig-ch35-04
+  - fig-ch35-05
+  source_refs:
+  - rfc3986
+  - rfc9110
+  - rfc9111
+  - consistent-hashing
+  - upstream-primer
+  upstream_action: REWRITE
+- id: ch36
+  part: case-studies
+  order: 36
+  title: 실시간 채팅과 알림 플랫폼
+  file: manuscript/07-case-studies/ch36-chat-notification.md
+  status: draft
+  freshness: current
+  last_verified: '2026-08-06'
+  review_due: '2027-02-06'
+  prerequisites:
+  - ch09
+  - ch16
+  - ch23
+  - ch25
+  - ch26
+  figures:
+  - fig-ch36-01
+  - fig-ch36-02
+  - fig-ch36-03
+  - fig-ch36-04
+  - fig-ch36-05
+  source_refs:
+  - rfc6455
+  - html-sse
+  - kafka-docs
+  - aws-timeouts-retries
+  upstream_action: ADD
+- id: ch37
+  part: case-studies
+  order: 37
+  title: 주문·재고·결제 원장 시스템
+  file: manuscript/07-case-studies/ch37-order-inventory-payment-ledger.md
+  status: draft
+  freshness: durable
+  last_verified: '2026-08-06'
+  review_due: '2028-08-06'
+  prerequisites:
+  - ch08
+  - ch23
+  - ch24
+  - ch25
+  - ch29
+  figures:
+  - fig-ch37-01
+  - fig-ch37-02
+  - fig-ch37-03
+  - fig-ch37-04
+  - fig-ch37-05
+  source_refs:
+  - postgres-transaction-iso
+  - saga-paper
+  - stripe-idempotency
+  - debezium-docs
+  upstream_action: ADD
+- id: ch38
+  part: case-studies
+  order: 38
+  title: 멀티테넌트 RAG·AI 고객지원 플랫폼
+  file: manuscript/07-case-studies/ch38-multitenant-rag-support.md
+  status: draft
+  freshness: volatile
+  last_verified: '2026-08-06'
+  review_due: '2026-11-06'
+  prerequisites:
+  - ch28
+  - ch31
+  - ch32
+  - ch33
+  - ch34
+  figures:
+  - fig-ch38-01
+  - fig-ch38-02
+  - fig-ch38-03
+  - fig-ch38-04
+  - fig-ch38-05
+  source_refs:
+  - azure-multitenant
+  - rag-paper
+  - nist-genai-profile
+  - owasp-llm
+  - otel-spec
+  upstream_action: ADD

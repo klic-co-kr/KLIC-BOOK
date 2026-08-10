@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>복제·Failover·백업·Restore의 역할 분담</title>
+  <desc>복제와 Failover는 물리 장애를, 백업과 Restore는 논리 손상을 담당한다. 서로 다른 실패를 보완한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="74" text-anchor="middle" font-size="36" font-weight="700" fill="#142131">네 가지 메커니즘이 각각 맡는 실패</text>
+    <text x="800" y="114" text-anchor="middle" font-size="24" fill="#7A8791">물리 장애와 논리 손상은 서로 다른 도구로 막는다</text>
+  </g>
+
+  <g id="failure-types" font-size="30" fill="#142131">
+    <g id="ft-physical">
+      <rect x="1080" y="180" width="420" height="200" rx="16" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+      <text x="1290" y="252" text-anchor="middle" font-weight="700">물리 장애</text>
+      <text x="1290" y="298" text-anchor="middle" font-size="22" fill="#7A8791">디스크 고장·정전</text>
+      <text x="1290" y="338" text-anchor="middle" font-size="22" fill="#7A8791">Zone·리전 장애</text>
+    </g>
+    <g id="ft-logical">
+      <rect x="1080" y="540" width="420" height="200" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="3" stroke-dasharray="10 6"/>
+      <text x="1290" y="612" text-anchor="middle" font-weight="700" fill="#D39A2C">논리 손상</text>
+      <text x="1290" y="658" text-anchor="middle" font-size="22" fill="#7A8791">잘못된 배포·운영 실수</text>
+      <text x="1290" y="698" text-anchor="middle" font-size="22" fill="#7A8791">삭제·데이터 오염</text>
+    </g>
+  </g>
+
+  <g id="mechanisms" font-size="30" fill="#142131">
+    <g id="m-replicate">
+      <rect x="100" y="180" width="420" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="310" y="252" text-anchor="middle" font-weight="700">복제</text>
+      <text x="310" y="292" text-anchor="middle" font-size="22" fill="#7A8791">다른 복제본에 계속 복사</text>
+    </g>
+    <g id="m-failover">
+      <rect x="100" y="340" width="420" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="310" y="412" text-anchor="middle" font-weight="700">Failover</text>
+      <text x="310" y="452" text-anchor="middle" font-size="22" fill="#7A8791">건강한 복제본으로 전환</text>
+    </g>
+    <g id="m-backup">
+      <rect x="100" y="540" width="420" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="310" y="612" text-anchor="middle" font-weight="700">백업</text>
+      <text x="310" y="652" text-anchor="middle" font-size="22" fill="#7A8791">과거 시점 스냅샷 보관</text>
+    </g>
+    <g id="m-restore">
+      <rect x="100" y="700" width="420" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="310" y="772" text-anchor="middle" font-weight="700">Restore</text>
+      <text x="310" y="812" text-anchor="middle" font-size="22" fill="#7A8791">스냅샷에서 복구</text>
+    </g>
+  </g>
+
+  <g id="mapping-edges" fill="none" stroke-width="2.5">
+    <path d="M520 245 C 740 245, 860 250, 1080 250" stroke="#283541" marker-end="url(#arrow)"/>
+    <text x="800" y="234" text-anchor="middle" font-size="22" fill="#283541">방어</text>
+    <path d="M520 405 C 740 405, 860 320, 1080 320" stroke="#283541" marker-end="url(#arrow)"/>
+    <text x="800" y="368" text-anchor="middle" font-size="22" fill="#283541">방어</text>
+    <path d="M520 605 C 740 605, 860 610, 1080 610" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="800" y="594" text-anchor="middle" font-size="22" fill="#D39A2C">복구</text>
+    <path d="M520 765 C 740 765, 860 700, 1080 700" stroke="#D39A2C" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="800" y="728" text-anchor="middle" font-size="22" fill="#D39A2C">복구</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="600" y1="852" x2="680" y2="852" stroke="#283541" stroke-width="2.5"/>
+    <text x="690" y="860">물리 장애 방어(실시간)</text>
+    <line x1="1010" y1="852" x2="1090" y2="852" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="1100" y="860">논리 손상 복구(시점 복원)</text>
+  </g>
+</svg>

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>LLM 서빙 스택</title>
+  <desc>gateway·router·prefill queue·decode scheduler·GPU worker·KV cache·streaming 응답 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-acc-start" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M10 0 L0 5 L10 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-acc-end" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="34" font-weight="700" fill="#142131">LLM 서빙 스택</text>
+    <text x="60" y="108" font-size="22" fill="#7A8791">prefill·decode 분리와 KV cache 공유, 토큰 스트리밍 응답 경로</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="990" y1="68" x2="1070" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="1080" y="76">요청 흐름</text>
+    <line x1="1210" y1="68" x2="1290" y2="68" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1300" y="76">KV R/W</text>
+    <line x1="1400" y1="68" x2="1480" y2="68" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1490" y="76" font-size="20">응답</text>
+  </g>
+
+  <g id="lane-labels" font-size="22" fill="#7A8791">
+    <text x="60" y="225">요청 경로</text>
+    <text x="60" y="465">공유 상태</text>
+    <text x="60" y="685">응답 경로</text>
+  </g>
+
+  <g id="request-row">
+    <g id="gateway">
+      <rect x="120" y="160" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="230" y="232" text-anchor="middle" font-size="28" fill="#142131">Gateway</text>
+    </g>
+    <g id="router">
+      <rect x="405" y="160" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="515" y="232" text-anchor="middle" font-size="26" fill="#142131">Model Router</text>
+    </g>
+    <g id="prefill">
+      <rect x="690" y="160" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="232" text-anchor="middle" font-size="26" fill="#142131">Prefill Queue</text>
+    </g>
+    <g id="decode">
+      <rect x="975" y="160" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1085" y="225" text-anchor="middle" font-size="24" fill="#142131">Decode</text>
+      <text x="1085" y="258" text-anchor="middle" font-size="24" fill="#142131">Scheduler</text>
+    </g>
+    <g id="gpu">
+      <rect x="1260" y="160" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1370" y="232" text-anchor="middle" font-size="26" fill="#142131">GPU Worker</text>
+    </g>
+  </g>
+
+  <g id="kv-cache">
+    <rect x="940" y="400" width="540" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1210" y="467" text-anchor="middle" font-size="28" fill="#142131">KV Cache</text>
+    <text x="1210" y="500" text-anchor="middle" font-size="22" fill="#7A8791">prefill · decode 공유 메모리</text>
+  </g>
+
+  <g id="streaming">
+    <rect x="120" y="620" width="1100" height="120" rx="14" fill="#FFF7E8" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="670" y="687" text-anchor="middle" font-size="28" fill="#142131">Streaming</text>
+    <text x="670" y="720" text-anchor="middle" font-size="22" fill="#7A8791">토큰 단위 점진적 응답</text>
+  </g>
+
+  <g id="request-edges" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M340 225 L405 225" marker-end="url(#arrow)"/>
+    <path d="M625 225 L690 225" marker-end="url(#arrow)"/>
+    <path d="M910 225 L975 225" marker-end="url(#arrow)"/>
+    <path d="M1195 225 L1260 225" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="kv-edges" fill="none" stroke="#0F8790" stroke-width="2.5">
+    <path d="M1085 290 L1085 400" marker-start="url(#arrow-acc-start)" marker-end="url(#arrow-acc-end)"/>
+    <path d="M1370 290 L1370 400" marker-start="url(#arrow-acc-start)" marker-end="url(#arrow-acc-end)"/>
+    <text x="1100" y="345" font-size="22" fill="#0F8790">R/W</text>
+    <text x="1385" y="345" font-size="22" fill="#0F8790">R/W</text>
+  </g>
+
+  <g id="response-edges" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M1370 290 L1370 580 L 230 580 L 230 620" marker-end="url(#arrow-amb)"/>
+    <text x="800" y="565" text-anchor="middle" font-size="22" fill="#D39A2C">토큰 스트림</text>
+    <path d="M230 620 L 230 320 L 230 290" marker-end="url(#arrow-amb)" stroke="#D39A2C"/>
+    <text x="245" y="450" font-size="22" fill="#D39A2C">클라이언트</text>
+  </g>
+</svg>

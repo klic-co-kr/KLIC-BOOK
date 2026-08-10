@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>리더 로그 복제와 Majority Commit</title>
+  <desc>리더가 Term과 Log Index를 가진 로그를 두 팔로워에게 복제하고, Majority ACK가 모이면 Commit하는 과정을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="58" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">리더가 보낸 로그가 다수 복제본에 쓰이면 Commit</text>
+  </g>
+
+  <g id="nodes" font-size="28" fill="#142131" text-anchor="middle" font-weight="700">
+    <rect x="100" y="120" width="360" height="80" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+    <text x="280" y="170">Leader</text>
+    <rect x="620" y="120" width="360" height="80" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="800" y="170">Follower A</text>
+    <rect x="1140" y="120" width="360" height="80" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="1320" y="170">Follower B</text>
+  </g>
+
+  <g id="appendedges" fill="none" stroke-width="2.5">
+    <path d="M460 160 C 540 160, 560 160, 620 160" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <path d="M460 190 C 540 190, 560 320, 620 320" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <path d="M460 200 C 700 200, 1000 160, 1140 160" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+    <text x="540" y="130" text-anchor="middle" font-size="22" fill="#0F8790" font-weight="700">AppendEntries</text>
+    <text x="800" y="130" text-anchor="middle" font-size="22" fill="#0F8790" font-weight="700">(Term, Log Index)</text>
+  </g>
+
+  <g id="logs" font-size="22" fill="#142131">
+    <g id="log-header-leader">
+      <rect x="100" y="230" width="360" height="48" fill="#142131"/>
+      <text x="190" y="262" text-anchor="middle" fill="#FFFFFF" font-weight="700">Term</text>
+      <text x="370" y="262" text-anchor="middle" fill="#FFFFFF" font-weight="700">Log Index</text>
+    </g>
+    <g font-size="24" text-anchor="middle">
+      <rect x="100" y="278" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="190" y="316">3</text>
+      <rect x="280" y="278" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="370" y="316">1</text>
+      <rect x="100" y="336" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="190" y="374">3</text>
+      <rect x="280" y="336" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="370" y="374">2</text>
+      <rect x="100" y="394" width="180" height="58" fill="#0F8790"/><text x="190" y="432" fill="#FFFFFF" font-weight="700">3</text>
+      <rect x="280" y="394" width="180" height="58" fill="#0F8790"/><text x="370" y="432" fill="#FFFFFF" font-weight="700">3</text>
+    </g>
+
+    <g id="log-header-a">
+      <rect x="620" y="380" width="360" height="48" fill="#142131"/>
+      <text x="710" y="412" text-anchor="middle" fill="#FFFFFF" font-weight="700">Term</text>
+      <text x="890" y="412" text-anchor="middle" fill="#FFFFFF" font-weight="700">Log Index</text>
+    </g>
+    <g font-size="24" text-anchor="middle">
+      <rect x="620" y="428" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="710" y="466">3</text>
+      <rect x="800" y="428" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="890" y="466">1</text>
+      <rect x="620" y="486" width="180" height="58" fill="#0F8790"/><text x="710" y="524" fill="#FFFFFF" font-weight="700">3</text>
+      <rect x="800" y="486" width="180" height="58" fill="#0F8790"/><text x="890" y="524" fill="#FFFFFF" font-weight="700">2</text>
+    </g>
+
+    <g id="log-header-b">
+      <rect x="1140" y="380" width="360" height="48" fill="#142131"/>
+      <text x="1230" y="412" text-anchor="middle" fill="#FFFFFF" font-weight="700">Term</text>
+      <text x="1410" y="412" text-anchor="middle" fill="#FFFFFF" font-weight="700">Log Index</text>
+    </g>
+    <g font-size="24" text-anchor="middle">
+      <rect x="1140" y="428" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1230" y="466">3</text>
+      <rect x="1320" y="428" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1410" y="466">1</text>
+      <rect x="1140" y="486" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1230" y="524">3</text>
+      <rect x="1320" y="486" width="180" height="58" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1410" y="524">2</text>
+    </g>
+  </g>
+
+  <g id="ack">
+    <path d="M800 560 C 600 560, 500 560, 460 560" fill="none" stroke="#283541" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+    <text x="630" y="548" text-anchor="middle" font-size="22" fill="#283541">ACK</text>
+    <path d="M1320 560 C 1000 560, 600 560, 460 560" fill="none" stroke="#283541" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+    <text x="1080" y="548" text-anchor="middle" font-size="22" fill="#283541">ACK</text>
+  </g>
+
+  <g id="majority">
+    <rect x="100" y="600" width="360" height="80" rx="12" fill="#0F8790"/>
+    <text x="280" y="640" text-anchor="middle" font-size="28" font-weight="700" fill="#FFFFFF">Majority 도달</text>
+    <text x="280" y="670" text-anchor="middle" font-size="22" fill="#EFF5F4">리더 + 팔로워 1 = 과반</text>
+  </g>
+
+  <g id="commit">
+    <path d="M280 680 L280 720" fill="none" stroke="#0F8790" stroke-width="3" marker-end="url(#arrow-acc)"/>
+    <rect x="100" y="720" width="360" height="70" rx="12" fill="#FFFFFF" stroke="#0F8790" stroke-width="3"/>
+    <text x="280" y="765" text-anchor="middle" font-size="30" font-weight="700" fill="#0F8790">Commit</text>
+
+    <path d="M460 755 C 540 755, 560 700, 620 700" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <path d="M460 755 C 800 755, 1000 700, 1140 700" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <text x="800" y="790" text-anchor="middle" font-size="22" fill="#0F8790">커밋된 인덱스를 팔로워에 통보</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="100" y="838" width="22" height="14" rx="3" fill="#0F8790"/>
+    <text x="132" y="852">커밋된 엔트리(과반 복제 완료)</text>
+    <text x="560" y="852" fill="#7A8791">Log Index로 순서를, Term으로 누가 쓴 것인지 구분한다</text>
+  </g>
+</svg>

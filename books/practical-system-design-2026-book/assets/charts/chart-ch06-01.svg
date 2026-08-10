@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>직렬·병렬 구성의 가용성 합성</title>
+  <desc>독립 실패를 가정할 때 구성 요소 가용성 0.9 예시에서 직렬 2개, 병렬 2개, 병렬 3개가 각각 어떤 계산 가용성을 갖는지 비교한다. 예시 합성 데이터.</desc>
+  <defs>
+    <pattern id="hatchBar" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(45)"><rect width="12" height="12" fill="#FFFFFF"/><line x1="0" y1="0" x2="0" y2="12" stroke="#283541" stroke-width="2.5"/></pattern>
+    <pattern id="dotBar" patternUnits="userSpaceOnUse" width="12" height="12"><rect width="12" height="12" fill="#FFFFFF"/><circle cx="6" cy="6" r="2.6" fill="#283541"/></pattern>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="58" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">구성 요소 가용성 0.9일 때 직렬·병렬 합성(예시)</text>
+  </g>
+  <g id="synthetic-note">
+    <rect x="1240" y="92" width="240" height="44" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="1.5"/>
+    <text x="1360" y="120" text-anchor="middle" font-size="22" fill="#7A8791">예시(합성 데이터)</text>
+  </g>
+
+  <g id="grid" stroke="#D8E1E2" stroke-width="1.5">
+    <line x1="200" y1="740" x2="1400" y2="740"/>
+    <line x1="200" y1="620" x2="1400" y2="620" stroke-dasharray="6 6"/>
+    <line x1="200" y1="500" x2="1400" y2="500" stroke-dasharray="6 6"/>
+    <line x1="200" y1="380" x2="1400" y2="380" stroke-dasharray="6 6"/>
+    <line x1="200" y1="260" x2="1400" y2="260" stroke-dasharray="6 6"/>
+    <line x1="200" y1="140" x2="1400" y2="140" stroke-dasharray="6 6"/>
+  </g>
+
+  <g id="axes" stroke="#142131" stroke-width="2.5">
+    <line x1="200" y1="140" x2="200" y2="740"/>
+    <line x1="200" y1="740" x2="1400" y2="740"/>
+  </g>
+
+  <g id="y-ticks" font-size="22" fill="#283541" text-anchor="end">
+    <text x="188" y="748">0</text>
+    <text x="188" y="628">20</text>
+    <text x="188" y="508">40</text>
+    <text x="188" y="388">60</text>
+    <text x="188" y="268">80</text>
+    <text x="188" y="148">100</text>
+  </g>
+  <text x="74" y="440" font-size="24" fill="#142131" transform="rotate(-90 74 440)" text-anchor="middle">계산된 가용성(%)</text>
+
+  <g id="bars">
+    <rect x="350" y="254" width="220" height="486" fill="#0F8790" stroke="#142131" stroke-width="2"/>
+    <rect x="690" y="146" width="220" height="594" fill="url(#hatchBar)" stroke="#142131" stroke-width="2.5"/>
+    <rect x="1030" y="141" width="220" height="599" fill="url(#dotBar)" stroke="#142131" stroke-width="2.5"/>
+  </g>
+
+  <g id="value-labels" font-size="28" font-weight="700" text-anchor="middle">
+    <text x="460" y="238" fill="#0F8790">81.0%</text>
+    <text x="800" y="130" fill="#142131">99.0%</text>
+    <text x="1140" y="125" fill="#142131">99.9%</text>
+  </g>
+
+  <g id="x-labels" font-size="26" fill="#142131" text-anchor="middle" font-weight="700">
+    <text x="460" y="790">직렬 2개</text>
+    <text x="800" y="790">병렬 2개</text>
+    <text x="1140" y="790">병렬 3개</text>
+  </g>
+  <text x="800" y="836" font-size="24" fill="#142131" text-anchor="middle">구성</text>
+
+  <g id="formulas" font-size="22" fill="#7A8791" text-anchor="middle">
+    <text x="460" y="668" fill="#FFFFFF" font-weight="700">p × p</text>
+    <text x="800" y="708" font-weight="700">1 − (1−p)²</text>
+    <text x="1140" y="708" font-weight="700">1 − (1−p)³</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="320" y="858" width="22" height="14" fill="#0F8790" stroke="#142131" stroke-width="1.5"/>
+    <text x="350" y="870">직렬(단일 경로)</text>
+    <rect x="560" y="858" width="22" height="14" fill="url(#hatchBar)" stroke="#142131" stroke-width="1.5"/>
+    <text x="590" y="870">병렬 2개(이중화)</text>
+    <rect x="820" y="858" width="22" height="14" fill="url(#dotBar)" stroke="#142131" stroke-width="1.5"/>
+    <text x="850" y="870">병렬 3개(삼중화)</text>
+    <text x="1110" y="870" fill="#7A8791">p = 0.9, 독립 실패 가정</text>
+  </g>
+</svg>

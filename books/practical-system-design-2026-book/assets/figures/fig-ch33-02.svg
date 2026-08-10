@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>에이전트 신뢰 경계</title>
+  <desc>trusted instruction(system policy)과 untrusted retrieval/tool output, memory, credential, sandbox 경계를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-mute" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="34" font-weight="700" fill="#142131">에이전트 신뢰 경계</text>
+    <text x="60" y="108" font-size="22" fill="#7A8791">신뢰 코어와 외부 입력·격리 영역의 경계 통과 지점</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1010" y="50" width="22" height="22" rx="4" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="1042" y="68">신뢰 코어</text>
+    <rect x="1190" y="50" width="22" height="22" rx="4" fill="#FFF7E8" stroke="#D39A2C" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="1222" y="68">격리·외부</text>
+    <line x1="1360" y1="60" x2="1430" y2="60" stroke="#283541" stroke-width="2.5"/>
+    <text x="1440" y="68">검증 통과</text>
+  </g>
+
+  <g id="trusted-zone">
+    <rect x="380" y="240" width="820" height="580" rx="18" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+    <text x="410" y="282" font-size="24" font-weight="700" fill="#0F8790">신뢰 코어 (Trusted)</text>
+  </g>
+
+  <g id="sandbox-zone">
+    <rect x="1260" y="350" width="300" height="400" rx="18" fill="#FFF7E8" stroke="#D39A2C" stroke-width="3" stroke-dasharray="12 8"/>
+    <text x="1290" y="392" font-size="24" font-weight="700" fill="#D39A2C">Sandbox</text>
+  </g>
+
+  <g id="untrusted-label" font-size="22" fill="#7A8791">
+    <text x="60" y="430">외부 입력(불신)</text>
+  </g>
+
+  <g id="user-request">
+    <rect x="680" y="120" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="800" y="178" text-anchor="middle" font-size="28" fill="#142131">사용자 요청</text>
+  </g>
+
+  <g id="retrieved-data">
+    <rect x="60" y="470" width="280" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="200" y="544" text-anchor="middle" font-size="28" fill="#142131">Retrieved Data</text>
+  </g>
+
+  <g id="system-policy">
+    <rect x="420" y="310" width="260" height="110" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="550" y="374" text-anchor="middle" font-size="26" fill="#142131">System Policy</text>
+  </g>
+
+  <g id="memory">
+    <rect x="900" y="310" width="260" height="110" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1030" y="374" text-anchor="middle" font-size="28" fill="#142131">Memory</text>
+  </g>
+
+  <g id="model-core">
+    <rect x="560" y="490" width="460" height="150" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="3"/>
+    <text x="790" y="572" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">Model</text>
+  </g>
+
+  <g id="credential">
+    <rect x="660" y="690" width="260" height="110" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="790" y="754" text-anchor="middle" font-size="28" fill="#142131">Credential</text>
+  </g>
+
+  <g id="tool-output">
+    <rect x="1310" y="500" width="200" height="140" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="1410" y="578" text-anchor="middle" font-size="26" fill="#142131">Tool Output</text>
+  </g>
+
+  <g id="internal-edges" fill="none" stroke="#0F8790" stroke-width="2.5">
+    <path d="M800 220 L800 490" marker-end="url(#arrow)"/>
+    <text x="815" y="380" font-size="22" fill="#0F8790">검증된 입력</text>
+
+    <path d="M550 420 L680 520" marker-end="url(#arrow)"/>
+    <text x="555" y="495" font-size="22" fill="#0F8790">정책 적용</text>
+
+    <path d="M1030 420 L900 540" marker-end="url(#arrow)"/>
+    <text x="945" y="495" font-size="22" fill="#0F8790">기억 read/write</text>
+
+    <path d="M790 690 L790 640" marker-end="url(#arrow)"/>
+    <text x="805" y="675" font-size="22" fill="#0F8790">보안 비밀</text>
+  </g>
+
+  <g id="boundary-edges" fill="none" stroke-width="2.5">
+    <path d="M340 535 L560 540" stroke="#D39A2C" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="365" y="525" font-size="22" fill="#D39A2C">외부 데이터 → 검증</text>
+
+    <path d="M1310 570 L1020 575" stroke="#D39A2C" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="1060" y="620" font-size="22" fill="#D39A2C">결과 검증</text>
+  </g>
+
+  <g id="sandbox-flow" fill="none" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M1020 555 L1260 555 L1310 570" marker-end="url(#arrow-mute)"/>
+    <text x="1075" y="545" font-size="22" fill="#7A8791">격리 실행 호출</text>
+  </g>
+</svg>

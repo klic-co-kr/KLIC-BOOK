@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>요구사항 정제 흐름</title>
+  <desc>모호한 사업 요구가 사용자 여정을 거쳐 불변조건·품질 목표·가정으로 정제되고 검증 항목으로 수렴되는 과정을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-mut" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1180" y1="68" x2="1260" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="1272" y="76">정제 흐름</text>
+    <line x1="1380" y1="68" x2="1460" y2="68" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1472" y="76">되머임</text>
+  </g>
+
+  <g id="nodes">
+    <g id="goal">
+      <rect x="70" y="400" width="240" height="140" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="3"/>
+      <text x="190" y="483" text-anchor="middle" font-size="34" fill="#142131">사업 목표</text>
+    </g>
+    <g id="journey">
+      <rect x="400" y="400" width="260" height="140" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="530" y="483" text-anchor="middle" font-size="34" fill="#142131">사용자 여정</text>
+    </g>
+    <g id="invariants">
+      <rect x="780" y="170" width="300" height="140" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="930" y="253" text-anchor="middle" font-size="32" fill="#142131">불변조건</text>
+    </g>
+    <g id="quality">
+      <rect x="780" y="400" width="300" height="140" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="930" y="483" text-anchor="middle" font-size="32" fill="#142131">품질 목표</text>
+    </g>
+    <g id="assumptions">
+      <rect x="780" y="630" width="300" height="140" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="930" y="713" text-anchor="middle" font-size="32" fill="#142131">가정</text>
+    </g>
+    <g id="verify">
+      <rect x="1200" y="400" width="260" height="140" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="3"/>
+      <text x="1330" y="483" text-anchor="middle" font-size="34" fill="#142131">검증</text>
+    </g>
+  </g>
+
+  <g id="edges" font-size="24" fill="#283541">
+    <path d="M310 470 L400 470" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M660 440 L720 440 L720 240 L780 240" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M660 470 L780 470" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M660 500 L720 500 L720 700 L780 700" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+
+    <path d="M1080 240 L1140 240 L1140 440 L1200 440" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M1080 470 L1200 470" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M1080 700 L1140 700 L1140 500 L1200 500" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+
+    <path d="M1330 540 L1330 810 L190 810 L190 540" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="10 8" fill="none" marker-end="url(#arrow-mut)"/>
+    <text x="760" y="800" text-anchor="middle" fill="#7A8791" font-size="24">되머임: 검증 결과로 가정·목표 갱신</text>
+  </g>
+</svg>

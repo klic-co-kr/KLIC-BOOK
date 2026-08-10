@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 40 900 660" width="900" height="660" style="background:#ffffff">
+<defs><marker id="ah" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto"><polygon points="0 0, 12 4, 0 8" fill="#333333"/></marker><marker id="ah-light" markerWidth="12" markerHeight="8" refX="12" refY="4" orient="auto"><polygon points="0 0, 12 4, 0 8" fill="#999999"/></marker></defs>
+<rect x="10.0" y="55" width="168" height="38" rx="6" fill="#999999" stroke="#333333" stroke-width="2"/>
+<text x="94.0" y="74" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" dominant-baseline="central" font-weight="bold">Diff + Apply Model</text>
+<rect x="10.0" y="101" width="168" height="116" rx="3" fill="#f5f5f5" stroke="#999999" stroke-width="2"/>
+<text x="16.0" y="117" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">LLM 출력 diff 설명:</text>
+<text x="16.0" y="134" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">- def foo(x):</text>
+<text x="16.0" y="151" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">    return x</text>
+<text x="16.0" y="168" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">+ def foo(x, y=0):</text>
+<text x="16.0" y="185" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">+   return x + y</text>
+<text x="16.0" y="202" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">→ 소형 모델이 위치 파악 후 적용</text>
+<rect x="14.0" y="229" width="160" height="56" rx="3" fill="#ffffff" stroke="#999999" stroke-width="2"/>
+<text x="94.0" y="248" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">장점: 관심사 분리</text>
+<text x="94.0" y="270" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">단점: 작은 오차로 어긋남</text>
+<rect x="188.0" y="55" width="168" height="38" rx="6" fill="#d0d0d0" stroke="#333333" stroke-width="2"/>
+<text x="272.0" y="74" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="13" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">Old String → New String</text>
+<rect x="188.0" y="101" width="168" height="99" rx="3" fill="#f5f5f5" stroke="#999999" stroke-width="2"/>
+<text x="194.0" y="117" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">old: &quot;def foo(x):\n</text>
+<text x="194.0" y="134" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">       return x&quot;</text>
+<text x="194.0" y="151" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">new: &quot;def foo(x, y=0):\n</text>
+<text x="194.0" y="168" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">       return x + y&quot;</text>
+<text x="194.0" y="185" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">→ 문자열 정확 매칭 치환</text>
+<rect x="192.0" y="212" width="160" height="56" rx="3" fill="#ffffff" stroke="#999999" stroke-width="2"/>
+<text x="272.0" y="231" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">장점: 예측 가능, 모호함 없음</text>
+<text x="272.0" y="253" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">단점: 큰 삭제 시 전체 출력 필요</text>
+<rect x="366.0" y="55" width="168" height="38" rx="6" fill="#f0f0f0" stroke="#333333" stroke-width="2"/>
+<text x="450.0" y="74" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">줄번호 위치 지정</text>
+<rect x="366.0" y="101" width="168" height="99" rx="3" fill="#f5f5f5" stroke="#999999" stroke-width="2"/>
+<text x="372.0" y="117" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">42-43줄 삭제, 삽입:</text>
+<text x="372.0" y="134" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">  def foo(x, y=0):</text>
+<text x="372.0" y="151" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">    return x + y</text>
+<text x="372.0" y="168" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central"></text>
+<text x="372.0" y="185" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">→ 줄번호로 범위 정확 지정</text>
+<rect x="370.0" y="212" width="160" height="56" rx="3" fill="#ffffff" stroke="#999999" stroke-width="2"/>
+<text x="450.0" y="231" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">장점: 큰 작업 효율적</text>
+<text x="450.0" y="253" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">단점: 긴 파일은 줄번호 오류 쉬움</text>
+<rect x="544.0" y="55" width="168" height="38" rx="6" fill="#f0f0f0" stroke="#333333" stroke-width="2"/>
+<text x="628.0" y="74" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">Vim 유사 명령</text>
+<rect x="544.0" y="101" width="168" height="99" rx="3" fill="#f5f5f5" stroke="#999999" stroke-width="2"/>
+<text x="550.0" y="117" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">42G  (42줄로 이동)</text>
+<text x="550.0" y="134" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">cw   (단어 치환)</text>
+<text x="550.0" y="151" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">dd   (줄 삭제)</text>
+<text x="550.0" y="168" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">yy/p (복사/붙여넣기)</text>
+<text x="550.0" y="185" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">→ 풍부한 편집 의미</text>
+<rect x="548.0" y="212" width="160" height="56" rx="3" fill="#ffffff" stroke="#999999" stroke-width="2"/>
+<text x="628.0" y="231" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">장점: 이동/재조직 효율적</text>
+<text x="628.0" y="253" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">단점: 약한 모델은 오류 많음</text>
+<rect x="722.0" y="55" width="168" height="38" rx="6" fill="#d0d0d0" stroke="#333333" stroke-width="2"/>
+<text x="806.0" y="74" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">처음과 끝 매칭</text>
+<rect x="722.0" y="101" width="168" height="99" rx="3" fill="#f5f5f5" stroke="#999999" stroke-width="2"/>
+<text x="728.0" y="117" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">start: &quot;def foo(x):&quot;</text>
+<text x="728.0" y="134" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">end:   &quot;    return x&quot;</text>
+<text x="728.0" y="151" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">new: &quot;def foo(x, y=0):</text>
+<text x="728.0" y="168" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">       return x + y&quot;</text>
+<text x="728.0" y="185" font-family="'Courier New', Courier, monospace" font-size="11" fill="#333333" text-anchor="start" dominant-baseline="central">→ 경계만으로 위치 파악</text>
+<rect x="726.0" y="212" width="160" height="56" rx="3" fill="#ffffff" stroke="#999999" stroke-width="2"/>
+<text x="806.0" y="231" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">장점: 큰 삭제 시 전체 출력 불필요</text>
+<text x="806.0" y="253" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#666666" text-anchor="middle" dominant-baseline="central" font-weight="normal">단점: 경계 조합이 유일해야 함</text>
+<line x1="30" y1="320" x2="870" y2="320" stroke="#999999" stroke-width="2" stroke-dasharray="8,4"/>
+<text x="450.0" y="344" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="20" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="bold">실제 채택 현황</text>
+<text x="240" y="382" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="end" dominant-baseline="central" font-weight="bold">Old→New</text>
+<rect x="250" y="368" width="408.0" height="28" rx="3" fill="#999999" stroke="#333333" stroke-width="2"/>
+<text x="454.0" y="382" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" dominant-baseline="central" font-weight="normal">Claude Code</text>
+<text x="240" y="420" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="end" dominant-baseline="central" font-weight="bold">줄번호 위치 지정</text>
+<rect x="250" y="406" width="240.0" height="28" rx="3" fill="#d0d0d0" stroke="#333333" stroke-width="2"/>
+<text x="370.0" y="420" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">IDE 깊은 통합 사례</text>
+<text x="240" y="458" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="end" dominant-baseline="central" font-weight="bold">Diff + Apply</text>
+<rect x="250" y="444" width="192.0" height="28" rx="3" fill="#f0f0f0" stroke="#333333" stroke-width="2"/>
+<text x="346.0" y="458" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">Cursor</text>
+<text x="240" y="496" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="end" dominant-baseline="central" font-weight="bold">처음과 끝 매칭</text>
+<rect x="250" y="482" width="144.0" height="28" rx="3" fill="#f0f0f0" stroke="#333333" stroke-width="2"/>
+<text x="322.0" y="496" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">일부 맞춤 사례</text>
+<text x="240" y="534" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="14" fill="#333333" text-anchor="end" dominant-baseline="central" font-weight="bold">Vim 명령</text>
+<rect x="250" y="520" width="72.0" height="28" rx="3" fill="#f5f5f5" stroke="#333333" stroke-width="2"/>
+<text x="286.0" y="534" font-family="Arial, 'Helvetica Neue', Helvetica, 'Noto Sans KR', 'Noto Sans KR', sans-serif" font-size="12" fill="#333333" text-anchor="middle" dominant-baseline="central" font-weight="normal">실험적 사례</text>
+</svg>

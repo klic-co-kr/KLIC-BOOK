@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>gateway 장애 후 복구 흐름</title>
+  <desc>gateway 장애 후 jitter reconnect·cursor sync·gap recovery를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="header">
+    <text x="80" y="78" font-size="30" font-weight="700" fill="#142131">gateway 장애 후 복구 흐름</text>
+    <text x="80" y="114" font-size="24" fill="#7A8791">장애 감지 → jitter reconnect → cursor sync → gap recovery</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="990" y1="92" x2="1070" y2="92" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1082" y="100">장애·연결 해제</text>
+    <line x1="1290" y1="92" x2="1370" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1382" y="100">재연결·갭 복구</text>
+  </g>
+
+  <g id="nodes">
+    <g id="client">
+      <rect x="60" y="400" width="180" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="150" y="450" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">Client</text>
+      <text x="150" y="490" text-anchor="middle" font-size="22" fill="#7A8791">연결 끊김 감지</text>
+    </g>
+
+    <g id="gw-fail">
+      <rect x="320" y="400" width="240" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="440" y="450" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Gateway 장애</text>
+      <text x="440" y="490" text-anchor="middle" font-size="22" fill="#7A8791">수천 연결 동시 손실</text>
+    </g>
+
+    <g id="jitter">
+      <rect x="640" y="400" width="260" height="120" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="770" y="450" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Jitter Reconnect</text>
+      <text x="770" y="490" text-anchor="middle" font-size="22" fill="#7A8791">지수 백오프·지터</text>
+    </g>
+
+    <g id="cursor">
+      <rect x="980" y="400" width="200" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1080" y="450" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Cursor</text>
+      <text x="1080" y="490" text-anchor="middle" font-size="22" fill="#7A8791">마지막 seq 보관</text>
+    </g>
+
+    <g id="sync-api">
+      <rect x="1260" y="400" width="180" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1350" y="450" text-anchor="middle" font-size="24" font-weight="600" fill="#142131">Sync API</text>
+      <text x="1350" y="490" text-anchor="middle" font-size="22" fill="#7A8791">누락 조회</text>
+    </g>
+
+    <g id="gap">
+      <rect x="1260" y="620" width="280" height="120" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1400" y="670" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Gap Recovery</text>
+      <text x="1400" y="704" text-anchor="middle" font-size="22" fill="#7A8791">빈 seq 채우기</text>
+    </g>
+
+    <g id="store">
+      <rect x="980" y="620" width="200" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1080" y="670" text-anchor="middle" font-size="24" font-weight="600" fill="#142131">대화 원장</text>
+      <text x="1080" y="704" text-anchor="middle" font-size="22" fill="#7A8791">정렬된 history</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M240 460 L320 460" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="248" y="448" font-size="22" fill="#283541">① 단절</text>
+
+    <path d="M560 460 L640 460" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="568" y="448" font-size="22" fill="#D39A2C">② 재연결 시도</text>
+
+    <path d="M900 460 L980 460" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="908" y="448" font-size="22" fill="#D39A2C">③ 보존 cursor</text>
+
+    <path d="M1180 460 L1260 460" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-ok)"/>
+    <text x="1188" y="448" font-size="22" fill="#0F8790">④ 누락 조회</text>
+
+    <path d="M1350 520 L1350 580 L1080 580 L1080 620" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-ok)"/>
+    <text x="1200" y="568" font-size="22" fill="#0F8790">⑤ cursor 이후 반환</text>
+
+    <path d="M1180 680 L1260 680" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-ok)"/>
+    <text x="1188" y="668" font-size="22" fill="#0F8790">⑥ 빈 구간</text>
+
+    <path d="M1400 620 L1400 580 L150 580 L150 520" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#arrow-ok)"/>
+    <text x="780" y="568" text-anchor="middle" font-size="22" fill="#0F8790">⑦ 정렬된 메시지로 화면 복원</text>
+  </g>
+
+  <g id="step-tag">
+    <rect x="60" y="810" width="320" height="50" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="220" y="843" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">STEP 5 · 장애 복구·gap recovery</text>
+  </g>
+</svg>

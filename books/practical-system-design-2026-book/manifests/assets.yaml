@@ -1,0 +1,3107 @@
+asset_budget:
+  technical_diagrams: 88
+  data_charts: 12
+  total: 100
+status_note: 모든 자산은 detailed specification까지 작성된 specified 상태이며 실제 binary는 아직 생성되지 않았다.
+assets:
+- id: fig-ch01-01
+  chapter: ch01
+  kind: technical-diagram
+  generator: direct-svg
+  role: context-boundary
+  caption_ko: 사용자·도메인 코어·외부 의존성과 신뢰 경계를 한눈에 보여준다
+  brief_ko: 사용자·도메인 코어·외부 의존성과 신뢰 경계를 한눈에 보여준다.
+  required_labels_ko:
+  - 사용자
+  - 경계 API
+  - 도메인 코어
+  - 데이터 저장소
+  - 외부 의존성
+  - 신뢰 경계
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - iso-42010
+  - upstream-primer
+  alt_ko: 사용자·도메인 코어·외부 의존성과 신뢰 경계를 한눈에 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch01-01.md
+  source_file: assets/src/svg/fig-ch01-01.svg
+  output_file: assets/figures/fig-ch01-01.svg
+- id: fig-ch01-02
+  chapter: ch01
+  kind: technical-diagram
+  generator: direct-svg
+  role: requirement-funnel
+  caption_ko: 모호한 사업 요구가 기능·품질·규모·실패 모델·검증 항목으로 좁혀지는 과정을 보여준다
+  brief_ko: 모호한 사업 요구가 기능·품질·규모·실패 모델·검증 항목으로 좁혀지는 과정을 보여준다.
+  required_labels_ko:
+  - 사업 목표
+  - 사용자 여정
+  - 불변조건
+  - 품질 목표
+  - 가정
+  - 검증
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - iso-42010
+  - upstream-primer
+  alt_ko: 모호한 사업 요구가 기능·품질·규모·실패 모델·검증 항목으로 좁혀지는 과정을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch01-02.md
+  source_file: assets/src/svg/fig-ch01-02.svg
+  output_file: assets/figures/fig-ch01-02.svg
+- id: fig-ch02-01
+  chapter: ch02
+  kind: technical-diagram
+  generator: direct-svg
+  role: capacity-equations
+  caption_ko: 요청률·동시성·대역폭·저장량의 입력과 식을 연결한다
+  brief_ko: 요청률·동시성·대역폭·저장량의 입력과 식을 연결한다.
+  required_labels_ko:
+  - 일 요청 수
+  - 피크 계수
+  - 서비스 시간
+  - 객체 크기
+  - 복제 계수
+  - 보존 기간
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - upstream-primer
+  - dean-tail-at-scale
+  alt_ko: 요청률·동시성·대역폭·저장량의 입력과 식을 연결한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch02-01.md
+  source_file: assets/src/svg/fig-ch02-01.svg
+  output_file: assets/figures/fig-ch02-01.svg
+- id: fig-ch02-02
+  chapter: ch02
+  kind: technical-diagram
+  generator: direct-svg
+  role: capacity-bottleneck-map
+  caption_ko: 트래픽 증가에 따라 CPU·메모리·IOPS·연결·네트워크 중 어느 한계에 먼저 닿는지 보여준다
+  brief_ko: 트래픽 증가에 따라 CPU·메모리·IOPS·연결·네트워크 중 어느 한계에 먼저 닿는지 보여준다.
+  required_labels_ko:
+  - 부하
+  - CPU
+  - 메모리
+  - IOPS
+  - 연결 수
+  - 네트워크
+  - 안전 여유
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - upstream-primer
+  - dean-tail-at-scale
+  alt_ko: 트래픽 증가에 따라 CPU·메모리·IOPS·연결·네트워크 중 어느 한계에 먼저 닿는지 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch02-02.md
+  source_file: assets/src/svg/fig-ch02-02.svg
+  output_file: assets/figures/fig-ch02-02.svg
+- id: chart-ch02-01
+  chapter: ch02
+  kind: data-chart
+  generator: python-matplotlib
+  role: capacity-scenarios
+  caption_ko: 낮음·기준·높음 용량 시나리오
+  brief_ko: 동일한 계산식에서 RPS, 저장량, 대역폭 입력의 낮음·기준·높음 가정이 결과를 어떻게 바꾸는지 비교한다.
+  required_labels_ko:
+  - 시나리오
+  - 정규화된 자원 요구량
+  - 요청률
+  - 저장량
+  - 대역폭
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - upstream-primer
+  - dean-tail-at-scale
+  alt_ko: 동일한 계산식에서 RPS, 저장량, 대역폭 입력의 낮음·기준·높음 가정이 결과를 어떻게 바꾸는지 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch02-01.md
+  source_file: assets/src/charts/chart-ch02-01.py
+  data_file: data/chart-ch02-01.csv
+  output_file: assets/charts/chart-ch02-01.svg
+  synthetic: true
+- id: fig-ch03-01
+  chapter: ch03
+  kind: technical-diagram
+  generator: direct-svg
+  role: adr-lifecycle
+  caption_ko: 제안·검증·승인·적용·관측·재검토로 이어지는 ADR 생명주기를 보여준다
+  brief_ko: 제안·검증·승인·적용·관측·재검토로 이어지는 ADR 생명주기를 보여준다.
+  required_labels_ko:
+  - 제안
+  - 근거
+  - 대안
+  - 결정
+  - 결과
+  - 재검토
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - iso-42010
+  - adr-nygard
+  alt_ko: 제안·검증·승인·적용·관측·재검토로 이어지는 ADR 생명주기를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch03-01.md
+  source_file: assets/src/svg/fig-ch03-01.svg
+  output_file: assets/figures/fig-ch03-01.svg
+- id: fig-ch03-02
+  chapter: ch03
+  kind: technical-diagram
+  generator: direct-svg
+  role: tradeoff-space
+  caption_ko: 가용성·지연·일관성·비용·운영 복잡도 사이의 선택 공간을 보여준다
+  brief_ko: 가용성·지연·일관성·비용·운영 복잡도 사이의 선택 공간을 보여준다.
+  required_labels_ko:
+  - 가용성
+  - 지연시간
+  - 일관성
+  - 비용
+  - 운영 복잡도
+  - 가역성
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - iso-42010
+  - adr-nygard
+  alt_ko: 가용성·지연·일관성·비용·운영 복잡도 사이의 선택 공간을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch03-02.md
+  source_file: assets/src/svg/fig-ch03-02.svg
+  output_file: assets/figures/fig-ch03-02.svg
+- id: fig-ch04-01
+  chapter: ch04
+  kind: technical-diagram
+  generator: direct-svg
+  role: slo-stack
+  caption_ko: 사용자 여정에서 SLI·SLO·SLA·error budget 정책으로 내려가는 관계를 보여준다
+  brief_ko: 사용자 여정에서 SLI·SLO·SLA·error budget 정책으로 내려가는 관계를 보여준다.
+  required_labels_ko:
+  - 사용자 여정
+  - SLI
+  - SLO
+  - SLA
+  - Error Budget
+  - 운영 정책
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - google-sre-slo
+  - google-sre-error-budget
+  - google-sre-book
+  alt_ko: 사용자 여정에서 SLI·SLO·SLA·error budget 정책으로 내려가는 관계를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch04-01.md
+  source_file: assets/src/svg/fig-ch04-01.svg
+  output_file: assets/figures/fig-ch04-01.svg
+- id: fig-ch04-02
+  chapter: ch04
+  kind: technical-diagram
+  generator: direct-svg
+  role: burn-rate-windows
+  caption_ko: 짧은 창과 긴 창의 burn rate가 빠른 장애와 느린 열화를 포착하는 방식을 보여준다
+  brief_ko: 짧은 창과 긴 창의 burn rate가 빠른 장애와 느린 열화를 포착하는 방식을 보여준다.
+  required_labels_ko:
+  - 5분
+  - 1시간
+  - 6시간
+  - 28일 창
+  - 빠른 소진
+  - 느린 소진
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - google-sre-slo
+  - google-sre-error-budget
+  - google-sre-book
+  alt_ko: 짧은 창과 긴 창의 burn rate가 빠른 장애와 느린 열화를 포착하는 방식을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch04-02.md
+  source_file: assets/src/svg/fig-ch04-02.svg
+  output_file: assets/figures/fig-ch04-02.svg
+- id: chart-ch04-01
+  chapter: ch04
+  kind: data-chart
+  generator: python-matplotlib
+  role: error-budget-burn
+  caption_ko: Error budget과 burn rate
+  brief_ko: 28일 SLO 예산이 정상·느린 소진·빠른 소진 시나리오에서 시간에 따라 감소하는 모습을 보여준다.
+  required_labels_ko:
+  - 관측 창 경과 시간
+  - 남은 Error Budget (%)
+  - 정상 소진
+  - 3배 Burn
+  - 20배 Burn
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - google-sre-slo
+  - google-sre-error-budget
+  alt_ko: 28일 SLO 예산이 정상·느린 소진·빠른 소진 시나리오에서 시간에 따라 감소하는 모습을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch04-01.md
+  source_file: assets/src/charts/chart-ch04-01.py
+  data_file: data/chart-ch04-01.csv
+  output_file: assets/charts/chart-ch04-01.svg
+  synthetic: true
+- id: fig-ch05-01
+  chapter: ch05
+  kind: technical-diagram
+  generator: direct-svg
+  role: latency-decomposition
+  caption_ko: 전체 지연을 네트워크·큐 대기·처리·하위 호출·직렬화로 분해한다
+  brief_ko: 전체 지연을 네트워크·큐 대기·처리·하위 호출·직렬화로 분해한다.
+  required_labels_ko:
+  - 전체 지연
+  - 네트워크
+  - 큐 대기
+  - 처리
+  - 하위 호출
+  - 직렬화
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - dean-tail-at-scale
+  - google-sre-overload
+  - google-sre-book
+  alt_ko: 전체 지연을 네트워크·큐 대기·처리·하위 호출·직렬화로 분해한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch05-01.md
+  source_file: assets/src/svg/fig-ch05-01.svg
+  output_file: assets/figures/fig-ch05-01.svg
+- id: fig-ch05-02
+  chapter: ch05
+  kind: technical-diagram
+  generator: direct-svg
+  role: fanout-tail
+  caption_ko: fan-out 개수가 증가할수록 하나 이상의 느린 하위 호출을 만날 확률이 커지는 모습을 보여준다
+  brief_ko: fan-out 개수가 증가할수록 하나 이상의 느린 하위 호출을 만날 확률이 커지는 모습을 보여준다.
+  required_labels_ko:
+  - 요청
+  - 병렬 호출
+  - 빠른 응답
+  - 느린 응답
+  - 전체 완료
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - dean-tail-at-scale
+  - google-sre-overload
+  - google-sre-book
+  alt_ko: fan-out 개수가 증가할수록 하나 이상의 느린 하위 호출을 만날 확률이 커지는 모습을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch05-02.md
+  source_file: assets/src/svg/fig-ch05-02.svg
+  output_file: assets/figures/fig-ch05-02.svg
+- id: chart-ch05-01
+  chapter: ch05
+  kind: data-chart
+  generator: python-matplotlib
+  role: latency-percentiles
+  caption_ko: 평균과 꼬리 지연 분포
+  brief_ko: 같은 평균을 가져도 p99가 다른 두 latency 분포를 histogram/ECDF로 비교한다.
+  required_labels_ko:
+  - 응답 지연(ms)
+  - 누적 요청 비율
+  - 분포 A
+  - 분포 B
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - dean-tail-at-scale
+  - google-sre-overload
+  alt_ko: 같은 평균을 가져도 p99가 다른 두 latency 분포를 histogram/ECDF로 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch05-01.md
+  source_file: assets/src/charts/chart-ch05-01.py
+  data_file: data/chart-ch05-01.csv
+  output_file: assets/charts/chart-ch05-01.svg
+  synthetic: true
+- id: fig-ch06-01
+  chapter: ch06
+  kind: technical-diagram
+  generator: direct-svg
+  role: failure-domain-map
+  caption_ko: 인스턴스·zone·리전·제어면·자격증명·배포 경로의 공유 장애 도메인을 보여준다
+  brief_ko: 인스턴스·zone·리전·제어면·자격증명·배포 경로의 공유 장애 도메인을 보여준다.
+  required_labels_ko:
+  - 인스턴스
+  - Zone
+  - 리전
+  - 제어면
+  - KMS
+  - 배포 파이프라인
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - google-sre-book
+  - nist-contingency
+  alt_ko: 인스턴스·zone·리전·제어면·자격증명·배포 경로의 공유 장애 도메인을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch06-01.md
+  source_file: assets/src/svg/fig-ch06-01.svg
+  output_file: assets/figures/fig-ch06-01.svg
+- id: fig-ch06-02
+  chapter: ch06
+  kind: technical-diagram
+  generator: direct-svg
+  role: redundancy-vs-recovery
+  caption_ko: 복제·failover·백업·restore가 서로 다른 실패를 담당하는 관계를 보여준다
+  brief_ko: 복제·failover·백업·restore가 서로 다른 실패를 담당하는 관계를 보여준다.
+  required_labels_ko:
+  - 복제
+  - Failover
+  - 백업
+  - Restore
+  - 논리 손상
+  - 물리 장애
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - google-sre-book
+  - nist-contingency
+  alt_ko: 복제·failover·백업·restore가 서로 다른 실패를 담당하는 관계를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch06-02.md
+  source_file: assets/src/svg/fig-ch06-02.svg
+  output_file: assets/figures/fig-ch06-02.svg
+- id: chart-ch06-01
+  chapter: ch06
+  kind: data-chart
+  generator: python-matplotlib
+  role: availability-composition
+  caption_ko: 직렬·병렬 구성의 단순 가용성
+  brief_ko: 독립 가정을 전제로 구성 요소 가용성이 직렬·병렬 연결에서 어떻게 합성되는지 비교한다.
+  required_labels_ko:
+  - 구성
+  - 계산된 가용성(%)
+  - 직렬 2개
+  - 병렬 2개
+  - 병렬 3개
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - google-sre-book
+  - nist-contingency
+  alt_ko: 독립 가정을 전제로 구성 요소 가용성이 직렬·병렬 연결에서 어떻게 합성되는지 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch06-01.md
+  source_file: assets/src/charts/chart-ch06-01.py
+  data_file: data/chart-ch06-01.csv
+  output_file: assets/charts/chart-ch06-01.svg
+  synthetic: true
+- id: fig-ch07-01
+  chapter: ch07
+  kind: technical-diagram
+  generator: direct-svg
+  role: cap-partition-timeline
+  caption_ko: 두 복제본 사이 분할 중 쓰기·읽기 선택과 응답 결과를 시간축으로 보여준다
+  brief_ko: 두 복제본 사이 분할 중 쓰기·읽기 선택과 응답 결과를 시간축으로 보여준다.
+  required_labels_ko:
+  - 클라이언트 A
+  - 복제본 A
+  - 네트워크 분할
+  - 복제본 B
+  - 클라이언트 B
+  - 성공
+  - 거부
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - gilbert-lynch-cap
+  - vogels-eventual
+  - dynamo-paper
+  alt_ko: 두 복제본 사이 분할 중 쓰기·읽기 선택과 응답 결과를 시간축으로 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch07-01.md
+  source_file: assets/src/svg/fig-ch07-01.svg
+  output_file: assets/figures/fig-ch07-01.svg
+- id: fig-ch07-02
+  chapter: ch07
+  kind: technical-diagram
+  generator: direct-svg
+  role: consistency-spectrum
+  caption_ko: 선형화·순차·인과·세션·최종 일관성을 보장과 비용 관점에서 비교한다
+  brief_ko: 선형화·순차·인과·세션·최종 일관성을 보장과 비용 관점에서 비교한다.
+  required_labels_ko:
+  - 선형화 가능성
+  - 순차 일관성
+  - 인과 일관성
+  - 세션 보장
+  - 최종 일관성
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - gilbert-lynch-cap
+  - vogels-eventual
+  - dynamo-paper
+  alt_ko: 선형화·순차·인과·세션·최종 일관성을 보장과 비용 관점에서 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch07-02.md
+  source_file: assets/src/svg/fig-ch07-02.svg
+  output_file: assets/figures/fig-ch07-02.svg
+- id: fig-ch08-01
+  chapter: ch08
+  kind: technical-diagram
+  generator: direct-svg
+  role: isolation-anomalies
+  caption_ko: 격리 수준별 dirty read·nonrepeatable read·phantom·write skew 가능성을 비교한다
+  brief_ko: 격리 수준별 dirty read·nonrepeatable read·phantom·write skew 가능성을 비교한다.
+  required_labels_ko:
+  - Read Committed
+  - Repeatable Read
+  - Serializable
+  - Lost Update
+  - Write Skew
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - postgres-mvcc
+  alt_ko: 격리 수준별 dirty read·nonrepeatable read·phantom·write skew 가능성을 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch08-01.md
+  source_file: assets/src/svg/fig-ch08-01.svg
+  output_file: assets/figures/fig-ch08-01.svg
+- id: fig-ch08-02
+  chapter: ch08
+  kind: technical-diagram
+  generator: direct-svg
+  role: mvcc-versions
+  caption_ko: 두 트랜잭션의 스냅샷이 여러 행 버전을 다르게 보는 과정을 시간축으로 보여준다
+  brief_ko: 두 트랜잭션의 스냅샷이 여러 행 버전을 다르게 보는 과정을 시간축으로 보여준다.
+  required_labels_ko:
+  - 트랜잭션 A
+  - 트랜잭션 B
+  - 행 버전
+  - 스냅샷
+  - 커밋
+  - 정리
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - postgres-mvcc
+  alt_ko: 두 트랜잭션의 스냅샷이 여러 행 버전을 다르게 보는 과정을 시간축으로 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch08-02.md
+  source_file: assets/src/svg/fig-ch08-02.svg
+  output_file: assets/figures/fig-ch08-02.svg
+- id: fig-ch09-01
+  chapter: ch09
+  kind: technical-diagram
+  generator: direct-svg
+  role: clock-models
+  caption_ko: 벽시계·단조 시계·Lamport·vector·hybrid logical clock의 목적을 비교한다
+  brief_ko: 벽시계·단조 시계·Lamport·vector·hybrid logical clock의 목적을 비교한다.
+  required_labels_ko:
+  - 벽시계
+  - 단조 시계
+  - Lamport Clock
+  - Vector Clock
+  - Hybrid Logical Clock
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - lamport-time
+  - rfc9562
+  - dynamo-paper
+  alt_ko: 벽시계·단조 시계·Lamport·vector·hybrid logical clock의 목적을 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch09-01.md
+  source_file: assets/src/svg/fig-ch09-01.svg
+  output_file: assets/figures/fig-ch09-01.svg
+- id: fig-ch09-02
+  chapter: ch09
+  kind: technical-diagram
+  generator: direct-svg
+  role: distributed-id-layout
+  caption_ko: 시간·노드·카운터·무작위 비트로 구성된 분산 ID와 인덱스 분포를 보여준다
+  brief_ko: 시간·노드·카운터·무작위 비트로 구성된 분산 ID와 인덱스 분포를 보여준다.
+  required_labels_ko:
+  - 시간 비트
+  - 노드 ID
+  - 순번
+  - 무작위
+  - 정렬
+  - Hot Partition
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - lamport-time
+  - rfc9562
+  - dynamo-paper
+  alt_ko: 시간·노드·카운터·무작위 비트로 구성된 분산 ID와 인덱스 분포를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch09-02.md
+  source_file: assets/src/svg/fig-ch09-02.svg
+  output_file: assets/figures/fig-ch09-02.svg
+- id: fig-ch10-01
+  chapter: ch10
+  kind: technical-diagram
+  generator: direct-svg
+  role: replication-ack-path
+  caption_ko: leader와 세 replica 사이 쓰기 로그·ack·commit 경로를 동기/비동기로 비교한다
+  brief_ko: leader와 세 replica 사이 쓰기 로그·ack·commit 경로를 동기/비동기로 비교한다.
+  required_labels_ko:
+  - 클라이언트
+  - Leader
+  - Replica 1
+  - Replica 2
+  - Replica 3
+  - ACK
+  - Commit
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - raft-paper
+  - dynamo-paper
+  - spanner-paper
+  alt_ko: leader와 세 replica 사이 쓰기 로그·ack·commit 경로를 동기/비동기로 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch10-01.md
+  source_file: assets/src/svg/fig-ch10-01.svg
+  output_file: assets/figures/fig-ch10-01.svg
+- id: fig-ch10-02
+  chapter: ch10
+  kind: technical-diagram
+  generator: direct-svg
+  role: failover-fencing
+  caption_ko: leader 장애 감지부터 새 term 획득·fencing·트래픽 전환·재동기화까지 보여준다
+  brief_ko: leader 장애 감지부터 새 term 획득·fencing·트래픽 전환·재동기화까지 보여준다.
+  required_labels_ko:
+  - 이전 Leader
+  - 새 Leader
+  - Term
+  - Fencing Token
+  - 라우터
+  - 재동기화
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - raft-paper
+  - dynamo-paper
+  - spanner-paper
+  alt_ko: leader 장애 감지부터 새 term 획득·fencing·트래픽 전환·재동기화까지 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch10-02.md
+  source_file: assets/src/svg/fig-ch10-02.svg
+  output_file: assets/figures/fig-ch10-02.svg
+- id: chart-ch10-01
+  chapter: ch10
+  kind: data-chart
+  generator: python-matplotlib
+  role: replication-lag-rpo
+  caption_ko: 복제 지연과 데이터 손실 노출 창
+  brief_ko: 쓰기율과 복제 지연 증가가 비동기 failover 시 손실 가능 record 수를 어떻게 늘리는지 보여준다.
+  required_labels_ko:
+  - 복제 지연(초)
+  - 손실 노출 record 수
+  - 1k writes/s
+  - 10k writes/s
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - raft-paper
+  - dynamo-paper
+  alt_ko: 쓰기율과 복제 지연 증가가 비동기 failover 시 손실 가능 record 수를 어떻게 늘리는지 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch10-01.md
+  source_file: assets/src/charts/chart-ch10-01.py
+  data_file: data/chart-ch10-01.csv
+  output_file: assets/charts/chart-ch10-01.svg
+  synthetic: true
+- id: fig-ch11-01
+  chapter: ch11
+  kind: technical-diagram
+  generator: direct-svg
+  role: partition-strategies
+  caption_ko: range·hash·directory 파티셔닝의 라우팅과 데이터 배치를 비교한다
+  brief_ko: range·hash·directory 파티셔닝의 라우팅과 데이터 배치를 비교한다.
+  required_labels_ko:
+  - Range
+  - Hash
+  - Directory
+  - 라우터
+  - Shard
+  - Global Index
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - consistent-hashing
+  - dynamo-paper
+  - bigtable-paper
+  alt_ko: range·hash·directory 파티셔닝의 라우팅과 데이터 배치를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch11-01.md
+  source_file: assets/src/svg/fig-ch11-01.svg
+  output_file: assets/figures/fig-ch11-01.svg
+- id: fig-ch11-02
+  chapter: ch11
+  kind: technical-diagram
+  generator: direct-svg
+  role: online-resharding
+  caption_ko: source shard에서 target shard로 복사·변경 동기화·검증·소유권 전환하는 단계를 보여준다
+  brief_ko: source shard에서 target shard로 복사·변경 동기화·검증·소유권 전환하는 단계를 보여준다.
+  required_labels_ko:
+  - Source Shard
+  - Target Shard
+  - Snapshot
+  - 변경 로그
+  - 검증
+  - Ownership Epoch
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - consistent-hashing
+  - dynamo-paper
+  - bigtable-paper
+  alt_ko: source shard에서 target shard로 복사·변경 동기화·검증·소유권 전환하는 단계를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch11-02.md
+  source_file: assets/src/svg/fig-ch11-02.svg
+  output_file: assets/figures/fig-ch11-02.svg
+- id: chart-ch11-01
+  chapter: ch11
+  kind: data-chart
+  generator: python-matplotlib
+  role: shard-skew
+  caption_ko: 샤드 부하 불균형
+  brief_ko: 평균 QPS는 같아도 hot tenant 때문에 상위 shard가 과부하되는 분포를 보여준다.
+  required_labels_ko:
+  - Shard ID
+  - QPS
+  - 균등 분포
+  - Skew 분포
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - consistent-hashing
+  - dynamo-paper
+  alt_ko: 평균 QPS는 같아도 hot tenant 때문에 상위 shard가 과부하되는 분포를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch11-01.md
+  source_file: assets/src/charts/chart-ch11-01.py
+  data_file: data/chart-ch11-01.csv
+  output_file: assets/charts/chart-ch11-01.svg
+  synthetic: true
+- id: fig-ch12-01
+  chapter: ch12
+  kind: technical-diagram
+  generator: direct-svg
+  role: raft-log-consensus
+  caption_ko: leader가 term·index를 가진 log를 복제하고 majority commit하는 과정을 보여준다
+  brief_ko: leader가 term·index를 가진 log를 복제하고 majority commit하는 과정을 보여준다.
+  required_labels_ko:
+  - Leader
+  - Follower A
+  - Follower B
+  - Term
+  - Log Index
+  - Majority
+  - Commit
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - raft-paper
+  - paxos-made-simple
+  - chubby-paper
+  alt_ko: leader가 term·index를 가진 log를 복제하고 majority commit하는 과정을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch12-01.md
+  source_file: assets/src/svg/fig-ch12-01.svg
+  output_file: assets/figures/fig-ch12-01.svg
+- id: fig-ch12-02
+  chapter: ch12
+  kind: technical-diagram
+  generator: direct-svg
+  role: lease-fencing
+  caption_ko: 오래된 worker와 새 worker가 같은 자원에 접근할 때 fencing token이 stale write를 막는 모습을 보여준다
+  brief_ko: 오래된 worker와 새 worker가 같은 자원에 접근할 때 fencing token이 stale write를 막는 모습을 보여준다.
+  required_labels_ko:
+  - Worker A
+  - Worker B
+  - Lease
+  - Fencing Token
+  - 공유 자원
+  - 거부
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - raft-paper
+  - paxos-made-simple
+  - chubby-paper
+  alt_ko: 오래된 worker와 새 worker가 같은 자원에 접근할 때 fencing token이 stale write를 막는 모습을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch12-02.md
+  source_file: assets/src/svg/fig-ch12-02.svg
+  output_file: assets/figures/fig-ch12-02.svg
+- id: fig-ch13-01
+  chapter: ch13
+  kind: technical-diagram
+  generator: direct-svg
+  role: global-request-path
+  caption_ko: resolver·authoritative DNS·edge·shield·region·data owner를 지나는 전역 요청 경로를 보여준다
+  brief_ko: resolver·authoritative DNS·edge·shield·region·data owner를 지나는 전역 요청 경로를 보여준다.
+  required_labels_ko:
+  - 클라이언트
+  - Resolver
+  - Authoritative DNS
+  - Edge PoP
+  - Origin Shield
+  - 리전
+  - 데이터 소유 리전
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc1034
+  - rfc1035
+  - rfc9111
+  alt_ko: resolver·authoritative DNS·edge·shield·region·data owner를 지나는 전역 요청 경로를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch13-01.md
+  source_file: assets/src/svg/fig-ch13-01.svg
+  output_file: assets/figures/fig-ch13-01.svg
+- id: fig-ch13-02
+  chapter: ch13
+  kind: technical-diagram
+  generator: direct-svg
+  role: cdn-cache-decision
+  caption_ko: cache key 생성·hit/miss·revalidation·stale fallback·purge 흐름을 보여준다
+  brief_ko: cache key 생성·hit/miss·revalidation·stale fallback·purge 흐름을 보여준다.
+  required_labels_ko:
+  - 요청
+  - Cache Key
+  - Hit
+  - Miss
+  - 재검증
+  - Stale
+  - Origin
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc1034
+  - rfc1035
+  - rfc9111
+  alt_ko: cache key 생성·hit/miss·revalidation·stale fallback·purge 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch13-02.md
+  source_file: assets/src/svg/fig-ch13-02.svg
+  output_file: assets/figures/fig-ch13-02.svg
+- id: fig-ch14-01
+  chapter: ch14
+  kind: technical-diagram
+  generator: direct-svg
+  role: proxy-layers
+  caption_ko: 전역 ingress·L7 gateway·L4 balancer·service proxy·endpoint의 책임을 계층별로 보여준다
+  brief_ko: 전역 ingress·L7 gateway·L4 balancer·service proxy·endpoint의 책임을 계층별로 보여준다.
+  required_labels_ko:
+  - 전역 Ingress
+  - L7 Gateway
+  - L4 Balancer
+  - Service Proxy
+  - Endpoint
+  - TLS 경계
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc9110
+  - rfc9112
+  - google-sre-overload
+  alt_ko: 전역 ingress·L7 gateway·L4 balancer·service proxy·endpoint의 책임을 계층별로 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch14-01.md
+  source_file: assets/src/svg/fig-ch14-01.svg
+  output_file: assets/figures/fig-ch14-01.svg
+- id: fig-ch14-02
+  chapter: ch14
+  kind: technical-diagram
+  generator: direct-svg
+  role: draining-sequence
+  caption_ko: 배포 중 endpoint 제외·기존 연결 drain·deadline 대기·강제 종료 순서를 보여준다
+  brief_ko: 배포 중 endpoint 제외·기존 연결 drain·deadline 대기·강제 종료 순서를 보여준다.
+  required_labels_ko:
+  - Registry
+  - Load Balancer
+  - 기존 연결
+  - 신규 요청
+  - Drain
+  - 종료
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc9110
+  - rfc9112
+  - google-sre-overload
+  alt_ko: 배포 중 endpoint 제외·기존 연결 drain·deadline 대기·강제 종료 순서를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch14-02.md
+  source_file: assets/src/svg/fig-ch14-02.svg
+  output_file: assets/figures/fig-ch14-02.svg
+- id: fig-ch15-01
+  chapter: ch15
+  kind: technical-diagram
+  generator: direct-svg
+  role: http-generation-stack
+  caption_ko: HTTP/1.1·HTTP/2·HTTP/3의 application·compression·transport·security stack을 비교한다
+  brief_ko: HTTP/1.1·HTTP/2·HTTP/3의 application·compression·transport·security stack을 비교한다.
+  required_labels_ko:
+  - HTTP/1.1
+  - HTTP/2
+  - HTTP/3
+  - TCP
+  - QUIC
+  - TLS
+  - QPACK
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc9110
+  - rfc9112
+  - rfc9113
+  alt_ko: HTTP/1.1·HTTP/2·HTTP/3의 application·compression·transport·security stack을 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch15-01.md
+  source_file: assets/src/svg/fig-ch15-01.svg
+  output_file: assets/figures/fig-ch15-01.svg
+- id: fig-ch15-02
+  chapter: ch15
+  kind: technical-diagram
+  generator: direct-svg
+  role: stream-loss-comparison
+  caption_ko: HTTP/2 TCP packet loss와 HTTP/3 QUIC stream 손실의 영향 범위를 비교한다
+  brief_ko: HTTP/2 TCP packet loss와 HTTP/3 QUIC stream 손실의 영향 범위를 비교한다.
+  required_labels_ko:
+  - 연결
+  - Stream A
+  - Stream B
+  - Packet Loss
+  - 재전송
+  - 영향 범위
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc9110
+  - rfc9112
+  - rfc9113
+  alt_ko: HTTP/2 TCP packet loss와 HTTP/3 QUIC stream 손실의 영향 범위를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch15-02.md
+  source_file: assets/src/svg/fig-ch15-02.svg
+  output_file: assets/figures/fig-ch15-02.svg
+- id: fig-ch16-01
+  chapter: ch16
+  kind: technical-diagram
+  generator: direct-svg
+  role: interaction-patterns
+  caption_ko: unary·server streaming·client streaming·bidirectional과 REST/gRPC/GraphQL/WebSocket/SSE의 적합도를 비교한다
+  brief_ko: unary·server streaming·client streaming·bidirectional과 REST/gRPC/GraphQL/WebSocket/SSE의 적합도를 비교한다.
+  required_labels_ko:
+  - Unary
+  - Server Stream
+  - Client Stream
+  - Bidirectional
+  - REST
+  - gRPC
+  - GraphQL
+  - WebSocket
+  - SSE
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc9110
+  - grpc-core
+  - graphql-spec
+  alt_ko: unary·server streaming·client streaming·bidirectional과 REST/gRPC/GraphQL/WebSocket/SSE의 적합도를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch16-01.md
+  source_file: assets/src/svg/fig-ch16-01.svg
+  output_file: assets/figures/fig-ch16-01.svg
+- id: fig-ch16-02
+  chapter: ch16
+  kind: technical-diagram
+  generator: direct-svg
+  role: realtime-resume
+  caption_ko: 실시간 연결 단절 후 cursor·replay window·deduplication으로 이어받는 흐름을 보여준다
+  brief_ko: 실시간 연결 단절 후 cursor·replay window·deduplication으로 이어받는 흐름을 보여준다.
+  required_labels_ko:
+  - 클라이언트
+  - Realtime Gateway
+  - Event Log
+  - Cursor
+  - 재연결
+  - Replay
+  - 중복 제거
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc9110
+  - grpc-core
+  - graphql-spec
+  alt_ko: 실시간 연결 단절 후 cursor·replay window·deduplication으로 이어받는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch16-02.md
+  source_file: assets/src/svg/fig-ch16-02.svg
+  output_file: assets/figures/fig-ch16-02.svg
+- id: fig-ch17-01
+  chapter: ch17
+  kind: technical-diagram
+  generator: direct-svg
+  role: architecture-evolution
+  caption_ko: 모놀리스→모듈러 모놀리스→선택적 서비스 분리의 단계와 되돌림 지점을 보여준다
+  brief_ko: 모놀리스→모듈러 모놀리스→선택적 서비스 분리의 단계와 되돌림 지점을 보여준다.
+  required_labels_ko:
+  - 모놀리스
+  - 모듈 경계
+  - 데이터 소유권
+  - 서비스 분리
+  - 독립 배포
+  - 되돌림
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - kubernetes-concepts
+  - istio-architecture
+  - iso-42010
+  alt_ko: 모놀리스→모듈러 모놀리스→선택적 서비스 분리의 단계와 되돌림 지점을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch17-01.md
+  source_file: assets/src/svg/fig-ch17-01.svg
+  output_file: assets/figures/fig-ch17-01.svg
+- id: fig-ch17-02
+  chapter: ch17
+  kind: technical-diagram
+  generator: direct-svg
+  role: service-mesh-scope
+  caption_ko: 애플리케이션·data plane·control plane·platform의 책임과 mesh가 다루지 않는 업무 트랜잭션을 보여준다
+  brief_ko: 애플리케이션·data plane·control plane·platform의 책임과 mesh가 다루지 않는 업무 트랜잭션을 보여준다.
+  required_labels_ko:
+  - 애플리케이션
+  - Sidecar/Data Plane
+  - Control Plane
+  - Platform
+  - mTLS
+  - 업무 트랜잭션
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - kubernetes-concepts
+  - istio-architecture
+  - iso-42010
+  alt_ko: 애플리케이션·data plane·control plane·platform의 책임과 mesh가 다루지 않는 업무 트랜잭션을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch17-02.md
+  source_file: assets/src/svg/fig-ch17-02.svg
+  output_file: assets/figures/fig-ch17-02.svg
+- id: fig-ch18-01
+  chapter: ch18
+  kind: technical-diagram
+  generator: direct-svg
+  role: storage-decision-matrix
+  caption_ko: 불변조건·쿼리·규모·수명·일관성·운영성을 후보 저장소에 매핑한다
+  brief_ko: 불변조건·쿼리·규모·수명·일관성·운영성을 후보 저장소에 매핑한다.
+  required_labels_ko:
+  - 불변조건
+  - 조회 패턴
+  - 쓰기 패턴
+  - 규모
+  - 보존
+  - 복구
+  - 후보 저장소
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - dynamo-paper
+  - bigtable-paper
+  alt_ko: 불변조건·쿼리·규모·수명·일관성·운영성을 후보 저장소에 매핑한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch18-01.md
+  source_file: assets/src/svg/fig-ch18-01.svg
+  output_file: assets/figures/fig-ch18-01.svg
+- id: fig-ch18-02
+  chapter: ch18
+  kind: technical-diagram
+  generator: direct-svg
+  role: system-of-record-and-derived
+  caption_ko: 원장 DB에서 CDC로 cache·search·analytics를 만드는 흐름과 rebuild 경계를 보여준다
+  brief_ko: 원장 DB에서 CDC로 cache·search·analytics를 만드는 흐름과 rebuild 경계를 보여준다.
+  required_labels_ko:
+  - 원장 DB
+  - CDC
+  - Cache
+  - Search Index
+  - Analytics
+  - 재구축
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - dynamo-paper
+  - bigtable-paper
+  alt_ko: 원장 DB에서 CDC로 cache·search·analytics를 만드는 흐름과 rebuild 경계를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch18-02.md
+  source_file: assets/src/svg/fig-ch18-02.svg
+  output_file: assets/figures/fig-ch18-02.svg
+- id: fig-ch19-01
+  chapter: ch19
+  kind: technical-diagram
+  generator: direct-svg
+  role: relational-query-path
+  caption_ko: SQL이 parse·optimize·index/join·transaction·WAL로 처리되는 경로를 보여준다
+  brief_ko: SQL이 parse·optimize·index/join·transaction·WAL로 처리되는 경로를 보여준다.
+  required_labels_ko:
+  - SQL Gateway
+  - Optimizer
+  - Index Scan
+  - Join
+  - Transaction
+  - WAL
+  - Replica
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-indexes
+  - postgres-transaction-iso
+  - spanner-paper
+  alt_ko: SQL이 parse·optimize·index/join·transaction·WAL로 처리되는 경로를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch19-01.md
+  source_file: assets/src/svg/fig-ch19-01.svg
+  output_file: assets/figures/fig-ch19-01.svg
+- id: fig-ch19-02
+  chapter: ch19
+  kind: technical-diagram
+  generator: direct-svg
+  role: scale-relational-options
+  caption_ko: 단일 DB·read replica·application sharding·distributed SQL의 경계와 비용을 비교한다
+  brief_ko: 단일 DB·read replica·application sharding·distributed SQL의 경계와 비용을 비교한다.
+  required_labels_ko:
+  - 단일 DB
+  - Read Replica
+  - Sharding
+  - Distributed SQL
+  - Coordination
+  - Locality
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-indexes
+  - postgres-transaction-iso
+  - spanner-paper
+  alt_ko: 단일 DB·read replica·application sharding·distributed SQL의 경계와 비용을 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch19-02.md
+  source_file: assets/src/svg/fig-ch19-02.svg
+  output_file: assets/figures/fig-ch19-02.svg
+- id: fig-ch20-01
+  chapter: ch20
+  kind: technical-diagram
+  generator: direct-svg
+  role: nosql-models
+  caption_ko: key-value·document·wide-column·graph의 데이터 형태와 대표 query를 비교한다
+  brief_ko: key-value·document·wide-column·graph의 데이터 형태와 대표 query를 비교한다.
+  required_labels_ko:
+  - Key-Value
+  - Document
+  - Wide-Column
+  - Graph
+  - Partition Key
+  - Traversal
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - dynamo-paper
+  - bigtable-paper
+  - mongodb-data-model
+  alt_ko: key-value·document·wide-column·graph의 데이터 형태와 대표 query를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch20-01.md
+  source_file: assets/src/svg/fig-ch20-01.svg
+  output_file: assets/figures/fig-ch20-01.svg
+- id: fig-ch20-02
+  chapter: ch20
+  kind: technical-diagram
+  generator: direct-svg
+  role: denormalized-view-flow
+  caption_ko: 원장 변경이 여러 denormalized view와 secondary index로 전파되고 reconciliation되는 흐름을 보여준다
+  brief_ko: 원장 변경이 여러 denormalized view와 secondary index로 전파되고 reconciliation되는 흐름을 보여준다.
+  required_labels_ko:
+  - 원장
+  - Change Stream
+  - Document View
+  - Wide-column View
+  - Graph View
+  - Reconciliation
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - dynamo-paper
+  - bigtable-paper
+  - mongodb-data-model
+  alt_ko: 원장 변경이 여러 denormalized view와 secondary index로 전파되고 reconciliation되는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch20-02.md
+  source_file: assets/src/svg/fig-ch20-02.svg
+  output_file: assets/figures/fig-ch20-02.svg
+- id: fig-ch21-01
+  chapter: ch21
+  kind: technical-diagram
+  generator: direct-svg
+  role: content-index-pipeline
+  caption_ko: 원문 object와 metadata에서 parser·chunk·text/vector index가 생성되는 흐름을 보여준다
+  brief_ko: 원문 object와 metadata에서 parser·chunk·text/vector index가 생성되는 흐름을 보여준다.
+  required_labels_ko:
+  - Metadata DB
+  - Object Store
+  - Parser
+  - Chunk
+  - Text Index
+  - Vector Index
+  - Search Coordinator
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - s3-consistency
+  - lucene-docs
+  - hnsw-paper
+  alt_ko: 원문 object와 metadata에서 parser·chunk·text/vector index가 생성되는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch21-01.md
+  source_file: assets/src/svg/fig-ch21-01.svg
+  output_file: assets/figures/fig-ch21-01.svg
+- id: fig-ch21-02
+  chapter: ch21
+  kind: technical-diagram
+  generator: direct-svg
+  role: hybrid-search
+  caption_ko: query가 lexical·vector 후보와 metadata filter·reranker를 거쳐 결과가 되는 흐름을 보여준다
+  brief_ko: query가 lexical·vector 후보와 metadata filter·reranker를 거쳐 결과가 되는 흐름을 보여준다.
+  required_labels_ko:
+  - Query
+  - Lexical Search
+  - Vector Search
+  - ACL Filter
+  - Fusion
+  - Reranker
+  - 결과
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - s3-consistency
+  - lucene-docs
+  - hnsw-paper
+  alt_ko: query가 lexical·vector 후보와 metadata filter·reranker를 거쳐 결과가 되는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch21-02.md
+  source_file: assets/src/svg/fig-ch21-02.svg
+  output_file: assets/figures/fig-ch21-02.svg
+- id: fig-ch22-01
+  chapter: ch22
+  kind: technical-diagram
+  generator: direct-svg
+  role: cache-patterns
+  caption_ko: cache-aside·write-through·refresh-ahead의 읽기·쓰기·실패 경로를 비교한다
+  brief_ko: cache-aside·write-through·refresh-ahead의 읽기·쓰기·실패 경로를 비교한다.
+  required_labels_ko:
+  - 애플리케이션
+  - Cache
+  - Origin
+  - Hit
+  - Miss
+  - Write
+  - Refresh
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc9111
+  - redis-cache
+  - memcached-docs
+  alt_ko: cache-aside·write-through·refresh-ahead의 읽기·쓰기·실패 경로를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch22-01.md
+  source_file: assets/src/svg/fig-ch22-01.svg
+  output_file: assets/figures/fig-ch22-01.svg
+- id: fig-ch22-02
+  chapter: ch22
+  kind: technical-diagram
+  generator: direct-svg
+  role: stampede-protection
+  caption_ko: 동시 miss가 single-flight·stale fallback·TTL jitter로 원본 한 요청으로 합쳐지는 모습을 보여준다
+  brief_ko: 동시 miss가 single-flight·stale fallback·TTL jitter로 원본 한 요청으로 합쳐지는 모습을 보여준다.
+  required_labels_ko:
+  - 동시 요청
+  - 만료
+  - Single Flight
+  - Stale 응답
+  - Origin
+  - TTL Jitter
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc9111
+  - redis-cache
+  - memcached-docs
+  alt_ko: 동시 miss가 single-flight·stale fallback·TTL jitter로 원본 한 요청으로 합쳐지는 모습을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch22-02.md
+  source_file: assets/src/svg/fig-ch22-02.svg
+  output_file: assets/figures/fig-ch22-02.svg
+- id: chart-ch22-01
+  chapter: ch22
+  kind: data-chart
+  generator: python-matplotlib
+  role: cache-hit-origin-load
+  caption_ko: 캐시 적중률과 원본 부하
+  brief_ko: 전체 요청률이 고정일 때 hit ratio가 낮아질수록 origin QPS가 비선형적으로 체감상 커지는 관계를 보여준다.
+  required_labels_ko:
+  - Cache Hit Ratio (%)
+  - Origin QPS
+  - 총 10,000 RPS
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - rfc9111
+  - redis-cache
+  alt_ko: 전체 요청률이 고정일 때 hit ratio가 낮아질수록 origin QPS가 비선형적으로 체감상 커지는 관계를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch22-01.md
+  source_file: assets/src/charts/chart-ch22-01.py
+  data_file: data/chart-ch22-01.csv
+  output_file: assets/charts/chart-ch22-01.svg
+  synthetic: true
+- id: fig-ch23-01
+  chapter: ch23
+  kind: technical-diagram
+  generator: direct-svg
+  role: delivery-timeline
+  caption_ko: effect·ack·crash 순서에 따라 유실·중복이 생기는 세 시나리오를 비교한다
+  brief_ko: effect·ack·crash 순서에 따라 유실·중복이 생기는 세 시나리오를 비교한다.
+  required_labels_ko:
+  - Producer
+  - Broker
+  - Consumer
+  - DB/API
+  - ACK
+  - Crash
+  - 중복
+  - 유실
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - kafka-docs
+  - rabbitmq-reliability
+  - kafka-transactions
+  alt_ko: effect·ack·crash 순서에 따라 유실·중복이 생기는 세 시나리오를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch23-01.md
+  source_file: assets/src/svg/fig-ch23-01.svg
+  output_file: assets/figures/fig-ch23-01.svg
+- id: fig-ch23-02
+  chapter: ch23
+  kind: technical-diagram
+  generator: direct-svg
+  role: queue-vs-log
+  caption_ko: work queue의 경쟁 소비와 durable log의 partition·offset·다중 consumer를 비교한다
+  brief_ko: work queue의 경쟁 소비와 durable log의 partition·offset·다중 consumer를 비교한다.
+  required_labels_ko:
+  - Work Queue
+  - Durable Log
+  - Consumer Group
+  - Partition
+  - Offset
+  - Replay
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - kafka-docs
+  - rabbitmq-reliability
+  - kafka-transactions
+  alt_ko: work queue의 경쟁 소비와 durable log의 partition·offset·다중 consumer를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch23-02.md
+  source_file: assets/src/svg/fig-ch23-02.svg
+  output_file: assets/figures/fig-ch23-02.svg
+- id: fig-ch24-01
+  chapter: ch24
+  kind: technical-diagram
+  generator: direct-svg
+  role: outbox-cdc-flow
+  caption_ko: 서비스 transaction이 업무 row와 outbox를 커밋하고 CDC·broker·inbox로 전달되는 흐름을 보여준다
+  brief_ko: 서비스 transaction이 업무 row와 outbox를 커밋하고 CDC·broker·inbox로 전달되는 흐름을 보여준다.
+  required_labels_ko:
+  - Service DB
+  - 업무 Row
+  - Outbox
+  - CDC
+  - Event Log
+  - Consumer Inbox
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - debezium-docs
+  - kafka-docs
+  - saga-paper
+  alt_ko: 서비스 transaction이 업무 row와 outbox를 커밋하고 CDC·broker·inbox로 전달되는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch24-01.md
+  source_file: assets/src/svg/fig-ch24-01.svg
+  output_file: assets/figures/fig-ch24-01.svg
+- id: fig-ch24-02
+  chapter: ch24
+  kind: technical-diagram
+  generator: direct-svg
+  role: saga-state-machine
+  caption_ko: 주문·재고·결제 단계의 성공·실패·timeout·보상 상태 전이를 보여준다
+  brief_ko: 주문·재고·결제 단계의 성공·실패·timeout·보상 상태 전이를 보여준다.
+  required_labels_ko:
+  - 주문
+  - 재고 예약
+  - 결제 승인
+  - 완료
+  - Timeout
+  - 보상
+  - 수동 개입
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - debezium-docs
+  - kafka-docs
+  - saga-paper
+  alt_ko: 주문·재고·결제 단계의 성공·실패·timeout·보상 상태 전이를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch24-02.md
+  source_file: assets/src/svg/fig-ch24-02.svg
+  output_file: assets/figures/fig-ch24-02.svg
+- id: fig-ch25-01
+  chapter: ch25
+  kind: technical-diagram
+  generator: direct-svg
+  role: deadline-propagation
+  caption_ko: 클라이언트 전체 deadline이 gateway·service·DB 호출의 남은 예산으로 줄어드는 흐름을 보여준다
+  brief_ko: 클라이언트 전체 deadline이 gateway·service·DB 호출의 남은 예산으로 줄어드는 흐름을 보여준다.
+  required_labels_ko:
+  - 클라이언트
+  - Gateway
+  - Service A
+  - Service B
+  - DB
+  - 남은 Deadline
+  - 취소
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - aws-timeouts-retries
+  - google-sre-overload
+  - stripe-idempotency
+  alt_ko: 클라이언트 전체 deadline이 gateway·service·DB 호출의 남은 예산으로 줄어드는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch25-01.md
+  source_file: assets/src/svg/fig-ch25-01.svg
+  output_file: assets/figures/fig-ch25-01.svg
+- id: fig-ch25-02
+  chapter: ch25
+  kind: technical-diagram
+  generator: direct-svg
+  role: retry-backoff-jitter
+  caption_ko: 여러 client의 동기 재시도와 jitter 적용 후 분산된 재시도를 비교한다
+  brief_ko: 여러 client의 동기 재시도와 jitter 적용 후 분산된 재시도를 비교한다.
+  required_labels_ko:
+  - Client 1
+  - Client 2
+  - Client 3
+  - 실패
+  - Backoff
+  - Jitter
+  - Retry Budget
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - aws-timeouts-retries
+  - google-sre-overload
+  - stripe-idempotency
+  alt_ko: 여러 client의 동기 재시도와 jitter 적용 후 분산된 재시도를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch25-02.md
+  source_file: assets/src/svg/fig-ch25-02.svg
+  output_file: assets/figures/fig-ch25-02.svg
+- id: chart-ch25-01
+  chapter: ch25
+  kind: data-chart
+  generator: python-matplotlib
+  role: retry-amplification
+  caption_ko: 계층별 재시도 증폭
+  brief_ko: 호출 깊이와 계층별 시도 횟수가 최하위 요청 수를 지수적으로 늘리는 모습을 보여준다.
+  required_labels_ko:
+  - 호출 깊이
+  - 최대 최하위 시도 수
+  - 계층당 2회
+  - 계층당 3회
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - aws-timeouts-retries
+  - google-sre-overload
+  alt_ko: 호출 깊이와 계층별 시도 횟수가 최하위 요청 수를 지수적으로 늘리는 모습을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch25-01.md
+  source_file: assets/src/charts/chart-ch25-01.py
+  data_file: data/chart-ch25-01.csv
+  output_file: assets/charts/chart-ch25-01.svg
+  synthetic: true
+- id: fig-ch26-01
+  chapter: ch26
+  kind: technical-diagram
+  generator: direct-svg
+  role: resilience-patterns
+  caption_ko: ingress에서 admission·bulkhead·circuit·backpressure·degradation이 적용되는 위치를 보여준다
+  brief_ko: ingress에서 admission·bulkhead·circuit·backpressure·degradation이 적용되는 위치를 보여준다.
+  required_labels_ko:
+  - Ingress
+  - Admission
+  - Bulkhead
+  - Circuit Breaker
+  - Downstream
+  - Backpressure
+  - Degradation
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - google-sre-overload
+  - aws-timeouts-retries
+  alt_ko: ingress에서 admission·bulkhead·circuit·backpressure·degradation이 적용되는 위치를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch26-01.md
+  source_file: assets/src/svg/fig-ch26-01.svg
+  output_file: assets/figures/fig-ch26-01.svg
+- id: fig-ch26-02
+  chapter: ch26
+  kind: technical-diagram
+  generator: direct-svg
+  role: overload-state-machine
+  caption_ko: 정상·압박·shed·복구 상태와 진입·복원 조건을 보여준다
+  brief_ko: 정상·압박·shed·복구 상태와 진입·복원 조건을 보여준다.
+  required_labels_ko:
+  - 정상
+  - 압박
+  - Load Shedding
+  - Degraded
+  - Probe
+  - 복구
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - google-sre-overload
+  - aws-timeouts-retries
+  alt_ko: 정상·압박·shed·복구 상태와 진입·복원 조건을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch26-02.md
+  source_file: assets/src/svg/fig-ch26-02.svg
+  output_file: assets/figures/fig-ch26-02.svg
+- id: fig-ch27-01
+  chapter: ch27
+  kind: technical-diagram
+  generator: direct-svg
+  role: observability-pipeline
+  caption_ko: 애플리케이션 instrumentation에서 collector 처리와 metrics/logs/traces backend로 가는 흐름을 보여준다
+  brief_ko: 애플리케이션 instrumentation에서 collector 처리와 metrics/logs/traces backend로 가는 흐름을 보여준다.
+  required_labels_ko:
+  - Instrumentation
+  - SDK
+  - Collector
+  - Metrics
+  - Logs
+  - Traces
+  - SLO Alert
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - otel-spec
+  - w3c-trace-context
+  - google-sre-slo
+  alt_ko: 애플리케이션 instrumentation에서 collector 처리와 metrics/logs/traces backend로 가는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch27-01.md
+  source_file: assets/src/svg/fig-ch27-01.svg
+  output_file: assets/figures/fig-ch27-01.svg
+- id: fig-ch27-02
+  chapter: ch27
+  kind: technical-diagram
+  generator: direct-svg
+  role: signal-correlation
+  caption_ko: SLO 경보에서 exemplar·trace·span log·deployment change로 조사하는 경로를 보여준다
+  brief_ko: SLO 경보에서 exemplar·trace·span log·deployment change로 조사하는 경로를 보여준다.
+  required_labels_ko:
+  - SLO Alert
+  - Metric Exemplar
+  - Trace
+  - Span
+  - Structured Log
+  - Deployment
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - otel-spec
+  - w3c-trace-context
+  - google-sre-slo
+  alt_ko: SLO 경보에서 exemplar·trace·span log·deployment change로 조사하는 경로를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch27-02.md
+  source_file: assets/src/svg/fig-ch27-02.svg
+  output_file: assets/figures/fig-ch27-02.svg
+- id: chart-ch27-01
+  chapter: ch27
+  kind: data-chart
+  generator: python-matplotlib
+  role: telemetry-cardinality
+  caption_ko: Metric cardinality와 비용
+  brief_ko: label dimension을 추가할 때 조합 가능한 time series 수가 곱셈으로 증가하는 모습을 보여준다.
+  required_labels_ko:
+  - 추가 Dimension 수
+  - 예상 Series 수(로그 축)
+  - bounded labels
+  - user_id 포함
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - otel-spec
+  - w3c-trace-context
+  alt_ko: label dimension을 추가할 때 조합 가능한 time series 수가 곱셈으로 증가하는 모습을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch27-01.md
+  source_file: assets/src/charts/chart-ch27-01.py
+  data_file: data/chart-ch27-01.csv
+  output_file: assets/charts/chart-ch27-01.svg
+  synthetic: true
+- id: fig-ch28-01
+  chapter: ch28
+  kind: technical-diagram
+  generator: direct-svg
+  role: zero-trust-access
+  caption_ko: 사용자·장치·workload identity와 정책 결정·강제·resource 접근 경계를 보여준다
+  brief_ko: 사용자·장치·workload identity와 정책 결정·강제·resource 접근 경계를 보여준다.
+  required_labels_ko:
+  - 사용자
+  - 장치
+  - Identity Provider
+  - Policy Engine
+  - Enforcement Point
+  - Resource
+  - Audit
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - nist-zero-trust
+  - rfc9700
+  - webauthn3
+  alt_ko: 사용자·장치·workload identity와 정책 결정·강제·resource 접근 경계를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch28-01.md
+  source_file: assets/src/svg/fig-ch28-01.svg
+  output_file: assets/figures/fig-ch28-01.svg
+- id: fig-ch28-02
+  chapter: ch28
+  kind: technical-diagram
+  generator: direct-svg
+  role: software-supply-chain
+  caption_ko: source·dependency·builder·artifact·registry·admission·runtime의 서명과 provenance 검증을 보여준다
+  brief_ko: source·dependency·builder·artifact·registry·admission·runtime의 서명과 provenance 검증을 보여준다.
+  required_labels_ko:
+  - Source
+  - Dependency
+  - Builder
+  - Provenance
+  - Artifact Registry
+  - Admission
+  - Runtime
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - nist-zero-trust
+  - rfc9700
+  - webauthn3
+  alt_ko: source·dependency·builder·artifact·registry·admission·runtime의 서명과 provenance 검증을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch28-02.md
+  source_file: assets/src/svg/fig-ch28-02.svg
+  output_file: assets/figures/fig-ch28-02.svg
+- id: fig-ch29-01
+  chapter: ch29
+  kind: technical-diagram
+  generator: direct-svg
+  role: dr-strategy-matrix
+  caption_ko: pilot light·warm standby·active-active를 RTO·RPO·비용·복잡도로 비교한다
+  brief_ko: pilot light·warm standby·active-active를 RTO·RPO·비용·복잡도로 비교한다.
+  required_labels_ko:
+  - Pilot Light
+  - Warm Standby
+  - Active/Active
+  - RTO
+  - RPO
+  - 비용
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - nist-contingency
+  - google-sre-book
+  alt_ko: pilot light·warm standby·active-active를 RTO·RPO·비용·복잡도로 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch29-01.md
+  source_file: assets/src/svg/fig-ch29-01.svg
+  output_file: assets/figures/fig-ch29-01.svg
+- id: fig-ch29-02
+  chapter: ch29
+  kind: technical-diagram
+  generator: direct-svg
+  role: recovery-runbook
+  caption_ko: 장애 선언·쓰기 차단·restore/승격·검증·traffic 전환·failback 순서를 보여준다
+  brief_ko: 장애 선언·쓰기 차단·restore/승격·검증·traffic 전환·failback 순서를 보여준다.
+  required_labels_ko:
+  - 장애 선언
+  - 쓰기 Fencing
+  - Restore/승격
+  - 데이터 검증
+  - Traffic 전환
+  - Failback
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - nist-contingency
+  - google-sre-book
+  alt_ko: 장애 선언·쓰기 차단·restore/승격·검증·traffic 전환·failback 순서를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch29-02.md
+  source_file: assets/src/svg/fig-ch29-02.svg
+  output_file: assets/figures/fig-ch29-02.svg
+- id: chart-ch29-01
+  chapter: ch29
+  kind: data-chart
+  generator: python-matplotlib
+  role: dr-rto-cost
+  caption_ko: DR 전략의 RTO·비용 비교
+  brief_ko: backup/restore, pilot light, warm standby, active-active를 상대 RTO와 정상 비용으로 비교한다.
+  required_labels_ko:
+  - 상대 정상 운영 비용
+  - 상대 RTO
+  - 전략별 점
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - nist-contingency
+  - google-sre-book
+  alt_ko: backup/restore, pilot light, warm standby, active-active를 상대 RTO와 정상 비용으로 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch29-01.md
+  source_file: assets/src/charts/chart-ch29-01.py
+  data_file: data/chart-ch29-01.csv
+  output_file: assets/charts/chart-ch29-01.svg
+  synthetic: true
+- id: fig-ch30-01
+  chapter: ch30
+  kind: technical-diagram
+  generator: direct-svg
+  role: cloud-native-delivery
+  caption_ko: source·build·registry·IaC/GitOps·runtime·telemetry·cost feedback의 폐쇄 루프를 보여준다
+  brief_ko: source·build·registry·IaC/GitOps·runtime·telemetry·cost feedback의 폐쇄 루프를 보여준다.
+  required_labels_ko:
+  - Source
+  - Build
+  - Registry
+  - IaC
+  - GitOps
+  - Runtime
+  - Telemetry
+  - Cost Feedback
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - kubernetes-concepts
+  - opengitops
+  - finops-framework
+  alt_ko: source·build·registry·IaC/GitOps·runtime·telemetry·cost feedback의 폐쇄 루프를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch30-01.md
+  source_file: assets/src/svg/fig-ch30-01.svg
+  output_file: assets/figures/fig-ch30-01.svg
+- id: fig-ch30-02
+  chapter: ch30
+  kind: technical-diagram
+  generator: direct-svg
+  role: runtime-decision
+  caption_ko: VM·Kubernetes·serverless·managed PaaS를 제어 수준·운영 부담·scale 특성으로 비교한다
+  brief_ko: VM·Kubernetes·serverless·managed PaaS를 제어 수준·운영 부담·scale 특성으로 비교한다.
+  required_labels_ko:
+  - VM
+  - Kubernetes
+  - Serverless
+  - Managed PaaS
+  - 제어 수준
+  - 운영 부담
+  - Scale
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - kubernetes-concepts
+  - opengitops
+  - finops-framework
+  alt_ko: VM·Kubernetes·serverless·managed PaaS를 제어 수준·운영 부담·scale 특성으로 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch30-02.md
+  source_file: assets/src/svg/fig-ch30-02.svg
+  output_file: assets/figures/fig-ch30-02.svg
+- id: fig-ch31-01
+  chapter: ch31
+  kind: technical-diagram
+  generator: direct-svg
+  role: rag-ingestion-serving
+  caption_ko: source 수집에서 parse·chunk·embedding·index와 query retrieval·rerank·generation까지 전체 파이프라인을 보여준다
+  brief_ko: source 수집에서 parse·chunk·embedding·index와 query retrieval·rerank·generation까지 전체 파이프라인을 보여준다.
+  required_labels_ko:
+  - Source Registry
+  - Parser
+  - Chunker
+  - Embedding
+  - Text Index
+  - Vector Index
+  - Retriever
+  - Reranker
+  - Generator
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rag-paper
+  - dpr-paper
+  - beir-paper
+  alt_ko: source 수집에서 parse·chunk·embedding·index와 query retrieval·rerank·generation까지 전체 파이프라인을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch31-01.md
+  source_file: assets/src/svg/fig-ch31-01.svg
+  output_file: assets/figures/fig-ch31-01.svg
+- id: fig-ch31-02
+  chapter: ch31
+  kind: technical-diagram
+  generator: direct-svg
+  role: rag-quality-funnel
+  caption_ko: candidate recall·rerank precision·context coverage·grounded answer로 이어지는 품질 funnel을 보여준다
+  brief_ko: candidate recall·rerank precision·context coverage·grounded answer로 이어지는 품질 funnel을 보여준다.
+  required_labels_ko:
+  - Recall@k
+  - Reranker
+  - Context Coverage
+  - Grounding
+  - Citation
+  - Abstention
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rag-paper
+  - dpr-paper
+  - beir-paper
+  alt_ko: candidate recall·rerank precision·context coverage·grounded answer로 이어지는 품질 funnel을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch31-02.md
+  source_file: assets/src/svg/fig-ch31-02.svg
+  output_file: assets/figures/fig-ch31-02.svg
+- id: fig-ch32-01
+  chapter: ch32
+  kind: technical-diagram
+  generator: direct-svg
+  role: llm-serving-runtime
+  caption_ko: gateway·router·prefill queue·decode scheduler·GPU worker·KV cache·streaming response를 보여준다
+  brief_ko: gateway·router·prefill queue·decode scheduler·GPU worker·KV cache·streaming response를 보여준다.
+  required_labels_ko:
+  - Gateway
+  - Model Router
+  - Prefill Queue
+  - Decode Scheduler
+  - GPU Worker
+  - KV Cache
+  - Streaming
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - vllm-paper
+  - orca-paper
+  - nist-genai-profile
+  alt_ko: gateway·router·prefill queue·decode scheduler·GPU worker·KV cache·streaming response를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch32-01.md
+  source_file: assets/src/svg/fig-ch32-01.svg
+  output_file: assets/figures/fig-ch32-01.svg
+- id: fig-ch32-02
+  chapter: ch32
+  kind: technical-diagram
+  generator: direct-svg
+  role: model-routing-policy
+  caption_ko: task risk·quality threshold·latency·cost·capacity에 따라 model과 fallback을 선택하는 decision flow를 보여준다
+  brief_ko: task risk·quality threshold·latency·cost·capacity에 따라 model과 fallback을 선택하는 decision flow를 보여준다.
+  required_labels_ko:
+  - Task Class
+  - Risk
+  - Quality Gate
+  - Latency Budget
+  - Cost
+  - Capacity
+  - Fallback
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - vllm-paper
+  - orca-paper
+  - nist-genai-profile
+  alt_ko: task risk·quality threshold·latency·cost·capacity에 따라 model과 fallback을 선택하는 decision flow를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch32-02.md
+  source_file: assets/src/svg/fig-ch32-02.svg
+  output_file: assets/figures/fig-ch32-02.svg
+- id: chart-ch32-01
+  chapter: ch32
+  kind: data-chart
+  generator: python-matplotlib
+  role: llm-sequence-cost
+  caption_ko: Sequence 길이와 KV Cache·TTFT
+  brief_ko: 입력 sequence 길이 증가가 KV cache 점유와 TTFT·unit cost를 어떻게 키우는지 개념적으로 보여준다.
+  required_labels_ko:
+  - Input Token 길이
+  - 정규화된 자원/지연
+  - KV Cache
+  - TTFT
+  - 단위 비용
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - vllm-paper
+  - orca-paper
+  alt_ko: 입력 sequence 길이 증가가 KV cache 점유와 TTFT·unit cost를 어떻게 키우는지 개념적으로 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch32-01.md
+  source_file: assets/src/charts/chart-ch32-01.py
+  data_file: data/chart-ch32-01.csv
+  output_file: assets/charts/chart-ch32-01.svg
+  synthetic: true
+- id: fig-ch33-01
+  chapter: ch33
+  kind: technical-diagram
+  generator: direct-svg
+  role: agent-control-loop
+  caption_ko: 사용자 목표·run state·model·policy·approval·tool gateway·audit의 제어 루프를 보여준다
+  brief_ko: 사용자 목표·run state·model·policy·approval·tool gateway·audit의 제어 루프를 보여준다.
+  required_labels_ko:
+  - 사용자 목표
+  - Run State
+  - Model
+  - Policy Engine
+  - Approval
+  - Tool Gateway
+  - Audit
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - react-paper
+  - toolformer-paper
+  - nist-ai-rmf
+  alt_ko: 사용자 목표·run state·model·policy·approval·tool gateway·audit의 제어 루프를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch33-01.md
+  source_file: assets/src/svg/fig-ch33-01.svg
+  output_file: assets/figures/fig-ch33-01.svg
+- id: fig-ch33-02
+  chapter: ch33
+  kind: technical-diagram
+  generator: direct-svg
+  role: agent-trust-boundaries
+  caption_ko: trusted instruction·untrusted retrieval/tool output·memory·credential·sandbox 경계를 보여준다
+  brief_ko: trusted instruction·untrusted retrieval/tool output·memory·credential·sandbox 경계를 보여준다.
+  required_labels_ko:
+  - System Policy
+  - 사용자 요청
+  - Retrieved Data
+  - Tool Output
+  - Memory
+  - Credential
+  - Sandbox
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - react-paper
+  - toolformer-paper
+  - nist-ai-rmf
+  alt_ko: trusted instruction·untrusted retrieval/tool output·memory·credential·sandbox 경계를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch33-02.md
+  source_file: assets/src/svg/fig-ch33-02.svg
+  output_file: assets/figures/fig-ch33-02.svg
+- id: fig-ch34-01
+  chapter: ch34
+  kind: technical-diagram
+  generator: direct-svg
+  role: ai-evaluation-loop
+  caption_ko: dataset·offline eval·safety test·release gate·canary·online telemetry·human review·failure feedback loop를 보여준다
+  brief_ko: dataset·offline eval·safety test·release gate·canary·online telemetry·human review·failure feedback loop를 보여준다.
+  required_labels_ko:
+  - Evaluation Dataset
+  - Offline Eval
+  - Safety Test
+  - Release Gate
+  - Canary
+  - Online Telemetry
+  - Human Review
+  - Failure Set
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - nist-ai-rmf
+  - nist-genai-profile
+  - owasp-llm
+  alt_ko: dataset·offline eval·safety test·release gate·canary·online telemetry·human review·failure feedback loop를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch34-01.md
+  source_file: assets/src/svg/fig-ch34-01.svg
+  output_file: assets/figures/fig-ch34-01.svg
+- id: fig-ch34-02
+  chapter: ch34
+  kind: technical-diagram
+  generator: direct-svg
+  role: ai-quality-scorecard
+  caption_ko: 품질·grounding·안전·지연·비용·segment를 하나의 release scorecard로 보여준다
+  brief_ko: 품질·grounding·안전·지연·비용·segment를 하나의 release scorecard로 보여준다.
+  required_labels_ko:
+  - Task Success
+  - Grounding
+  - Safety
+  - Latency
+  - Cost
+  - Segment
+  - Threshold
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - nist-ai-rmf
+  - nist-genai-profile
+  - owasp-llm
+  alt_ko: 품질·grounding·안전·지연·비용·segment를 하나의 release scorecard로 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch34-02.md
+  source_file: assets/src/svg/fig-ch34-02.svg
+  output_file: assets/figures/fig-ch34-02.svg
+- id: chart-ch34-01
+  chapter: ch34
+  kind: data-chart
+  generator: python-matplotlib
+  role: ai-quality-cost-frontier
+  caption_ko: AI 품질·지연·비용 Pareto
+  brief_ko: 여러 model/routing 정책을 품질, latency, accepted outcome당 비용으로 비교하고 지배되는 선택을 표시한다.
+  required_labels_ko:
+  - Accepted Outcome당 비용
+  - 품질 점수
+  - 정책 후보
+  - Pareto frontier
+  prohibited:
+  - 출처 없는 실측 수치
+  - 3D chart
+  - 잘린 축
+  - 색상만으로 구분
+  source_refs:
+  - nist-ai-rmf
+  - nist-genai-profile
+  alt_ko: 여러 model/routing 정책을 품질, latency, accepted outcome당 비용으로 비교하고 지배되는 선택을 표시한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/charts/chart-ch34-01.md
+  source_file: assets/src/charts/chart-ch34-01.py
+  data_file: data/chart-ch34-01.csv
+  output_file: assets/charts/chart-ch34-01.svg
+  synthetic: true
+- id: fig-ch35-01
+  chapter: ch35
+  kind: technical-diagram
+  generator: direct-svg
+  role: url-shortener-v1
+  caption_ko: 단일 API·DB에서 시작하는 최소 URL 단축 서비스와 create/redirect 경로를 보여준다
+  brief_ko: 단일 API·DB에서 시작하는 최소 URL 단축 서비스와 create/redirect 경로를 보여준다.
+  required_labels_ko:
+  - 사용자
+  - Create API
+  - Redirect API
+  - URL DB
+  - Short Code
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc3986
+  - rfc9110
+  - rfc9111
+  alt_ko: 단일 API·DB에서 시작하는 최소 URL 단축 서비스와 create/redirect 경로를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch35-01.md
+  source_file: assets/src/svg/fig-ch35-01.svg
+  output_file: assets/figures/fig-ch35-01.svg
+- id: fig-ch35-02
+  chapter: ch35
+  kind: technical-diagram
+  generator: direct-svg
+  role: url-shortener-global
+  caption_ko: edge·regional cache·single writer·event log·analytics를 포함한 전역 구조를 보여준다
+  brief_ko: edge·regional cache·single writer·event log·analytics를 포함한 전역 구조를 보여준다.
+  required_labels_ko:
+  - Edge
+  - Regional Cache
+  - URL DB
+  - Single Writer
+  - Event Log
+  - Analytics
+  - Abuse Service
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc3986
+  - rfc9110
+  - rfc9111
+  alt_ko: edge·regional cache·single writer·event log·analytics를 포함한 전역 구조를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch35-02.md
+  source_file: assets/src/svg/fig-ch35-02.svg
+  output_file: assets/figures/fig-ch35-02.svg
+- id: fig-ch35-03
+  chapter: ch35
+  kind: technical-diagram
+  generator: direct-svg
+  role: capacity-and-keyspace
+  caption_ko: URL 생성·redirect 비율, Base62 keyspace, 저장량 계산을 한 장에 보여준다
+  brief_ko: URL 생성·redirect 비율, Base62 keyspace, 저장량 계산을 한 장에 보여준다.
+  required_labels_ko:
+  - Create RPS
+  - Redirect RPS
+  - Base62 공간
+  - 저장량
+  - 성장률
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc3986
+  - rfc9110
+  - rfc9111
+  alt_ko: URL 생성·redirect 비율, Base62 keyspace, 저장량 계산을 한 장에 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch35-03.md
+  source_file: assets/src/svg/fig-ch35-03.svg
+  output_file: assets/figures/fig-ch35-03.svg
+- id: fig-ch35-04
+  chapter: ch35
+  kind: technical-diagram
+  generator: direct-svg
+  role: abuse-and-blocking
+  caption_ko: URL 생성 전·후 scan, blocklist, 긴급 purge, 신고 처리 흐름을 보여준다
+  brief_ko: URL 생성 전·후 scan, blocklist, 긴급 purge, 신고 처리 흐름을 보여준다.
+  required_labels_ko:
+  - URL 검증
+  - Sandbox Scan
+  - Blocklist
+  - 긴급 Purge
+  - 신고
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc3986
+  - rfc9110
+  - rfc9111
+  alt_ko: URL 생성 전·후 scan, blocklist, 긴급 purge, 신고 처리 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch35-04.md
+  source_file: assets/src/svg/fig-ch35-04.svg
+  output_file: assets/figures/fig-ch35-04.svg
+- id: fig-ch35-05
+  chapter: ch35
+  kind: technical-diagram
+  generator: direct-svg
+  role: regional-failover
+  caption_ko: 쓰기 소유 리전 장애 중 read redirect 유지·create 제한·복구·failback을 보여준다
+  brief_ko: 쓰기 소유 리전 장애 중 read redirect 유지·create 제한·복구·failback을 보여준다.
+  required_labels_ko:
+  - Primary Region
+  - Secondary Region
+  - Edge Cache
+  - Create 제한
+  - Read 유지
+  - Failback
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc3986
+  - rfc9110
+  - rfc9111
+  alt_ko: 쓰기 소유 리전 장애 중 read redirect 유지·create 제한·복구·failback을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch35-05.md
+  source_file: assets/src/svg/fig-ch35-05.svg
+  output_file: assets/figures/fig-ch35-05.svg
+- id: fig-ch36-01
+  chapter: ch36
+  kind: technical-diagram
+  generator: direct-svg
+  role: chat-message-path
+  caption_ko: client·gateway·message service·conversation store·event log·fan-out·sync 경로를 보여준다
+  brief_ko: client·gateway·message service·conversation store·event log·fan-out·sync 경로를 보여준다.
+  required_labels_ko:
+  - Client
+  - Realtime Gateway
+  - Message Service
+  - Conversation Store
+  - Event Log
+  - Fan-out
+  - Sync API
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc6455
+  - html-sse
+  - kafka-docs
+  alt_ko: client·gateway·message service·conversation store·event log·fan-out·sync 경로를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch36-01.md
+  source_file: assets/src/svg/fig-ch36-01.svg
+  output_file: assets/figures/fig-ch36-01.svg
+- id: fig-ch36-02
+  chapter: ch36
+  kind: technical-diagram
+  generator: direct-svg
+  role: notification-routing
+  caption_ko: notification intent가 사용자 선호·quiet hours·dedup·provider·fallback을 거치는 흐름을 보여준다
+  brief_ko: notification intent가 사용자 선호·quiet hours·dedup·provider·fallback을 거치는 흐름을 보여준다.
+  required_labels_ko:
+  - Notification Intent
+  - Preference
+  - Quiet Hours
+  - Dedup
+  - Push Provider
+  - SMS/Email
+  - Expiry
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc6455
+  - html-sse
+  - kafka-docs
+  alt_ko: notification intent가 사용자 선호·quiet hours·dedup·provider·fallback을 거치는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch36-02.md
+  source_file: assets/src/svg/fig-ch36-02.svg
+  output_file: assets/figures/fig-ch36-02.svg
+- id: fig-ch36-03
+  chapter: ch36
+  kind: technical-diagram
+  generator: direct-svg
+  role: conversation-sequence
+  caption_ko: client ID·conversation sequence·dedup·reorder buffer를 보여준다
+  brief_ko: client ID·conversation sequence·dedup·reorder buffer를 보여준다.
+  required_labels_ko:
+  - Client Message ID
+  - Conversation Sequence
+  - Dedup
+  - Reorder Buffer
+  - ACK
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc6455
+  - html-sse
+  - kafka-docs
+  alt_ko: client ID·conversation sequence·dedup·reorder buffer를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch36-03.md
+  source_file: assets/src/svg/fig-ch36-03.svg
+  output_file: assets/figures/fig-ch36-03.svg
+- id: fig-ch36-04
+  chapter: ch36
+  kind: technical-diagram
+  generator: direct-svg
+  role: fanout-strategies
+  caption_ko: fan-out-on-write, fan-out-on-read, 대형 broadcast 하이브리드를 비교한다
+  brief_ko: fan-out-on-write, fan-out-on-read, 대형 broadcast 하이브리드를 비교한다.
+  required_labels_ko:
+  - Fan-out on Write
+  - Fan-out on Read
+  - 대형 방
+  - Inbox
+  - Message Log
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc6455
+  - html-sse
+  - kafka-docs
+  alt_ko: fan-out-on-write, fan-out-on-read, 대형 broadcast 하이브리드를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch36-04.md
+  source_file: assets/src/svg/fig-ch36-04.svg
+  output_file: assets/figures/fig-ch36-04.svg
+- id: fig-ch36-05
+  chapter: ch36
+  kind: technical-diagram
+  generator: direct-svg
+  role: reconnect-sync
+  caption_ko: gateway 장애 후 jitter reconnect·cursor sync·gap recovery를 보여준다
+  brief_ko: gateway 장애 후 jitter reconnect·cursor sync·gap recovery를 보여준다.
+  required_labels_ko:
+  - Gateway 장애
+  - Jitter Reconnect
+  - Cursor
+  - Sync API
+  - Gap Recovery
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - rfc6455
+  - html-sse
+  - kafka-docs
+  alt_ko: gateway 장애 후 jitter reconnect·cursor sync·gap recovery를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch36-05.md
+  source_file: assets/src/svg/fig-ch36-05.svg
+  output_file: assets/figures/fig-ch36-05.svg
+- id: fig-ch37-01
+  chapter: ch37
+  kind: technical-diagram
+  generator: direct-svg
+  role: commerce-saga
+  caption_ko: 주문 생성·재고 예약·결제 승인·확정과 실패 보상 흐름을 보여준다
+  brief_ko: 주문 생성·재고 예약·결제 승인·확정과 실패 보상 흐름을 보여준다.
+  required_labels_ko:
+  - Order
+  - Inventory Reservation
+  - Payment Authorization
+  - Confirm
+  - Release
+  - Void/Refund
+  - Manual Review
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - saga-paper
+  - stripe-idempotency
+  alt_ko: 주문 생성·재고 예약·결제 승인·확정과 실패 보상 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch37-01.md
+  source_file: assets/src/svg/fig-ch37-01.svg
+  output_file: assets/figures/fig-ch37-01.svg
+- id: fig-ch37-02
+  chapter: ch37
+  kind: technical-diagram
+  generator: direct-svg
+  role: payment-ledger
+  caption_ko: 결제·수수료·환불·정산이 append-only ledger entry와 balance 검증으로 연결되는 모습을 보여준다
+  brief_ko: 결제·수수료·환불·정산이 append-only ledger entry와 balance 검증으로 연결되는 모습을 보여준다.
+  required_labels_ko:
+  - 결제 계정
+  - 판매자 계정
+  - 수수료 계정
+  - 환불
+  - 정산
+  - Ledger Entry
+  - Balance Check
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - saga-paper
+  - stripe-idempotency
+  alt_ko: 결제·수수료·환불·정산이 append-only ledger entry와 balance 검증으로 연결되는 모습을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch37-02.md
+  source_file: assets/src/svg/fig-ch37-02.svg
+  output_file: assets/figures/fig-ch37-02.svg
+- id: fig-ch37-03
+  chapter: ch37
+  kind: technical-diagram
+  generator: direct-svg
+  role: order-state-machine
+  caption_ko: pending·reserved·authorized·confirmed·cancelled·manual-review 상태 전이를 보여준다
+  brief_ko: pending·reserved·authorized·confirmed·cancelled·manual-review 상태 전이를 보여준다.
+  required_labels_ko:
+  - Pending
+  - Reserved
+  - Authorized
+  - Confirmed
+  - Cancelled
+  - Manual Review
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - saga-paper
+  - stripe-idempotency
+  alt_ko: pending·reserved·authorized·confirmed·cancelled·manual-review 상태 전이를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch37-03.md
+  source_file: assets/src/svg/fig-ch37-03.svg
+  output_file: assets/figures/fig-ch37-03.svg
+- id: fig-ch37-04
+  chapter: ch37
+  kind: technical-diagram
+  generator: direct-svg
+  role: idempotency-and-unknown
+  caption_ko: 중복 주문·결제 timeout·결과 조회·webhook reconciliation을 보여준다
+  brief_ko: 중복 주문·결제 timeout·결과 조회·webhook reconciliation을 보여준다.
+  required_labels_ko:
+  - Idempotency Key
+  - Timeout
+  - Unknown Outcome
+  - Result Lookup
+  - Webhook
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - saga-paper
+  - stripe-idempotency
+  alt_ko: 중복 주문·결제 timeout·결과 조회·webhook reconciliation을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch37-04.md
+  source_file: assets/src/svg/fig-ch37-04.svg
+  output_file: assets/figures/fig-ch37-04.svg
+- id: fig-ch37-05
+  chapter: ch37
+  kind: technical-diagram
+  generator: direct-svg
+  role: reconciliation
+  caption_ko: 주문·재고·결제 provider·ledger를 비교해 mismatch를 수리하는 흐름을 보여준다
+  brief_ko: 주문·재고·결제 provider·ledger를 비교해 mismatch를 수리하는 흐름을 보여준다.
+  required_labels_ko:
+  - Order DB
+  - Inventory Ledger
+  - Payment Provider
+  - Internal Ledger
+  - Mismatch
+  - Repair
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - postgres-transaction-iso
+  - saga-paper
+  - stripe-idempotency
+  alt_ko: 주문·재고·결제 provider·ledger를 비교해 mismatch를 수리하는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch37-05.md
+  source_file: assets/src/svg/fig-ch37-05.svg
+  output_file: assets/figures/fig-ch37-05.svg
+- id: fig-ch38-01
+  chapter: ch38
+  kind: technical-diagram
+  generator: direct-svg
+  role: multitenant-ai-platform
+  caption_ko: control plane·knowledge·conversation·inference·action·evaluation plane과 tenant 경계를 보여준다
+  brief_ko: control plane·knowledge·conversation·inference·action·evaluation plane과 tenant 경계를 보여준다.
+  required_labels_ko:
+  - Tenant Control Plane
+  - Knowledge Plane
+  - Conversation Plane
+  - Inference Plane
+  - Action Plane
+  - Evaluation Plane
+  - Tenant Boundary
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - azure-multitenant
+  - rag-paper
+  - nist-genai-profile
+  alt_ko: control plane·knowledge·conversation·inference·action·evaluation plane과 tenant 경계를 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch38-01.md
+  source_file: assets/src/svg/fig-ch38-01.svg
+  output_file: assets/figures/fig-ch38-01.svg
+- id: fig-ch38-02
+  chapter: ch38
+  kind: technical-diagram
+  generator: direct-svg
+  role: ai-support-request-flow
+  caption_ko: 사용자 message가 tenant auth·RAG·model·citation·tool approval·human handoff를 거치는 end-to-end 흐름을 보여준다
+  brief_ko: 사용자 message가 tenant auth·RAG·model·citation·tool approval·human handoff를 거치는 end-to-end 흐름을 보여준다.
+  required_labels_ko:
+  - 사용자
+  - Tenant Gateway
+  - RAG
+  - Model Router
+  - Citation Check
+  - Tool Approval
+  - Human Handoff
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - azure-multitenant
+  - rag-paper
+  - nist-genai-profile
+  alt_ko: 사용자 message가 tenant auth·RAG·model·citation·tool approval·human handoff를 거치는 end-to-end 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch38-02.md
+  source_file: assets/src/svg/fig-ch38-02.svg
+  output_file: assets/figures/fig-ch38-02.svg
+- id: fig-ch38-03
+  chapter: ch38
+  kind: technical-diagram
+  generator: direct-svg
+  role: tenant-isolation-tiers
+  caption_ko: shared·isolated-data·dedicated tier의 자원·데이터·model 경계를 비교한다
+  brief_ko: shared·isolated-data·dedicated tier의 자원·데이터·model 경계를 비교한다.
+  required_labels_ko:
+  - Shared
+  - Isolated Data
+  - Dedicated
+  - Tenant Boundary
+  - GPU
+  - Index
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - azure-multitenant
+  - rag-paper
+  - nist-genai-profile
+  alt_ko: shared·isolated-data·dedicated tier의 자원·데이터·model 경계를 비교한다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch38-03.md
+  source_file: assets/src/svg/fig-ch38-03.svg
+  output_file: assets/figures/fig-ch38-03.svg
+- id: fig-ch38-04
+  chapter: ch38
+  kind: technical-diagram
+  generator: direct-svg
+  role: evaluation-and-metering
+  caption_ko: tenant별 품질·안전·latency·token·tool·human handoff를 집계하는 흐름을 보여준다
+  brief_ko: tenant별 품질·안전·latency·token·tool·human handoff를 집계하는 흐름을 보여준다.
+  required_labels_ko:
+  - Quality
+  - Safety
+  - Latency
+  - Token
+  - Tool
+  - Human Handoff
+  - Metering
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - azure-multitenant
+  - rag-paper
+  - nist-genai-profile
+  alt_ko: tenant별 품질·안전·latency·token·tool·human handoff를 집계하는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch38-04.md
+  source_file: assets/src/svg/fig-ch38-04.svg
+  output_file: assets/figures/fig-ch38-04.svg
+- id: fig-ch38-05
+  chapter: ch38
+  kind: technical-diagram
+  generator: direct-svg
+  role: tenant-deletion-lifecycle
+  caption_ko: 탈퇴 요청이 원문·index·cache·conversation·evaluation·backup에 전파되고 증거가 남는 흐름을 보여준다
+  brief_ko: 탈퇴 요청이 원문·index·cache·conversation·evaluation·backup에 전파되고 증거가 남는 흐름을 보여준다.
+  required_labels_ko:
+  - 삭제 요청
+  - 원문
+  - Index
+  - Cache
+  - Conversation
+  - Evaluation
+  - Backup
+  - 완료 증거
+  prohibited:
+  - 임의 성능 수치
+  - 제품 로고
+  - 래스터 이미지
+  - base64
+  - 텍스트 path 변환
+  source_refs:
+  - azure-multitenant
+  - rag-paper
+  - nist-genai-profile
+  alt_ko: 탈퇴 요청이 원문·index·cache·conversation·evaluation·backup에 전파되고 증거가 남는 흐름을 보여준다.
+  aspect_ratio: '16:9'
+  canvas_preset: chapter-wide
+  status: specified
+  spec_file: assets/specs/svg/fig-ch38-05.md
+  source_file: assets/src/svg/fig-ch38-05.svg
+  output_file: assets/figures/fig-ch38-05.svg

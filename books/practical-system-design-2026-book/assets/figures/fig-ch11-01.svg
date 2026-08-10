@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>파티셔닝 방식 비교</title>
+  <desc>Range, Hash, Directory 파티셔닝이 라우터를 통해 Shard로 데이터를 배치하는 방식을 비교하고, Global Index를 함께 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="58" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">세 가지 파티셔닝: 키를 어떻게 샤드에 배치하느냐</text>
+  </g>
+
+  <g id="col-range">
+    <rect x="60" y="100" width="480" height="560" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="300" y="148" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Range</text>
+    <g id="router-range">
+      <rect x="120" y="180" width="360" height="64" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+      <text x="300" y="220" text-anchor="middle" font-size="26" fill="#142131">라우터</text>
+    </g>
+    <g font-size="22" fill="#142131" text-anchor="middle">
+      <rect x="120" y="290" width="360" height="56" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="300" y="326">Shard · 키 0–99</text>
+      <rect x="120" y="366" width="360" height="56" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="300" y="402">Shard · 키 100–199</text>
+      <rect x="120" y="442" width="360" height="56" rx="8" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/><text x="300" y="478">Shard · 키 200–299</text>
+    </g>
+    <path d="M300 244 L300 288" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <text x="300" y="544" text-anchor="middle" font-size="22" fill="#7A8791">순서 보존 · 범위 질의에 유리</text>
+    <text x="300" y="576" text-anchor="middle" font-size="22" fill="#D39A2C">핫스팟 위험(한쪽으로 쏠림)</text>
+  </g>
+
+  <g id="col-hash">
+    <rect x="560" y="100" width="480" height="560" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="800" y="148" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Hash</text>
+    <g id="router-hash">
+      <rect x="620" y="180" width="360" height="64" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+      <text x="800" y="220" text-anchor="middle" font-size="26" fill="#142131">라우터</text>
+    </g>
+    <g font-size="22" fill="#142131" text-anchor="middle">
+      <rect x="620" y="290" width="360" height="56" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="800" y="326">Shard · 해시 % N</text>
+      <rect x="620" y="366" width="360" height="56" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="800" y="402">Shard · 해시 % N</text>
+      <rect x="620" y="442" width="360" height="56" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="800" y="478">Shard · 해시 % N</text>
+    </g>
+    <path d="M800 244 L800 288" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="800" y="544" text-anchor="middle" font-size="22" fill="#7A8791">분포 균등 · 핫스팟 완화</text>
+    <text x="800" y="576" text-anchor="middle" font-size="22" fill="#D39A2C">범위 질의 어려움(순서 없음)</text>
+  </g>
+
+  <g id="col-directory">
+    <rect x="1060" y="100" width="480" height="560" rx="16" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1300" y="148" text-anchor="middle" font-size="30" font-weight="700" fill="#0F8790">Directory</text>
+    <g id="router-dir">
+      <rect x="1120" y="180" width="360" height="64" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+      <text x="1300" y="220" text-anchor="middle" font-size="26" fill="#142131">라우터</text>
+    </g>
+    <g font-size="22" fill="#142131" text-anchor="middle">
+      <rect x="1120" y="290" width="360" height="56" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1300" y="326">Shard · 조회표 매핑</text>
+      <rect x="1120" y="366" width="360" height="56" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1300" y="402">Shard · 조회표 매핑</text>
+      <rect x="1120" y="442" width="360" height="56" rx="8" fill="#FFFFFF" stroke="#7A8791" stroke-width="2"/><text x="1300" y="478">Shard · 조회표 매핑</text>
+    </g>
+    <path d="M1300 244 L1300 288" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <text x="1300" y="544" text-anchor="middle" font-size="22" fill="#7A8791">유연한 재배치 · 제어 쉬움</text>
+    <text x="1300" y="576" text-anchor="middle" font-size="22" fill="#D39A2C">조회표 자체가 병목·단일 장애점</text>
+  </g>
+
+  <g id="global-index">
+    <rect x="60" y="700" width="1480" height="120" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="800" y="752" text-anchor="middle" font-size="28" font-weight="700" fill="#D39A2C">Global Index</text>
+    <text x="800" y="790" text-anchor="middle" font-size="22" fill="#7A8791">파티션 키가 아닌 다른 필드로 검색할 때 모든 샤드에 걸친 인덱스 사용(비용 큼)</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <text x="800" y="858" text-anchor="middle" fill="#7A8791">같은 라우터·샤드라도 키→샤드 배치 규칙이 다르면 분포와 질의 성격이 달라진다</text>
+  </g>
+</svg>

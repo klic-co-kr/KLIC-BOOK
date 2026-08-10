@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>리전 장애와 failback</title>
+  <desc>쓰기 소유 리전 장애 중 read redirect 유지·create 제한·복구·failback을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="header">
+    <text x="80" y="78" font-size="30" font-weight="700" fill="#142131">쓰기 소유 리전 장애와 failback</text>
+    <text x="80" y="114" font-size="24" fill="#7A8791">read 유지, create 제한, 복구 후 failback</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="990" y1="92" x2="1070" y2="92" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-ok)"/>
+    <text x="1082" y="100">Read 유지</text>
+    <line x1="1230" y1="92" x2="1310" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1322" y="100">Failback</text>
+    <line x1="1430" y1="92" x2="1510" y2="92" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1522" y="100">Create 제한</text>
+  </g>
+
+  <g id="users">
+    <rect x="60" y="420" width="180" height="100" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="150" y="478" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">사용자</text>
+  </g>
+
+  <g id="edge-cache">
+    <rect x="320" y="380" width="240" height="180" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="440" y="440" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">Edge Cache</text>
+    <text x="440" y="478" text-anchor="middle" font-size="22" fill="#7A8791">redirect 응답</text>
+    <text x="440" y="510" text-anchor="middle" font-size="22" fill="#7A8791">redirect 전역</text>
+  </g>
+
+  <g id="primary">
+    <rect x="680" y="180" width="440" height="240" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="900" y="232" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">Primary Region</text>
+    <text x="900" y="266" text-anchor="middle" font-size="22" fill="#7A8791">쓰기 소유 리전 (장애 중)</text>
+    <rect x="710" y="290" width="380" height="50" rx="10" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2"/>
+    <text x="900" y="322" text-anchor="middle" font-size="24" font-weight="600" fill="#D39A2C">Create 제한 · 쓰기 중단</text>
+    <text x="900" y="386" text-anchor="middle" font-size="22" fill="#7A8791">단일 writer epoch 보류</text>
+  </g>
+
+  <g id="secondary">
+    <rect x="680" y="500" width="440" height="240" rx="16" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="900" y="552" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">Secondary Region</text>
+    <text x="900" y="586" text-anchor="middle" font-size="22" fill="#7A8791">읽기 복제본 · read-only</text>
+    <rect x="710" y="610" width="380" height="50" rx="10" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/>
+    <text x="900" y="642" text-anchor="middle" font-size="24" font-weight="600" fill="#0F8790">Read 유지 · redirect 계속</text>
+    <text x="900" y="706" text-anchor="middle" font-size="22" fill="#7A8791">warm cache로 응답</text>
+  </g>
+
+  <g id="failback">
+    <rect x="1240" y="380" width="280" height="200" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="1380" y="432" text-anchor="middle" font-size="28" font-weight="600" fill="#142131">Failback</text>
+    <text x="1380" y="466" text-anchor="middle" font-size="22" fill="#7A8791">복구 후 쓰기 복귀</text>
+    <text x="1380" y="498" text-anchor="middle" font-size="22" fill="#7A8791">1) epoch 전환</text>
+    <text x="1380" y="530" text-anchor="middle" font-size="22" fill="#7A8791">2) cache 재동기화</text>
+    <text x="1380" y="562" text-anchor="middle" font-size="22" fill="#7A8791">3) create 재개</text>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M240 470 L320 470" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+    <path d="M560 470 L620 470 L620 620 L680 620" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-ok)"/>
+    <text x="556" y="600" font-size="22" fill="#0F8790">redirect read</text>
+
+    <path d="M560 440 L620 440 L620 320 L680 320" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="556" y="300" font-size="22" fill="#283541">create (거부)</text>
+
+    <path d="M1120 300 L1180 300 L1180 440 L1240 440" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1160" y="288" font-size="22" fill="#D39A2C">장애 복구</text>
+
+    <path d="M1240 500 L1180 500 L1180 640 L1120 640" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1160" y="690" font-size="22" fill="#D39A2C">재동기화</text>
+
+    <path d="M900 420 L900 500" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="910" y="465" font-size="22" fill="#D39A2C">복제 확인</text>
+  </g>
+
+  <g id="step-tag">
+    <rect x="80" y="810" width="320" height="50" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="240" y="843" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">STEP 5 · 리전 장애·failback</text>
+  </g>
+</svg>

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>캐시 패턴 세 가지 비교</title>
+  <desc>cache-aside·write-through·refresh-ahead의 읽기·쓰기·갱신 경로를 애플리케이션·Cache·Origin 삼각형으로 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="50" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">세 캐시 패턴: 읽기(Hit/Miss)·쓰기(Write)·갱신(Refresh)</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="60" y1="86" x2="140" y2="86" stroke="#283541" stroke-width="2.5"/><text x="150" y="94">읽기 Hit / 쓰기</text>
+    <line x1="360" y1="86" x2="440" y2="86" stroke="#0F8790" stroke-width="2.5"/><text x="450" y="94">Miss 채움</text>
+    <line x1="640" y1="86" x2="720" y2="86" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="730" y="94">Refresh(미리 갱신)</text>
+  </g>
+
+  <!-- Panel 1: Cache-Aside -->
+  <g id="panel-aside">
+    <rect x="40" y="120" width="500" height="700" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="70" y="162" font-size="26" font-weight="700" fill="#142131">cache-aside</text>
+    <text x="70" y="194" font-size="22" fill="#7A8791">앱이 캐시를 직접 채운다</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="80" y="450" width="180" height="100" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="170" y="508">애플리케이션</text></g>
+      <g><rect x="330" y="240" width="180" height="100" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="420" y="298">Cache</text></g>
+      <g><rect x="330" y="660" width="180" height="100" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="420" y="718">Origin</text></g>
+    </g>
+    <g fill="none" stroke-width="2.5">
+      <path d="M260 470 L 330 290" stroke="#283541" marker-end="url(#arrow)"/>
+      <text x="280" y="380" font-size="22" fill="#283541" font-weight="700">① Hit</text>
+      <path d="M260 500 L 420 660" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+      <text x="300" y="600" font-size="22" fill="#0F8790" font-weight="700">② Miss</text>
+      <path d="M330 690 L 420 690 L 420 340" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+      <text x="180" y="710" font-size="22" fill="#0F8790" font-weight="700">③ 캐시 채움</text>
+    </g>
+    <text x="70" y="800" font-size="22" fill="#7A8791">쓰기 시 캐시를 무효화한다</text>
+  </g>
+
+  <!-- Panel 2: Write-Through -->
+  <g id="panel-wt">
+    <rect x="560" y="120" width="500" height="700" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="590" y="162" font-size="26" font-weight="700" fill="#142131">write-through</text>
+    <text x="590" y="194" font-size="22" fill="#7A8791">쓰기가 캐시와 Origin에 동시에</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="600" y="450" width="180" height="100" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="690" y="508">애플리케이션</text></g>
+      <g><rect x="850" y="350" width="180" height="100" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="940" y="408">Cache</text></g>
+      <g><rect x="850" y="550" width="180" height="100" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="940" y="608">Origin</text></g>
+    </g>
+    <g fill="none" stroke-width="2.5">
+      <path d="M780 470 L 850 400" stroke="#283541" marker-end="url(#arrow)"/>
+      <text x="800" y="425" font-size="22" fill="#283541" font-weight="700">① Write</text>
+      <path d="M940 450 L 940 550" stroke="#0F8790" marker-end="url(#arrow-acc)"/>
+      <text x="955" y="510" font-size="22" fill="#0F8790" font-weight="700">② 동기 쓰기</text>
+      <path d="M850 400 L 780 470" stroke="#283541" fill="none"/>
+    </g>
+    <text x="590" y="720" font-size="22" fill="#7A8791">읽기는 항상 Hit(캐시가 최신)</text>
+    <text x="590" y="760" font-size="22" fill="#7A8791">쓰기 지연이 Origin 속도에 비례</text>
+    <text x="590" y="800" font-size="22" fill="#7A8791">장애 시에도 강한 일관성</text>
+  </g>
+
+  <!-- Panel 3: Refresh-Ahead -->
+  <g id="panel-ra">
+    <rect x="1080" y="120" width="480" height="700" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="1110" y="162" font-size="26" font-weight="700" fill="#D39A2C">refresh-ahead</text>
+    <text x="1110" y="194" font-size="22" fill="#7A8791">만료 전에 미리 갱신</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="1120" y="450" width="180" height="100" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1210" y="508">애플리케이션</text></g>
+      <g><rect x="1370" y="240" width="160" height="100" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1450" y="298">Cache</text></g>
+      <g><rect x="1370" y="660" width="160" height="100" rx="12" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1450" y="718">Origin</text></g>
+    </g>
+    <g fill="none" stroke-width="2.5">
+      <path d="M1300 470 L 1370 300" stroke="#283541" marker-end="url(#arrow)"/>
+      <text x="1320" y="380" font-size="22" fill="#283541" font-weight="700">Hit(갱신됨)</text>
+      <path d="M1450 660 L 1450 340" stroke="#D39A2C" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+      <text x="1462" y="500" font-size="22" fill="#D39A2C" font-weight="700">Refresh</text>
+      <text x="1462" y="530" font-size="22" fill="#D39A2C" font-weight="700">(TTL 전)</text>
+    </g>
+    <text x="1110" y="800" font-size="22" fill="#7A8791">인기 키 한정; 만료 찰나의 Miss 회피</text>
+  </g>
+</svg>

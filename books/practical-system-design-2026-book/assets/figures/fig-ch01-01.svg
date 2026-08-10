@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>신뢰 경계와 시스템 구성</title>
+  <desc>사용자·경계 API·도메인 코어·데이터 저장소·외부 의존성과 이들을 둘러싼 신뢰 경계를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1060" y1="68" x2="1140" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="1152" y="76">내부 호출</text>
+    <line x1="1280" y1="68" x2="1360" y2="68" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1372" y="76">외부 호출</text>
+    <rect x="1060" y="96" width="80" height="16" rx="4" fill="none" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="8 6"/>
+    <text x="1152" y="110">신뢰 경계</text>
+  </g>
+
+  <g id="trust-boundary">
+    <rect x="340" y="180" width="900" height="600" rx="24" fill="#EFF5F4" stroke="#0F8790" stroke-width="3" stroke-dasharray="14 10"/>
+    <text x="368" y="168" font-size="26" fill="#0F8790" font-weight="600">신뢰 경계</text>
+  </g>
+
+  <g id="nodes">
+    <g id="user">
+      <rect x="70" y="410" width="240" height="140" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="190" y="492" text-anchor="middle" font-size="34" fill="#142131">사용자</text>
+    </g>
+    <g id="edge-api">
+      <rect x="410" y="410" width="260" height="140" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="540" y="492" text-anchor="middle" font-size="34" fill="#142131">경계 API</text>
+    </g>
+    <g id="domain-core">
+      <rect x="780" y="380" width="320" height="200" rx="18" fill="#F4F8FA" stroke="#0F8790" stroke-width="3.5"/>
+      <text x="940" y="492" text-anchor="middle" font-size="36" fill="#142131">도메인 코어</text>
+    </g>
+    <g id="store">
+      <rect x="800" y="210" width="280" height="130" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="940" y="288" text-anchor="middle" font-size="32" fill="#142131">데이터 저장소</text>
+    </g>
+    <g id="external">
+      <rect x="1310" y="410" width="240" height="140" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+      <text x="1430" y="492" text-anchor="middle" font-size="32" fill="#142131">외부 의존성</text>
+    </g>
+  </g>
+
+  <g id="edges" font-size="24" fill="#283541">
+    <path d="M310 480 L410 480" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="360" y="466" text-anchor="middle">요청</text>
+    <path d="M670 480 L780 480" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M940 380 L940 340" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+    <text x="958" y="368" font-size="22">영속화</text>
+    <path d="M1100 480 L1310 480" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none" marker-end="url(#arrow-amb)"/>
+    <text x="1205" y="466" text-anchor="middle" fill="#D39A2C">외부 호출</text>
+  </g>
+</svg>

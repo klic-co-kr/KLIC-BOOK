@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>컴퓨트 모델 비교</title>
+  <desc>VM, Kubernetes, Serverless, Managed PaaS를 제어 수준과 운영 부담의 위치로 배치하고, Scale 특성은 테두리 선과 라벨로 구분해 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">컴퓨트 모델 비교</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">제어 수준·운영 부담 위치와 Scale 특성</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1090" y="76" width="26" height="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="1126" y="92">수동·클러스터 확장</text>
+    <rect x="1090" y="108" width="26" height="16" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <text x="1126" y="124">자동 확장</text>
+  </g>
+
+  <g id="axes" stroke="#142131" stroke-width="2.5" fill="none">
+    <line x1="200" y1="150" x2="200" y2="750"/>
+    <line x1="200" y1="750" x2="1450" y2="750"/>
+    <path d="M1450 750 L1420 740 M1450 750 L1420 760" stroke-width="2.5"/>
+    <path d="M200 150 L190 180 M200 150 L210 180" stroke-width="2.5"/>
+  </g>
+  <g id="axis-labels" font-size="26" fill="#142131" font-weight="700">
+    <text x="825" y="810" text-anchor="middle">제어 수준</text>
+    <text x="110" y="450" text-anchor="middle" transform="rotate(-90 110 450)">운영 부담</text>
+  </g>
+  <g id="tick-labels" font-size="22" fill="#7A8791">
+    <text x="250" y="784" text-anchor="middle">낮음</text>
+    <text x="1400" y="784" text-anchor="middle">높음</text>
+    <text x="185" y="745" text-anchor="end">낮음</text>
+    <text x="185" y="175" text-anchor="end">높음</text>
+  </g>
+
+  <g id="models">
+    <g id="vm">
+      <rect x="1235" y="160" width="210" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1340" y="210" text-anchor="middle" font-size="30" fill="#142131" font-weight="700">VM</text>
+      <text x="1340" y="248" text-anchor="middle" font-size="22" fill="#283541">제어 최고·운영 최고</text>
+      <text x="1340" y="272" text-anchor="middle" font-size="22" fill="#7A8791">Scale: 수동</text>
+    </g>
+    <g id="k8s">
+      <rect x="995" y="290" width="210" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1100" y="340" text-anchor="middle" font-size="28" fill="#142131" font-weight="700">Kubernetes</text>
+      <text x="1100" y="378" text-anchor="middle" font-size="22" fill="#283541">제어 높음·운영 높음</text>
+      <text x="1100" y="402" text-anchor="middle" font-size="22" fill="#7A8791">Scale: 클러스터</text>
+    </g>
+    <g id="paas">
+      <rect x="535" y="480" width="210" height="120" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <text x="640" y="530" text-anchor="middle" font-size="28" fill="#142131" font-weight="700">Managed PaaS</text>
+      <text x="640" y="568" text-anchor="middle" font-size="22" fill="#283541">제어 중간·운영 낮음</text>
+      <text x="640" y="592" text-anchor="middle" font-size="22" fill="#7A8791">Scale: 자동</text>
+    </g>
+    <g id="serverless">
+      <rect x="235" y="600" width="210" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <text x="340" y="650" text-anchor="middle" font-size="28" fill="#142131" font-weight="700">Serverless</text>
+      <text x="340" y="688" text-anchor="middle" font-size="22" fill="#283541">제어 낮음·운영 최저</text>
+      <text x="340" y="712" text-anchor="middle" font-size="22" fill="#7A8791">Scale: 자동·즉시</text>
+    </g>
+  </g>
+
+  <g id="trend" stroke="#7A8791" stroke-width="2" stroke-dasharray="6 6" fill="none">
+    <path d="M340 660 L640 540 L1100 350 L1340 220"/>
+  </g>
+
+  <text x="70" y="858" font-size="22" fill="#7A8791">오른쪽으로 갈수록 제어 수준과 운영 부담이 커지고, 왼쪽 아래로 갈수록 확장은 자동이지만 제어는 제한된다.</text>
+</svg>

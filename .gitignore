@@ -1,0 +1,15 @@
+.DS_Store
+tmp/
+*.zip
+.venv/
+**/_build/
+**/_extracted.md
+__pycache__/
+*.pyc
+
+# 책 빌드 산물: PDF·HTML·보고서는 추적, 무거운 렌더 이미지·분할 작업폴더는 제외
+books/*/build/rendered/
+books/*/build/_work/
+books/*/build/qa/
+books/*/build/contact-sheet-*.jpg
+docs/superpowers/

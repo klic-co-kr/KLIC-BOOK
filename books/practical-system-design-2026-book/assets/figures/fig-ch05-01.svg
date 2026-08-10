@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>전체 지연 분해</title>
+  <desc>전체 지연을 네트워크, 큐 대기, 처리, 하위 호출, 직렬화로 분해한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="74" text-anchor="middle" font-size="36" font-weight="700" fill="#142131">요청 하나가 겪는 전체 지연의 구성 요소</text>
+    <text x="800" y="112" text-anchor="middle" font-size="24" fill="#7A8791">각 단계의 지연을 합하면 사용자가 체감하는 전체 지연이 된다</text>
+  </g>
+
+  <g id="total-latency">
+    <rect x="120" y="146" width="1360" height="92" rx="16" fill="#0F8790" stroke="#142131" stroke-width="2.5"/>
+    <text x="800" y="206" text-anchor="middle" font-size="38" font-weight="700" fill="#FFFFFF">전체 지연</text>
+  </g>
+
+  <g id="bracket" fill="none" stroke="#7A8791" stroke-width="2.5">
+    <path d="M120 238 L120 280 L1480 280 L1480 238"/>
+    <path d="M800 280 L800 312" stroke="#7A8791"/>
+  </g>
+  <text x="800" y="306" text-anchor="middle" font-size="22" fill="#7A8791">아래 5단계의 합</text>
+
+  <g id="stages" font-size="30" fill="#142131">
+    <g id="st-network">
+      <rect x="100" y="332" width="256" height="184" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="228" y="424" text-anchor="middle" font-weight="700">네트워크</text>
+      <text x="228" y="468" text-anchor="middle" font-size="22" fill="#7A8791">왕복 전송</text>
+    </g>
+    <g id="st-queue">
+      <rect x="386" y="332" width="256" height="184" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="514" y="424" text-anchor="middle" font-weight="700">큐 대기</text>
+      <text x="514" y="468" text-anchor="middle" font-size="22" fill="#7A8791">스케줄 대기</text>
+    </g>
+    <g id="st-process">
+      <rect x="672" y="332" width="256" height="184" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="424" text-anchor="middle" font-weight="700">처리</text>
+      <text x="800" y="468" text-anchor="middle" font-size="22" fill="#7A8791">실제 연산</text>
+    </g>
+    <g id="st-downstream">
+      <rect x="958" y="332" width="256" height="184" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+      <text x="1086" y="424" text-anchor="middle" font-weight="700" fill="#0F8790">하위 호출</text>
+      <text x="1086" y="468" text-anchor="middle" font-size="22" fill="#7A8791">꼬리 지연 확대</text>
+    </g>
+    <g id="st-serialize">
+      <rect x="1244" y="332" width="256" height="184" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1372" y="424" text-anchor="middle" font-weight="700">직렬화</text>
+      <text x="1372" y="468" text-anchor="middle" font-size="22" fill="#7A8791">응답 변환</text>
+    </g>
+  </g>
+
+  <g id="stage-arrows" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M356 424 L386 424" marker-end="url(#arrow)"/>
+    <path d="M642 424 L672 424" marker-end="url(#arrow)"/>
+    <path d="M928 424 L958 424" marker-end="url(#arrow)"/>
+    <path d="M1214 424 L1244 424" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="waterfall">
+    <text x="100" y="624" font-size="26" font-weight="700" fill="#283541">누적 지연(개념적 비율, 측정값 아님)</text>
+    <g stroke="#FFFFFF" stroke-width="2">
+      <rect x="100" y="650" width="220" height="86" rx="6" fill="#7A8791"/>
+      <rect x="320" y="650" width="120" height="86" rx="6" fill="#7A8791"/>
+      <rect x="440" y="650" width="200" height="86" rx="6" fill="#7A8791"/>
+      <rect x="640" y="650" width="420" height="86" rx="6" fill="#0F8790"/>
+      <rect x="1060" y="650" width="140" height="86" rx="6" fill="#7A8791"/>
+    </g>
+    <g font-size="22" fill="#FFFFFF" text-anchor="middle" font-weight="700">
+      <text x="210" y="700">네트워크</text>
+      <text x="380" y="700">큐 대기</text>
+      <text x="540" y="700">처리</text>
+      <text x="850" y="700">하위 호출</text>
+      <text x="1130" y="700">직렬화</text>
+    </g>
+    <path d="M100 762 L1200 762" stroke="#142131" stroke-width="2.5" stroke-dasharray="10 8" fill="none" marker-end="url(#arrow)"/>
+    <text x="640" y="800" text-anchor="middle" font-size="24" fill="#142131">시간이 누적되는 방향</text>
+  </g>
+</svg>

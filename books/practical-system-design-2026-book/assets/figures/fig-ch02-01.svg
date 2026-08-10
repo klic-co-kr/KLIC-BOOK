@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>용량 산정 입력과 식</title>
+  <desc>일 요청 수·피크 계수·서비스 시간·객체 크기·복제 계수·보존 기간 입력이 용량 산정 식을 통해 요청률·동시성·대역폭·저장량 산출량으로 연결되는 구조를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="section-labels" font-size="24" fill="#7A8791">
+    <text x="185" y="100" text-anchor="middle">입력 매개변수</text>
+    <text x="700" y="100" text-anchor="middle">용량 산정 식</text>
+    <text x="1230" y="100" text-anchor="middle">산출량</text>
+  </g>
+
+  <g id="inputs">
+    <g><rect x="70" y="130" width="230" height="80" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="185" y="182" text-anchor="middle" font-size="28" fill="#142131">일 요청 수</text></g>
+    <g><rect x="70" y="230" width="230" height="80" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="185" y="282" text-anchor="middle" font-size="28" fill="#142131">피크 계수</text></g>
+    <g><rect x="70" y="330" width="230" height="80" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="185" y="382" text-anchor="middle" font-size="28" fill="#142131">서비스 시간</text></g>
+    <g><rect x="70" y="430" width="230" height="80" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="185" y="482" text-anchor="middle" font-size="28" fill="#142131">객체 크기</text></g>
+    <g><rect x="70" y="530" width="230" height="80" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="185" y="582" text-anchor="middle" font-size="28" fill="#142131">복제 계수</text></g>
+    <g><rect x="70" y="630" width="230" height="80" rx="12" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="185" y="682" text-anchor="middle" font-size="28" fill="#142131">보존 기간</text></g>
+  </g>
+
+  <g id="formula-panel">
+    <rect x="430" y="130" width="540" height="600" rx="18" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="700" y="178" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="600">용량 산정 식</text>
+
+    <g font-family="'Noto Sans KR','NanumSquare',sans-serif">
+      <text x="460" y="240" font-size="30" fill="#142131" font-weight="600">요청률</text>
+      <text x="460" y="276" font-size="23" fill="#283541">= (일 요청 수 ÷ 하루 초) × 피크 계수</text>
+
+      <text x="460" y="350" font-size="30" fill="#142131" font-weight="600">동시성</text>
+      <text x="460" y="386" font-size="23" fill="#283541">= 요청률 × 서비스 시간<tspan fill="#7A8791">   (Little's 법칙)</tspan></text>
+
+      <text x="460" y="460" font-size="30" fill="#142131" font-weight="600">대역폭</text>
+      <text x="460" y="496" font-size="23" fill="#283541">= 요청률 × 객체 크기</text>
+
+      <text x="460" y="570" font-size="30" fill="#142131" font-weight="600">저장량</text>
+      <text x="460" y="606" font-size="23" fill="#283541">= 일 요청 수 × 객체 크기</text>
+      <text x="460" y="640" font-size="23" fill="#283541">  × 복제 계수 × 보존 기간</text>
+    </g>
+  </g>
+
+  <g id="outputs">
+    <g><rect x="1100" y="150" width="260" height="110" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="3"/><text x="1230" y="217" text-anchor="middle" font-size="32" fill="#142131">요청률</text></g>
+    <g><rect x="1100" y="310" width="260" height="110" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="3"/><text x="1230" y="377" text-anchor="middle" font-size="32" fill="#142131">동시성</text></g>
+    <g><rect x="1100" y="470" width="260" height="110" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="3"/><text x="1230" y="537" text-anchor="middle" font-size="32" fill="#142131">대역폭</text></g>
+    <g><rect x="1100" y="630" width="260" height="110" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="3"/><text x="1230" y="697" text-anchor="middle" font-size="32" fill="#142131">저장량</text></g>
+  </g>
+
+  <g id="edges">
+    <path d="M300 170 L430 170" stroke="#283541" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <path d="M300 270 L430 270" stroke="#283541" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <path d="M300 370 L430 370" stroke="#283541" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <path d="M300 470 L430 470" stroke="#283541" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <path d="M300 570 L430 570" stroke="#283541" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <path d="M300 670 L430 670" stroke="#283541" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+    <path d="M970 205 L1100 205" stroke="#0F8790" stroke-width="2.5" fill="none" marker-end="url(#arrow-teal)"/>
+    <path d="M970 365 L1100 365" stroke="#0F8790" stroke-width="2.5" fill="none" marker-end="url(#arrow-teal)"/>
+    <path d="M970 525 L1100 525" stroke="#0F8790" stroke-width="2.5" fill="none" marker-end="url(#arrow-teal)"/>
+    <path d="M970 685 L1100 685" stroke="#0F8790" stroke-width="2.5" fill="none" marker-end="url(#arrow-teal)"/>
+  </g>
+
+  <text x="1430" y="810" text-anchor="end" font-size="22" fill="#7A8791">식은 일반적 용량 추정 모델; 실제 측정값 아님</text>
+</svg>

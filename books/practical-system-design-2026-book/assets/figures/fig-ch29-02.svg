@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>장애 전환 절차 순서</title>
+  <desc>장애 선언, 쓰기 Fencing, Restore/승격, 데이터 검증, Traffic 전환, Failback가 어떤 순서로 일어나는지 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">장애 전환 절차 순서</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">선언에서 복구까지 정해진 순서를 따른다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1170" y1="90" x2="1240" y2="90" stroke="#283541" stroke-width="2.5"/>
+    <text x="1250" y="98">순차 진행</text>
+    <line x1="1370" y1="90" x2="1440" y2="90" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6"/>
+    <text x="1450" y="98">정상화</text>
+  </g>
+
+  <g id="step-numbers" font-size="24" font-weight="700" fill="#FFFFFF" text-anchor="middle">
+    <circle cx="155" cy="240" r="24" fill="#0F8790"/><text x="155" y="249">1</text>
+    <circle cx="419" cy="240" r="24" fill="#0F8790"/><text x="419" y="249">2</text>
+    <circle cx="683" cy="240" r="24" fill="#0F8790"/><text x="683" y="249">3</text>
+    <circle cx="947" cy="240" r="24" fill="#0F8790"/><text x="947" y="249">4</text>
+    <circle cx="1211" cy="240" r="24" fill="#0F8790"/><text x="1211" y="249">5</text>
+    <circle cx="1475" cy="240" r="24" fill="#D39A2C"/><text x="1475" y="249">6</text>
+  </g>
+
+  <g id="steps">
+    <g id="declare"><rect x="50" y="340" width="210" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="155" y="414" text-anchor="middle" font-size="28" fill="#142131">장애 선언</text></g>
+    <g id="fence"><rect x="314" y="340" width="210" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="419" y="406" text-anchor="middle" font-size="26" fill="#142131">쓰기 Fencing</text></g>
+    <g id="restore"><rect x="578" y="340" width="210" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="683" y="406" text-anchor="middle" font-size="26" fill="#142131">Restore/승격</text></g>
+    <g id="verify"><rect x="842" y="340" width="210" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="947" y="406" text-anchor="middle" font-size="26" fill="#142131">데이터 검증</text></g>
+    <g id="switch"><rect x="1106" y="340" width="210" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1211" y="406" text-anchor="middle" font-size="26" fill="#142131">Traffic 전환</text></g>
+    <g id="failback"><rect x="1370" y="340" width="210" height="130" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1475" y="414" text-anchor="middle" font-size="28" fill="#142131">Failback</text></g>
+  </g>
+
+  <g id="edges" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M260 405 L314 405" marker-end="url(#arrow)"/>
+    <path d="M524 405 L578 405" marker-end="url(#arrow)"/>
+    <path d="M788 405 L842 405" marker-end="url(#arrow)"/>
+    <path d="M1052 405 L1106 405" marker-end="url(#arrow)"/>
+    <path d="M1316 405 L1370 405" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="recovery-loop">
+    <path d="M1475 470 L1475 600 L155 600 L155 470" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6" fill="none" marker-end="url(#arrow-teal)"/>
+    <text x="815" y="588" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">Failback 완료 후 원래 체계로 정상화</text>
+  </g>
+
+  <g font-size="22" fill="#283541" text-anchor="middle">
+    <text x="155" y="508">장애 인지·공식화</text>
+    <text x="419" y="508">이중 쓰기 차단</text>
+    <text x="683" y="508">복구본 승격</text>
+    <text x="947" y="508">무결성 확인</text>
+    <text x="1211" y="508">대상으로 전환</text>
+    <text x="1475" y="508">원래 체계 복귀</text>
+  </g>
+
+  <text x="70" y="810" font-size="22" fill="#7A8791">쓰기를 먼저 막고 데이터를 복구·검증한 뒤 트래픽을 전환하며, 안정되면 원래 체계로 Failback한다.</text>
+</svg>

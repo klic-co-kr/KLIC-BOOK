@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>리더 교체 과정</title>
+  <desc>이전 리더 장애 감지부터 새 리더의 새 Term 획득, Fencing Token, 라우터 트래픽 전환, 재동기화까지의 과정을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="58" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">리더가 죽으면: 감지 → 새 Term → Fencing → 트래픽 전환 → 재동기화</text>
+  </g>
+
+  <g id="lifelines" stroke="#D8E1E2" stroke-width="2" stroke-dasharray="6 6">
+    <line x1="200" y1="180" x2="200" y2="820"/>
+    <line x1="800" y1="180" x2="800" y2="820"/>
+    <line x1="1200" y1="180" x2="1200" y2="820"/>
+  </g>
+
+  <g id="roles" font-size="28" fill="#142131" text-anchor="middle" font-weight="700">
+    <rect x="100" y="130" width="200" height="70" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="200" y="174">이전 Leader</text>
+    <rect x="700" y="130" width="200" height="70" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="800" y="174">새 Leader</text>
+    <rect x="1100" y="130" width="200" height="70" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="1200" y="174">라우터</text>
+  </g>
+
+  <g id="steps" font-size="24" fill="#142131">
+    <g>
+      <path d="M200 250 L130 250 L130 320" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+      <rect x="90" y="320" width="220" height="56" rx="10" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="200" y="356" text-anchor="middle" fill="#D39A2C" font-weight="700">장애 감지(응답 없음)</text>
+    </g>
+
+    <g>
+      <path d="M310 348 C 500 348, 600 360, 700 360" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+      <text x="500" y="338" text-anchor="middle">새 Term 선출</text>
+      <rect x="700" y="390" width="200" height="56" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="800" y="426" text-anchor="middle" fill="#0F8790" font-weight="700">Term 증가</text>
+    </g>
+
+    <g>
+      <path d="M800 446 L800 500" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+      <rect x="680" y="500" width="240" height="56" rx="10" fill="#0F8790"/>
+      <text x="800" y="536" text-anchor="middle" fill="#FFFFFF" font-weight="700">Fencing Token 발급</text>
+    </g>
+
+    <g>
+      <path d="M900 528 C 1040 528, 1080 470, 1100 470" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+      <text x="1040" y="448" text-anchor="middle" fill="#0F8790">트래픽 전환</text>
+      <rect x="1100" y="440" width="200" height="60" rx="10" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1200" y="478" text-anchor="middle" font-weight="700">라우터</text>
+      <text x="1200" y="528" text-anchor="middle" font-size="22" fill="#7A8791">새 리더로 라우팅</text>
+    </g>
+
+    <g>
+      <path d="M200 600 C 400 600, 560 600, 700 600" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+      <text x="450" y="588" text-anchor="middle" fill="#D39A2C">오래된 쓰기 차단(낮은 Token)</text>
+    </g>
+
+    <g>
+      <path d="M800 600 L800 660" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+      <rect x="700" y="660" width="200" height="56" rx="10" fill="#FFFFFF" stroke="#283541" stroke-width="2.5"/>
+      <text x="800" y="696" text-anchor="middle" font-weight="700">재동기화</text>
+    </g>
+
+    <g>
+      <path d="M800 716 C 600 716, 400 716, 200 716" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+      <text x="500" y="704" text-anchor="middle" font-size="22" fill="#283541">빠진 로그 전달</text>
+    </g>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="100" y1="800" x2="180" y2="800" stroke="#0F8790" stroke-width="2.5"/><text x="190" y="808">정상 인계 경로</text>
+    <line x1="380" y1="800" x2="460" y2="800" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="470" y="808">이전 리더(차단·복구)</text>
+    <text x="800" y="852" text-anchor="middle" fill="#7A8791">Fencing Token이 없으면 깨어난 이전 리더의 과거 쓰기가 새 리더를 덮칠 수 있다</text>
+  </g>
+</svg>

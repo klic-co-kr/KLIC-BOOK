@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>SLO 계층과 운영 정책</title>
+  <desc>사용자 여정에서 SLI·SLO·SLA·Error Budget이 차례로 도출되고, Error Budget이 운영 정책으로 이어지는 관계를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-mut" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A8791"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="80" y1="68" x2="160" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="172" y="76">도출 관계</text>
+    <line x1="300" y1="68" x2="380" y2="68" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="392" y="76">되머임</text>
+  </g>
+
+  <g id="nodes">
+    <g id="journey">
+      <rect x="580" y="70" width="440" height="110" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="3"/>
+      <text x="800" y="137" text-anchor="middle" font-size="34" fill="#142131">사용자 여정</text>
+    </g>
+    <g id="sli">
+      <rect x="670" y="230" width="260" height="110" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="297" text-anchor="middle" font-size="34" fill="#142131">SLI</text>
+    </g>
+    <g id="slo">
+      <rect x="670" y="390" width="260" height="110" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="457" text-anchor="middle" font-size="34" fill="#142131">SLO</text>
+    </g>
+    <g id="budget">
+      <rect x="660" y="550" width="280" height="130" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="3"/>
+      <text x="800" y="627" text-anchor="middle" font-size="32" fill="#142131">Error Budget</text>
+    </g>
+    <g id="sla">
+      <rect x="220" y="395" width="260" height="110" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5" stroke-dasharray="10 6"/>
+      <text x="350" y="462" text-anchor="middle" font-size="34" fill="#142131">SLA</text>
+    </g>
+    <g id="policy">
+      <rect x="1100" y="550" width="300" height="130" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="3"/>
+      <text x="1250" y="627" text-anchor="middle" font-size="32" fill="#142131">운영 정책</text>
+    </g>
+  </g>
+
+  <g id="edges" font-size="24" fill="#283541">
+    <path d="M800 180 L800 230" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="812" y="212" font-size="22">측정 대상</text>
+
+    <path d="M800 340 L800 390" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="812" y="372" font-size="22">목표값</text>
+
+    <path d="M670 445 L480 460" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="560" y="430" text-anchor="middle" font-size="22">계약 조건</text>
+
+    <path d="M800 500 L800 550" stroke="#0F8790" stroke-width="2.5" fill="none" marker-end="url(#arrow-teal)"/>
+    <text x="812" y="532" font-size="22" fill="#0F8790">예산 = 1 − SLO</text>
+
+    <path d="M940 615 L1100 615" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="1020" y="602" text-anchor="middle" font-size="22">소진 통제</text>
+
+    <path d="M1250 550 L1250 285 L930 285" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="10 8" fill="none" marker-end="url(#arrow-mut)"/>
+    <text x="1090" y="272" text-anchor="middle" fill="#7A8791" font-size="22">정책 되머임</text>
+  </g>
+</svg>

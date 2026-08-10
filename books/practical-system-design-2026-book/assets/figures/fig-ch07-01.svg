@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>네트워크 분할 중 쓰기·읽기 선택</title>
+  <desc>네트워크 분할이 발생한 두 복제본 사이에서 쓰기와 읽기가 어떻게 성공하거나 거부되는지 시간축으로 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <text x="100" y="58" font-size="28" font-weight="700" fill="#142131">분할 중에는 쓰기나 읽기 중 하나를 포기해야 한다</text>
+    <line x1="1120" y1="80" x2="1200" y2="80" stroke="#0F8790" stroke-width="2.5"/><text x="1210" y="88">성공</text>
+    <line x1="1300" y1="80" x2="1380" y2="80" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/><text x="1390" y="88">거부·차단</text>
+  </g>
+
+  <g id="lifelines" stroke="#D8E1E2" stroke-width="2" stroke-dasharray="6 6">
+    <line x1="180" y1="180" x2="180" y2="820"/>
+    <line x1="540" y1="180" x2="540" y2="820"/>
+    <line x1="1060" y1="180" x2="1060" y2="820"/>
+    <line x1="1420" y1="180" x2="1420" y2="820"/>
+  </g>
+
+  <g id="actors" font-size="28" fill="#142131">
+    <rect x="80" y="130" width="200" height="74" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="180" y="178" text-anchor="middle" font-weight="700">클라이언트 A</text>
+    <rect x="440" y="130" width="200" height="74" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="540" y="178" text-anchor="middle" font-weight="700">복제본 A</text>
+    <rect x="960" y="130" width="200" height="74" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/><text x="1060" y="178" text-anchor="middle" font-weight="700">복제본 B</text>
+    <rect x="1320" y="130" width="200" height="74" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1420" y="178" text-anchor="middle" font-weight="700">클라이언트 B</text>
+  </g>
+
+  <g id="partition">
+    <rect x="755" y="220" width="90" height="540" rx="10" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="800" y="252" text-anchor="middle" font-size="24" font-weight="700" fill="#D39A2C">네트워크</text>
+    <text x="800" y="286" text-anchor="middle" font-size="24" font-weight="700" fill="#D39A2C">분할</text>
+    <text x="800" y="740" text-anchor="middle" font-size="22" fill="#7A8791">통신 불가</text>
+  </g>
+
+  <g id="messages" font-size="24" fill="#142131">
+    <path d="M180 340 L540 340" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-ok)"/>
+    <text x="360" y="328" text-anchor="middle">쓰기 요청</text>
+
+    <path d="M540 400 L180 400" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-ok)"/>
+    <text x="360" y="388" text-anchor="middle" fill="#0F8790" font-weight="700">성공 (단일 복제본 허용 정책)</text>
+
+    <path d="M540 480 L740 480" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="640" y="468" text-anchor="middle" fill="#D39A2C">복제 시도</text>
+    <path d="M860 540 L1060 540" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="960" y="528" text-anchor="middle" fill="#D39A2C">도달 못 함</text>
+
+    <path d="M1420 620 L1060 620" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1240" y="608" text-anchor="middle">읽기 요청</text>
+
+    <path d="M1060 680 L1420 680" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1240" y="668" text-anchor="middle" fill="#D39A2C" font-weight="700">거부 (정족수 부족)</text>
+  </g>
+
+  <g id="time-axis">
+    <line x1="100" y1="800" x2="1500" y2="800" stroke="#7A8791" stroke-width="2"/>
+    <text x="100" y="838" font-size="22" fill="#7A8791">시간</text>
+    <path d="M1480 800 L1500 800 L1490 792 M1500 800 L1490 808" stroke="#7A8791" stroke-width="2" fill="none"/>
+  </g>
+</svg>

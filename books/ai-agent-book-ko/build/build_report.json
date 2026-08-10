@@ -1,0 +1,60 @@
+{
+  "status": "success",
+  "generated_at": "2026-08-09T08:43:54.769220+00:00",
+  "book": {
+    "title": "AI 에이전트 깊이 이해하기",
+    "metadata_title": "AI 에이전트 깊이 이해하기: 설계 원리와 엔지니어링 실천",
+    "subtitle": "Agent = LLM + 컨텍스트 + 도구 — 10장으로 끝내는 AI 에이전트 설계와 실전",
+    "author": "원저작 chemark · 한국어 번역 KLIC",
+    "language": "ko-KR",
+    "short_title": "DEEP UNDERSTANDING AI AGENT",
+    "output_name": "ai-agent-book-ko",
+    "subject": "AI 에이전트 깊이 이해하기 한국어 PDF 편집본",
+    "keywords": [
+      "AI 에이전트",
+      "LLM",
+      "컨텍스트 엔지니어링",
+      "도구",
+      "MCP",
+      "RAG"
+    ],
+    "edition_label": "한국어 번역판 · Apache 2.0",
+    "copyright_notice": "이 책은 chemark 의 오픈소스 저서 《深入理解 AI Agent：设计原理与工程实践》(Apache License 2.0)를 한국어로 번역한 판본이다. 원본 라이선스는 licenses/LICENSE-upstream-apache.txt에 보존했으며 원저자를 명시한다. 원저자는 이 번역판을 보증하거나 후원하지 않는다. 번역은 원문의 기술 내용과 구조를 충실히 따랐으며, 본문 133개 이미지는 원본을 그대로 사용한다(일부 도면 라벨은 중국어 원문 그대로일 수 있어 최종판에서 별도 제작을 검토한다).",
+    "build_date": "auto"
+  },
+  "input": {
+    "content_file_count": 12,
+    "reference_file_count": 0,
+    "aggregate_counts": {
+      "h1": 0,
+      "h2": 92,
+      "h3": 181,
+      "paragraphs": 1856,
+      "list_items": 445,
+      "table_rows": 144,
+      "links": 8,
+      "images": 120,
+      "footnote_markers": 137
+    }
+  },
+  "output": {
+    "pdf": "/mnt/d/DEV/KLIC-BOOK/books/ai-agent-book-ko/build/AI_에이전트_깊이_이해하기_ai-agent-book-ko.pdf",
+    "visual_summary_pages": 0,
+    "toc_layout": "one-column",
+    "pdf_sha256": "b45d6e54bd26f56f06ac5775d4288c812578b5b1e4903b886fad66b4fbb01f75",
+    "pdf_size_bytes": 3348616,
+    "html": "/mnt/d/DEV/KLIC-BOOK/books/ai-agent-book-ko/build/book.html",
+    "pages": 413,
+    "outline_top_level_count": 16,
+    "outline_item_count": 300,
+    "annotations": 465
+  },
+  "warnings": [],
+  "content_policy": {
+    "reference_content_ingested": false,
+    "front_matter_sections_removed": [
+      "목차"
+    ],
+    "front_matter_paragraphs_removed": []
+  }
+}

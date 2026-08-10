@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>원천 간 재조정과 불일치 수리</title>
+  <desc>order db · inventory ledger · payment provider · internal ledger를 비교해 mismatch를 찾고 repair로 수리하는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="80">order · inventory · payment · internal ledger 비교로 mismatch를 수리하는 흐름</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1080" y="55" width="465" height="48" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1100" y1="79" x2="1160" y2="79" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="87">읽기·비교</text>
+    <line x1="1320" y1="79" x2="1380" y2="79" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1390" y="87">불일치</text>
+    <line x1="1490" y1="79" x2="1510" y2="79" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6"/>
+  </g>
+  <g id="legend-extra" font-size="22" fill="#0F8790">
+    <text x="1100" y="115">- - -  수리 반영</text>
+  </g>
+
+  <g id="band-labels" font-size="22" fill="#7A8791">
+    <text x="40" y="235" transform="rotate(-90 40 235)" text-anchor="middle">원천</text>
+    <text x="40" y="500" transform="rotate(-90 40 500)" text-anchor="middle">탐지</text>
+    <text x="40" y="740" transform="rotate(-90 40 740)" text-anchor="middle">수리</text>
+  </g>
+
+  <g id="sources">
+    <g id="order-db">
+      <rect x="150" y="170" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="270" y="245" text-anchor="middle" font-size="30" fill="#142131">Order DB</text>
+    </g>
+    <g id="inv-ledger">
+      <rect x="500" y="170" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="620" y="245" text-anchor="middle" font-size="28" fill="#142131"><tspan x="620" dy="0">Inventory</tspan><tspan x="620" dy="32">Ledger</tspan></text>
+    </g>
+    <g id="pay-provider">
+      <rect x="850" y="170" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="970" y="245" text-anchor="middle" font-size="28" fill="#142131"><tspan x="970" dy="0">Payment</tspan><tspan x="970" dy="32">Provider</tspan></text>
+    </g>
+    <g id="int-ledger">
+      <rect x="1200" y="170" width="240" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1320" y="245" text-anchor="middle" font-size="28" fill="#142131"><tspan x="1320" dy="0">Internal</tspan><tspan x="1320" dy="32">Ledger</tspan></text>
+    </g>
+  </g>
+
+  <g id="mismatch">
+    <rect x="620" y="440" width="360" height="120" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+    <text x="800" y="510" text-anchor="middle" font-size="32" fill="#142131">Mismatch</text>
+  </g>
+
+  <g id="repair">
+    <rect x="620" y="680" width="360" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="800" y="750" text-anchor="middle" font-size="32" fill="#142131">Repair</text>
+  </g>
+
+  <g id="edges-read" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M300 300 C 300 380, 540 380, 640 440" marker-end="url(#arrow)"/>
+    <path d="M620 300 L680 440" marker-end="url(#arrow)"/>
+    <path d="M940 300 L880 440" marker-end="url(#arrow)"/>
+    <path d="M1290 300 C 1290 380, 1060 380, 960 440" marker-end="url(#arrow)"/>
+    <path d="M800 560 L800 680" marker-end="url(#arrow)"/>
+  </g>
+  <g id="edge-read-labels" font-size="22" fill="#283541">
+    <text x="360" y="395">읽기</text>
+    <text x="700" y="395">읽기</text>
+    <text x="860" y="395" text-anchor="end">읽기</text>
+    <text x="1220" y="395" text-anchor="end">읽기</text>
+    <text x="810" y="630">불일치 발견</text>
+  </g>
+
+  <g id="edges-repair" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6" fill="none">
+    <path d="M620 740 C 380 740, 240 540, 240 300" marker-end="url(#arrow-accent)"/>
+    <path d="M700 680 C 700 560, 660 420, 660 300" marker-end="url(#arrow-accent)"/>
+    <path d="M900 680 C 900 560, 980 420, 980 300" marker-end="url(#arrow-accent)"/>
+    <path d="M980 740 C 1220 740, 1360 540, 1360 300" marker-end="url(#arrow-accent)"/>
+  </g>
+  <g id="edge-repair-labels" font-size="22" fill="#0F8790">
+    <text x="300" y="560">수리 반영</text>
+    <text x="1300" y="560" text-anchor="end">수리 반영</text>
+  </g>
+</svg>

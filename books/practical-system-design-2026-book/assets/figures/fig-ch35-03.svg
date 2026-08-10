@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>용량과 keyspace 계산</title>
+  <desc>URL 생성·redirect 비율, Base62 keyspace, 저장량 계산을 한 장에 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="header">
+    <text x="80" y="78" font-size="30" font-weight="700" fill="#142131">용량과 keyspace 계산</text>
+    <text x="80" y="114" font-size="24" fill="#7A8791">Create·Redirect RPS 비율에서 저장량·성장률까지</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1130" y1="92" x2="1210" y2="92" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="1222" y="100">쓰기 흐름</text>
+    <line x1="1350" y1="92" x2="1430" y2="92" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1442" y="100">읽기 흐름</text>
+  </g>
+
+  <g id="ratio-panel">
+    <rect x="80" y="170" width="1440" height="150" rx="16" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2.5"/>
+    <text x="110" y="212" font-size="24" font-weight="600" fill="#142131">요청 비율</text>
+    <text x="110" y="246" font-size="22" fill="#7A8791">redirect : create = 읽기가 쓰기보다 압도적으로 많음</text>
+
+    <g id="bar-create">
+      <rect x="540" y="252" width="140" height="28" rx="6" fill="#0F8790"/>
+      <text x="700" y="274" font-size="24" font-weight="600" fill="#0F8790">Create RPS</text>
+      <text x="540" y="296" font-size="22" fill="#7A8791">단위 쓰기량</text>
+    </g>
+    <g id="bar-redirect">
+      <rect x="980" y="220" width="440" height="28" rx="6" fill="#142131"/>
+      <text x="1440" y="242" font-size="24" font-weight="600" fill="#142131">Redirect RPS</text>
+      <text x="980" y="296" font-size="22" fill="#7A8791">읽기는 쓰기의 배수 (hot link 가속)</text>
+    </g>
+  </g>
+
+  <g id="keyspace">
+    <rect x="80" y="380" width="700" height="320" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="110" y="424" font-size="26" font-weight="600" fill="#142131">Base62 공간</text>
+    <text x="110" y="460" font-size="22" fill="#7A8791">문자 62종(0-9, a-z, A-Z)로 표현 가능한 code 수</text>
+
+    <g id="ks-rows" font-size="24" fill="#283541">
+      <text x="140" y="510">자릿수</text>
+      <text x="460" y="510" text-anchor="middle">가짓수 (62ⁿ)</text>
+      <line x1="120" y1="524" x2="740" y2="524" stroke="#D8E1E2" stroke-width="2"/>
+
+      <text x="140" y="566">n = 6</text>
+      <text x="460" y="566" text-anchor="middle">약 568억</text>
+      <text x="140" y="610">n = 7</text>
+      <text x="460" y="610" text-anchor="middle">약 3.5조</text>
+      <text x="140" y="654">n = 8</text>
+      <text x="460" y="654" text-anchor="middle">약 218조</text>
+      <text x="140" y="680" font-size="20" fill="#7A8791">충돌 확률과 code 길이 균형에서 n 선택</text>
+    </g>
+  </g>
+
+  <g id="storage">
+    <rect x="820" y="380" width="700" height="320" rx="16" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="850" y="424" font-size="26" font-weight="600" fill="#142131">저장량 계산</text>
+    <text x="850" y="460" font-size="22" fill="#7A8791">레코드당 크기 × 생성량 × 보존 기간</text>
+
+    <g id="st-formula" font-size="24" fill="#283541">
+      <text x="850" y="510">저장량 = Create RPS × 초/일 × 보존일</text>
+      <text x="850" y="548" fill="#7A8791" font-size="22">× 레코드당 bytes (destination + metadata)</text>
+    </g>
+
+    <g id="growth">
+      <rect x="850" y="580" width="640" height="100" rx="12" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="870" y="618" font-size="24" font-weight="600" fill="#0F8790">성장률</text>
+      <text x="870" y="654" font-size="22" fill="#283541">일별 신규 code가 저장량을 선형·누적 증가시킴</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M610 320 L610 360 L430 360 L430 380" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="430" y="352" text-anchor="middle" font-size="22" fill="#0F8790">쓰기가 code 소모</text>
+
+    <path d="M1190 320 L1190 360 L1170 360 L1170 380" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-accent)"/>
+    <text x="1180" y="352" text-anchor="middle" font-size="22" fill="#0F8790">누적 저장</text>
+
+    <path d="M780 540 L820 540" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="800" y="528" text-anchor="middle" font-size="22" fill="#D39A2C">연관</text>
+  </g>
+
+  <g id="step-tag">
+    <rect x="80" y="810" width="280" height="50" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="220" y="843" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">STEP 3 · 용량·keyspace 산정</text>
+  </g>
+</svg>

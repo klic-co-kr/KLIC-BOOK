@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>품질 속성 트레이드오프 선택 공간</title>
+  <desc>가용성·지연시간·일관성·비용·운영 복잡도 다섯 축 사이의 선택 공간과, 의사결정이 되돌릴 수 있음을 뜻하는 가역성을 보여준다.</desc>
+  <defs>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="80" y1="68" x2="160" y2="68" stroke="#7A8791" stroke-width="2.5"/>
+    <text x="172" y="76">트레이드오프 축</text>
+    <line x1="340" y1="68" x2="420" y2="68" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="432" y="76">가역성 이동</text>
+  </g>
+
+  <g id="pentagon-edges">
+    <polygon points="800,200 1047,380 953,670 647,670 553,380" fill="#EFF5F4" stroke="#7A8791" stroke-width="2.5" stroke-linejoin="round"/>
+  </g>
+
+  <g id="center">
+    <text x="800" y="460" text-anchor="middle" font-size="34" fill="#142131" font-weight="600">선택 공간</text>
+    <text x="800" y="500" text-anchor="middle" font-size="24" fill="#7A8791">설계 의사결정의 위치</text>
+  </g>
+
+  <g id="reversibility">
+    <path d="M900 215 Q1330 420 1000 625" stroke="#D39A2C" stroke-width="3" stroke-dasharray="12 8" fill="none" marker-start="url(#arrow-amb)" marker-end="url(#arrow-amb)"/>
+    <text x="1290" y="415" text-anchor="middle" font-size="30" fill="#D39A2C" font-weight="600">가역성</text>
+    <text x="1290" y="450" text-anchor="middle" font-size="22" fill="#D39A2C">의사결정을 되돌릴 수 있음</text>
+  </g>
+
+  <g id="dimensions">
+    <g id="d-availability">
+      <rect x="690" y="155" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="800" y="213" text-anchor="middle" font-size="30" fill="#142131">가용성</text>
+    </g>
+    <g id="d-latency">
+      <rect x="937" y="335" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1047" y="393" text-anchor="middle" font-size="30" fill="#142131">지연시간</text>
+    </g>
+    <g id="d-consistency">
+      <rect x="843" y="625" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="953" y="683" text-anchor="middle" font-size="30" fill="#142131">일관성</text>
+    </g>
+    <g id="d-cost">
+      <rect x="537" y="625" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="647" y="683" text-anchor="middle" font-size="30" fill="#142131">비용</text>
+    </g>
+    <g id="d-ops">
+      <rect x="423" y="335" width="260" height="90" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="553" y="393" text-anchor="middle" font-size="30" fill="#142131">운영 복잡도</text>
+    </g>
+  </g>
+</svg>

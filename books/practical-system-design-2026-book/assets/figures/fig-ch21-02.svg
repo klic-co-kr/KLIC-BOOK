@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>하이브리드 검색 질의 흐름</title>
+  <desc>Query가 Lexical Search와 Vector Search 후보를 만들고, ACL Filter·Fusion·Reranker를 거쳐 결과가 되는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="56" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Query가 두 후보 스트림을 거쳐 Fusion·Reranker로 결과가 된다</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1080" y1="92" x2="1160" y2="92" stroke="#283541" stroke-width="2.5"/><text x="1170" y="100">후보 생성(동등)</text>
+    <line x1="1400" y1="92" x2="1480" y2="92" stroke="#0F8790" stroke-width="2.5"/><text x="1490" y="100">제어(필터·랭킹)</text>
+  </g>
+
+  <g id="query">
+    <rect x="60" y="400" width="180" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="150" y="468" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">Query</text>
+  </g>
+
+  <g id="branches" font-size="26" fill="#142131" text-anchor="middle" font-weight="700">
+    <g><rect x="380" y="220" width="260" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="510" y="272">Lexical Search</text><text x="510" y="310" font-size="22" font-weight="400" fill="#7A8791">어휘 일치</text></g>
+    <g><rect x="380" y="580" width="260" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="510" y="632">Vector Search</text><text x="510" y="670" font-size="22" font-weight="400" fill="#7A8791">의미 유사도</text></g>
+  </g>
+
+  <g id="acl-filter">
+    <rect x="740" y="400" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="850" y="452" text-anchor="middle" font-size="28" font-weight="700" fill="#0F8790">ACL Filter</text>
+    <text x="850" y="490" text-anchor="middle" font-size="22" fill="#7A8791">권한 통과만</text>
+  </g>
+
+  <g id="fusion">
+    <rect x="1040" y="400" width="200" height="120" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1140" y="452" text-anchor="middle" font-size="28" font-weight="700" fill="#0F8790">Fusion</text>
+    <text x="1140" y="490" text-anchor="middle" font-size="22" fill="#7A8791">점수 통합</text>
+  </g>
+
+  <g id="reranker">
+    <rect x="1310" y="220" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1420" y="272" text-anchor="middle" font-size="28" font-weight="700" fill="#0F8790">Reranker</text>
+    <text x="1420" y="310" text-anchor="middle" font-size="22" fill="#7A8791">정밀 재랭킹</text>
+  </g>
+
+  <g id="result">
+    <rect x="1310" y="580" width="220" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1420" y="650" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">결과</text>
+  </g>
+
+  <!-- Query → both branches -->
+  <g fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M240 440 C 320 440, 320 280, 380 280" marker-end="url(#arrow)"/>
+    <path d="M240 480 C 320 480, 320 640, 380 640" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Both branches → ACL Filter -->
+  <g fill="none" stroke="#0F8790" stroke-width="2.5">
+    <path d="M640 280 C 700 280, 700 430, 740 430" marker-end="url(#arrow-acc)"/>
+    <path d="M640 640 C 700 640, 700 490, 740 490" marker-end="url(#arrow-acc)"/>
+  </g>
+
+  <!-- ACL Filter → Fusion -->
+  <path d="M960 460 L 1040 460" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+
+  <!-- Fusion → Reranker -->
+  <path d="M1240 440 C 1280 440, 1290 280, 1310 280" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+
+  <!-- Reranker → 결과 -->
+  <path d="M1420 340 L 1420 580" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+
+  <text x="800" y="800" text-anchor="middle" font-size="22" fill="#7A8791">두 검색이 만든 후보를 ACL이 걸러내고, Fusion이 점수를 합친 뒤 Reranker가 최종 순서를 정한다</text>
+</svg>

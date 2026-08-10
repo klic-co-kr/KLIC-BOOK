@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>RPC 패턴과 프로토콜 적합도</title>
+  <desc>Unary, Server Stream, Client Stream, Bidirectional 네 가지 호출 패턴과 REST, gRPC, GraphQL, WebSocket, SSE 다섯 프로토콜의 적합도를 행렬로 비교한다.</desc>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">RPC 패턴과 프로토콜 적합도</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">세로는 호출 형태, 가로는 프로토콜. 채운 정도가 적합도를 뜻한다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <circle cx="1010" cy="92" r="12" fill="#0F8790"/>
+    <text x="1030" y="100">매우 적합</text>
+    <circle cx="1170" cy="92" r="12" fill="#0F8790" fill-opacity="0.55"/>
+    <text x="1190" y="100">부분 적합</text>
+    <circle cx="1340" cy="92" r="12" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+    <text x="1360" y="100">부적합·과잉</text>
+  </g>
+
+  <g id="matrix-frame">
+    <rect x="280" y="180" width="1240" height="560" rx="14" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="280" y1="280" x2="1520" y2="280" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="528" y1="180" x2="528" y2="740" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="776" y1="180" x2="776" y2="740" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1024" y1="180" x2="1024" y2="740" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1272" y1="180" x2="1272" y2="740" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="280" y1="350" x2="1520" y2="350" stroke="#D8E1E2" stroke-width="1"/>
+    <line x1="280" y1="480" x2="1520" y2="480" stroke="#D8E1E2" stroke-width="1"/>
+    <line x1="280" y1="610" x2="1520" y2="610" stroke="#D8E1E2" stroke-width="1"/>
+  </g>
+
+  <g id="col-headers" font-size="26" fill="#142131" text-anchor="middle" font-weight="600">
+    <text x="404" y="240">REST</text>
+    <text x="652" y="240">gRPC</text>
+    <text x="900" y="240">GraphQL</text>
+    <text x="1148" y="240">WebSocket</text>
+    <text x="1396" y="240">SSE</text>
+  </g>
+
+  <g id="row-labels" font-size="26" fill="#142131" text-anchor="end">
+    <text x="260" y="324">Unary</text>
+    <text x="260" y="420">Server Stream</text>
+    <text x="260" y="550">Client Stream</text>
+    <text x="260" y="680">Bidirectional</text>
+  </g>
+  <g id="row-sub" font-size="20" fill="#7A8791" text-anchor="end">
+    <text x="260" y="350">요청 1 · 응답 1</text>
+    <text x="260" y="446">요청 1 · 응답 여러</text>
+    <text x="260" y="576">요청 여러 · 응답 1</text>
+    <text x="260" y="706">양방향 지속</text>
+  </g>
+
+  <g id="cells">
+    <circle cx="404" cy="324" r="20" fill="#0F8790"/>
+    <circle cx="652" cy="324" r="20" fill="#0F8790"/>
+    <circle cx="900" cy="324" r="20" fill="#0F8790"/>
+    <circle cx="1148" cy="324" r="20" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+    <circle cx="1396" cy="324" r="20" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+
+    <circle cx="404" cy="413" r="20" fill="#0F8790" fill-opacity="0.55"/>
+    <circle cx="652" cy="413" r="20" fill="#0F8790"/>
+    <circle cx="900" cy="413" r="20" fill="#0F8790" fill-opacity="0.55"/>
+    <circle cx="1148" cy="413" r="20" fill="#0F8790" fill-opacity="0.55"/>
+    <circle cx="1396" cy="413" r="20" fill="#0F8790"/>
+
+    <circle cx="404" cy="543" r="20" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+    <circle cx="652" cy="543" r="20" fill="#0F8790"/>
+    <circle cx="900" cy="543" r="20" fill="#0F8790"/>
+    <circle cx="1148" cy="543" r="20" fill="#0F8790" fill-opacity="0.55"/>
+    <circle cx="1396" cy="543" r="20" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+
+    <circle cx="404" cy="673" r="20" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+    <circle cx="652" cy="673" r="20" fill="#0F8790"/>
+    <circle cx="900" cy="673" r="20" fill="#0F8790" fill-opacity="0.55"/>
+    <circle cx="1148" cy="673" r="20" fill="#0F8790"/>
+    <circle cx="1396" cy="673" r="20" fill="#FFFFFF" stroke="#D8E1E2" stroke-width="2"/>
+  </g>
+
+  <g id="reading" font-size="22" fill="#7A8791">
+    <text x="70" y="800">행을 읽으면 그 호출 형태에 어떤 프로토콜이 어울리는지가 보인다. 예: Server Stream엔 SSE와 gRPC, Bidirectional엔 WebSocket과 gRPC가 강하다.</text>
+  </g>
+</svg>

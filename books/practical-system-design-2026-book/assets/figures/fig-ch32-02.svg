@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>모델 라우팅 의사결정 흐름</title>
+  <desc>task class·risk·quality gate·latency budget·cost·capacity에 따라 model과 fallback을 선택하는 의사결정 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="34" font-weight="700" fill="#142131">모델 라우팅 의사결정 흐름</text>
+    <text x="60" y="108" font-size="22" fill="#7A8791">여러 제약因子가 판정 허브로 모이고, 정상 모델 또는 fallback로 분기</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1100" y1="68" x2="1180" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="1190" y="76">정상 선택</text>
+    <line x1="1330" y1="68" x2="1410" y2="68" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1420" y="76">fallback</text>
+  </g>
+
+  <g id="section-labels" font-size="22" fill="#7A8791">
+    <text x="60" y="160">평가 인자</text>
+    <text x="905" y="160" text-anchor="middle">판정</text>
+    <text x="1370" y="160" text-anchor="middle">결과</text>
+  </g>
+
+  <g id="factor-cards">
+    <g id="task-class">
+      <rect x="80" y="180" width="300" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="230" y="247" text-anchor="middle" font-size="28" fill="#142131">Task Class</text>
+    </g>
+    <g id="risk">
+      <rect x="420" y="180" width="300" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="570" y="247" text-anchor="middle" font-size="28" fill="#142131">Risk</text>
+    </g>
+    <g id="quality-gate">
+      <rect x="80" y="350" width="300" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="230" y="417" text-anchor="middle" font-size="28" fill="#142131">Quality Gate</text>
+    </g>
+    <g id="latency">
+      <rect x="420" y="350" width="300" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="570" y="410" text-anchor="middle" font-size="26" fill="#142131">Latency</text>
+      <text x="570" y="442" text-anchor="middle" font-size="26" fill="#142131">Budget</text>
+    </g>
+    <g id="cost">
+      <rect x="80" y="520" width="300" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="230" y="587" text-anchor="middle" font-size="28" fill="#142131">Cost</text>
+    </g>
+    <g id="capacity">
+      <rect x="420" y="520" width="300" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="570" y="587" text-anchor="middle" font-size="28" fill="#142131">Capacity</text>
+    </g>
+  </g>
+
+  <g id="bus" stroke="#283541" stroke-width="2.5" fill="none">
+    <line x1="820" y1="235" x2="820" y2="575"/>
+    <line x1="380" y1="235" x2="820" y2="235" marker-end="url(#arrow)"/>
+    <line x1="720" y1="235" x2="820" y2="235" marker-end="url(#arrow)"/>
+    <line x1="380" y1="405" x2="820" y2="405" marker-end="url(#arrow)"/>
+    <line x1="720" y1="405" x2="820" y2="405" marker-end="url(#arrow)"/>
+    <line x1="380" y1="575" x2="820" y2="575" marker-end="url(#arrow)"/>
+    <line x1="720" y1="575" x2="820" y2="575" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="hub">
+    <rect x="860" y="345" width="180" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="950" y="415" text-anchor="middle" font-size="28" fill="#142131">판정</text>
+    <line x1="820" y1="405" x2="860" y2="405" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <g id="outputs">
+    <g id="model-out">
+      <rect x="1240" y="290" width="280" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1380" y="358" text-anchor="middle" font-size="26" fill="#142131">선택된 모델</text>
+    </g>
+    <g id="fallback">
+      <rect x="1240" y="540" width="280" height="120" rx="14" fill="#FFF7E8" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+      <text x="1380" y="608" text-anchor="middle" font-size="28" fill="#142131">Fallback</text>
+    </g>
+  </g>
+
+  <g id="output-edges" fill="none" stroke-width="2.5">
+    <path d="M1040 380 L1160 380 L1160 350 L1240 350" stroke="#283541" marker-end="url(#arrow)"/>
+    <text x="1075" y="365" font-size="22" fill="#283541">제약 충족</text>
+    <path d="M1040 430 L1160 430 L1160 600 L1240 600" stroke="#D39A2C" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <text x="1075" y="465" font-size="22" fill="#D39A2C">제약 미충족</text>
+  </g>
+</svg>

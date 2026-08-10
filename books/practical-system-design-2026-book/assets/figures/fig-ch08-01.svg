@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>격리 수준별 이상 현상 비교</title>
+  <desc>Read Committed, Repeatable Read, Serializable 격리 수준이 dirty read, nonrepeatable read, phantom, Lost Update, Write Skew를 어디까지 막는지 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="74" text-anchor="middle" font-size="36" font-weight="700" fill="#142131">격리 수준이 강해질수록 막을 수 있는 이상 현상이 늘어난다</text>
+    <text x="800" y="112" text-anchor="middle" font-size="24" fill="#7A8791">PostgreSQL 기준 · 동시 실행에서 나타날 수 있는 현상</text>
+  </g>
+
+  <g id="table">
+    <rect x="100" y="150" width="1400" height="90" fill="#EFF5F4" stroke="#142131" stroke-width="2.5"/>
+    <line x1="420" y1="150" x2="420" y2="240" stroke="#142131" stroke-width="2"/>
+    <text x="260" y="206" text-anchor="middle" font-size="26" font-weight="700" fill="#142131">격리 수준</text>
+
+    <g font-size="22" fill="#142131" text-anchor="middle">
+      <text x="560" y="206">Dirty Read</text>
+      <text x="760" y="206">Nonrepeatable</text>
+      <text x="760" y="232">Read</text>
+      <text x="960" y="206">Phantom</text>
+      <text x="1180" y="206">Lost Update</text>
+      <text x="1400" y="206">Write Skew</text>
+    </g>
+
+    <line x1="100" y1="420" x2="1500" y2="420" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="100" y1="600" x2="1500" y2="600" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="420" y1="240" x2="420" y2="780" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="660" y1="240" x2="660" y2="780" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="860" y1="240" x2="860" y2="780" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1060" y1="240" x2="1060" y2="780" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1300" y1="240" x2="1300" y2="780" stroke="#D8E1E2" stroke-width="2"/>
+
+    <g id="row-rc">
+      <rect x="120" y="270" width="290" height="120" rx="10" fill="#F4F8FA" stroke="#142131" stroke-width="2"/>
+      <text x="265" y="340" text-anchor="middle" font-size="26" font-weight="700" fill="#142131">Read Committed</text>
+      <text x="560" y="340" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="760" y="340" text-anchor="middle" font-size="26" fill="#D39A2C" font-weight="700">가능</text>
+      <text x="960" y="340" text-anchor="middle" font-size="26" fill="#D39A2C" font-weight="700">가능</text>
+      <text x="1180" y="340" text-anchor="middle" font-size="26" fill="#D39A2C" font-weight="700">가능</text>
+      <text x="1400" y="340" text-anchor="middle" font-size="26" fill="#D39A2C" font-weight="700">가능</text>
+    </g>
+
+    <g id="row-rr">
+      <rect x="120" y="450" width="290" height="120" rx="10" fill="#F4F8FA" stroke="#142131" stroke-width="2"/>
+      <text x="265" y="520" text-anchor="middle" font-size="26" font-weight="700" fill="#142131">Repeatable Read</text>
+      <text x="560" y="520" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="760" y="520" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="960" y="520" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="1180" y="520" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="1400" y="520" text-anchor="middle" font-size="26" fill="#D39A2C" font-weight="700">가능</text>
+    </g>
+
+    <g id="row-ser">
+      <rect x="120" y="630" width="290" height="120" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="3"/>
+      <text x="265" y="700" text-anchor="middle" font-size="26" font-weight="700" fill="#0F8790">Serializable</text>
+      <text x="560" y="700" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="760" y="700" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="960" y="700" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="1180" y="700" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+      <text x="1400" y="700" text-anchor="middle" font-size="26" fill="#0F8790" font-weight="700">방지</text>
+    </g>
+  </g>
+
+  <line x1="265" y1="390" x2="265" y2="450" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="265" y1="570" x2="265" y2="630" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <text x="100" y="820" font-size="24" font-weight="700" fill="#142131">범례:</text>
+    <text x="190" y="820" fill="#0F8790" font-weight="700">방지</text>
+    <text x="250" y="820">= 격리 수준이 막아주는 현상</text>
+    <text x="560" y="820" fill="#D39A2C" font-weight="700">가능</text>
+    <text x="620" y="820">= 동시 실행에서 여전히 발생할 수 있는 현상</text>
+    <text x="100" y="858" fill="#7A8791">아래로 내려갈수록 보장이 강해지지만 동시성은 줄고 비용은 커진다. 색을 빼도 ‘방지/가능’ 글자로 구분된다.</text>
+  </g>
+</svg>

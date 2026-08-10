@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>다중 창 burn rate 알림</title>
+  <desc>짧은 창(5분·6시간)과 긴 창(1시간·28일 창)이 동시에 초과될 때 빠른 소진과 느린 소진을 각각 포착하는 방식을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1100" y="60" width="22" height="16" fill="#FFFFFF" stroke="#142131" stroke-width="2"/>
+    <text x="1132" y="76">짧은 창: 빠른 변화 감지</text>
+    <rect x="1330" y="60" width="22" height="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <text x="1362" y="76">긴 창: 지속성 확인</text>
+  </g>
+
+  <g id="row-fast">
+    <g id="w-5m">
+      <rect x="240" y="120" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="360" y="168" text-anchor="middle" font-size="32" fill="#142131">5분</text>
+      <text x="360" y="202" text-anchor="middle" font-size="22" fill="#7A8791">짧은 창</text>
+    </g>
+    <g id="w-1h">
+      <rect x="240" y="270" width="240" height="110" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5" stroke-dasharray="8 6"/>
+      <text x="360" y="318" text-anchor="middle" font-size="32" fill="#142131">1시간</text>
+      <text x="360" y="352" text-anchor="middle" font-size="22" fill="#7A8791">긴 창</text>
+    </g>
+    <g id="and-fast">
+      <rect x="555" y="215" width="130" height="70" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="620" y="260" text-anchor="middle" font-size="24" fill="#142131">동시 초과</text>
+    </g>
+    <g id="fast-burn">
+      <rect x="740" y="175" width="320" height="150" rx="16" fill="#F4F8FA" stroke="#D39A2C" stroke-width="3"/>
+      <text x="900" y="238" text-anchor="middle" font-size="34" fill="#142131">빠른 소진</text>
+      <text x="900" y="278" text-anchor="middle" font-size="24" fill="#7A8791">단기 장애 포착</text>
+    </g>
+  </g>
+
+  <g id="row-slow">
+    <g id="w-6h">
+      <rect x="240" y="480" width="240" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="360" y="528" text-anchor="middle" font-size="32" fill="#142131">6시간</text>
+      <text x="360" y="562" text-anchor="middle" font-size="22" fill="#7A8791">짧은 창</text>
+    </g>
+    <g id="w-28d">
+      <rect x="240" y="630" width="240" height="110" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5" stroke-dasharray="8 6"/>
+      <text x="360" y="678" text-anchor="middle" font-size="32" fill="#142131">28일 창</text>
+      <text x="360" y="712" text-anchor="middle" font-size="22" fill="#7A8791">긴 창</text>
+    </g>
+    <g id="and-slow">
+      <rect x="555" y="575" width="130" height="70" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="620" y="620" text-anchor="middle" font-size="24" fill="#142131">동시 초과</text>
+    </g>
+    <g id="slow-burn">
+      <rect x="740" y="535" width="320" height="150" rx="16" fill="#F4F8FA" stroke="#0F8790" stroke-width="3"/>
+      <text x="900" y="598" text-anchor="middle" font-size="34" fill="#142131">느린 소진</text>
+      <text x="900" y="638" text-anchor="middle" font-size="24" fill="#7A8791">느린 열화 포착</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M480 175 L620 175 L620 215" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M480 325 L620 325 L620 285" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M685 250 L740 250" stroke="#D39A2C" stroke-width="3" marker-end="url(#arrow-amb)"/>
+
+    <path d="M480 535 L620 535 L620 575" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M480 685 L620 685 L620 645" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M685 610 L740 610" stroke="#0F8790" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+
+  <text x="1120" y="450" font-size="24" fill="#7A8791">두 창이 모두 한계를 넘을 때 알림</text>
+</svg>

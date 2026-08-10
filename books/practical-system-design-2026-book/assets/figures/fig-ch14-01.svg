@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>계층별 부하 분산 책임</title>
+  <desc>전역 Ingress, L7 Gateway, L4 Balancer, Service Proxy, Endpoint의 책임을 계층별로 보여주고 TLS 경계가 L7 Gateway와 L4 Balancer 사이에 있음을 나타낸다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-ctrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption">
+    <text x="70" y="70" font-size="28" fill="#142131" font-weight="600">계층별 부하 분산 책임</text>
+    <text x="70" y="104" font-size="24" fill="#7A8791">위에서 아래로 요청이 흐르고, 각 계층은 서로 다른 일을 담당한다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="980" y1="92" x2="1060" y2="92" stroke="#283541" stroke-width="2.5"/>
+    <text x="1070" y="100">요청 흐름</text>
+    <line x1="1210" y1="92" x2="1290" y2="92" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1300" y="100">제어 신호</text>
+    <rect x="1430" y="80" width="22" height="22" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="1462" y="100">TLS 경계</text>
+  </g>
+
+  <g id="layers">
+    <g id="ingress">
+      <rect x="120" y="170" width="1360" height="100" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="180" y="230" font-size="30" fill="#142131">전역 Ingress</text>
+      <text x="780" y="230" font-size="24" fill="#283541">가장 바깥 진입점 · 지역 라우팅 · 인증서 종결 지점 후보</text>
+    </g>
+    <g id="l7">
+      <rect x="120" y="310" width="1360" height="100" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="180" y="370" font-size="30" fill="#142131">L7 Gateway</text>
+      <text x="780" y="370" font-size="24" fill="#283541">경로·헤더 기반 라우팅, 속도 제한, 재시도, 회로 차단</text>
+    </g>
+    <g id="l4">
+      <rect x="120" y="470" width="1360" height="100" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="180" y="530" font-size="30" fill="#142131">L4 Balancer</text>
+      <text x="780" y="530" font-size="24" fill="#283541">연결 단위 분산 · 백엔드 풀 관리 · 건강 검사</text>
+    </g>
+    <g id="proxy">
+      <rect x="120" y="610" width="1360" height="100" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="180" y="670" font-size="30" fill="#142131">Service Proxy</text>
+      <text x="780" y="670" font-size="24" fill="#283541">서비스 간 호출 담당 · 관측 · 정책 적용</text>
+    </g>
+    <g id="endpoint">
+      <rect x="120" y="740" width="1360" height="90" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="180" y="795" font-size="30" fill="#142131">Endpoint</text>
+      <text x="780" y="795" font-size="24" fill="#283541">실제 처리 주체 · 비즈니스 로직</text>
+    </g>
+  </g>
+
+  <g id="tls-boundary">
+    <rect x="80" y="416" width="1440" height="48" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="800" y="446" text-anchor="middle" font-size="24" fill="#0F8790" font-weight="600">TLS 경계 — 인증서를 종결하고 이후 평문으로 위임</text>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M800 270 L800 310" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M800 410 L800 464" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M800 570 L800 610" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M800 710 L800 740" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+    <path d="M1560 760 L1560 200 L1480 200" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-ctrl)"/>
+    <text x="1490" y="180" font-size="22" fill="#0F8790">구성·정책 전파</text>
+  </g>
+</svg>

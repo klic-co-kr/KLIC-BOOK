@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>과부하 보호 적용 위치</title>
+  <desc>Ingress에서 Admission, Bulkhead, Circuit Breaker를 거쳐 Downstream에 이르는 정상 흐름과, Downstream에서 거슬러 오는 Backpressure, Circuit Breaker에서 빠지는 Degradation 경로를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">과부하 보호 단계 적용 위치</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">요청이 지나는 각 단계에서 과부하 보호가 어디에 걸리는지 보여준다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1010" y1="90" x2="1080" y2="90" stroke="#283541" stroke-width="2.5"/>
+    <text x="1090" y="98">정상 흐름</text>
+    <line x1="1230" y1="90" x2="1300" y2="90" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6"/>
+    <text x="1310" y="98">대체 경로</text>
+    <line x1="1430" y1="90" x2="1500" y2="90" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1430" y="128">피드백</text>
+  </g>
+
+  <g id="nodes">
+    <g id="ingress"><rect x="70" y="440" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="180" y="514" text-anchor="middle" font-size="30" fill="#142131">Ingress</text></g>
+    <g id="admission"><rect x="380" y="440" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="490" y="514" text-anchor="middle" font-size="30" fill="#142131">Admission</text></g>
+    <g id="bulkhead"><rect x="690" y="440" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="800" y="514" text-anchor="middle" font-size="30" fill="#142131">Bulkhead</text></g>
+    <g id="circuit"><rect x="1000" y="440" width="220" height="130" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1110" y="514" text-anchor="middle" font-size="30" fill="#142131">Circuit Breaker</text></g>
+    <g id="downstream"><rect x="1310" y="440" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="1420" y="514" text-anchor="middle" font-size="30" fill="#142131">Downstream</text></g>
+  </g>
+
+  <g id="normal-edges">
+    <path d="M290 505 L380 505" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M600 505 L690 505" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M910 505 L1000 505" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <path d="M1220 505 L1310 505" stroke="#283541" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <g font-size="22" fill="#283541" text-anchor="middle">
+      <text x="335" y="494">요청</text>
+      <text x="645" y="494">격리</text>
+      <text x="955" y="494">차단 판단</text>
+      <text x="1265" y="494">통과</text>
+    </g>
+  </g>
+
+  <g id="backpressure">
+    <path d="M1420 440 L1420 300 L490 300 L490 440" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none" marker-end="url(#arrow-amb)"/>
+    <rect x="780" y="270" width="240" height="44" rx="10" fill="#FFFFFF" stroke="#D39A2C" stroke-width="1.5"/>
+    <text x="900" y="299" text-anchor="middle" font-size="24" fill="#D39A2C" font-weight="700">Backpressure</text>
+    <text x="1420" y="288" text-anchor="middle" font-size="22" fill="#D39A2C">부하 신호 역전달</text>
+  </g>
+
+  <g id="degradation">
+    <path d="M1110 570 L1110 690 L760 690" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6" fill="none" marker-end="url(#arrow-teal)"/>
+    <rect x="500" y="650" width="260" height="80" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="630" y="699" text-anchor="middle" font-size="30" fill="#142131">Degradation</text>
+    <text x="1110" y="640" text-anchor="middle" font-size="22" fill="#0F8790">회로 열림 시 기능 축소</text>
+  </g>
+
+  <text x="70" y="820" font-size="22" fill="#7A8791">Admission은 받아들이는 양을, Bulkhead는 격리 범위를, Circuit Breaker는 반복 실패의 차단을, Backpressure와 Degradation은 부하를 거꾸로 줄인다.</text>
+</svg>

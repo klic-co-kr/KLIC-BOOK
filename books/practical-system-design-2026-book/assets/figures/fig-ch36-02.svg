@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>알림 라우팅 흐름</title>
+  <desc>notification intent가 사용자 선호·quiet hours·dedup·provider·fallback을 거치는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="header">
+    <text x="80" y="78" font-size="30" font-weight="700" fill="#142131">알림 라우팅 흐름</text>
+    <text x="80" y="114" font-size="24" fill="#7A8791">intent → 선호·quiet hours·dedup → provider, 실패 시 fallback·expiry</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1100" y1="92" x2="1180" y2="92" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1192" y="100">정상 라우팅</text>
+    <line x1="1360" y1="92" x2="1440" y2="92" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1452" y="100">fallback</text>
+  </g>
+
+  <g id="nodes">
+    <g id="intent">
+      <rect x="60" y="400" width="240" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="180" y="450" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Notification Intent</text>
+      <text x="180" y="488" text-anchor="middle" font-size="22" fill="#7A8791">사유·우선순위</text>
+    </g>
+
+    <g id="preference">
+      <rect x="360" y="400" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="470" y="450" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Preference</text>
+      <text x="470" y="488" text-anchor="middle" font-size="22" fill="#7A8791">채널·주제 동의</text>
+    </g>
+
+    <g id="quiet">
+      <rect x="640" y="400" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="750" y="450" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Quiet Hours</text>
+      <text x="750" y="488" text-anchor="middle" font-size="22" fill="#7A8791">방해 금지 시간</text>
+    </g>
+
+    <g id="dedup">
+      <rect x="920" y="400" width="200" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1020" y="450" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Dedup</text>
+      <text x="1020" y="488" text-anchor="middle" font-size="22" fill="#7A8791">중복 알림 제거</text>
+    </g>
+
+    <g id="push">
+      <rect x="1180" y="280" width="220" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1290" y="330" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Push Provider</text>
+      <text x="1290" y="368" text-anchor="middle" font-size="22" fill="#7A8791">기본 채널</text>
+    </g>
+
+    <g id="sms-email">
+      <rect x="1180" y="520" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5"/>
+      <text x="1290" y="570" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">SMS/Email</text>
+      <text x="1290" y="608" text-anchor="middle" font-size="22" fill="#7A8791">대체 채널</text>
+    </g>
+
+    <g id="expiry">
+      <rect x="1460" y="400" width="120" height="120" rx="14" fill="#FFFFFF" stroke="#7A8791" stroke-width="2.5"/>
+      <text x="1520" y="450" text-anchor="middle" font-size="26" font-weight="600" fill="#142131">Expiry</text>
+      <text x="1520" y="488" text-anchor="middle" font-size="22" fill="#7A8791">폐기</text>
+    </g>
+  </g>
+
+  <g id="edges" fill="none">
+    <path d="M300 460 L360 460" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M580 460 L640 460" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M860 460 L920 460" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+    <path d="M1120 440 L1180 440 L1180 400" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1130" y="428" font-size="22" fill="#283541">정상</text>
+
+    <path d="M1400 340 L1460 340 L1460 400" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="1410" y="328" font-size="22" fill="#283541">전송 완료</text>
+
+    <path d="M1180 400 L1140 400 L1140 520 L1180 520" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1130" y="490" font-size="22" fill="#D39A2C">provider 실패</text>
+
+    <path d="M1400 580 L1460 580 L1460 520" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6" marker-end="url(#arrow-amb)"/>
+    <text x="1410" y="612" font-size="22" fill="#D39A2C">재시도 초과</text>
+
+    <path d="M640 440 L600 440 L600 360 L470 360 L470 400" stroke="#7A8791" stroke-width="2.5" stroke-dasharray="3 5" marker-end="url(#arrow)"/>
+    <text x="540" y="348" font-size="22" fill="#7A8791">quiet hours 보류</text>
+  </g>
+
+  <g id="step-tag">
+    <rect x="60" y="810" width="300" height="50" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2"/>
+    <text x="210" y="843" text-anchor="middle" font-size="22" font-weight="600" fill="#0F8790">STEP 2 · 알림 선호·fallback 라우팅</text>
+  </g>
+</svg>

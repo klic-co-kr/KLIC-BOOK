@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>RAG 파이프라인</title>
+  <desc>source 색인과 질의·생성 흐름: Source Registry, Parser, Chunker, Embedding, Text Index, Vector Index, Retriever, Reranker, Generator</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-read" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="title">
+    <text x="60" y="70" font-size="34" font-weight="700" fill="#142131">RAG 파이프라인</text>
+    <text x="60" y="108" font-size="22" fill="#7A8791">source 색인(indexing)과 질의·생성(retrieval·generation)의 전체 흐름</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1080" y1="68" x2="1160" y2="68" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="76">색인 흐름</text>
+    <line x1="1300" y1="68" x2="1380" y2="68" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1390" y="76">검색/읽기</text>
+  </g>
+
+  <g id="lane-labels" font-size="22" fill="#7A8791">
+    <text x="60" y="225">색인 파이프라인</text>
+    <text x="60" y="685">질의·생성 파이프라인</text>
+  </g>
+
+  <g id="index-row">
+    <g id="source-registry">
+      <rect x="80" y="170" width="220" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="190" y="237" text-anchor="middle" font-size="26" fill="#142131">Source Registry</text>
+    </g>
+    <g id="parser">
+      <rect x="360" y="170" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="470" y="237" text-anchor="middle" font-size="28" fill="#142131">Parser</text>
+    </g>
+    <g id="chunker">
+      <rect x="640" y="170" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="750" y="237" text-anchor="middle" font-size="28" fill="#142131">Chunker</text>
+    </g>
+    <g id="embedding">
+      <rect x="920" y="170" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1030" y="237" text-anchor="middle" font-size="28" fill="#142131">Embedding</text>
+    </g>
+  </g>
+
+  <g id="index-stores">
+    <g id="text-index">
+      <rect x="640" y="360" width="220" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="750" y="427" text-anchor="middle" font-size="26" fill="#142131">Text Index</text>
+    </g>
+    <g id="vector-index">
+      <rect x="920" y="360" width="220" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1030" y="427" text-anchor="middle" font-size="26" fill="#142131">Vector Index</text>
+    </g>
+  </g>
+
+  <g id="query-row">
+    <g id="retriever">
+      <rect x="730" y="620" width="240" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="850" y="687" text-anchor="middle" font-size="28" fill="#142131">Retriever</text>
+    </g>
+    <g id="reranker">
+      <rect x="1010" y="620" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+      <text x="1120" y="687" text-anchor="middle" font-size="28" fill="#142131">Reranker</text>
+    </g>
+    <g id="generator">
+      <rect x="1270" y="620" width="240" height="120" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/>
+      <text x="1390" y="687" text-anchor="middle" font-size="28" fill="#142131">Generator</text>
+    </g>
+  </g>
+
+  <g id="index-edges" fill="none" stroke-width="2.5">
+    <path d="M300 230 L360 230" stroke="#283541" marker-end="url(#arrow)"/>
+    <path d="M580 230 L640 230" stroke="#283541" marker-end="url(#arrow)"/>
+    <path d="M860 230 L920 230" stroke="#283541" marker-end="url(#arrow)"/>
+    <path d="M750 290 L750 360" stroke="#283541" marker-end="url(#arrow)"/>
+    <path d="M1030 290 L1030 360" stroke="#283541" marker-end="url(#arrow)"/>
+    <text x="1075" y="335" font-size="22" fill="#283541">임베딩</text>
+    <text x="640" y="335" font-size="22" fill="#283541">청크</text>
+  </g>
+
+  <g id="read-edges" fill="none" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8">
+    <path d="M750 480 L750 550 L800 550 L800 620" marker-end="url(#arrow-read)"/>
+    <path d="M1030 480 L1030 550 L900 550 L900 620" marker-end="url(#arrow-read)"/>
+    <text x="710" y="540" font-size="22" fill="#0F8790">검색</text>
+  </g>
+
+  <g id="query-edges" fill="none" stroke="#283541" stroke-width="2.5">
+    <path d="M970 680 L1010 680" marker-end="url(#arrow)"/>
+    <path d="M1230 680 L1270 680" marker-end="url(#arrow)"/>
+  </g>
+</svg>

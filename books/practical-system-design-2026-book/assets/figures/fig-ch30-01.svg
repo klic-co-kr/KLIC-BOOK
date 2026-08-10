@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>플랫폼 폐쇄 루프</title>
+  <desc>Source, Build, Registry, IaC, GitOps, Runtime, Telemetry, Cost Feedback가 한 방향으로 이어지며 비용·관측 정보가 다시 Source로 돌아가는 폐쇄 루프를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">플랫폼 폐쇄 루프</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">공급·배포·실행·관측·비용이 한 루프로 이어진다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1170" y1="90" x2="1240" y2="90" stroke="#283541" stroke-width="2.5"/>
+    <text x="1250" y="98">정방향 흐름</text>
+    <line x1="1380" y1="90" x2="1450" y2="90" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="4 6"/>
+    <text x="1460" y="98">비용 환류</text>
+  </g>
+
+  <g id="center-note">
+    <text x="720" y="470" text-anchor="middle" font-size="26" fill="#7A8791" font-weight="700">폐쇄 루프</text>
+    <text x="720" y="504" text-anchor="middle" font-size="22" fill="#7A8791">관측·비용이 다시 공급로</text>
+  </g>
+
+  <g id="nodes">
+    <g id="source"><rect x="80" y="220" width="200" height="110" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="180" y="285" text-anchor="middle" font-size="30" fill="#142131">Source</text></g>
+    <g id="build"><rect x="425" y="220" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="525" y="285" text-anchor="middle" font-size="30" fill="#142131">Build</text></g>
+    <g id="registry"><rect x="770" y="220" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="870" y="285" text-anchor="middle" font-size="30" fill="#142131">Registry</text></g>
+    <g id="iac"><rect x="1115" y="220" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1215" y="285" text-anchor="middle" font-size="30" fill="#142131">IaC</text></g>
+    <g id="gitops"><rect x="1360" y="355" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1460" y="420" text-anchor="middle" font-size="30" fill="#142131">GitOps</text></g>
+    <g id="runtime"><rect x="1115" y="600" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1215" y="665" text-anchor="middle" font-size="30" fill="#142131">Runtime</text></g>
+    <g id="telemetry"><rect x="770" y="600" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="870" y="665" text-anchor="middle" font-size="30" fill="#142131">Telemetry</text></g>
+    <g id="cost"><rect x="80" y="355" width="200" height="110" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="180" y="420" text-anchor="middle" font-size="28" fill="#142131">Cost Feedback</text></g>
+  </g>
+
+  <g id="edges" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M280 275 L425 275" marker-end="url(#arrow)"/>
+    <path d="M625 275 L770 275" marker-end="url(#arrow)"/>
+    <path d="M970 275 L1115 275" marker-end="url(#arrow)"/>
+    <path d="M1315 275 L1460 275 L1460 355" marker-end="url(#arrow)"/>
+    <path d="M1460 465 L1460 655 L1315 655" marker-end="url(#arrow)"/>
+    <path d="M1115 655 L970 655" marker-end="url(#arrow)"/>
+    <path d="M770 655 L180 655 L180 465" stroke="#0F8790" stroke-dasharray="4 6" marker-end="url(#arrow-teal)"/>
+    <path d="M180 355 L180 330" stroke="#0F8790" stroke-dasharray="4 6" marker-end="url(#arrow-teal)"/>
+  </g>
+
+  <g font-size="22" fill="#283541" text-anchor="middle">
+    <text x="352" y="264">빌드</text>
+    <text x="697" y="264">패키지</text>
+    <text x="1042" y="264">선언</text>
+    <text x="1480" y="335">배포 적용</text>
+    <text x="1480" y="560">실행</text>
+    <text x="1042" y="644">관측</text>
+    <text x="475" y="690" fill="#0F8790">비용·지표 환류</text>
+    <text x="225" y="345" fill="#0F8790">최적화</text>
+  </g>
+
+  <text x="70" y="820" font-size="22" fill="#7A8791">코드에서 빌드·배포·실행·관측을 거쳐 비용과 지표가 다시 Source로 돌아가, 다음 변경의 판단 근거가 된다.</text>
+</svg>

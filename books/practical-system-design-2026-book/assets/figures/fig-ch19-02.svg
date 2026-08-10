@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>단일 DB·Read Replica·Sharding·Distributed SQL 비교</title>
+  <desc>네 가지 확장 전략의 아키텍처와 조정 비용(Coordination), 데이터 국소성(Locality)의 트레이드오프를 비교한다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <text x="800" y="50" text-anchor="middle" font-size="30" font-weight="700" fill="#142131">확장 전략 네 가지: 조정 비용과 국소성의 트레이드오프</text>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="80" y1="86" x2="160" y2="86" stroke="#283541" stroke-width="2.5"/><text x="170" y="94">읽기/쓰기</text>
+    <line x1="320" y1="86" x2="400" y2="86" stroke="#0F8790" stroke-width="2.5"/><text x="410" y="94">복제(동기)</text>
+    <line x1="580" y1="86" x2="660" y2="86" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/><text x="670" y="94">샤딩 라우팅</text>
+  </g>
+
+  <!-- Panel 1: 단일 DB -->
+  <g id="panel-single">
+    <rect x="40" y="120" width="740" height="330" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="70" y="162" font-size="26" font-weight="700" fill="#142131">단일 DB</text>
+    <text x="70" y="194" font-size="22" fill="#7A8791">모든 읽기·쓰기가 한 노드로 몰린다</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="120" y="260" width="160" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="200" y="307">앱</text></g>
+      <g><rect x="540" y="260" width="160" height="80" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="620" y="307">DB</text></g>
+    </g>
+    <path d="M280 300 L 540 300" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M540 320 L 280 320" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <g font-size="22" fill="#7A8791">
+      <text x="70" y="395">Coordination: 매우 낮음(한 노드)</text>
+      <text x="70" y="430">Locality: 매우 높음(모든 데이터在同一 노드)</text>
+    </g>
+  </g>
+
+  <!-- Panel 2: Read Replica -->
+  <g id="panel-replica">
+    <rect x="820" y="120" width="740" height="330" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+    <text x="850" y="162" font-size="26" font-weight="700" fill="#142131">Read Replica</text>
+    <text x="850" y="194" font-size="22" fill="#7A8791">쓰기는 1차, 읽기는 복제본으로 분산</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="860" y="260" width="140" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="930" y="307">앱</text></g>
+      <g><rect x="1120" y="240" width="160" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1200" y="278">Primary</text></g>
+      <g><rect x="1340" y="220" width="160" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="1420" y="258">Replica 1</text></g>
+      <g><rect x="1340" y="300" width="160" height="60" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="1420" y="338">Replica 2</text></g>
+    </g>
+    <path d="M1000 290 L 1120 270" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M1280 260 L 1340 250" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <path d="M1280 290 L 1340 330" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <path d="M1340 250 C 1100 250, 1000 270, 1000 320" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <g font-size="22" fill="#7A8791">
+      <text x="850" y="395">Coordination: 낮음(비동기 복제)</text>
+      <text x="850" y="430">Locality: 높음 / 쓰기는 단일 병목</text>
+    </g>
+  </g>
+
+  <!-- Panel 3: Sharding -->
+  <g id="panel-shard">
+    <rect x="40" y="480" width="740" height="330" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="70" y="522" font-size="26" font-weight="700" fill="#D39A2C">Sharding</text>
+    <text x="70" y="554" font-size="22" fill="#7A8791">앱이 샤드 키로 직접 라우팅, 독립 DB 인스턴스</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="80" y="610" width="140" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="150" y="657">앱</text></g>
+      <g><rect x="290" y="610" width="160" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="370" y="657">Router</text></g>
+      <g><rect x="540" y="580" width="160" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="620" y="618">Shard A</text></g>
+      <g><rect x="540" y="660" width="160" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="620" y="698">Shard B</text></g>
+    </g>
+    <path d="M220 650 L 290 650" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M450 635 L 540 610" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <path d="M450 665 L 540 690" fill="none" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" marker-end="url(#arrow-amb)"/>
+    <g font-size="22" fill="#7A8791">
+      <text x="70" y="755">Coordination: 낮음(샤드 독립)</text>
+      <text x="70" y="790">Locality: 매우 높음(키별 국소화) / 재샤딩 비용 큼</text>
+    </g>
+  </g>
+
+  <!-- Panel 4: Distributed SQL -->
+  <g id="panel-dist">
+    <rect x="820" y="480" width="740" height="330" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+    <text x="850" y="522" font-size="26" font-weight="700" fill="#D39A2C">Distributed SQL</text>
+    <text x="850" y="554" font-size="22" fill="#7A8791">샤딩+동기 복제를 시스템이 자동 처리</text>
+    <g font-size="22" fill="#142131" text-anchor="middle" font-weight="700">
+      <g><rect x="860" y="620" width="140" height="80" rx="10" fill="#FFFFFF" stroke="#142131" stroke-width="2"/><text x="930" y="667">앱</text></g>
+      <g><rect x="1100" y="580" width="150" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1175" y="618">Node 1</text></g>
+      <g><rect x="1100" y="660" width="150" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1175" y="698">Node 2</text></g>
+      <g><rect x="1330" y="620" width="150" height="60" rx="10" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/><text x="1405" y="658">Node 3</text></g>
+    </g>
+    <path d="M1000 660 L 1100 615" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M1000 670 L 1100 685" fill="none" stroke="#283541" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M1250 610 L 1330 645" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <path d="M1250 690 L 1330 660" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <g font-size="22" fill="#7A8791">
+      <text x="850" y="755">Coordination: 매우 높음(분산 트랜잭션·합의)</text>
+      <text x="850" y="790">Locality: 낮음 / 운영 부담은 시스템이 흡수</text>
+    </g>
+  </g>
+</svg>

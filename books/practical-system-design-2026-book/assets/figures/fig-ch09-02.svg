@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>분산 ID 구성과 인덱스 분포</title>
+  <desc>시간·노드·순번·무작위 비트로 구성된 분산 ID가 정렬을 돕거나 Hot Partition을 만드는 모습을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+    <marker id="arrow-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="800" y="58" text-anchor="middle" font-size="32" font-weight="700" fill="#142131">ID 한 줄의 구조가 샤드 분포를 결정한다</text>
+  </g>
+
+  <g id="id-register" font-size="24" fill="#142131">
+    <text x="800" y="120" text-anchor="middle" font-size="26" font-weight="700">분산 ID(개념적 비트 배치)</text>
+    <g stroke="#FFFFFF" stroke-width="2">
+      <rect x="120" y="150" width="560" height="120" rx="8" fill="#0F8790"/>
+      <rect x="680" y="150" width="340" height="120" rx="8" fill="#283541"/>
+      <rect x="1020" y="150" width="240" height="120" rx="8" fill="#7A8791"/>
+      <rect x="1260" y="150" width="220" height="120" rx="8" fill="#D39A2C"/>
+    </g>
+    <g fill="#FFFFFF" text-anchor="middle" font-weight="700" font-size="28">
+      <text x="400" y="222">시간 비트</text>
+      <text x="850" y="222">노드 ID</text>
+      <text x="1140" y="222">순번</text>
+      <text x="1370" y="222">무작위</text>
+    </g>
+    <path d="M400 270 L400 320" fill="none" stroke="#0F8790" stroke-width="2.5" marker-end="url(#arrow-acc)"/>
+    <text x="400" y="352" text-anchor="middle" font-size="24" font-weight="700" fill="#0F8790">정렬</text>
+    <text x="400" y="384" text-anchor="middle" font-size="22" fill="#7A8791">시간 순 = ID 크기순</text>
+  </g>
+
+  <g id="distribution">
+    <g id="dist-time">
+      <rect x="80" y="430" width="700" height="380" rx="16" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="430" y="478" text-anchor="middle" font-size="28" font-weight="700" fill="#142131">시간 기반 ID → 고른 분포(정렬)</text>
+      <g fill="#0F8790">
+        <rect x="130" y="700" width="90" height="80"/>
+        <rect x="240" y="690" width="90" height="90"/>
+        <rect x="350" y="700" width="90" height="80"/>
+        <rect x="460" y="690" width="90" height="90"/>
+        <rect x="570" y="700" width="90" height="80"/>
+        <rect x="680" y="690" width="90" height="90"/>
+      </g>
+      <g font-size="22" fill="#7A8791" text-anchor="middle">
+        <text x="175" y="800">샤드 1</text>
+        <text x="285" y="800">샤드 2</text>
+        <text x="395" y="800">샤드 3</text>
+        <text x="505" y="800">샤드 4</text>
+        <text x="615" y="800">샤드 5</text>
+        <text x="725" y="800">샤드 6</text>
+      </g>
+    </g>
+
+    <g id="dist-random">
+      <rect x="820" y="430" width="700" height="380" rx="16" fill="#FFFFFF" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 6"/>
+      <text x="1170" y="478" text-anchor="middle" font-size="28" font-weight="700" fill="#D39A2C">무작위 ID → Hot Partition</text>
+      <g fill="#7A8791">
+        <rect x="870" y="720" width="90" height="60"/>
+        <rect x="980" y="710" width="90" height="70"/>
+        <rect x="1090" y="560" width="90" height="220" fill="#D39A2C"/>
+        <rect x="1200" y="725" width="90" height="55"/>
+        <rect x="1310" y="715" width="90" height="65"/>
+        <rect x="1420" y="725" width="90" height="55"/>
+      </g>
+      <g font-size="22" fill="#7A8791" text-anchor="middle">
+        <text x="915" y="800">샤드 1</text>
+        <text x="1025" y="800">샤드 2</text>
+        <text x="1135" y="800" fill="#D39A2C" font-weight="700">샤드 3(과부하)</text>
+        <text x="1245" y="800">샤드 4</text>
+        <text x="1355" y="800">샤드 5</text>
+        <text x="1465" y="800">샤드 6</text>
+      </g>
+      <text x="1135" y="540" text-anchor="middle" font-size="22" font-weight="700" fill="#D39A2C">Hot Partition</text>
+    </g>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <text x="800" y="858" text-anchor="middle" fill="#7A8791">앞쪽 비트가 시간이면 ID가 정렬되어 샤드가 고르게; 무작위면 특정 샤드로 쏠림(개념도)</text>
+  </g>
+</svg>

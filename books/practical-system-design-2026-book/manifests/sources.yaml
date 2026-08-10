@@ -1,0 +1,596 @@
+observed_at: '2026-08-06'
+release_gate: 출판 직전 모든 current/volatile source URL과 version 재검증
+sources:
+- id: upstream-primer
+  citation_key: upstream-primer
+  review_status: draft-source-list
+  title: The System Design Primer
+  author: Donne Martin
+  year: 2026
+  type: repository
+  url: https://github.com/donnemartin/system-design-primer
+  note: 기준 revision ae9bbd7, 2026-03-20
+- id: iso-42010
+  citation_key: iso-42010
+  review_status: draft-source-list
+  title: ISO/IEC/IEEE 42010:2022 — Architecture description
+  author: ISO/IEC/IEEE
+  year: 2022
+  type: standard
+  url: https://www.iso.org/standard/74393.html
+- id: adr-nygard
+  citation_key: adr-nygard
+  review_status: draft-source-list
+  title: Documenting Architecture Decisions
+  author: Michael Nygard
+  year: 2011
+  type: authoritative-article
+  url: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
+- id: google-sre-slo
+  citation_key: google-sre-slo
+  review_status: draft-source-list
+  title: SRE Workbook — Implementing SLOs
+  author: Google
+  year: 2018
+  type: official-book
+  url: https://sre.google/workbook/implementing-slos/
+- id: google-sre-error-budget
+  citation_key: google-sre-error-budget
+  review_status: draft-source-list
+  title: SRE Workbook — Error Budget Policy
+  author: Google
+  year: 2018
+  type: official-book
+  url: https://sre.google/workbook/error-budget-policy/
+- id: google-sre-book
+  citation_key: google-sre-book
+  review_status: draft-source-list
+  title: Site Reliability Engineering
+  author: Google
+  year: 2016
+  type: official-book
+  url: https://sre.google/sre-book/table-of-contents/
+- id: dean-tail-at-scale
+  citation_key: dean-tail-at-scale
+  review_status: draft-source-list
+  title: The Tail at Scale
+  author: Jeffrey Dean and Luiz André Barroso
+  year: 2013
+  type: research-paper
+  url: https://research.google/pubs/the-tail-at-scale/
+- id: gilbert-lynch-cap
+  citation_key: gilbert-lynch-cap
+  review_status: draft-source-list
+  title: Brewer's Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services
+  author: Seth Gilbert and Nancy Lynch
+  year: 2002
+  type: research-paper
+  url: https://doi.org/10.1145/564585.564601
+- id: vogels-eventual
+  citation_key: vogels-eventual
+  review_status: draft-source-list
+  title: Eventually Consistent
+  author: Werner Vogels
+  year: 2009
+  type: research-article
+  url: https://dl.acm.org/doi/10.1145/1435417.1435432
+- id: postgres-transaction-iso
+  citation_key: postgres-transaction-iso
+  review_status: draft-source-list
+  title: PostgreSQL Documentation — Transaction Isolation
+  author: PostgreSQL Global Development Group
+  year: 2026
+  type: official-documentation
+  url: https://www.postgresql.org/docs/current/transaction-iso.html
+- id: postgres-mvcc
+  citation_key: postgres-mvcc
+  review_status: draft-source-list
+  title: PostgreSQL Documentation — Concurrency Control
+  author: PostgreSQL Global Development Group
+  year: 2026
+  type: official-documentation
+  url: https://www.postgresql.org/docs/current/mvcc.html
+- id: lamport-time
+  citation_key: lamport-time
+  review_status: draft-source-list
+  title: Time, Clocks, and the Ordering of Events in a Distributed System
+  author: Leslie Lamport
+  year: 1978
+  type: research-paper
+  url: https://lamport.azurewebsites.net/pubs/time-clocks.pdf
+- id: rfc9562
+  citation_key: rfc9562
+  review_status: draft-source-list
+  title: RFC 9562 — Universally Unique IDentifiers (UUIDs)
+  author: IETF
+  year: 2024
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9562.html
+- id: raft-paper
+  citation_key: raft-paper
+  review_status: draft-source-list
+  title: In Search of an Understandable Consensus Algorithm
+  author: Diego Ongaro and John Ousterhout
+  year: 2014
+  type: research-paper
+  url: https://raft.github.io/raft.pdf
+- id: paxos-made-simple
+  citation_key: paxos-made-simple
+  review_status: draft-source-list
+  title: Paxos Made Simple
+  author: Leslie Lamport
+  year: 2001
+  type: research-paper
+  url: https://lamport.azurewebsites.net/pubs/paxos-simple.pdf
+- id: chubby-paper
+  citation_key: chubby-paper
+  review_status: draft-source-list
+  title: The Chubby Lock Service for Loosely-Coupled Distributed Systems
+  author: Mike Burrows
+  year: 2006
+  type: research-paper
+  url: https://research.google/pubs/the-chubby-lock-service-for-loosely-coupled-distributed-systems/
+- id: dynamo-paper
+  citation_key: dynamo-paper
+  review_status: draft-source-list
+  title: 'Dynamo: Amazon''s Highly Available Key-value Store'
+  author: Giuseppe DeCandia et al.
+  year: 2007
+  type: research-paper
+  url: https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf
+- id: consistent-hashing
+  citation_key: consistent-hashing
+  review_status: draft-source-list
+  title: Consistent Hashing and Random Trees
+  author: David Karger et al.
+  year: 1997
+  type: research-paper
+  url: https://doi.org/10.1145/258533.258660
+- id: bigtable-paper
+  citation_key: bigtable-paper
+  review_status: draft-source-list
+  title: 'Bigtable: A Distributed Storage System for Structured Data'
+  author: Fay Chang et al.
+  year: 2006
+  type: research-paper
+  url: https://research.google/pubs/bigtable-a-distributed-storage-system-for-structured-data/
+- id: rfc1034
+  citation_key: rfc1034
+  review_status: draft-source-list
+  title: 'RFC 1034 — Domain Names: Concepts and Facilities'
+  author: IETF
+  year: 1987
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc1034.html
+- id: rfc1035
+  citation_key: rfc1035
+  review_status: draft-source-list
+  title: 'RFC 1035 — Domain Names: Implementation and Specification'
+  author: IETF
+  year: 1987
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc1035.html
+- id: rfc9110
+  citation_key: rfc9110
+  review_status: draft-source-list
+  title: RFC 9110 — HTTP Semantics
+  author: IETF
+  year: 2022
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9110.html
+- id: rfc9111
+  citation_key: rfc9111
+  review_status: draft-source-list
+  title: RFC 9111 — HTTP Caching
+  author: IETF
+  year: 2022
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9111.html
+- id: rfc9112
+  citation_key: rfc9112
+  review_status: draft-source-list
+  title: RFC 9112 — HTTP/1.1
+  author: IETF
+  year: 2022
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9112.html
+- id: rfc9113
+  citation_key: rfc9113
+  review_status: draft-source-list
+  title: RFC 9113 — HTTP/2
+  author: IETF
+  year: 2022
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9113.html
+- id: rfc9000
+  citation_key: rfc9000
+  review_status: draft-source-list
+  title: 'RFC 9000 — QUIC: A UDP-Based Multiplexed and Secure Transport'
+  author: IETF
+  year: 2021
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9000.html
+- id: rfc9114
+  citation_key: rfc9114
+  review_status: draft-source-list
+  title: RFC 9114 — HTTP/3
+  author: IETF
+  year: 2022
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9114.html
+- id: rfc9204
+  citation_key: rfc9204
+  review_status: draft-source-list
+  title: 'RFC 9204 — QPACK: Field Compression for HTTP/3'
+  author: IETF
+  year: 2022
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9204.html
+- id: grpc-core
+  citation_key: grpc-core
+  review_status: draft-source-list
+  title: gRPC Core Concepts
+  author: gRPC Authors
+  year: 2026
+  type: official-documentation
+  url: https://grpc.io/docs/what-is-grpc/core-concepts/
+- id: graphql-spec
+  citation_key: graphql-spec
+  review_status: draft-source-list
+  title: GraphQL Specification
+  author: GraphQL Foundation
+  year: 2025
+  type: standard
+  url: https://spec.graphql.org/
+- id: rfc6455
+  citation_key: rfc6455
+  review_status: draft-source-list
+  title: RFC 6455 — The WebSocket Protocol
+  author: IETF
+  year: 2011
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc6455.html
+- id: html-sse
+  citation_key: html-sse
+  review_status: draft-source-list
+  title: HTML Living Standard — Server-sent events
+  author: WHATWG
+  year: 2026
+  type: standard
+  url: https://html.spec.whatwg.org/multipage/server-sent-events.html
+- id: kubernetes-concepts
+  citation_key: kubernetes-concepts
+  review_status: draft-source-list
+  title: Kubernetes Concepts
+  author: Kubernetes Authors
+  year: 2026
+  type: official-documentation
+  url: https://kubernetes.io/docs/concepts/
+- id: istio-architecture
+  citation_key: istio-architecture
+  review_status: draft-source-list
+  title: Istio Architecture
+  author: Istio Authors
+  year: 2026
+  type: official-documentation
+  url: https://istio.io/latest/docs/ops/deployment/architecture/
+- id: postgres-indexes
+  citation_key: postgres-indexes
+  review_status: draft-source-list
+  title: PostgreSQL Documentation — Indexes
+  author: PostgreSQL Global Development Group
+  year: 2026
+  type: official-documentation
+  url: https://www.postgresql.org/docs/current/indexes.html
+- id: spanner-paper
+  citation_key: spanner-paper
+  review_status: draft-source-list
+  title: 'Spanner: Google''s Globally-Distributed Database'
+  author: James C. Corbett et al.
+  year: 2012
+  type: research-paper
+  url: https://research.google/pubs/spanner-googles-globally-distributed-database/
+- id: mongodb-data-model
+  citation_key: mongodb-data-model
+  review_status: draft-source-list
+  title: MongoDB Data Modeling Introduction
+  author: MongoDB
+  year: 2026
+  type: official-documentation
+  url: https://www.mongodb.com/docs/manual/data-modeling/
+- id: neo4j-graph-modeling
+  citation_key: neo4j-graph-modeling
+  review_status: draft-source-list
+  title: Graph Data Modeling Guidelines
+  author: Neo4j
+  year: 2026
+  type: official-documentation
+  url: https://neo4j.com/docs/getting-started/data-modeling/
+- id: s3-consistency
+  citation_key: s3-consistency
+  review_status: draft-source-list
+  title: Amazon S3 Data Consistency Model
+  author: Amazon Web Services
+  year: 2026
+  type: official-documentation
+  url: https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html#ConsistencyModel
+- id: lucene-docs
+  citation_key: lucene-docs
+  review_status: draft-source-list
+  title: Apache Lucene Documentation
+  author: Apache Software Foundation
+  year: 2026
+  type: official-documentation
+  url: https://lucene.apache.org/core/
+- id: hnsw-paper
+  citation_key: hnsw-paper
+  review_status: draft-source-list
+  title: Efficient and Robust Approximate Nearest Neighbor Search Using Hierarchical Navigable Small World Graphs
+  author: Yu. A. Malkov and D. A. Yashunin
+  year: 2018
+  type: research-paper
+  url: https://arxiv.org/abs/1603.09320
+- id: redis-cache
+  citation_key: redis-cache
+  review_status: draft-source-list
+  title: Redis Documentation — Client-side caching and cache patterns
+  author: Redis
+  year: 2026
+  type: official-documentation
+  url: https://redis.io/docs/latest/develop/use/client-side-caching/
+- id: memcached-docs
+  citation_key: memcached-docs
+  review_status: draft-source-list
+  title: Memcached Documentation
+  author: Memcached Authors
+  year: 2026
+  type: official-documentation
+  url: https://docs.memcached.org/
+- id: kafka-docs
+  citation_key: kafka-docs
+  review_status: draft-source-list
+  title: Apache Kafka Documentation
+  author: Apache Software Foundation
+  year: 2026
+  type: official-documentation
+  url: https://kafka.apache.org/documentation/
+- id: rabbitmq-reliability
+  citation_key: rabbitmq-reliability
+  review_status: draft-source-list
+  title: RabbitMQ Reliability Guide
+  author: Broadcom
+  year: 2026
+  type: official-documentation
+  url: https://www.rabbitmq.com/docs/reliability
+- id: saga-paper
+  citation_key: saga-paper
+  review_status: draft-source-list
+  title: Sagas
+  author: Hector Garcia-Molina and Kenneth Salem
+  year: 1987
+  type: research-paper
+  url: https://doi.org/10.1145/38713.38742
+- id: debezium-docs
+  citation_key: debezium-docs
+  review_status: draft-source-list
+  title: Debezium Documentation
+  author: Debezium Authors
+  year: 2026
+  type: official-documentation
+  url: https://debezium.io/documentation/reference/stable/
+- id: kafka-transactions
+  citation_key: kafka-transactions
+  review_status: draft-source-list
+  title: 'Apache Kafka — Design: Transactions'
+  author: Apache Software Foundation
+  year: 2026
+  type: official-documentation
+  url: https://kafka.apache.org/documentation/#semantics
+- id: aws-timeouts-retries
+  citation_key: aws-timeouts-retries
+  review_status: draft-source-list
+  title: Timeouts, retries, and backoff with jitter
+  author: Amazon Web Services
+  year: 2026
+  type: official-engineering-article
+  url: https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/
+- id: google-sre-overload
+  citation_key: google-sre-overload
+  review_status: draft-source-list
+  title: Site Reliability Engineering — Handling Overload
+  author: Google
+  year: 2016
+  type: official-book
+  url: https://sre.google/sre-book/handling-overload/
+- id: otel-spec
+  citation_key: otel-spec
+  review_status: draft-source-list
+  title: OpenTelemetry Specification
+  author: OpenTelemetry Authors
+  year: 2026
+  type: standard
+  url: https://opentelemetry.io/docs/specs/otel/
+- id: w3c-trace-context
+  citation_key: w3c-trace-context
+  review_status: draft-source-list
+  title: Trace Context
+  author: W3C
+  year: 2021
+  type: standard
+  url: https://www.w3.org/TR/trace-context/
+- id: nist-zero-trust
+  citation_key: nist-zero-trust
+  review_status: draft-source-list
+  title: NIST SP 800-207 — Zero Trust Architecture
+  author: NIST
+  year: 2020
+  type: government-standard
+  url: https://csrc.nist.gov/pubs/sp/800/207/final
+- id: rfc9700
+  citation_key: rfc9700
+  review_status: draft-source-list
+  title: RFC 9700 — Best Current Practice for OAuth 2.0 Security
+  author: IETF
+  year: 2025
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc9700.html
+- id: webauthn3
+  citation_key: webauthn3
+  review_status: draft-source-list
+  title: 'Web Authentication: An API for accessing Public Key Credentials — Level 3 (Candidate Recommendation Snapshot)'
+  author: W3C
+  year: 2026
+  type: candidate-recommendation
+  url: https://www.w3.org/TR/webauthn-3/
+- id: slsa12
+  citation_key: slsa12
+  review_status: draft-source-list
+  title: SLSA Specification v1.2
+  author: OpenSSF
+  year: 2025
+  type: standard
+  url: https://slsa.dev/spec/v1.2/
+- id: nist-contingency
+  citation_key: nist-contingency
+  review_status: draft-source-list
+  title: NIST SP 800-34 Rev. 1 — Contingency Planning Guide for Federal Information Systems
+  author: NIST
+  year: 2010
+  type: government-standard
+  url: https://csrc.nist.gov/pubs/sp/800/34/r1/final
+- id: opengitops
+  citation_key: opengitops
+  review_status: draft-source-list
+  title: OpenGitOps Principles
+  author: OpenGitOps
+  year: 2026
+  type: official-specification
+  url: https://opengitops.dev/
+- id: finops-framework
+  citation_key: finops-framework
+  review_status: draft-source-list
+  title: FinOps Framework
+  author: FinOps Foundation
+  year: 2026
+  type: official-framework
+  url: https://www.finops.org/framework/
+- id: cncf-platforms
+  citation_key: cncf-platforms
+  review_status: draft-source-list
+  title: Platforms White Paper
+  author: Cloud Native Computing Foundation
+  year: 2025
+  type: official-whitepaper
+  url: https://tag-app-delivery.cncf.io/whitepapers/platforms/
+- id: rag-paper
+  citation_key: rag-paper
+  review_status: draft-source-list
+  title: Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
+  author: Patrick Lewis et al.
+  year: 2020
+  type: research-paper
+  url: https://arxiv.org/abs/2005.11401
+- id: dpr-paper
+  citation_key: dpr-paper
+  review_status: draft-source-list
+  title: Dense Passage Retrieval for Open-Domain Question Answering
+  author: Vladimir Karpukhin et al.
+  year: 2020
+  type: research-paper
+  url: https://arxiv.org/abs/2004.04906
+- id: beir-paper
+  citation_key: beir-paper
+  review_status: draft-source-list
+  title: 'BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models'
+  author: Nandan Thakur et al.
+  year: 2021
+  type: research-paper
+  url: https://arxiv.org/abs/2104.08663
+- id: vllm-paper
+  citation_key: vllm-paper
+  review_status: draft-source-list
+  title: Efficient Memory Management for Large Language Model Serving with PagedAttention
+  author: Woosuk Kwon et al.
+  year: 2023
+  type: research-paper
+  url: https://arxiv.org/abs/2309.06180
+- id: orca-paper
+  citation_key: orca-paper
+  review_status: draft-source-list
+  title: 'Orca: A Distributed Serving System for Transformer-Based Generative Models'
+  author: Gyeong-In Yu et al.
+  year: 2022
+  type: research-paper
+  url: https://www.usenix.org/conference/osdi22/presentation/yu
+- id: react-paper
+  citation_key: react-paper
+  review_status: draft-source-list
+  title: 'ReAct: Synergizing Reasoning and Acting in Language Models'
+  author: Shunyu Yao et al.
+  year: 2022
+  type: research-paper
+  url: https://arxiv.org/abs/2210.03629
+- id: toolformer-paper
+  citation_key: toolformer-paper
+  review_status: draft-source-list
+  title: 'Toolformer: Language Models Can Teach Themselves to Use Tools'
+  author: Timo Schick et al.
+  year: 2023
+  type: research-paper
+  url: https://arxiv.org/abs/2302.04761
+- id: nist-ai-rmf
+  citation_key: nist-ai-rmf
+  review_status: draft-source-list
+  title: Artificial Intelligence Risk Management Framework (AI RMF 1.0)
+  author: NIST
+  year: 2023
+  type: government-framework
+  url: https://www.nist.gov/itl/ai-risk-management-framework
+- id: nist-genai-profile
+  citation_key: nist-genai-profile
+  review_status: draft-source-list
+  title: 'Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile'
+  author: NIST
+  year: 2024
+  type: government-framework
+  url: https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence
+- id: owasp-llm
+  citation_key: owasp-llm
+  review_status: draft-source-list
+  title: OWASP Top 10 for LLM Applications
+  author: OWASP Foundation
+  year: 2025
+  type: security-guidance
+  url: https://genai.owasp.org/llm-top-10/
+- id: ragas-paper
+  citation_key: ragas-paper
+  review_status: draft-source-list
+  title: 'RAGAS: Automated Evaluation of Retrieval Augmented Generation'
+  author: Shahul Es et al.
+  year: 2023
+  type: research-paper
+  url: https://arxiv.org/abs/2309.15217
+- id: rfc3986
+  citation_key: rfc3986
+  review_status: draft-source-list
+  title: 'RFC 3986 — Uniform Resource Identifier (URI): Generic Syntax'
+  author: IETF
+  year: 2005
+  type: standard
+  url: https://www.rfc-editor.org/rfc/rfc3986.html
+- id: stripe-idempotency
+  citation_key: stripe-idempotency
+  review_status: draft-source-list
+  title: Stripe API — Idempotent requests
+  author: Stripe
+  year: 2026
+  type: official-documentation
+  url: https://docs.stripe.com/api/idempotent_requests
+- id: azure-multitenant
+  citation_key: azure-multitenant
+  review_status: draft-source-list
+  title: Azure Architecture Center — Multitenant solutions
+  author: Microsoft
+  year: 2026
+  type: official-architecture-guidance
+  url: https://learn.microsoft.com/azure/architecture/guide/multitenant/overview

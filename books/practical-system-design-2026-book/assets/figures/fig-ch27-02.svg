@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>SLO 경보 조사 경로</title>
+  <desc>SLO Alert에서 Metric Exemplar로 들어가 Trace, Span, Structured Log를 따라가며 원인을 좁히고, Deployment 변경과 시점을 상관하는 조사 경로를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-amb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#D39A2C"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="heading">
+    <text x="70" y="62" font-size="34" font-weight="700" fill="#142131">SLO 경보에서 원인까지 조사 경로</text>
+    <text x="70" y="98" font-size="24" fill="#7A8791">exemplar·trace·span·log를 따라가고 배포 변경과 상관한다</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <line x1="1130" y1="90" x2="1200" y2="90" stroke="#283541" stroke-width="2.5"/>
+    <text x="1210" y="98">조사 이동</text>
+    <line x1="1340" y1="90" x2="1410" y2="90" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1420" y="98">상관 단서</text>
+  </g>
+
+  <g id="investigation">
+    <g id="alert"><rect x="60" y="220" width="220" height="110" rx="14" fill="#FFFFFF" stroke="#D39A2C" stroke-width="3"/><text x="170" y="285" text-anchor="middle" font-size="26" fill="#D39A2C" font-weight="700">SLO Alert</text></g>
+    <g id="exemplar"><rect x="360" y="220" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="460" y="285" text-anchor="middle" font-size="24" fill="#142131">Metric Exemplar</text></g>
+    <g id="trace"><rect x="640" y="220" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="740" y="285" text-anchor="middle" font-size="28" fill="#142131">Trace</text></g>
+    <g id="span"><rect x="920" y="220" width="200" height="110" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/><text x="1020" y="285" text-anchor="middle" font-size="28" fill="#142131">Span</text></g>
+    <g id="log"><rect x="1200" y="220" width="340" height="110" rx="14" fill="#F4F8FA" stroke="#0F8790" stroke-width="2.5"/><text x="1370" y="285" text-anchor="middle" font-size="28" fill="#142131">Structured Log</text></g>
+  </g>
+
+  <g id="edges" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M280 275 L360 275" marker-end="url(#arrow)"/>
+    <path d="M560 275 L640 275" marker-end="url(#arrow)"/>
+    <path d="M840 275 L920 275" marker-end="url(#arrow)"/>
+    <path d="M1120 275 L1200 275" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="22" fill="#283541" text-anchor="middle">
+    <text x="320" y="264">exemplar</text>
+    <text x="600" y="264">trace 펼침</text>
+    <text x="880" y="264">span 상세</text>
+    <text x="1160" y="264">로그 점프</text>
+  </g>
+
+  <g id="deployment">
+    <rect x="900" y="560" width="320" height="110" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="1060" y="625" text-anchor="middle" font-size="30" fill="#142131">Deployment</text>
+    <text x="1060" y="652" text-anchor="middle" font-size="22" fill="#7A8791">최근 배포·변경 이력</text>
+    <path d="M1060 560 L1060 400 L1020 400 L1020 330" stroke="#D39A2C" stroke-width="2.5" stroke-dasharray="10 8" fill="none" marker-end="url(#arrow-amb)"/>
+    <text x="1080" y="470" font-size="22" fill="#D39A2C">변경 시점 상관</text>
+  </g>
+
+  <text x="70" y="820" font-size="22" fill="#7A8791">경보의 메트릭 exemplar에서 trace로, trace의 span에서 structured log로 이동하며, 동시에 Deployment 변경 시점과 겹치는지 확인한다.</text>
+</svg>

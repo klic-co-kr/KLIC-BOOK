@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'Noto Sans KR','NanumSquare',sans-serif">
+  <title>멀티테넌트 플랫폼의 여섯 평면과 테넌트 경계</title>
+  <desc>tenant control · knowledge · conversation · inference · action · evaluation 여섯 평면이 테넌트 경계 안에서 어떻게 배치되는지 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#283541"/></marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0F8790"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+
+  <g id="caption" font-size="24" fill="#7A8791">
+    <text x="70" y="60">control · knowledge · conversation · inference · action · evaluation 평면과 테넌트 경계</text>
+  </g>
+
+  <g id="legend" font-size="22" fill="#283541">
+    <rect x="1080" y="35" width="465" height="44" rx="8" fill="#F4F8FA" stroke="#D8E1E2" stroke-width="2"/>
+    <line x1="1100" y1="57" x2="1160" y2="57" stroke="#283541" stroke-width="2.5"/>
+    <text x="1170" y="65">데이터 흐름</text>
+    <line x1="1340" y1="57" x2="1400" y2="57" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8"/>
+    <text x="1410" y="65">제어</text>
+  </g>
+
+  <g id="tenant-boundary">
+    <rect x="100" y="115" width="1400" height="735" rx="22" fill="none" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="14 8"/>
+    <rect x="130" y="100" width="280" height="42" rx="8" fill="#FFFFFF" stroke="#0F8790" stroke-width="2"/>
+    <text x="270" y="128" text-anchor="middle" font-size="24" fill="#0F8790">Tenant Boundary</text>
+  </g>
+
+  <g id="control-plane">
+    <rect x="600" y="180" width="400" height="120" rx="14" fill="#EFF5F4" stroke="#0F8790" stroke-width="2.5"/>
+    <text x="800" y="250" text-anchor="middle" font-size="30" fill="#142131">Tenant Control Plane</text>
+  </g>
+
+  <g id="data-planes">
+    <g id="knowledge">
+      <rect x="170" y="420" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="280" y="495" text-anchor="middle" font-size="28" fill="#142131"><tspan x="280" dy="0">Knowledge</tspan><tspan x="280" dy="30">Plane</tspan></text>
+    </g>
+    <g id="conversation">
+      <rect x="510" y="420" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="620" y="495" text-anchor="middle" font-size="28" fill="#142131"><tspan x="620" dy="0">Conversation</tspan><tspan x="620" dy="30">Plane</tspan></text>
+    </g>
+    <g id="inference">
+      <rect x="850" y="420" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="960" y="495" text-anchor="middle" font-size="28" fill="#142131"><tspan x="960" dy="0">Inference</tspan><tspan x="960" dy="30">Plane</tspan></text>
+    </g>
+    <g id="action">
+      <rect x="1190" y="420" width="220" height="130" rx="14" fill="#F4F8FA" stroke="#142131" stroke-width="2.5"/>
+      <text x="1300" y="495" text-anchor="middle" font-size="28" fill="#142131"><tspan x="1300" dy="0">Action</tspan><tspan x="1300" dy="30">Plane</tspan></text>
+    </g>
+  </g>
+
+  <g id="evaluation-plane">
+    <rect x="550" y="700" width="500" height="120" rx="14" fill="#FFFFFF" stroke="#142131" stroke-width="2.5"/>
+    <text x="800" y="770" text-anchor="middle" font-size="30" fill="#142131">Evaluation Plane</text>
+  </g>
+
+  <g id="edges-data" stroke="#283541" stroke-width="2.5" fill="none">
+    <path d="M390 485 L510 485" marker-end="url(#arrow)"/>
+    <path d="M730 485 L850 485" marker-end="url(#arrow)"/>
+    <path d="M1070 485 L1190 485" marker-end="url(#arrow)"/>
+    <path d="M280 550 C 280 640, 560 660, 600 700" marker-end="url(#arrow)"/>
+    <path d="M620 550 C 620 620, 700 640, 720 700" marker-end="url(#arrow)"/>
+    <path d="M960 550 C 960 620, 880 640, 860 700" marker-end="url(#arrow)"/>
+    <path d="M1300 550 C 1300 640, 1020 660, 1000 700" marker-end="url(#arrow)"/>
+  </g>
+  <g id="edge-data-labels" font-size="22" fill="#283541">
+    <text x="450" y="475" text-anchor="middle">검색</text>
+    <text x="790" y="475" text-anchor="middle">컨텍스트</text>
+    <text x="1130" y="475" text-anchor="middle">응답·실행</text>
+    <text x="420" y="640">지표</text>
+  </g>
+
+  <g id="edges-control" stroke="#0F8790" stroke-width="2.5" stroke-dasharray="10 8" fill="none">
+    <path d="M800 300 L800 360 L280 360 L280 420" marker-end="url(#arrow-accent)"/>
+    <path d="M800 360 L620 360 L620 420" marker-end="url(#arrow-accent)"/>
+    <path d="M800 360 L960 360 L960 420" marker-end="url(#arrow-accent)"/>
+    <path d="M800 360 L1300 360 L1300 420" marker-end="url(#arrow-accent)"/>
+    <path d="M1000 240 L1490 240 L1490 760 L1050 760" marker-end="url(#arrow-accent)"/>
+  </g>
+  <g id="edge-control-labels" font-size="22" fill="#0F8790">
+    <text x="540" y="350" text-anchor="middle">제어</text>
+    <text x="1430" y="230" text-anchor="middle">제어</text>
+  </g>
+</svg>
