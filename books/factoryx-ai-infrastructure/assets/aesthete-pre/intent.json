@@ -1,0 +1,40 @@
+{
+  "schema": "aesthete.intent/v1",
+  "schema_version": 1,
+  "goal": "A4 Korean technical book diagrams and charts for NHN FactoryX; flat navy and teal, source-grounded labels, no gradients or decorative icons",
+  "scope": {
+    "included": [],
+    "excluded": []
+  },
+  "content_priority": [],
+  "artifact": {
+    "requested_type": "svg",
+    "effective_type": "generic",
+    "format": null,
+    "canvas": {
+      "w": 1600,
+      "h": 900
+    }
+  },
+  "audience": {
+    "description": "CTO, platform engineers, ML infrastructure engineers",
+    "frequency": null
+  },
+  "desired_action": null,
+  "source": {
+    "mode": "unspecified",
+    "must_preserve": [],
+    "must_not_assume": []
+  },
+  "claim_scope": {
+    "role": "declared_generation_context_not_evaluation",
+    "does_not_establish": [
+      "intent_correctness",
+      "intent_fulfillment",
+      "scope_coverage",
+      "priority_fulfillment",
+      "audience_comprehension",
+      "human_approval"
+    ]
+  }
+}

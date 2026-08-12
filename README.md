@@ -4,12 +4,13 @@
 
 ## 📚 책
 
-| 책 | 한줄 소개 |
-| --- | --- |
-| [포워드 디플로이드 엔지니어](books/forward-deployed-engineer/) | AI 시대에 고객 가치를 직접 전달하는 직무, FDE의 전 과정을 정리 |
-| [GitHub 협업 실무 가이드](books/github-guide/) | AI 코딩 시대, 협업 기준점을 GitHub에 두는 issue·branch·PR 실무 가이드 |
-| [실전 시스템 설계 2026](books/practical-system-design-2026-book/) | 분산·데이터·프로덕션·AI 네이티브까지, 2026년 시스템 설계 38장 종합 (System Design Primer 한국어 개정 초고) |
-| [AI 에이전트 깊이 이해하기](books/ai-agent-book-ko/) | Agent = LLM + 컨텍스트 + 도구. 10장으로 끝내는 AI 에이전트 설계·실전 (chemark 《深入理解 AI Agent》 한국어 번역판, Apache 2.0) |
+| 책 | 한줄 소개 | 완성본 |
+| --- | --- | --- |
+| [포워드 디플로이드 엔지니어](books/forward-deployed-engineer/) | AI 시대에 고객 가치를 직접 전달하는 직무, FDE의 전 과정을 정리 | [PDF 다운로드](books/forward-deployed-engineer/FDE_포워드_디플로이드_엔지니어_한국어판_최종편집본.pdf?raw=1) |
+| [GitHub 협업 실무 가이드](books/github-guide/) | AI 코딩 시대, 협업 기준점을 GitHub에 두는 issue·branch·PR 실무 가이드 | [PDF 다운로드](books/github-guide/GitHub_협업_실무_가이드.pdf?raw=1) |
+| [실전 시스템 설계 2026](books/practical-system-design-2026-book/) | 분산·데이터·프로덕션·AI 네이티브까지, 2026년 시스템 설계 38장 종합 (System Design Primer 한국어 개정 초고) | [PDF 다운로드](books/practical-system-design-2026-book/build/실전_시스템_설계_2026_practical-system-design-2026-ko.pdf?raw=1) |
+| [AI 에이전트 깊이 이해하기](books/ai-agent-book-ko/) | Agent = LLM + 컨텍스트 + 도구. 10장으로 끝내는 AI 에이전트 설계·실전 (chemark 《深入理解 AI Agent》 한국어 번역판, Apache 2.0) | [PDF 다운로드](books/ai-agent-book-ko/build/AI_에이전트_깊이_이해하기_ai-agent-book-ko.pdf?raw=1) |
+| [NHN FactoryX 실전 설계](books/factoryx-ai-infrastructure/) | GPU 데이터센터에서 AI 에이전트 실행 환경까지, 공개 근거로 설계하는 AI 인프라 실무서 | [PDF 다운로드](books/factoryx-ai-infrastructure/build/NHN_FactoryX_실전_설계_nhn-factoryx-ai-infrastructure-ko.pdf?raw=1) |
 
 ## 🎓 강의
 

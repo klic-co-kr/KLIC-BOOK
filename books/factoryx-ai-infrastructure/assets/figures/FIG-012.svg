@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="FIG-012-title FIG-012-desc">
+  <title id="FIG-012-title">도입과 변경 통제의 증거 사슬</title>
+  <desc id="FIG-012-desc">문제 선택, 기준선과 위험, Issue와 ADR, PR과 CI 평가, 제한 배포 승인, trace와 rollback, 운영 인수가 연결된 도입 흐름.</desc>
+  <defs>
+    <style>.paper { fill: #f7f5ef; }
+.band { fill: #10324a; }
+.surface { fill: #dce8e8; stroke: #10324a; stroke-width: 3; }
+.surface-teal { fill: #d7eceb; stroke: #087e8b; stroke-width: 3; }
+.surface-amber { fill: #f4e5c9; stroke: #d18b24; stroke-width: 3; }
+.line { stroke: #7f9ba0; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+.rule { stroke: #7f9ba0; stroke-width: 2; }
+.title { font-family: 'Noto Serif CJK KR', serif; font-size: 38px; font-weight: 700; fill: #f7f5ef; }
+.subtitle { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 22px; fill: #18313f; }
+.body { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; fill: #18313f; }
+.small { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 17px; fill: #18313f; }
+.value { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 24px; font-weight: 700; fill: #10324a; }
+.node-label { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; font-weight: 700; fill: #18313f; }
+.bar-teal { fill: #087e8b; }
+.bar-navy { fill: #10324a; }
+.bar-amber { fill: #d18b24; }</style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><polygon points="0,0 12,6 0,12" fill="#7f9ba0"/></marker>
+  </defs>
+  <rect class="paper" width="1600" height="900"/>
+  <rect class="band" width="1600" height="112"/>
+  <text x="90.0" y="68.0" class="title" text-anchor="start"><tspan x="90.0" dy="0">도입과 변경 통제의 증거 사슬</tspan></text>
+  <text x="90.0" y="154.0" class="subtitle" text-anchor="start"><tspan x="90.0" dy="0">작은 범위의 검증을 누적해 제한 배포와 운영 인수로 확장한다.</tspan></text>
+  <line class="rule" x1="90" y1="182" x2="1510" y2="182"/>
+  <line class="line" x1="275.0" y1="342.5" x2="320.0" y2="342.5"/>
+  <line class="line" x1="520.0" y1="342.5" x2="565.0" y2="342.5"/>
+  <line class="line" x1="765.0" y1="342.5" x2="810.0" y2="342.5"/>
+  <line class="line" x1="1010.0" y1="342.5" x2="1055.0" y2="342.5"/>
+  <line class="line" x1="1255.0" y1="342.5" x2="1300.0" y2="342.5"/>
+  <rect class="surface" x="75.0" y="285.0" width="200.0" height="115.0" rx="14"/>
+  <text x="175.0" y="327.5" class="node-label" text-anchor="middle"><tspan x="175.0" dy="0">문제 선택</tspan><tspan x="175.0" dy="30">업무 가설</tspan></text>
+  <rect class="surface-teal" x="320.0" y="285.0" width="200.0" height="115.0" rx="14"/>
+  <text x="420.0" y="327.5" class="node-label" text-anchor="middle"><tspan x="420.0" dy="0">기준선·위험</tspan><tspan x="420.0" dy="30">측정 기준</tspan></text>
+  <rect class="surface-amber" x="565.0" y="285.0" width="200.0" height="115.0" rx="14"/>
+  <text x="665.0" y="327.5" class="node-label" text-anchor="middle"><tspan x="665.0" dy="0">Issue·ADR</tspan><tspan x="665.0" dy="30">결정 기록</tspan></text>
+  <rect class="surface" x="810.0" y="285.0" width="200.0" height="115.0" rx="14"/>
+  <text x="910.0" y="327.5" class="node-label" text-anchor="middle"><tspan x="910.0" dy="0">PR·CI·평가</tspan><tspan x="910.0" dy="30">증거 생성</tspan></text>
+  <rect class="surface-teal" x="1055.0" y="285.0" width="200.0" height="115.0" rx="14"/>
+  <text x="1155.0" y="327.5" class="node-label" text-anchor="middle"><tspan x="1155.0" dy="0">제한 배포·승인</tspan><tspan x="1155.0" dy="30">확장 판단</tspan></text>
+  <rect class="surface-amber" x="1300.0" y="285.0" width="200.0" height="115.0" rx="14"/>
+  <text x="1400.0" y="327.5" class="node-label" text-anchor="middle"><tspan x="1400.0" dy="0">trace·rollback</tspan><tspan x="1400.0" dy="30">운영 인수</tspan></text>
+  <line class="rule" x1="90" y1="790" x2="1510" y2="790"/>
+  <text x="90.0" y="830.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">근거: 원자료 | SRC-030 · SRC-034 · SRC-035 · SRC-036 · SRC-037</tspan></text>
+  <text x="90.0" y="862.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">FIG-012 | 문제 선택, 기준선과 위험, Issue와 ADR, PR과 CI 평가, 제한 배포 승인, trace와 rollback, 운영 인수가 연결된 도입 흐름.</tspan></text>
+</svg>

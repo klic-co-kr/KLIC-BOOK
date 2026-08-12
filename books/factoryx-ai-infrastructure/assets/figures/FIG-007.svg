@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="FIG-007-title FIG-007-desc">
+  <title id="FIG-007-title">GPU 요청에서 회수까지의 제어면</title>
+  <desc id="FIG-007-desc">GPU 요청이 큐·쿼터, 장치 할당, 학습 또는 추론 실행, 회수로 이어지는 제어면 도식.</desc>
+  <defs>
+    <style>.paper { fill: #f7f5ef; }
+.band { fill: #10324a; }
+.surface { fill: #dce8e8; stroke: #10324a; stroke-width: 3; }
+.surface-teal { fill: #d7eceb; stroke: #087e8b; stroke-width: 3; }
+.surface-amber { fill: #f4e5c9; stroke: #d18b24; stroke-width: 3; }
+.line { stroke: #7f9ba0; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+.rule { stroke: #7f9ba0; stroke-width: 2; }
+.title { font-family: 'Noto Serif CJK KR', serif; font-size: 38px; font-weight: 700; fill: #f7f5ef; }
+.subtitle { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 22px; fill: #18313f; }
+.body { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; fill: #18313f; }
+.small { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 17px; fill: #18313f; }
+.value { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 24px; font-weight: 700; fill: #10324a; }
+.node-label { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; font-weight: 700; fill: #18313f; }
+.bar-teal { fill: #087e8b; }
+.bar-navy { fill: #10324a; }
+.bar-amber { fill: #d18b24; }</style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><polygon points="0,0 12,6 0,12" fill="#7f9ba0"/></marker>
+  </defs>
+  <rect class="paper" width="1600" height="900"/>
+  <rect class="band" width="1600" height="112"/>
+  <text x="90.0" y="68.0" class="title" text-anchor="start"><tspan x="90.0" dy="0">GPU 요청에서 회수까지의 제어면</tspan></text>
+  <text x="90.0" y="154.0" class="subtitle" text-anchor="start"><tspan x="90.0" dy="0">학습·추론 분리 공개 범위와 업계 구현 대안을 서로 다르게 표시한다.</tspan></text>
+  <line class="rule" x1="90" y1="182" x2="1510" y2="182"/>
+  <line class="line" x1="340.0" y1="370.0" x2="420.0" y2="370.0"/>
+  <line class="line" x1="660.0" y1="370.0" x2="740.0" y2="370.0"/>
+  <line class="line" x1="980.0" y1="370.0" x2="1060.0" y2="370.0"/>
+  <line class="line" x1="1064.8" y1="430.0" x2="815.2" y2="560.0"/>
+  <rect class="surface" x="100.0" y="310.0" width="240.0" height="120.0" rx="14"/>
+  <text x="220.0" y="355.0" class="node-label" text-anchor="middle"><tspan x="220.0" dy="0">GPU 요청</tspan><tspan x="220.0" dy="30">업무 우선순위</tspan></text>
+  <rect class="surface-teal" x="420.0" y="310.0" width="240.0" height="120.0" rx="14"/>
+  <text x="540.0" y="355.0" class="node-label" text-anchor="middle"><tspan x="540.0" dy="0">큐·쿼터</tspan><tspan x="540.0" dy="30">업계 설계 대안</tspan></text>
+  <rect class="surface-amber" x="740.0" y="310.0" width="240.0" height="120.0" rx="14"/>
+  <text x="860.0" y="355.0" class="node-label" text-anchor="middle"><tspan x="860.0" dy="0">장치 할당</tspan><tspan x="860.0" dy="30">업계 설계 대안</tspan></text>
+  <rect class="surface" x="1060.0" y="310.0" width="240.0" height="120.0" rx="14"/>
+  <text x="1180.0" y="355.0" class="node-label" text-anchor="middle"><tspan x="1180.0" dy="0">학습·추론 실행</tspan><tspan x="1180.0" dy="30">공개된 분리</tspan></text>
+  <rect class="surface-teal" x="580.0" y="560.0" width="240.0" height="120.0" rx="14"/>
+  <text x="700.0" y="605.0" class="node-label" text-anchor="middle"><tspan x="700.0" dy="0">회수·재배치</tspan><tspan x="700.0" dy="30">운영 계약</tspan></text>
+  <line class="rule" x1="90" y1="790" x2="1510" y2="790"/>
+  <text x="90.0" y="830.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">근거: 공식 발표 | SRC-003 · SRC-023 · SRC-024 · SRC-026 · SRC-027</tspan></text>
+  <text x="90.0" y="862.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">FIG-007 | GPU 요청이 큐·쿼터, 장치 할당, 학습 또는 추론 실행, 회수로 이어지는 제어면 도식.</tspan></text>
+</svg>

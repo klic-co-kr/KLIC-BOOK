@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="CHT-006-title CHT-006-desc">
+  <title id="CHT-006-title">DGX B200 전력과 PSU 장애 단계</title>
+  <desc id="CHT-006-desc">DGX B200 최대 시스템 전력 14.3 kW와 PSU 상실 단계 1부터 4까지를 표시한 일반 참조 차트.</desc>
+  <defs>
+    <style>.paper { fill: #f7f5ef; }
+.band { fill: #10324a; }
+.surface { fill: #dce8e8; stroke: #10324a; stroke-width: 3; }
+.surface-teal { fill: #d7eceb; stroke: #087e8b; stroke-width: 3; }
+.surface-amber { fill: #f4e5c9; stroke: #d18b24; stroke-width: 3; }
+.line { stroke: #7f9ba0; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+.rule { stroke: #7f9ba0; stroke-width: 2; }
+.title { font-family: 'Noto Serif CJK KR', serif; font-size: 38px; font-weight: 700; fill: #f7f5ef; }
+.subtitle { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 22px; fill: #18313f; }
+.body { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; fill: #18313f; }
+.small { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 17px; fill: #18313f; }
+.value { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 24px; font-weight: 700; fill: #10324a; }
+.node-label { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; font-weight: 700; fill: #18313f; }
+.bar-teal { fill: #087e8b; }
+.bar-navy { fill: #10324a; }
+.bar-amber { fill: #d18b24; }</style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><polygon points="0,0 12,6 0,12" fill="#7f9ba0"/></marker>
+  </defs>
+  <rect class="paper" width="1600" height="900"/>
+  <rect class="band" width="1600" height="112"/>
+  <text x="90.0" y="68.0" class="title" text-anchor="start"><tspan x="90.0" dy="0">DGX B200 전력과 PSU 장애 단계</tspan></text>
+  <text x="90.0" y="154.0" class="subtitle" text-anchor="start"><tspan x="90.0" dy="0">일반 참조 시스템의 최대 전력과 PSU 상실 단계는 FactoryX 운영값이 아니다.</tspan></text>
+  <line class="rule" x1="90" y1="182" x2="1510" y2="182"/>
+  <line class="rule" x1="140.0" y1="675.0" x2="1500.0" y2="675.0"/>
+  <text x="140.0" y="255.0" class="body" text-anchor="start"><tspan x="140.0" dy="0">단위: 일반 참조값</tspan></text>
+  <rect data-panel="power" class="bar-teal" x="199.8" y="300.0" width="152.3" height="375.0" rx="8"/>
+  <text x="276.0" y="284.0" class="value" text-anchor="middle"><tspan x="276.0" dy="0">14.3</tspan></text>
+  <text x="276.0" y="714.0" class="small" text-anchor="middle"><tspan x="276.0" dy="0">최대 시스템</tspan><tspan x="276.0" dy="30">전력 kW</tspan></text>
+  <rect data-panel="psu-loss" class="bar-navy" x="471.8" y="648.8" width="152.3" height="26.2" rx="8"/>
+  <text x="548.0" y="632.8" class="value" text-anchor="middle"><tspan x="548.0" dy="0">1</tspan></text>
+  <text x="548.0" y="714.0" class="small" text-anchor="middle"><tspan x="548.0" dy="0">PSU 상실</tspan><tspan x="548.0" dy="30">단계 1</tspan></text>
+  <rect data-panel="psu-loss" class="bar-amber" x="743.8" y="622.6" width="152.3" height="52.4" rx="8"/>
+  <text x="820.0" y="606.6" class="value" text-anchor="middle"><tspan x="820.0" dy="0">2</tspan></text>
+  <text x="820.0" y="714.0" class="small" text-anchor="middle"><tspan x="820.0" dy="0">PSU 상실</tspan><tspan x="820.0" dy="30">단계 2</tspan></text>
+  <rect data-panel="psu-loss" class="bar-teal" x="1015.8" y="596.3" width="152.3" height="78.7" rx="8"/>
+  <text x="1092.0" y="580.3" class="value" text-anchor="middle"><tspan x="1092.0" dy="0">3</tspan></text>
+  <text x="1092.0" y="714.0" class="small" text-anchor="middle"><tspan x="1092.0" dy="0">PSU 상실</tspan><tspan x="1092.0" dy="30">단계 3</tspan></text>
+  <rect data-panel="psu-loss" class="bar-navy" x="1287.8" y="570.1" width="152.3" height="104.9" rx="8"/>
+  <text x="1364.0" y="554.1" class="value" text-anchor="middle"><tspan x="1364.0" dy="0">4</tspan></text>
+  <text x="1364.0" y="714.0" class="small" text-anchor="middle"><tspan x="1364.0" dy="0">PSU 상실</tspan><tspan x="1364.0" dy="30">단계 4</tspan></text>
+  <line class="rule" x1="90" y1="770" x2="1510" y2="770"/>
+  <text x="90.0" y="812.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">증거 표시: 원자료</tspan></text>
+  <text x="90.0" y="844.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">근거: 원자료 | SRC-014</tspan></text>
+  <text x="90.0" y="876.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">CHT-006 | DGX B200 최대 시스템 전력 14.3 kW와 PSU 상실 단계 1부터 4까지를 표시한 일반 참조 차트.</tspan></text>
+</svg>

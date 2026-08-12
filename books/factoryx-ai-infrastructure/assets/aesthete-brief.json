@@ -1,0 +1,6 @@
+{
+  "artifact_type": "svg",
+  "brief": "A4 Korean technical book diagrams and charts for NHN FactoryX; flat navy and teal, source-grounded labels, no gradients or decorative icons",
+  "canvas": {"w": 1600, "h": 900},
+  "audience": "CTO, platform engineers, ML infrastructure engineers"
+}

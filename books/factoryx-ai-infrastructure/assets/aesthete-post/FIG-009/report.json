@@ -1,0 +1,1720 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "overallScore": 0.842,
+    "hardIntegrityScore": 1,
+    "measuredAestheticScore": 0.842,
+    "coverageScore": 1,
+    "totalWeightedViolation": 46.25,
+    "passing": [
+      "boundary",
+      "collision",
+      "fluency",
+      "harmony",
+      "hierarchy",
+      "whitespace"
+    ],
+    "failing": [
+      "balance",
+      "proximity",
+      "similarity"
+    ]
+  },
+  "skills": {
+    "collision": {
+      "score": 1,
+      "coverage": "measured",
+      "metrics": {
+        "count": 0
+      },
+      "effect": "요소 겹침 제거로 명확한 figure-ground 분리를 복원 → saccadic eye movement 안정화. 가독성의 최상위 전제(P0).",
+      "violations": []
+    },
+    "boundary": {
+      "score": 1,
+      "coverage": "measured",
+      "metrics": {
+        "overflowCount": 0,
+        "totalOverflowPx": 0
+      },
+      "effect": "캔버스 내 완결 배치로 게슈탈트 폐쇄성(closure) 만족 → 잘림으로 인한 인지 단절·불안 방지.",
+      "violations": []
+    },
+    "proximity": {
+      "score": 0,
+      "coverage": "measured",
+      "metrics": {
+        "fragmentedCount": 82,
+        "falseAdjacencyCount": 9,
+        "meanGroupP": 0.036
+      },
+      "effect": "근접 요소를 단일 지각 단위로 군집화(Wertheimer, 1923) → 불필요 saccade 감소·처리 유창성(Reber)↑ → 인지 부하·탐색 마찰 감소.",
+      "violations": [
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-1",
+            "line-6"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.178,
+          "threshold": 0,
+          "message": "proximity: /nodes/rect-1 ↔ /nodes/line-6 too close (d 126 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "rect-1",
+            "b": "line-6",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "line-7"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.084,
+          "threshold": 0,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/line-7 too close (d 181 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "text-4",
+            "b": "line-7",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-12",
+            "text-13"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.762,
+          "threshold": 0,
+          "message": "proximity: /nodes/rect-12 ↔ /nodes/text-13 too close (d 20 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "rect-12",
+            "b": "text-13",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-16",
+            "text-17"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.762,
+          "threshold": 0,
+          "message": "proximity: /nodes/rect-16 ↔ /nodes/text-17 too close (d 20 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "rect-16",
+            "b": "text-17",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-20",
+            "text-21"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.762,
+          "threshold": 0,
+          "message": "proximity: /nodes/rect-20 ↔ /nodes/text-21 too close (d 20 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "rect-20",
+            "b": "text-21",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-24",
+            "text-25"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.762,
+          "threshold": 0,
+          "message": "proximity: /nodes/rect-24 ↔ /nodes/text-25 too close (d 20 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "rect-24",
+            "b": "text-25",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-28",
+            "text-29"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.762,
+          "threshold": 0,
+          "message": "proximity: /nodes/rect-28 ↔ /nodes/text-29 too close (d 20 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "rect-28",
+            "b": "text-29",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-32",
+            "text-33"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.936,
+          "threshold": 0,
+          "message": "proximity: /nodes/rect-32 ↔ /nodes/text-33 too close (d 5 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "rect-32",
+            "b": "text-33",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-35",
+            "text-38"
+          ],
+          "metric": "falseAdjacencyCount",
+          "measured": 0.025,
+          "threshold": 0,
+          "message": "proximity: /nodes/line-35 ↔ /nodes/text-38 too close (d 269 ≤ 1.5×nn) but unrelated — increase gap",
+          "fix": {
+            "kind": "increase-gap",
+            "a": "line-35",
+            "b": "text-38",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-1",
+            "rect-12"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 648,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-1 ↔ /nodes/rect-12 related but split (d 648 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-12",
+            "toward": "rect-1",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-1",
+            "rect-16"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 408,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-1 ↔ /nodes/rect-16 related but split (d 408 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-16",
+            "toward": "rect-1",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-1",
+            "rect-20"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 275,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-1 ↔ /nodes/rect-20 related but split (d 275 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-20",
+            "toward": "rect-1",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-1",
+            "rect-24"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 383,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-1 ↔ /nodes/rect-24 related but split (d 383 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-24",
+            "toward": "rect-1",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-1",
+            "rect-28"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 617,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-1 ↔ /nodes/rect-28 related but split (d 617 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-28",
+            "toward": "rect-1",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-1",
+            "rect-32"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 549,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-1 ↔ /nodes/rect-32 related but split (d 549 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-32",
+            "toward": "rect-1",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-2",
+            "text-13"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 247,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-2 ↔ /nodes/text-13 related but split (d 247 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-13",
+            "toward": "text-2",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-2",
+            "text-17"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 387,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-2 ↔ /nodes/text-17 related but split (d 387 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-17",
+            "toward": "text-2",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-2",
+            "text-21"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 633,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-2 ↔ /nodes/text-21 related but split (d 633 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-21",
+            "toward": "text-2",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-2",
+            "text-25"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 903,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-2 ↔ /nodes/text-25 related but split (d 903 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-25",
+            "toward": "text-2",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-2",
+            "text-29"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 1179,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-2 ↔ /nodes/text-29 related but split (d 1179 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-29",
+            "toward": "text-2",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-2",
+            "text-33"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 806,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-2 ↔ /nodes/text-33 related but split (d 806 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-33",
+            "toward": "text-2",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-2",
+            "text-36"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 779,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-2 ↔ /nodes/text-36 related but split (d 779 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-36",
+            "toward": "text-2",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-2",
+            "text-38"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 864,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-2 ↔ /nodes/text-38 related but split (d 864 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-38",
+            "toward": "text-2",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "text-13"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 212,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/text-13 related but split (d 212 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-13",
+            "toward": "text-4",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "text-17"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 218,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/text-17 related but split (d 218 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-17",
+            "toward": "text-4",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "text-21"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 461,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/text-21 related but split (d 461 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-21",
+            "toward": "text-4",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "text-25"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 735,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/text-25 related but split (d 735 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-25",
+            "toward": "text-4",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "text-29"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 1015,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/text-29 related but split (d 1015 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-29",
+            "toward": "text-4",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "text-33"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 637,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/text-33 related but split (d 637 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-33",
+            "toward": "text-4",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "text-36"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 676,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/text-36 related but split (d 676 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-36",
+            "toward": "text-4",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-4",
+            "text-38"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 733,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-4 ↔ /nodes/text-38 related but split (d 733 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-38",
+            "toward": "text-4",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-6",
+            "line-7"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 469,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-6 ↔ /nodes/line-7 related but split (d 469 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-7",
+            "toward": "line-6",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-6",
+            "line-8"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 218,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-6 ↔ /nodes/line-8 related but split (d 218 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-8",
+            "toward": "line-6",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-6",
+            "line-9"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 194,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-6 ↔ /nodes/line-9 related but split (d 194 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-9",
+            "toward": "line-6",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-6",
+            "line-10"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 436,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-6 ↔ /nodes/line-10 related but split (d 436 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-10",
+            "toward": "line-6",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-6",
+            "line-11"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 283,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-6 ↔ /nodes/line-11 related but split (d 283 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-11",
+            "toward": "line-6",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-6",
+            "line-35"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 608,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-6 ↔ /nodes/line-35 related but split (d 608 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-35",
+            "toward": "line-6",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-7",
+            "line-8"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-7 ↔ /nodes/line-8 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-8",
+            "toward": "line-7",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-7",
+            "line-9"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 570,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-7 ↔ /nodes/line-9 related but split (d 570 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-9",
+            "toward": "line-7",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-7",
+            "line-10"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 855,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-7 ↔ /nodes/line-10 related but split (d 855 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-10",
+            "toward": "line-7",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-7",
+            "line-11"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 457,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-7 ↔ /nodes/line-11 related but split (d 457 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-11",
+            "toward": "line-7",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-7",
+            "line-35"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 640,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-7 ↔ /nodes/line-35 related but split (d 640 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-35",
+            "toward": "line-7",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-8",
+            "line-10"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 570,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-8 ↔ /nodes/line-10 related but split (d 570 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-10",
+            "toward": "line-8",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-8",
+            "line-35"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 487,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-8 ↔ /nodes/line-35 related but split (d 487 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-35",
+            "toward": "line-8",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-9",
+            "line-10"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-9 ↔ /nodes/line-10 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-10",
+            "toward": "line-9",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-9",
+            "line-35"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 477,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-9 ↔ /nodes/line-35 related but split (d 477 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-35",
+            "toward": "line-9",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-10",
+            "line-11"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 440,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-10 ↔ /nodes/line-11 related but split (d 440 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-11",
+            "toward": "line-10",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-10",
+            "line-35"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 616,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-10 ↔ /nodes/line-35 related but split (d 616 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-35",
+            "toward": "line-10",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "line-11",
+            "line-35"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 325,
+          "threshold": 182,
+          "message": "proximity: /nodes/line-11 ↔ /nodes/line-35 related but split (d 325 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "line-35",
+            "toward": "line-11",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-12",
+            "rect-16"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-12 ↔ /nodes/rect-16 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-16",
+            "toward": "rect-12",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-12",
+            "rect-20"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 570,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-12 ↔ /nodes/rect-20 related but split (d 570 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-20",
+            "toward": "rect-12",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-12",
+            "rect-24"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 855,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-12 ↔ /nodes/rect-24 related but split (d 855 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-24",
+            "toward": "rect-12",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-12",
+            "rect-28"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 1140,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-12 ↔ /nodes/rect-28 related but split (d 1140 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-28",
+            "toward": "rect-12",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-12",
+            "rect-32"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 649,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-12 ↔ /nodes/rect-32 related but split (d 649 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-32",
+            "toward": "rect-12",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-13",
+            "text-17"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-13 ↔ /nodes/text-17 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-17",
+            "toward": "text-13",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-13",
+            "text-21"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 570,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-13 ↔ /nodes/text-21 related but split (d 570 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-21",
+            "toward": "text-13",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-13",
+            "text-25"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 855,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-13 ↔ /nodes/text-25 related but split (d 855 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-25",
+            "toward": "text-13",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-13",
+            "text-29"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 1140,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-13 ↔ /nodes/text-29 related but split (d 1140 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-29",
+            "toward": "text-13",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-13",
+            "text-33"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 655,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-13 ↔ /nodes/text-33 related but split (d 655 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-33",
+            "toward": "text-13",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-13",
+            "text-36"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 535,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-13 ↔ /nodes/text-36 related but split (d 535 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-36",
+            "toward": "text-13",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-13",
+            "text-38"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 637,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-13 ↔ /nodes/text-38 related but split (d 637 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-38",
+            "toward": "text-13",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-16",
+            "rect-20"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-16 ↔ /nodes/rect-20 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-20",
+            "toward": "rect-16",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-16",
+            "rect-24"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 570,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-16 ↔ /nodes/rect-24 related but split (d 570 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-24",
+            "toward": "rect-16",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-16",
+            "rect-28"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 855,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-16 ↔ /nodes/rect-28 related but split (d 855 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-28",
+            "toward": "rect-16",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-16",
+            "rect-32"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 409,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-16 ↔ /nodes/rect-32 related but split (d 409 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-32",
+            "toward": "rect-16",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-17",
+            "text-21"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-17 ↔ /nodes/text-21 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-21",
+            "toward": "text-17",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-17",
+            "text-25"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 570,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-17 ↔ /nodes/text-25 related but split (d 570 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-25",
+            "toward": "text-17",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-17",
+            "text-29"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 855,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-17 ↔ /nodes/text-29 related but split (d 855 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-29",
+            "toward": "text-17",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-17",
+            "text-33"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 419,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-17 ↔ /nodes/text-33 related but split (d 419 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-33",
+            "toward": "text-17",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-17",
+            "text-36"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 533,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-17 ↔ /nodes/text-36 related but split (d 533 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-36",
+            "toward": "text-17",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-17",
+            "text-38"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 549,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-17 ↔ /nodes/text-38 related but split (d 549 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-38",
+            "toward": "text-17",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-20",
+            "rect-24"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-20 ↔ /nodes/rect-24 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-24",
+            "toward": "rect-20",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-20",
+            "rect-28"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 570,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-20 ↔ /nodes/rect-28 related but split (d 570 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-28",
+            "toward": "rect-20",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-20",
+            "rect-32"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 276,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-20 ↔ /nodes/rect-32 related but split (d 276 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-32",
+            "toward": "rect-20",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-21",
+            "text-25"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-21 ↔ /nodes/text-25 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-25",
+            "toward": "text-21",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-21",
+            "text-29"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 570,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-21 ↔ /nodes/text-29 related but split (d 570 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-29",
+            "toward": "text-21",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-21",
+            "text-33"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 291,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-21 ↔ /nodes/text-33 related but split (d 291 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-33",
+            "toward": "text-21",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-21",
+            "text-36"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 667,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-21 ↔ /nodes/text-36 related but split (d 667 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-36",
+            "toward": "text-21",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-21",
+            "text-38"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 599,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-21 ↔ /nodes/text-38 related but split (d 599 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-38",
+            "toward": "text-21",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-24",
+            "rect-28"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-24 ↔ /nodes/rect-28 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-28",
+            "toward": "rect-24",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-24",
+            "rect-32"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 384,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-24 ↔ /nodes/rect-32 related but split (d 384 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-32",
+            "toward": "rect-24",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-25",
+            "text-29"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 285,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-25 ↔ /nodes/text-29 related but split (d 285 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-29",
+            "toward": "text-25",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-25",
+            "text-33"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 395,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-25 ↔ /nodes/text-33 related but split (d 395 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-33",
+            "toward": "text-25",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-25",
+            "text-36"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 876,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-25 ↔ /nodes/text-36 related but split (d 876 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-36",
+            "toward": "text-25",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-25",
+            "text-38"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 760,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-25 ↔ /nodes/text-38 related but split (d 760 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-38",
+            "toward": "text-25",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-28",
+            "rect-32"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 617,
+          "threshold": 182,
+          "message": "proximity: /nodes/rect-28 ↔ /nodes/rect-32 related but split (d 617 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "rect-32",
+            "toward": "rect-28",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-29",
+            "text-33"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 624,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-29 ↔ /nodes/text-33 related but split (d 624 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-33",
+            "toward": "text-29",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-29",
+            "text-36"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 1119,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-29 ↔ /nodes/text-36 related but split (d 1119 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-36",
+            "toward": "text-29",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-29",
+            "text-38"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 980,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-29 ↔ /nodes/text-38 related but split (d 980 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-38",
+            "toward": "text-29",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-33",
+            "text-36"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 495,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-33 ↔ /nodes/text-36 related but split (d 495 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-36",
+            "toward": "text-33",
+            "mode": "autoFixable"
+          }
+        },
+        {
+          "severity": "medium",
+          "nodes": [
+            "text-33",
+            "text-38"
+          ],
+          "metric": "fragmentedCount",
+          "measured": 366,
+          "threshold": 182,
+          "message": "proximity: /nodes/text-33 ↔ /nodes/text-38 related but split (d 366 > 2.5×typical 73) — move closer into one cluster",
+          "fix": {
+            "kind": "shift-toward-cluster-centroid",
+            "node": "text-38",
+            "toward": "text-33",
+            "mode": "autoFixable"
+          }
+        }
+      ]
+    },
+    "balance": {
+      "score": 0.338,
+      "coverage": "measured",
+      "metrics": {
+        "BM": 0.338,
+        "BMv": 0.536,
+        "BMh": 0.788
+      },
+      "effect": "광학 무게 중심의 평형(Ngo, 2001) → 정서적 안정감·시지각적 편안함, early visual processing 단과 연관(2024, Symmetry).",
+      "violations": [
+        {
+          "severity": "medium",
+          "nodes": [
+            "rect-1"
+          ],
+          "metric": "BM",
+          "measured": 0.338,
+          "threshold": 0.85,
+          "message": "balance: BM 0.34 < 0.85 (left-heavy, top-heavy) — shift heaviest /nodes/rect-1 toward canvas center",
+          "fix": {
+            "kind": "shift-heaviest-toward-center",
+            "node": "rect-1",
+            "mode": "autoFixable"
+          }
+        }
+      ]
+    },
+    "whitespace": {
+      "score": 1,
+      "coverage": "measured",
+      "metrics": {
+        "freeRatio": 0.627,
+        "largestFreeRect": {
+          "area": 90000,
+          "aspectRatio": 1.78
+        },
+        "margins": {
+          "top": 0,
+          "bottom": 35,
+          "left": 0,
+          "right": 0
+        },
+        "minMargin": 0
+      },
+      "effect": "능동 여백으로 처리 유창성(Reber et al.) 극대화 → 시선 유도·cognitive load 감소, 시각 복잡도 통제(Fan et al.).",
+      "violations": []
+    },
+    "hierarchy": {
+      "score": 1,
+      "coverage": "partial",
+      "metrics": {
+        "clarity": 1,
+        "stepRegularity": 1,
+        "contrastAdequacy": 1,
+        "distinctSizes": 1
+      },
+      "effect": "명확한 시각 계층 → Treisman Feature Integration Theory 기반 visual search 시간 단축, 정보 우선순위 즉시 인지.",
+      "violations": []
+    },
+    "harmony": {
+      "score": 1,
+      "coverage": "measured",
+      "metrics": {
+        "distinctHues": 0,
+        "momentBalance": 1,
+        "analogousScore": 1,
+        "birkhoff": 1,
+        "harmonyScore": 1
+      },
+      "effect": "보색 모멘트 평형 + analogous 그룹화(Birkhoff M=O/C, Munsell) → 색채 피로 감소, 지각적 안정·자연스러운 흐름.",
+      "violations": []
+    },
+    "similarity": {
+      "score": 0.533,
+      "coverage": "measured",
+      "metrics": {
+        "inconsistentGroups": 1,
+        "meanConsistency": 0.533,
+        "groupsMeasured": 3
+      },
+      "effect": "동일 그룹·종류 요소의 시각 일관성으로 게슈탈트 유사성(Similarity) 군집화 강화 → 지각적 단위화, visual search 효율↑.",
+      "violations": [
+        {
+          "severity": "low",
+          "nodes": [
+            "line-6",
+            "line-7",
+            "line-8",
+            "line-9",
+            "line-10",
+            "line-11",
+            "line-35"
+          ],
+          "metric": "inconsistentGroups",
+          "measured": 0,
+          "threshold": 0.6,
+          "message": "similarity: group \"line|decor\" visually inconsistent (consistency 0.00 < 0.60) — unify size/lightness/color among same-group elements",
+          "fix": {
+            "kind": "unify-group",
+            "category": "line",
+            "mode": "suggestionOnly"
+          }
+        }
+      ]
+    },
+    "fluency": {
+      "score": 1,
+      "coverage": "measured",
+      "metrics": {
+        "flowInversions": 0,
+        "flowScore": 1,
+        "gradientScore": 1,
+        "fluency": 1
+      },
+      "effect": "읽기 흐름(Z/F-pattern) 정렬 + 크기-중요도 기울기로 처리 유창성(Reber et al., 2004)↑ → 이해·회상·미학적 쾌감 증가. 과도한 단조는 지루함(Birkhoff O/C 균형).",
+      "violations": []
+    }
+  }
+}

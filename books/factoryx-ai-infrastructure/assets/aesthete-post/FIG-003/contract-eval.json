@@ -1,0 +1,118 @@
+{
+  "verdict": "fail",
+  "score": 0.724,
+  "allPass": false,
+  "criteria": [
+    {
+      "criterion": "collision.count==0",
+      "skill": "collision",
+      "metric": "count",
+      "op": "==",
+      "threshold": 0,
+      "measured": 0,
+      "passed": true,
+      "status": "pass",
+      "weight": 3
+    },
+    {
+      "criterion": "boundary.overflowCount==0",
+      "skill": "boundary",
+      "metric": "overflowCount",
+      "op": "==",
+      "threshold": 0,
+      "measured": 0,
+      "passed": true,
+      "status": "pass",
+      "weight": 3
+    },
+    {
+      "criterion": "proximity.fragmentedCount==0",
+      "skill": "proximity",
+      "metric": "fragmentedCount",
+      "op": "==",
+      "threshold": 0,
+      "measured": 61,
+      "passed": false,
+      "status": "fail",
+      "weight": 1
+    },
+    {
+      "criterion": "proximity.falseAdjacencyCount==0",
+      "skill": "proximity",
+      "metric": "falseAdjacencyCount",
+      "op": "==",
+      "threshold": 0,
+      "measured": 7,
+      "passed": false,
+      "status": "fail",
+      "weight": 1
+    },
+    {
+      "criterion": "harmony.harmonyScore>=0.5",
+      "skill": "harmony",
+      "metric": "harmonyScore",
+      "op": ">=",
+      "threshold": 0.5,
+      "measured": 1,
+      "passed": true,
+      "status": "pass",
+      "weight": 1
+    },
+    {
+      "criterion": "similarity.inconsistentGroups==0",
+      "skill": "similarity",
+      "metric": "inconsistentGroups",
+      "op": "==",
+      "threshold": 0,
+      "measured": 1,
+      "passed": false,
+      "status": "fail",
+      "weight": 1
+    },
+    {
+      "criterion": "whitespace.freeRatio>=0.2",
+      "skill": "whitespace",
+      "metric": "freeRatio",
+      "op": ">=",
+      "threshold": 0.2,
+      "measured": 0.672,
+      "passed": true,
+      "status": "pass",
+      "weight": 1
+    },
+    {
+      "criterion": "balance.BM>=0.7",
+      "skill": "balance",
+      "metric": "BM",
+      "op": ">=",
+      "threshold": 0.7,
+      "measured": 0.267,
+      "passed": false,
+      "status": "fail",
+      "weight": 1
+    },
+    {
+      "criterion": "hierarchy.clarity>=0.7",
+      "skill": "hierarchy",
+      "metric": "clarity",
+      "op": ">=",
+      "threshold": 0.7,
+      "measured": 1,
+      "passed": true,
+      "status": "pass",
+      "weight": 1.5
+    },
+    {
+      "criterion": "fluency.fluency>=0.6",
+      "skill": "fluency",
+      "metric": "fluency",
+      "op": ">=",
+      "threshold": 0.6,
+      "measured": 1,
+      "passed": true,
+      "status": "pass",
+      "weight": 1
+    }
+  ],
+  "unmeasured": []
+}

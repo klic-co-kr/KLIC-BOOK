@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="FIG-011-title FIG-011-desc">
+  <title id="FIG-011-title">에이전트 제안에서 실제 행동까지의 게이트</title>
+  <desc id="FIG-011-desc">사용자 의도와 검색·도구 결과가 모델 제안으로 모이고 정책 판정, 사람 승인, 도구 게이트웨이, 감사 기록을 거쳐 행동하는 에이전트 도식.</desc>
+  <defs>
+    <style>.paper { fill: #f7f5ef; }
+.band { fill: #10324a; }
+.surface { fill: #dce8e8; stroke: #10324a; stroke-width: 3; }
+.surface-teal { fill: #d7eceb; stroke: #087e8b; stroke-width: 3; }
+.surface-amber { fill: #f4e5c9; stroke: #d18b24; stroke-width: 3; }
+.line { stroke: #7f9ba0; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+.rule { stroke: #7f9ba0; stroke-width: 2; }
+.title { font-family: 'Noto Serif CJK KR', serif; font-size: 38px; font-weight: 700; fill: #f7f5ef; }
+.subtitle { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 22px; fill: #18313f; }
+.body { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; fill: #18313f; }
+.small { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 17px; fill: #18313f; }
+.value { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 24px; font-weight: 700; fill: #10324a; }
+.node-label { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; font-weight: 700; fill: #18313f; }
+.bar-teal { fill: #087e8b; }
+.bar-navy { fill: #10324a; }
+.bar-amber { fill: #d18b24; }</style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><polygon points="0,0 12,6 0,12" fill="#7f9ba0"/></marker>
+  </defs>
+  <rect class="paper" width="1600" height="900"/>
+  <rect class="band" width="1600" height="112"/>
+  <text x="90.0" y="68.0" class="title" text-anchor="start"><tspan x="90.0" dy="0">에이전트 제안에서 실제 행동까지의 게이트</tspan></text>
+  <text x="90.0" y="154.0" class="subtitle" text-anchor="start"><tspan x="90.0" dy="0">신뢰되지 않은 입력과 도구 호출을 정책·사람 승인·감사로 통제한다.</tspan></text>
+  <line class="rule" x1="90" y1="182" x2="1510" y2="182"/>
+  <line class="line" x1="360.0" y1="345.1" x2="505.0" y2="389.9"/>
+  <line class="line" x1="360.0" y1="514.9" x2="505.0" y2="470.1"/>
+  <line class="line" x1="765.0" y1="430.0" x2="880.0" y2="430.0"/>
+  <line class="line" x1="1140.0" y1="430.0" x2="1255.0" y2="430.0"/>
+  <line class="line" x1="1010.0" y1="485.0" x2="1010.0" y2="590.0"/>
+  <rect class="surface" x="100.0" y="250.0" width="260.0" height="110.0" rx="14"/>
+  <text x="230.0" y="290.0" class="node-label" text-anchor="middle"><tspan x="230.0" dy="0">사용자 의도</tspan><tspan x="230.0" dy="30">승인된 요청</tspan></text>
+  <rect class="surface-teal" x="100.0" y="500.0" width="260.0" height="110.0" rx="14"/>
+  <text x="230.0" y="540.0" class="node-label" text-anchor="middle"><tspan x="230.0" dy="0">검색·도구 결과</tspan><tspan x="230.0" dy="30">신뢰되지 않은 입력</tspan></text>
+  <rect class="surface-amber" x="505.0" y="375.0" width="260.0" height="110.0" rx="14"/>
+  <text x="635.0" y="415.0" class="node-label" text-anchor="middle"><tspan x="635.0" dy="0">모델 제안</tspan><tspan x="635.0" dy="30">행동 후보</tspan></text>
+  <rect class="surface" x="880.0" y="375.0" width="260.0" height="110.0" rx="14"/>
+  <text x="1010.0" y="415.0" class="node-label" text-anchor="middle"><tspan x="1010.0" dy="0">정책 판정</tspan><tspan x="1010.0" dy="30">권한·위험 검사</tspan></text>
+  <rect class="surface-teal" x="1255.0" y="375.0" width="260.0" height="110.0" rx="14"/>
+  <text x="1385.0" y="415.0" class="node-label" text-anchor="middle"><tspan x="1385.0" dy="0">도구 게이트웨이</tspan><tspan x="1385.0" dy="30">실제 행동</tspan></text>
+  <rect class="surface-amber" x="880.0" y="590.0" width="260.0" height="90.0" rx="14"/>
+  <text x="1010.0" y="620.0" class="node-label" text-anchor="middle"><tspan x="1010.0" dy="0">사람 승인·감사</tspan><tspan x="1010.0" dy="30">중단·복구</tspan></text>
+  <line class="rule" x1="90" y1="790" x2="1510" y2="790"/>
+  <text x="90.0" y="830.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">근거: 공식 발표 | SRC-001 · SRC-003 · SRC-030 · SRC-032 · SRC-033</tspan></text>
+  <text x="90.0" y="862.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">FIG-011 | 사용자 의도와 검색·도구 결과가 모델 제안으로 모이고 정책 판정, 사람 승인, 도구 게이트웨이, 감사 기록을 거쳐 행동하는 에이전트 도식.</tspan></text>
+</svg>

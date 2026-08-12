@@ -44,6 +44,9 @@ Expected: one documentation commit on `docs/publish-factoryx-downloads`.
 - Modify: `README.md`
 - Create: `books/factoryx-ai-infrastructure/**`
 - Modify: `books/factoryx-ai-infrastructure/README.md`
+- Modify: `skills/korean-ebook/scripts/publish_book.py`
+- Modify: `skills/korean-ebook/scripts/verify_pdf.py`
+- Modify: `skills/korean-ebook/SHA256SUMS`
 
 **Interfaces:**
 - Consumes: five repository-relative PDF paths
@@ -71,8 +74,11 @@ Expected: all download-link tests pass.
 Run: `/mnt/d/DEV/KLIC-BOOK/.venv/bin/python books/factoryx-ai-infrastructure/scripts/validate_book.py --root books/factoryx-ai-infrastructure --require-build`
 Expected: `VALID: chapters=12 figures=12 charts=8 sources=37 pages=100`.
 
-Run: `sha256sum -c books/factoryx-ai-infrastructure/SHA256SUMS`
+Run: `(cd books/factoryx-ai-infrastructure && sha256sum -c SHA256SUMS)`
 Expected: all listed artifacts report `OK`.
+
+Run: `(cd skills/korean-ebook && sha256sum -c SHA256SUMS)`
+Expected: all skill package files report `OK`.
 
 - [ ] **Step 5: Commit the publication**
 
