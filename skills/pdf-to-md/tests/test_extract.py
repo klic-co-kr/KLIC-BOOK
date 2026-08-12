@@ -49,6 +49,18 @@ def test_extract_text_page_output(tmp_path):
     assert "## Chapter 1" in md
 
 
+def test_normalize_math():
+    """수식 Unicode 기호 → LaTeX 매핑 + $$ 래핑."""
+    from scripts.extract_text import normalize_math
+    r = normalize_math("손실 L = ∑ p(x) log p")
+    assert r"\sum" in r
+    assert r.startswith("$$") and r.endswith("$$")
+    # 수식 아닌 일반 텍스트는 그대로
+    assert normalize_math("일반 텍스트") == "일반 텍스트"
+    # 이탤릭 수학 문자 → 보통
+    assert "p" in normalize_math("𝑝(𝑥)")
+
+
 def test_dedupe_repeated_footer(tmp_path):
     """매 페이지 반복되는 푸터(라이선스·페이지번호) 자동 제거."""
     from scripts.classify_pages import classify

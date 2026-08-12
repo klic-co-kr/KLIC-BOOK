@@ -12,6 +12,48 @@ import fitz  # pymupdf
 
 HEADING_SIZE = 14.0
 
+# 수학 Unicode 기호 → LaTeX 매핑
+MATH_MAP = {
+    '∑': r'\sum', '∏': r'\prod', '∫': r'\int', '∇': r'\nabla', '√': r'\sqrt',
+    '≤': r'\le', '≥': r'\ge', '≠': r'\ne', '≈': r'\approx', '→': r'\to',
+    '←': r'\leftarrow', '⇒': r'\Rightarrow', '×': r'\times', '÷': r'\div',
+    '±': r'\pm', '∞': r'\infty', '·': r'\cdot', '…': r'\ldots',
+    'Δ': r'\Delta', 'Σ': r'\Sigma', 'Π': r'\Pi', 'Ω': r'\Omega', 'Θ': r'\Theta',
+    'α': r'\alpha', 'β': r'\beta', 'γ': r'\gamma', 'δ': r'\delta', 'ε': r'\epsilon',
+    'θ': r'\theta', 'λ': r'\lambda', 'μ': r'\mu', 'π': r'\pi', 'σ': r'\sigma',
+    'φ': r'\phi', 'ω': r'\omega', 'ρ': r'\rho', 'τ': r'\tau', 'η': r'\eta',
+    '∈': r'\in', '∉': r'\notin', '⊂': r'\subset', '⊆': r'\subseteq',
+    '∪': r'\cup', '∩': r'\cap', '∀': r'\forall', '∃': r'\exists',
+}
+# 수학 이탈릭/볼드 Unicode (U+1D400 영역) → 보통 문자
+_ITALIC = "𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧"
+_PLAIN = "abcdefghijklmnopqrstuvwxyz"
+_BOLD = "𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳"
+
+
+def normalize_math(line: str) -> str:
+    """수식 라인 감지(수학 기호/이탤릭 포함) → LaTeX 매핑 + $$...$$ 래핑."""
+    if not line.strip() or '$$' in line:
+        return line
+    orig = line
+    # 수학 이탤릭/볼드 → 보통
+    for ic, pc in zip(_ITALIC + _ITALIC.upper() + _BOLD, _PLAIN + _PLAIN.upper() + _PLAIN):
+        line = line.replace(ic, pc)
+    # 기호 매핑
+    has_math = any(s in line for s in MATH_MAP)
+    for u, l in MATH_MAP.items():
+        line = line.replace(u, l)
+    # 위첨자/아래첨자 (Unicode subscript/superscript) → 보통 문자
+    SUP = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾", "0123456789+-=()")
+    SUB = str.maketrans("₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎", "0123456789+-=()")
+    line = line.translate(SUP).translate(SUB)
+    # 수식 기호 있었거나 원래 이탤릭 있었으면 $$ 래핑
+    if has_math or orig != line:
+        s = line.strip().strip('.')
+        if not s.startswith('$'):
+            line = f'$${s}$$'
+    return line
+
 
 def extract_text_page(doc, page_num: int) -> str:
     """pymupdf dict → MD (헤딩 감지)."""
@@ -30,7 +72,7 @@ def extract_text_page(doc, page_num: int) -> str:
             if max_size >= HEADING_SIZE:
                 lines.append(f"## {text}")
             else:
-                lines.append(text)
+                lines.append(normalize_math(text))
     return "\n\n".join(lines)
 
 
