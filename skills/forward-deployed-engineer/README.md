@@ -32,7 +32,13 @@ flowchart LR
 
 ```
 skills/forward-deployed-engineer/
-├── SKILL.md              # ← 쿼리 진입점. 5카테고리별 통찰 31개 + 근거
+├── SKILL.md              # ← 색인. 카테고리별 통찰 제목 + 원문 §ref (7K, 발동 가벼움)
+├── insights/             # 통찰 본문 — 카테고리별 5파일, 쿼리 시 주문형 로드
+│   ├── research.md       # 연구 4개
+│   ├── methodology.md    # 방법론 29개
+│   ├── solution.md       # 해법 3개
+│   ├── principle.md      # 원리 14개
+│   └── anti-pattern.md   # 안티패턴 5개
 ├── chapters/             # 챕터별 헤딩 트리 (ch01-08 + 부록A)
 ├── appendix-c-map.md     # 부록C 120건 사례 회상 coverage + 누락 목록
 └── extraction-report.md  # 판단 루브릭 점수 + 승인 이력
