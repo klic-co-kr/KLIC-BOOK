@@ -47,3 +47,25 @@ def test_extract_text_page_output(tmp_path):
     extract(str(pdf), str(work), ocr="skip")
     md = (work / "pages" / "001.md").read_text(encoding="utf-8")
     assert "## Chapter 1" in md
+
+
+def test_dedupe_repeated_footer(tmp_path):
+    """매 페이지 반복되는 푸터(라이선스·페이지번호) 자동 제거."""
+    from scripts.classify_pages import classify
+    from scripts.extract_text import extract
+    pdf = tmp_path / "f.pdf"
+    doc = fitz.open()
+    for i in range(3):
+        p = doc.new_page()
+        p.insert_text((72, 72), f"Chapter {i}", fontsize=18)
+        p.insert_text((72, 120), f"unique body {i} text " * 20, fontsize=11)
+        p.insert_text((72, 700), "COMMON LICENSE FOOTER", fontsize=9)   # 매 페이지 푸터
+    doc.save(str(pdf))
+    doc.close()
+    work = tmp_path / "w"
+    classify(str(pdf), str(work))
+    extract(str(pdf), str(work), ocr="skip")
+    for pg in ("001", "002", "003"):
+        md = (work / "pages" / f"{pg}.md").read_text(encoding="utf-8")
+        assert "COMMON LICENSE FOOTER" not in md   # 푸터 제거
+        assert "unique body" in md                  # 본문 보존

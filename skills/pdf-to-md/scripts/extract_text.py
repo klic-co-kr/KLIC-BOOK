@@ -57,17 +57,43 @@ def ocr_page(doc, page_num: int, ocr_engine: str = "paddle") -> str:
         return f"{img_link}\n\n<!-- OCR 실패({type(e).__name__}): {e} -->"
 
 
+def detect_footers(page_texts: dict, threshold: float = 0.5) -> set:
+    """매 페이지 반복되는 라인(푸터/헤더) 감지. 과반(threshold) 페이지에 등장한 라인.
+    단일/소수 페이지 오팅 방지 위해 n>=3 조건."""
+    from collections import Counter
+    n = len(page_texts)
+    if n < 3:
+        return set()
+    counts = Counter()
+    for text in page_texts.values():
+        for line in set(text.splitlines()):       # 페이지당 중복 1회 카운트
+            s = line.strip()
+            if s:
+                counts[s] += 1
+    return {line for line, c in counts.items() if c / n >= threshold}
+
+
 def extract(pdf_path: str, work_dir: str, ocr: str = "paddle") -> None:
     work = Path(work_dir)
     pages = json.loads((work / "pages.json").read_text(encoding="utf-8"))
     (work / "pages").mkdir(exist_ok=True)
     doc = fitz.open(pdf_path)
+    # 1패스: 페이지별 원시 텍스트 수집
+    raw = {}
     for p in pages:
         if p["kind"] == "text":
-            md = extract_text_page(doc, p["page"])
+            raw[p["page"]] = extract_text_page(doc, p["page"])
         else:
-            md = ocr_page(doc, p["page"], ocr)
-        (work / "pages" / f"{p['page']:03d}.md").write_text(md, encoding="utf-8")
+            raw[p["page"]] = ocr_page(doc, p["page"], ocr)
+    # 2패스: 반복 푸터/헤더 제거 (매 페이지 도배되는 라이선스·페이지번호 등)
+    footers = detect_footers(raw)
+    for page_num, text in raw.items():
+        cleaned = "\n".join(l for l in text.splitlines() if l.strip() not in footers)
+        (work / "pages" / f"{page_num:03d}.md").write_text(
+            cleaned.strip() + "\n", encoding="utf-8")
+    if footers:
+        print(f"deduped {len(footers)} repeated footer/header lines "
+              f"(e.g. {list(footers)[:2]})")
     doc.close()
 
 
