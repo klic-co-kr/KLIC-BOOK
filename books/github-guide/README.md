@@ -4,7 +4,7 @@ AI 코딩 도구를 써도 협업의 기준점은 GitHub다. Claude Code·Codex�
 
 ## 다운로드
 
-- [PDF (23쪽 A4)](GitHub_협업_실무_가이드.pdf) — fde-midnight 편집본
+- [PDF (23쪽 A4)](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/github-guide/GitHub_협업_실무_가이드.pdf) — fde-midnight 편집본 (raw 직접 다운로드)
 
 ## 목차
 
