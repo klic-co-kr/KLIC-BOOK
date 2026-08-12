@@ -22,8 +22,8 @@ cd skills/korean-ebook-to-skill && python3 -m pytest tests/ -v
 
 - 산출물: [`skills/forward-deployed-engineer/`](../forward-deployed-engineer/)
 - 입력 책: [`books/forward-deployed-engineer/`](../../books/forward-deployed-engineer/) (12챕터 + 부록C 사례 120건)
-- 실행: 핵심 챕터(ch1/2/8/후기) 우선 추출 → 사람 게이트 승인 → 렌더 → 검증
-- 결과: 51 후보 → 저자 엄선 31개 통찰(5카테고리) → SKILL.md 1개 + chapters/ + 회상 보고
+- 실행: Phase A(ch1/2/8/후기) 우선 → 게이트 → Phase B(ch3-7) 확장 → 게이트 → 렌더 → 검증
+- 결과: 75 후보 → 저자 엄선 55개 통찰(5카테고리) → SKILL.md 1개 + chapters/ + 회상 28.3%
 
 ## 파이프라인 연계도
 
