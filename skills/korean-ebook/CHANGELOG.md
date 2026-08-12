@@ -1,5 +1,15 @@
 # Changelog
 
+## 26.08.12 — 2026-08-12
+
+- 산출물 형식 게이트(`book`, `manual`, `hybrid`)와 공통 근거 역할 계약 추가
+- KLIC 독립형 정적 HTML 매뉴얼 빌더·검증기·템플릿·예제 추가
+- 업무 흐름, 초보자 개요, 독립 lesson, 단계별 operation/action/evidence/success/readback 계약 도입
+- high/critical 작업의 승인·안전 fixture 게이트와 제품별 외부 런타임 결합 금지
+- 기술·내용·시각 QA를 분리하고 구조화된 브라우저 증거 없이는 final 시각 PASS를 거부
+- 기존 Book PDF 파이프라인과 시각 편집 기능은 별도 경로로 유지
+- 적대 검토를 반영해 비어 있지 않은 출력 폴더 삭제, symlink 보고서 쓰기, DOM·근거 변조, inference-only final, 미해결 visual finding을 차단
+
 ## 26.08.09 — 2026-08-09
 
 - 단일 Markdown 파일(`BOOK.md`) 입력 지원: H1 단위 장 분할, 첫 제목 블록·`목차`/`차례` 섹션 자동 제외

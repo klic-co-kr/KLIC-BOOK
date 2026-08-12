@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{DESCRIPTION}}">
+  <title>{{PAGE_TITLE}}</title>
+  <link rel="stylesheet" href="{{CSS_PATH}}">
+</head>
+<body data-manual-status="{{STATUS}}">
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  {{STATUS_BANNER}}
+  <header class="site-header">
+    <a class="brand" href="{{HOME_PATH}}">{{MANUAL_TITLE}}</a>
+    <nav aria-label="매뉴얼 주요 탐색">
+      <a href="{{HOME_PATH}}">업무 흐름</a>
+      <a href="{{OVERVIEW_PATH}}">시스템 개요</a>
+    </nav>
+  </header>
+  <main id="main" class="page-shell">
+    {{CONTENT}}
+  </main>
+  <footer class="site-footer">
+    <p>{{VERSION_BASIS}}</p>
+  </footer>
+</body>
+</html>

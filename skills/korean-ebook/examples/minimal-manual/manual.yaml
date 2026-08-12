@@ -1,0 +1,101 @@
+schema_version: 1
+manual:
+  id: request-operations
+  title: 요청 운영 최소 매뉴얼
+  subtitle: 접수된 요청을 검토하고 완료 근거를 확인하는 방법
+  language: ko
+  audience:
+    - 신규 운영 담당자
+  status: provisional
+  version: "1.0"
+  version_basis: 공식 운영 가이드와 UI 다이어그램 확인본
+  purpose: 신규 담당자가 요청의 입력과 상태를 확인하고 완료 조건을 설명하도록 돕는다.
+overview:
+  summary: 요청은 접수, 검토, 승인 확인, 완료의 순서로 상태와 확인 기록을 남긴다.
+  mental_model: 요청 한 건을 바통처럼 다음 담당자에게 넘기되 인수인계 기록을 함께 남긴다.
+  roles:
+    - name: 요청자
+      responsibility: 필요한 정보를 제출하고 보완 요청에 응답한다.
+    - name: 운영 담당자
+      responsibility: 요청 내용과 상태를 검토하고 완료 근거를 확인한다.
+  components:
+    - name: 요청 목록
+      purpose: 요청 번호, 요청자, 현재 상태를 보여준다.
+    - name: 요청 상세
+      purpose: 입력값, 승인 기록, 완료 상태를 보여준다.
+  lifecycle:
+    - 접수
+    - 검토
+    - 승인 확인
+    - 완료
+  beginner_confusions:
+    - confusion: 목록에 나타나면 요청 처리가 끝났다고 생각한다.
+      correction: 상세 화면에서 완료 상태와 확인 기록을 모두 읽어야 한다.
+workflows:
+  - id: request-to-complete
+    title: 요청 접수부터 완료 확인
+    goal: 누락 없이 요청을 검토하고 완료 근거를 남긴다.
+    trigger: 새 요청이 검토 대기 상태로 들어온다.
+    outcome: 완료 상태와 확인 기록이 함께 남는다.
+    lessons:
+      - review-request
+lessons:
+  - id: review-request
+    title: 요청 검토하기
+    purpose: 요청 내용과 승인 상태를 확인한다.
+    audience:
+      - 신규 운영 담당자
+    when_to_use: 검토 대기 요청을 처음 맡았을 때
+    prerequisites:
+      - 요청 목록 읽기 권한
+      - 요청 번호
+    source_refs:
+      - SRC-001
+      - UI-001
+    risk: low
+    approval_required: false
+    fixture: not_required
+    steps:
+      - title: 검토 대기 요청 찾기
+        operation: read
+        action: 요청 목록에서 상태가 ‘검토 대기’인 요청 번호를 연다.
+        evidence: 목록과 상세 화면의 요청 번호가 같고 상태가 ‘검토 대기’로 보인다.
+        success: 요청자, 요청 내용, 상태를 한 화면에서 확인했다.
+        source_refs:
+          - SRC-001
+          - UI-001
+      - title: 완료 근거 읽기
+        operation: read
+        action: 필수 입력과 승인 기록을 읽고 누락 여부를 확인한다.
+        evidence: 필수 입력이 채워져 있고 승인 기록에 담당자와 상태가 보인다.
+        success: 누락 항목이 없고 다음 처리 가능 여부를 설명할 수 있다.
+        source_refs:
+          - SRC-001
+    cautions:
+      - 상태를 확인하지 않은 채 완료로 간주하지 않는다.
+    common_mistakes:
+      - 목록의 첫 행을 현재 요청으로 오인한다.
+    completion_checks:
+      - 요청 번호가 목록과 상세 화면에서 일치한다.
+      - 완료 상태와 확인 기록을 읽었다.
+    next: 누락이 있으면 요청자에게 보완을 요청하고, 없으면 후속 처리로 이동한다.
+    media:
+      - type: image
+        path: evidence/request-list.svg
+        sha256: 578ef7731a64abf3d3aa651735d9cdadd583fe5c0131661b8d7d1fe484e8218b
+        alt: 검토 대기 상태가 표시된 요청 목록 예시
+        source_refs:
+          - UI-001
+sources:
+  - id: SRC-001
+    title: 공식 운영 가이드
+    evidence_type: source
+    path: sources/operator-guide.md
+    checked_at: "2026-08-12"
+    sha256: ef48dd3ae37166f1c2d9dfec0b06910cb527333244f3e358f501cf7f82c02667
+  - id: UI-001
+    title: 요청 목록 확인 화면
+    evidence_type: ui
+    path: evidence/request-list.svg
+    checked_at: "2026-08-12"
+    sha256: 578ef7731a64abf3d3aa651735d9cdadd583fe5c0131661b8d7d1fe484e8218b

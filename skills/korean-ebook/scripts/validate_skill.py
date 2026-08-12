@@ -18,6 +18,7 @@ except ImportError as exc:  # pragma: no cover
 
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 FONT_SUFFIXES = {".ttf", ".otf", ".woff", ".woff2", ".ttc", ".eot"}
+IGNORED_DIRS = {"__pycache__", ".pytest_cache", ".venv"}
 
 
 def parse_frontmatter(path: Path) -> tuple[dict, str]:
@@ -68,7 +69,11 @@ def main() -> int:
     if len(body.splitlines()) > 500:
         issues.append({"severity": "warning", "message": f"SKILL.md body is {len(body.splitlines())} lines; keep it under 500 when possible"})
 
-    files = [p for p in root.rglob("*") if p.is_file()]
+    files = [
+        path
+        for path in root.rglob("*")
+        if path.is_file() and not any(part in IGNORED_DIRS for part in path.parts)
+    ]
     if len(files) > 500:
         issues.append({"severity": "error", "message": f"Skill has {len(files)} files; OpenAI upload limit is 500"})
     total_size = sum(p.stat().st_size for p in files)
@@ -113,6 +118,43 @@ def main() -> int:
     for path in required:
         if not path.exists():
             issues.append({"severity": "error", "message": f"Required package file missing: {path.relative_to(root)}"})
+
+    manual_claimed = any(
+        token in f"{description}\n{body}".casefold()
+        for token in ("operator manual", "운영 매뉴얼", "build_manual.py", "manual.yaml")
+    )
+    if manual_claimed:
+        manual_required = [
+            root / "scripts" / "manual_common.py",
+            root / "scripts" / "build_manual.py",
+            root / "scripts" / "verify_manual.py",
+            root / "assets" / "manual-template.html",
+            root / "assets" / "manual.css",
+            root / "assets" / "manual-config.example.yaml",
+            root / "assets" / "visual-review.example.json",
+            root / "references" / "manual-production.md",
+            root / "references" / "manual-quality-gates.md",
+            root / "references" / "manual-media.md",
+            root / "examples" / "minimal-manual" / "manual.yaml",
+        ]
+        for path in manual_required:
+            if not path.exists():
+                issues.append(
+                    {
+                        "severity": "error",
+                        "message": f"Claimed manual mode requires: {path.relative_to(root)}",
+                    }
+                )
+
+        forbidden_dependencies = {
+            "manual-verification": "Removed external dependency found: manual-verification",
+            "hermes": "Removed external dependency found: Hermes",
+            "peer oracle workflow": "Removed external dependency found: peer/oracle workflow",
+        }
+        instruction_text = f"{description}\n{body}".casefold()
+        for needle, message in forbidden_dependencies.items():
+            if needle in instruction_text:
+                issues.append({"severity": "error", "message": message})
 
     report = {
         "skill": str(root),

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "reviewed_at": "2026-08-12",
+  "reviewer": "검수자 이름 또는 팀",
+  "viewports": [
+    "1280x800",
+    "390x844"
+  ],
+  "pages": [
+    "index.html",
+    "overview.html",
+    "lessons/example-lesson.html"
+  ],
+  "keyboard_navigation": "pass",
+  "internal_navigation": "pass",
+  "console_errors": 0,
+  "findings": []
+}

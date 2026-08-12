@@ -1,4 +1,6 @@
-# 품질 게이트
+# Book 품질 게이트
+
+이 문서는 `book` 모드 전용이다. `manual` 모드는 `manual-quality-gates.md`를 사용하며, `hybrid`는 두 게이트를 각각 통과해야 한다.
 
 ## Gate 1 — 입력 경계
 

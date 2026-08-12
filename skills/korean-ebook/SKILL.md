@@ -1,344 +1,221 @@
 ---
 name: korean-ebook
-description: Markdown·ZIP·문서 원고를 한국어 출판형 A4 PDF로 편집하고 렌더링·검수한다. 원문 근거를 벗어나지 않는 장별 도형·흐름도·비교표·시각 요약과 1단 목차를 선택적으로 적용한다. 참고 PDF·가이드·예시는 시각 스타일과 작업 절차에만 사용하고 본문에 합치지 않는다. 실용서, 가이드북, 백서, 매뉴얼, 전자책, 장문 보고서 제작에 사용한다. 단순 PDF 병합, 폼 입력, OCR만 필요한 작업에는 사용하지 않는다.
+description: Use when producing Korean publication-ready books, whitepapers, long reports, evidence-grounded operator manuals, admin guides, onboarding tutorials, SOPs, or hybrid PDF and static-HTML documentation from Markdown, ZIP, documents, official sources, repositories, or verified product screens. Do not use for simple PDF merge, OCR-only extraction, marketing landing pages, pure API references, or fictional click paths.
 license: MIT
-compatibility: Python 3.11+, WeasyPrint 68.x 권장. Poppler(pdftoppm, pdftotext, pdffonts)는 정밀 검수에 권장되며 PyMuPDF로 일부 대체 가능하다.
 metadata:
   author: KLIC
-  version: "26.08.05"
+  version: "26.08.12"
   language: ko
+  compatibility: Python 3.11+. Book mode recommends WeasyPrint 68.x and Poppler. Manual mode requires PyYAML and BeautifulSoup; browser and media tools are optional.
 ---
 
-# Korean Editorial PDF
+# Korean Book and Manual Publishing
 
-장문 한국어 원고를 **출판 가능한 편집 PDF**로 제작한다. 핵심 원칙은 다음 두 문장이다.
+한국어 장문 콘텐츠를 **검증 가능한 책 또는 운영 매뉴얼**로 출판한다. 원고와 실제 시스템 근거를 보존하고, 참고자료는 스타일·절차에만 사용한다.
 
-1. **원고의 내용은 보존하고, 편집 구조와 시각 체계만 개선한다.**
-2. **참고자료는 스타일과 절차만 참고하며, 참고자료의 문장·주장·목차·평가 기준을 본문에 섞지 않는다.**
+## 0. 산출물 형식 게이트
 
-## 0. 시작 전에 반드시 구분할 것
+본문을 쓰거나 화면을 캡처하기 전에 모드를 확정한다.
 
-입력 파일을 다음 역할로 명시적으로 분리한다.
+| 모드 | 기본 산출물 | 선택 기준 |
+| --- | --- | --- |
+| `book` | A4 PDF, HTML, 소스 매니페스트, 검증 보고서 | 실용서, 백서, 전자책, 장문 보고서 |
+| `manual` | 정적 HTML, overview, lesson, 근거 맵, QA, STATUS, HANDOFF | 운영·관리자 매뉴얼, 온보딩, SOP, UI 튜토리얼 |
+| `hybrid` | 동일 근거에서 book과 manual을 각각 생성 | 인쇄용 책과 웹 운영 가이드가 모두 필요함 |
 
-- `CONTENT`: 최종 PDF에 들어갈 원고와 원고 소속 이미지·표·각주
-- `REFERENCE`: 표지, 편집, 타이포그래피, 목차, 검수 방식의 예시
-- `CONFIG`: 제목, 부제, 저자, 판권, 파일 순서, 색상, 출력 이름
-- `EXCLUDE`: 임시 파일, 이전 결과물, 중복 사본, 개인 메모
+요청이 단순히 “매뉴얼”이고 형식을 좁히지 않았다면 `manual`을 기본값으로 한다. 인쇄·배포 PDF를 명시하면 `book`, 둘 다 명시하면 `hybrid`를 사용한다. 두 파이프라인은 입력 근거만 공유하며 렌더러와 검증기를 섞지 않는다.
 
-혼합 ZIP이라면 바로 빌드하지 말고 `references/input-contract.md`에 따라 소스 맵을 먼저 작성한다. 역할이 불명확한 파일은 내용에 합치지 않는다.
+## 1. 공통 입력 경계
 
-### 절대 금지
+모든 입력을 다음 역할로 분류한다.
 
-- 참고자료의 내용을 원고에 요약·통합·보강하는 행위
-- 원고에 없는 방법론, 체크리스트, 수치, 출처를 임의로 추가하는 행위
-- 누락을 숨기기 위해 문장을 새로 만드는 행위
-- 원고의 사실관계를 자동으로 “교정”하면서 원문을 바꾸는 행위
-- 렌더링 검수 없이 PDF만 생성하고 완료 처리하는 행위
+- `CONTENT`: 최종 산출물에 포함할 승인된 원고·설명·이미지
+- `EVIDENCE`: 공식 문서, 저장소, UI, 런타임, 운영자 확인처럼 주장을 증명하는 근거
+- `REFERENCE`: 디자인·타이포·작업 절차 예시. 문장·주장·목차는 가져오지 않는다.
+- `CONFIG`: 제목, 판본, 파일 순서, 스타일, 산출물 설정
+- `EXCLUDE`: 이전 결과물, 임시 파일, 중복 사본, 개인 메모
 
-## 1. 입력 인벤토리와 경계 확정
+혼합 입력은 즉시 빌드하지 않는다. 파일명·크기·SHA-256·역할·포함 여부를 먼저 기록한다. 상세 기준은 `references/input-contract.md`와 `references/content-boundary.md`를 읽는다.
 
-1. 모든 파일의 이름, 확장자, 크기, SHA-256을 기록한다.
-2. 숫자 접두 파일명(`01-`, `02-`)과 README/목차를 통해 원고 순서를 판단한다.
-3. 원고와 참고자료를 별도 경로로 둔다. 한 폴더에 섞여 있으면 작업 폴더에서 분리 복사한다.
-4. `REFERENCE`는 해시와 메타데이터만 빌드 기록에 남긴다. 빌드 스크립트의 본문 입력으로 전달하지 않는다.
-5. 저작권·배포 조건이 원고에 있으면 삭제하거나 완화하지 말고 그대로 유지한다.
+### 공통 금지
 
-상세 기준: `references/content-boundary.md`
+- 참고자료 내용을 원고나 매뉴얼 설명에 합치기
+- 확인하지 않은 화면·상태·버튼·수치·부작용을 사실처럼 쓰기
+- 누락을 숨기려고 문장·증거를 발명하기
+- 실제 결제·청구·재고·삭제·권한 변경을 승인 없이 실행하기
+- 자동 검사만 통과하고 시각·사용성 검수까지 통과했다고 보고하기
 
-## 2. 편집 계획 확정
+## 2. Book 모드
 
-원고를 읽고 다음을 먼저 결정한다.
+Book 모드는 기존 결정론적 출판 파이프라인을 사용한다.
 
-- 책 제목, 부제, 저자, 판본 설명
-- README 또는 서문을 앞부분에 포함할지
-- 장·후기·부록의 순서
-- 표지, 속표지, 편집본 안내, 자동 목차, 장 표제지의 사용 여부
-- 본문 글꼴 계열, 색상, 여백, 머리말·꼬리말
-- 표·인용문·코드·각주의 처리 방식
+1. 원고 순서, 제목 계층, 표·목록·각주·이미지를 프리플라이트한다.
+2. `assets/book-config.example.yaml`을 프로젝트 설정으로 복사해 표지, 1단 목차, 장 표제지, 시각 요약, 스타일을 정한다.
+3. 시각화 문구는 해당 장 원문에서 추출하거나 충실하게 축약한다. 근거가 없으면 생략한다.
+4. `publish_book.py`로 PDF와 HTML을 만든다.
+5. `verify_pdf.py`로 구조·글꼴·원문 표본·참고자료 오염을 검사한다.
+6. 모든 페이지를 이미지로 렌더하고 접촉표와 고위험 페이지를 확인한다.
 
-기본 스타일은 이 스킬의 `fde-midnight` 프리셋이다. 범용 원고에는 `assets/book-config.example.yaml`을 사용한다. FDE 원고를 1단 목차와 장별 시각 요약이 포함된 실무서형으로 편집하려면 `assets/book-config.fde-example.yaml`을 사용하고, 시각 요약 없이 본문 중심으로 만들려면 `assets/book-config.fde-text-only.yaml`을 사용한다. 스타일 규칙은 `references/editorial-system.md`를 읽는다.
-
-FDE 시각 편집 프로필은 제공 원고 13개를 기준으로 회귀 검증되어 있다. 기준 결과는 A4 120쪽, 1단 목차 3쪽, 시각 요약 12쪽, PDF 북마크 140개다. 본문 중심 프로필은 A4 108쪽이며 목차는 동일하게 1단이다. 이는 동일 원고와 동일 렌더링 환경에서의 회귀 기준이며, 다른 원고의 페이지 수를 보장하지 않는다. 상세값은 `references/fde-regression-profile.md`를 따른다.
-
-## 2.1 시각 편집 레이어
-
-실용서가 문단만 이어져 딱딱해지지 않도록 장 표제지 다음에 **시각 요약 페이지**를 선택적으로 넣는다. 시각화는 장식이 아니라 이해와 탐색을 돕는 편집 변환이어야 한다.
-
-필수 규칙:
-
-- 도형·표의 모든 문구는 해당 장의 제목·절 제목·본문 핵심 문장에서 추출하거나 충실하게 축약한다.
-- 원고에 없는 사실, 숫자, 사례, 출처, 평가 기준을 시각화라는 이유로 추가하지 않는다.
-- 각 시각 페이지 하단에 원문을 대체하지 않는 편집 요약임을 밝힌다.
-- 근거가 약하거나 비교 축이 성립하지 않으면 시각 페이지를 생략한다. 빈칸을 추측으로 채우지 않는다.
-- 표는 한 셀에 한 판단만 담고, A4에서 읽히도록 열 수와 문장 길이를 제한한다.
-- 목차는 기본적으로 1단으로 구성해 장·절·페이지 번호의 읽기 순서를 보존한다.
-
-지원 레이아웃:
-
-- `process`: 단계 흐름
-- `bridge`: 양쪽 영역을 연결하는 역할·가치 구조
-- `quadrant`: 네 가지 관점 또는 상태
-- `ladder`: 단계별 성숙도·레버리지
-- `principles`: 원칙 카드
-- `dashboard`: 지표·관점 묶음
-- `network`: 인물·팀·지식 원천 관계
-- `matrix`: 사례·항목 비교표
-
-설정 예:
-
-```yaml
-visuals:
-  enabled: true
-  default_note: "편집 요약: 본문의 장·절 구조와 핵심 문장을 재배열한 도식이며, 원문을 대체하지 않습니다."
-  chapters:
-    "1장 예시":
-      kicker: "CHAPTER MAP"
-      title: "이 장의 핵심 흐름"
-      thesis: "원문에서 확인한 핵심 명제를 한 문장으로 적습니다."
-      diagram:
-        layout: process
-        label: "WORKFLOW"
-        steps:
-          - {title: "진단", text: "원문 근거 문장"}
-          - {title: "검증", text: "원문 근거 문장"}
-      table:
-        title: "판단 기준"
-        headers: [구간, 확인할 것, 산출물]
-        rows:
-          - [진단, 원문 근거, 기록]
-```
-
-상세 계약과 검수법은 `references/visual-editorial-layer.md`를 따른다. 시각 요소에서 AI 생성물 티가 나는 패턴(gradient·이모지·무지개 구분색·가짜 수치·과장 카피)을 피하는 기준은 `references/ai-tells.md`를 따른다.
-
-원고가 본문 안에 `<!-- figure-spec …… output: assets/figures/x.svg …… alt_ko: …… caption_ko: …… -->` 주석과 자리표시자 인용구를 박아둔 경우, 스킬이 빌드 시 이를 파싱한다. `output` 경로의 SVG(또는 이미지)가 `asset_root`(단일 파일 입력이면 입력 파일의 디렉터리, 폴더·ZIP이면 콘텐츠 루트)에 존재하면 `<figure>`로 본문에 임베드하고, 없으면 “제작 예정” 자리표시자로 바꾼다. 원시 스펙 텍스트가 PDF에 노출되지 않는다.
-
-표지와 도면의 색 팔레트는 `editorial.cover_theme`으로 정한다. `midnight`·`burgundy`·`forest`·`slate`·`plum`·`ink` 중 하나를 지정하거나, `auto`(기본)로 두면 책 제목의 MD5 해시로 자동 선택한다. 같은 제목은 같은 표지, 다른 제목은 다른 표지가 나온다(재현 가능). 원고에 이미 만들어진 표지 이미지가 있으면 `editorial.cover_image`에 경로를 지정한다. 절대경로, 콘텐츠 루트 상대경로, 현재 작업 디렉터리 상대경로 순으로 찾고, 파일이 있으면 풀블리드 이미지 표지로 쓰고 없으면 `cover_theme` 생성 표지로 폴백한다.
-
-장 제목은 자동으로 분류한다. `N장 …`·`NN. …`·`NN) …` 꼴은 장 번호를 추출해 표제지 번호와 정렬하고 제목에서 번호 접두사를 덜어낸다. `Part N. …`·`제N부 …`는 PART 분할자, `부록 X …`는 APPENDIX, `후기 …`는 AFTERWORD로 묶는다. `머리말`·`서문`·`들어가며`·`이 책을 사용하는 방법`·`읽는 법` 따위의 앞부분 제목은 CHAPTER 번호 없이 프런트매터로 렌더한다(`editorial.front_matter_header`로 상단 라벨을 바꾼다).
-
-## 3. 원고 보존 프리플라이트
-
-빌드 전 다음을 집계한다.
-
-- 소스 파일 수
-- H1/H2/H3 제목 수
-- 본문 문단 수
-- 목록 항목 수
-- 표 수
-- 링크·각주 수
-- 이미지 수
-
-원문을 수정해야 할 때는 원본 파일을 직접 덮어쓰지 않는다. 정규화 사본을 작업 폴더에 만들고 변경 내역을 기록한다. 허용되는 자동 변경은 다음뿐이다.
-
-- 파일 순서 정렬
-- 제목 ID 부여
-- 생성형 목차용 앵커 추가
-- 페이지 편집을 위한 래퍼 요소 추가
-- 명백한 Markdown 렌더링 오류의 구조적 복구
-- 설정에 명시된 저장소용 목차·읽기 안내·중복 판권·호출 문구를 편집면으로 이동하거나 제외
-
-마지막 항목은 반드시 `strip_front_matter_sections`, `front_matter_drop_paragraphs`에 정확히 기록해야 한다. 문장 표현과 사실 내용은 변경하지 않는다.
-
-## 4. 빌드
-
-먼저 의존성을 확인한다.
+의존성 확인:
 
 ```bash
 python scripts/publish_book.py --check-deps
 ```
 
-기본 실행:
-
-```bash
-python scripts/publish_book.py \
-  --input <CONTENT_폴더_또는_ZIP_또는_단일_MD> \
-  --output-dir <출력_폴더> \
-  --config assets/book-config.example.yaml
-```
-
-`--input`은 콘텐츠 폴더, ZIP, 또는 **단일 Markdown 파일**을 받는다. 단일 `.md`(예: 전체 권을 합친 `BOOK.md`)을 넣으면 H1 단위로 장을 나눠 작업 폴더에 쓴 뒤 다중 파일 파이프라인과 같게 처리한다. 이때 첫 제목 블록(책 제목·표지 이미지)과 `목차`/`차례` H1 섹션은 스킬이 표지·제목 페이지·목차를 다시 만들므로 자동으로 제외한다.
-
-FDE 한국어판을 **1단 목차 + 장별 도형·표 12쪽**이 포함된 시각 편집본으로 제작할 때는 다음 설정을 사용한다.
-
-```bash
-python scripts/publish_book.py \
-  --input <FDE_CONTENT_ZIP> \
-  --output-dir <출력_폴더> \
-  --config assets/book-config.fde-example.yaml
-```
-
-본문 중심 판본이 필요하면 `assets/book-config.fde-text-only.yaml`로 바꾼다.
-
-참고자료가 있을 때는 **검수용으로만** 전달한다.
-
 ```bash
 python scripts/publish_book.py \
   --input <CONTENT> \
-  --reference <REFERENCE_1> \
-  --reference <REFERENCE_2> \
-  --output-dir <출력_폴더> \
-  --config <프로젝트용_book.yaml>
-```
+  --output-dir <OUT> \
+  --config <BOOK_CONFIG>
 
-스크립트는 참고자료 본문을 PDF에 삽입하지 않는다. 출력 폴더에는 PDF, HTML, 소스 매니페스트, 빌드 보고서가 생성된다.
-
-## 5. 구조 검수
-
-```bash
 python scripts/verify_pdf.py \
-  --pdf <출력.pdf> \
-  --source-manifest <출력_폴더/source_manifest.json> \
-  --report-dir <출력_폴더/verification>
+  --pdf <OUT/BOOK.pdf> \
+  --source-manifest <OUT/source_manifest.json> \
+  --report-dir <OUT/verification>
+
+python scripts/render_pdf.py --pdf <OUT/BOOK.pdf> --out-dir <OUT/rendered> --dpi 160
+python scripts/make_contact_sheet.py --input-dir <OUT/rendered> --output <OUT/contact-sheet.jpg>
 ```
 
-참고자료 오염 검사까지 수행하려면:
+참고자료는 빌더와 검증기의 `--reference`에 전달하되 본문 입력에서는 제외한다. 장별 도형·표, 표지 이미지, 장 분류, 설정 계약은 `references/editorial-system.md`, `references/visual-editorial-layer.md`, `references/ai-tells.md`를 따른다.
+
+원고 기반 용어집·장별 요약 스캐폴드가 필요하면 PDF와 별도의 선택 산출물로 생성한다. 스크립트는 LLM을 호출하지 않으며, 생성 후 원문 근거를 붙여 채운다.
 
 ```bash
-python scripts/verify_pdf.py \
-  --pdf <출력.pdf> \
-  --source-manifest <출력_폴더/source_manifest.json> \
-  --reference <REFERENCE_1> \
-  --reference <REFERENCE_2> \
-  --report-dir <출력_폴더/verification>
+python scripts/generate_summary.py <MANUSCRIPT_DIR> <OUT>
+python scripts/generate_summary.py <MANUSCRIPT_DIR> <OUT> --no-auto-terms
+python scripts/generate_summary.py <MANUSCRIPT_DIR> <OUT> --note <GUIDANCE>
 ```
 
-검사 항목:
+`summary.auto_terms: false`는 `--no-auto-terms`, `summary.default_note`는 `--note`에 대응한다.
 
-- A4 페이지 크기
-- PDF 열기 가능 여부와 페이지 수
-- 제목·저자 메타데이터
-- 북마크/아웃라인
-- 링크 주석
-- 글꼴 임베딩과 유니코드 매핑
-- 빈 페이지 후보
-- 원문 제목·문단 표본의 누락
-- 참고자료 고유 문구의 비의도적 유입
+## 3. Manual 모드
 
-자동 검사는 시각 검수를 대체하지 않는다.
+Manual 모드는 화면 설명문이 아니라 **실제 업무를 수행하고 완료를 판정하는 운영 산출물**을 만든다. 시작 전에 `references/manual-production.md`를 완전히 읽는다.
 
-## 6. 전 페이지 렌더링과 시각 검수
+### 3.1 실제 업무 인벤토리
+
+다음을 먼저 확인한다.
+
+- 누가 이 작업을 수행하는가
+- 어떤 입력·상태가 작업을 시작시키는가
+- 어떤 메뉴·문서·데이터가 흐름에 참여하는가
+- 어떤 상태 변화와 읽기 결과가 성공을 증명하는가
+- 어떤 분기·예외·승인·되돌리기·전문가 검토가 필요한가
+- 근거가 `source`, `ui`, `runtime`, `operator-confirmed`, `inference` 중 무엇인가
+
+화면 목록이 아니라 `trigger → 준비 → 실행 → 검토/승인 → 결과/감사` 업무 흐름으로 구성한다. 실제 UI를 확인하지 못한 click path는 `provisional`이다.
+
+### 3.2 초보자 개요
+
+상세 절차보다 `overview.html`을 먼저 설계한다. 다음을 포함한다.
+
+- 시스템이 무엇이고 누가 사용하는가
+- 주요 구성요소와 역할
+- 데이터·요청·문서가 이동하는 생명주기
+- 처음 접하는 사람이 자주 하는 오해와 교정
+- 매뉴얼을 읽는 순서와 한 줄 정신 모형
+
+### 3.3 독립 lesson 계약
+
+각 lesson은 index 카드의 반복이 아니라 단독으로 실행 가능한 교육 단위여야 한다.
+
+- 목적, 대상, 사용 시점, 선행 조건
+- 단계별 `operation`, `action`, 독자가 봐야 할 `evidence`, `success` 판정
+- 위험도, 승인 필요 여부, 안전 fixture
+- 주의, 흔한 실수, 완료 확인
+- 근거 ID, 다음 분기
+- 화면·영상이 있으면 설명 가능한 alt와 근거 ID
+
+### 3.4 매니페스트와 빌드
+
+`assets/manual-config.example.yaml`을 복사해 `manual.yaml`을 만든다. 실제 예시는 `examples/minimal-manual/`을 사용한다.
 
 ```bash
-python scripts/render_pdf.py \
-  --pdf <출력.pdf> \
-  --out-dir <출력_폴더/rendered> \
-  --dpi 160
+python scripts/build_manual.py \
+  --manifest <PROJECT/manual.yaml> \
+  --output-dir <OUT>
 
-python scripts/make_contact_sheet.py \
-  --input-dir <출력_폴더/rendered> \
-  --output <출력_폴더/contact-sheet.jpg>
+python scripts/verify_manual.py \
+  --manifest <PROJECT/manual.yaml> \
+  --package-dir <OUT>
 ```
 
-렌더된 페이지를 실제로 확인한다. 최소한 표지, 속표지, 편집본 안내, 목차 전 페이지, 각 장 표제지, 표·인용문·긴 목록·부록 페이지를 확인한다. 장문 표나 복잡한 페이지가 있으면 해당 페이지를 원본 크기로 별도 확인한다.
+`--output-dir`은 존재하지 않거나 비어 있어야 한다. 빌더는 기존 폴더를 자동 삭제·덮어쓰지 않는다.
 
-시각 품질 기준:
-
-- 잘린 글자, 겹침, 검은 네모, 깨진 한글이 없어야 한다.
-- 제목이 페이지 하단에 홀로 남지 않아야 한다.
-- 표 행과 목록 항목이 부자연스럽게 잘리지 않아야 한다.
-- 1단 목차의 장·절·점선 리더·페이지 번호가 같은 읽기 흐름을 유지해야 한다.
-- 시각 요약의 카드·화살표·표가 겹치거나 잘리지 않고, 문구가 원문 근거와 대응해야 한다.
-- 머리말·꼬리말이 표지·장 표제지에 나타나지 않아야 한다.
-- 페이지 번호, 목차 페이지, PDF 북마크가 서로 맞아야 한다.
-- 지나치게 빈 페이지와 과밀 페이지가 반복되지 않아야 한다.
-- 참고자료와 비슷한 **시각 체계**는 허용되지만 참고자료의 콘텐츠 흔적은 없어야 한다.
-
-전체 품질 게이트: `references/quality-gates.md`
-
-## 6.1 요약본 생성 (선택)
-
-`summary.enabled: true`일 때, PDF 빌드·검수가 끝난 뒤 원문 기반 **요약본**(용어집 + 장별 요약) 스캐폴드를 생성한다. 요약본은 PDF 본문과는 별개의 참조 레이어로, 원문을 대체하지 않는다.
+브라우저에서 전 페이지·탐색·반응형·키보드·화면 증거를 직접 검수했다면 `assets/visual-review.example.json` 형식으로 패키지 안에 증거를 저장한 뒤 `--visual-evidence`로 전달한다.
 
 ```bash
-# 기본: H2 제목 + **굵은 용어** 후보 자동 추출, 하드코딩된 기본 안내문
-python3 scripts/generate_summary.py <manuscript_dir> <out_dir>
-
-# summary.auto_terms: false → 용어집 후보 자동 추출을 끔 (에이전트가 직접 채움)
-python3 scripts/generate_summary.py <manuscript_dir> <out_dir> --no-auto-terms
-
-# summary.default_note → 장·용어집 스캐폴드의 안내문을 config 값으로 덮어쓰기
-python3 scripts/generate_summary.py <manuscript_dir> <out_dir> \
-    --note "$(yq '.summary.default_note' book-config.yaml)"
+python scripts/verify_manual.py \
+  --manifest <PROJECT/manual.yaml> \
+  --package-dir <OUT> \
+  --visual-evidence <OUT/qa/visual-review.json>
 ```
 
-`book-config.yaml`의 `summary` 섹션과 플래그 대응:
+## 4. 위험 작업 게이트
 
-- `summary.auto_terms: false` → `--no-auto-terms`를 전달한다. 용어집이 자동 후보(H2 제목·`**굵은 용어**`)를 내지 않고, 에이전트가 직접 채울 수 있도록 빈 구획만 남긴다.
-- `summary.default_note` → `--note <text>`로 전달한다. 이 값이 장 스캐폴드와 용어집 스캐폴드 양쪽의 하드코딩된 기본 안내문을 덮어쓴다. 플래그를 생략하면 스크립트의 기본 안내문을 그대로 쓴다.
+읽기 전용 조사와 화면 확인을 기본값으로 한다.
 
-이 스크립트는 **결정론적 스캐폴드만** 생성한다(LLM 호출 없음). `out_dir/summary/chapters/ch<NN>-<slug>.md`와 `out_dir/summary/glossary.md`를 내며, 각 장 스캐폴드는 H1 제목, 자동 추출한 H2 절 목록, 그리고 비어 있는 네 가지 구획(핵심 아이디어·절 구성·주요 개념·핵심 요약)을 담는다. 용어집은 각 장의 H2 제목과 본문 `**굵은 용어**`를 후보로 나열한다(`--no-auto-terms`로 끄기 가능).
+`high` 또는 `critical` lesson은 다음을 모두 만족하기 전에는 빌드 계약을 통과하지 못한다.
 
-스캐폴드를 만든 뒤, 에이전트가 각 장의 핵심 아이디어·주요 개념·핵심 요약을 작성하고 용어집 용어를 선별·정의한다. 이때 반드시 **원문 근거**(파일명·절)를 인용하고, 원문에 없는 의미·주장·사실을 부여하지 않는다. 허구의 개념을 만들거나 원문을 요약하면서 사실관계를 바꾸면 안 된다. 요약본 규칙은 `원문 보존 원칙`과 동일하게 적용된다.
+- `approval_required: true`
+- `fixture`: `demo`, `staging`, `local`, `sandbox`, `dedicated-test-data` 중 하나
+- 상태 변경 단계의 `operation: write`와 변경 후 확인할 `readback`
+- 실제 실행 시 사용자 승인 범위 안에서 고유 테스트 식별자를 사용
+- 실행 후 ID, 상태, 감사 기록, 재고·원장·권한 같은 부작용을 다시 읽어 확인
 
-재실행은 멱등(같은 결과로 덮어쓰기)이므로, 원문이 바뀌면 스캐폴드를 다시 만들고 에이전트가 다시 채울 수 있다.
+규제·회계·세무·법률·의료·보안 판단은 UI 사용법과 전문적 판단을 구분하고 전문가 검토 범위를 표시한다.
 
-## 7. 실패 시 수정 순서
+## 5. 매체 단계 상승
 
-1. 내용 누락 또는 참고자료 오염
-2. 글자 깨짐·폰트 미임베딩
-3. 표·목록·제목 잘림
-4. 목차·북마크·페이지 번호 불일치
-5. 장 표제지와 본문 흐름
-6. 여백·타이포·장식 미세 조정
+화면·영상은 장식이 아니라 단계의 증거다. 핵심 경로는 다음 순서로 상승시킨다.
 
-미관 문제보다 내용 경계와 무결성을 먼저 고친다. 수정 후 PDF를 다시 생성하고, 다시 렌더링하며, 검증 보고서를 갱신한다.
+1. 공식 문서·저장소 근거
+2. 실제 화면 캡처 또는 신뢰 가능한 다이어그램
+3. 단계별 강조·설명 카드
+4. 사용자가 요청하고 도구가 준비된 경우에만 안내 영상
 
-## 8. 완료 조건
+화면 캡처가 불가능하면 placeholder를 배포하지 않는다. 근거 기반 다이어그램을 사용하거나 lesson을 `provisional`로 제한한다. 영상·브라우저 검수 기준은 필요할 때만 `references/manual-media.md`를 읽는다.
 
-다음 조건을 모두 만족해야 완료다.
+## 6. 검증과 완료 조건
 
-- 원고 파일과 최종 PDF의 핵심 내용이 동기화됨
-- 참고자료 내용이 본문에 유입되지 않음
-- 표지·1단 목차·장 표제지·본문·부록 구조가 일관됨
-- 사용 설정에 시각 요약이 있으면 도형·표의 문구가 원문과 추적 가능하고 전 페이지 렌더 검수를 통과함
-- PDF 메타데이터, 북마크, 링크가 정상 작동함
-- 글꼴이 포함되고 한글이 정상 렌더링됨
-- 전 페이지 또는 전 페이지 접촉표를 검토함
-- 고위험 검수 오류가 0건임
-- 최종 PDF와 검수 보고서의 SHA-256을 기록함
+Book은 `references/quality-gates.md`, Manual은 `references/manual-quality-gates.md`를 따른다.
 
-## 9. 완료 보고 형식
+Manual 검증은 세 축을 분리한다.
+
+- `technical`: 파일, HTML 구조, 내부 링크, 매체, alt, 매니페스트 동기화
+- `content`: 업무 흐름, lesson 깊이, 단계 근거, 위험 게이트, placeholder·원시 마크업 누출
+- `visual`: 브라우저에서 실제로 본 레이아웃, 탐색, 반응형, 키보드, 매체 가독성
+
+`final`은 고위험 오류가 0이고 실제 동작 근거가 inference뿐이 아니며 시각·사용성 검수 범위가 기록됐을 때만 사용한다. 자동 검증 PASS와 시각 PASS를 합치지 않는다.
+
+## 7. 완료 보고
+
+다음을 짧고 구체적으로 보고한다.
 
 ```text
-Goal — 원고 편집 PDF 제작
+Goal — 책/매뉴얼 제작
+모드: book / manual / hybrid
 상태: 완료 / 조건부 완료 / 실패
 
 입력 경계
-- CONTENT: ...
-- REFERENCE: ...
-- 제외: ...
-
-제작 결과
-- 페이지 수: ...
-- 목차 레이아웃: 1단 / 기타
-- 시각 요약 페이지: ...
-- 목차 항목: ...
-- 북마크: ...
-- 글꼴: ...
-- 링크: ...
-
-무결성 검수
-- 소스 파일: ...
-- 제목/문단 누락: ...
-- 참고자료 오염 경고: ...
-- 렌더링 이상: ...
+- CONTENT / EVIDENCE / REFERENCE / EXCLUDE
 
 산출물
-- PDF
-- 검수 보고서
-- 소스 매니페스트
-- 필요 시 전체 패키지 ZIP
+- 최종 PDF 또는 index.html
+- 매니페스트·근거 맵
+- 검증 보고서·STATUS·HANDOFF
 
-확인하지 못한 범위
-- 자동 또는 수동으로 확인하지 못한 사항을 정확히 기록
+검증
+- 기술 / 내용·근거 / 시각·사용성
+- 고위험 오류와 미확인 범위
+- SHA-256
 ```
 
-## 10. 이 스킬을 사용하지 않는 경우
+## 8. 사용하지 않는 경우
 
-- 기존 PDF 여러 개를 단순 병합·분할하는 작업
-- 스캔 PDF OCR만 필요한 작업
-- 계약서 양식 입력·서명·레드액션 작업
-- 슬라이드형 발표자료 제작
-- 원고 내용을 새로 집필하거나 다른 자료와 통합하는 편집 작업
-
-이 경우 해당 목적에 맞는 PDF·DOCX·슬라이드 스킬을 사용한다.
+- PDF 단순 병합·분할 또는 OCR만 필요한 작업
+- 상품 판매용 랜딩페이지·마케팅 카피
+- 사용자 업무 흐름이 없는 순수 API 레퍼런스
+- 실제 근거 없이 만드는 가상 UI·클릭 경로
+- 계약서 입력·서명·레드액션, 슬라이드 발표자료
