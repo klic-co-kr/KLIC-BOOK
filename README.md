@@ -11,6 +11,7 @@
 | [실전 시스템 설계 2026](books/practical-system-design-2026-book/) | 분산·데이터·프로덕션·AI 네이티브까지, 2026년 시스템 설계 38장 종합 (System Design Primer 한국어 개정 초고) | [PDF 다운로드](books/practical-system-design-2026-book/build/실전_시스템_설계_2026_practical-system-design-2026-ko.pdf?raw=1) |
 | [AI 에이전트 깊이 이해하기](books/ai-agent-book-ko/) | Agent = LLM + 컨텍스트 + 도구. 10장으로 끝내는 AI 에이전트 설계·실전 (chemark 《深入理解 AI Agent》 한국어 번역판, Apache 2.0) | [PDF 다운로드](books/ai-agent-book-ko/build/AI_에이전트_깊이_이해하기_ai-agent-book-ko.pdf?raw=1) |
 | [NHN FactoryX 실전 설계](books/factoryx-ai-infrastructure/) | GPU 데이터센터에서 AI 에이전트 실행 환경까지, 공개 근거로 설계하는 AI 인프라 실무서 | [PDF 다운로드](books/factoryx-ai-infrastructure/build/NHN_FactoryX_실전_설계_nhn-factoryx-ai-infrastructure-ko.pdf?raw=1) |
+| [대규모 언어모델(LLM) 강좌 2025](books/llm-lecture-2025/) | 동경대 마츠오·이와사와 연구실 LLM 강좌(8일) 한국어 번역판. pdf-to-md 변환→번역→재구성→출간 파이프라인. CC BY-NC-ND 4.0 | [PDF 다운로드](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/llm-lecture-2025/LLM_강좌_2025_한국어번역판.pdf) |
 
 ## 🎓 강의
 
