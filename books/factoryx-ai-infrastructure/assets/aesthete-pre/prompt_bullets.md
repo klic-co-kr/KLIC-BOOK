@@ -1,0 +1,34 @@
+- generic layout — no type profile; verifiable P0 floor only
+- Structure: unspecified — no type profile — pick a shape and commit (do not default to the statistical mode)
+- freeRatio target 0.3, min 0.2.
+- Focal budget: 1.
+- Do not: generic sans as the SOLE typeface (pair a display/serif voice)
+- Do not: more than 5 type sizes (a system, not accidents)
+- Do not: mid-render token improvisation — every color/font must reference a named token; inline hex/oklch bypassing the token block is an escape hatch
+- Do not: purple→blue gradient on white (the default “AI” look)
+- Do not: pure #000 on #FFF (use off-black/off-white)
+- Do not: rainbow palette for non-ordinal categories
+- Do not: identical spacing everywhere (commit a rhythm scale)
+- Do not: 50/50 split (reads indecisive — 60/40 or commit an asymmetry)
+- Do not: identical shadow + corner-radius on every element (differentiate surfaces)
+- Do not: every decision at the statistical mode (that is a template, not a design)
+- Do not: hanging header / left-margin label — tag-left + heading-right two-column (the templated-editorial tell)
+- Do not: bare 1fr grid tracks for image-bearing cells (use minmax(0,1fr))
+- Do not: re-drawn fake chrome — browser bars, phone frames, code-window mockups (use real screenshots or omit)
+- Do not: two-line clickable text — buttons / nav / CTA labels must fit one line
+- Do not: invented metrics / testimonials / counts — “+47% conversion”, “trusted by 50,000+”, “10× faster” are slop the moment they are fabricated; use real numbers or a labelled placeholder, never invent
+- Do not: invented metrics/testimonials/counts (+47%, 10×, 50,000+)
+- Do not: cliché indigo→pink/violet gradient stops
+- Do not: emoji inside heading text
+- Do not: glassmorphism (backdrop-filter) panels as primary surface
+- Do not: decorative scale/spin @keyframes on static content
+- Do not: excessive lucide/svg icon saturation
+- Do not: "Trusted by" logo strip with fabricated names/metrics
+- Avoid the indigo→pink/violet cliché gradient (#6366f1/#8b5cf6/#a855f7 → #ec4899/#d946ef) — the default "AI" look.
+- No emoji inside heading text — decoration belongs outside the heading, not inside it.
+- No glassmorphism (backdrop-filter blur) panels as the primary surface treatment.
+- No "Trusted by …" logo strip with invented company names or fabricated metrics (+N%, 10×, 50,000+).
+- No decorative scale/spin keyframe animations on static content (motion must serve meaning).
+- No icon saturation — do not stack lucide/svg icons beyond what the prose needs.
+- Declared goal: A4 Korean technical book diagrams and charts for NHN FactoryX; flat navy and teal, source-grounded labels, no gradients or decorative icons
+- Audience: CTO, platform engineers, ML infrastructure engineers

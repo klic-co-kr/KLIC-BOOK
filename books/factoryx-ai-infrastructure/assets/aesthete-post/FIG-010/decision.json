@@ -1,0 +1,543 @@
+{
+  "schema": "aesthete.decision/v1",
+  "schema_version": 1,
+  "decision": "regenerate",
+  "reasons": [
+    {
+      "code": "CONTRACT_FAIL",
+      "tier": "P2",
+      "detail": "balance.BM>=0.7",
+      "fixable": false
+    },
+    {
+      "code": "CONTRACT_FAIL",
+      "tier": "P2",
+      "detail": "proximity.falseAdjacencyCount==0",
+      "fixable": false
+    },
+    {
+      "code": "CONTRACT_FAIL",
+      "tier": "P2",
+      "detail": "proximity.fragmentedCount==0",
+      "fixable": false
+    },
+    {
+      "code": "CONTRACT_FAIL",
+      "tier": "P2",
+      "detail": "similarity.inconsistentGroups==0",
+      "fixable": false
+    }
+  ],
+  "scores": {
+    "hardIntegrityScore": 1,
+    "measuredAestheticScore": 0.841,
+    "coverageScore": 1
+  },
+  "paths": {
+    "report": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/assets/aesthete-post/FIG-010/report.json",
+    "vuln": null,
+    "structure": null,
+    "contract_eval": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/assets/aesthete-post/FIG-010/contract-eval.json",
+    "slop": null,
+    "decision": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/assets/aesthete-post/FIG-010/decision.json"
+  },
+  "next": {
+    "action": "rewrite_generator",
+    "loop_hint_max": 3
+  },
+  "claim_scope": {
+    "schema": "aesthete.claim-scope/v1",
+    "pass_means": "no_enabled_blocking_rule_triggered",
+    "rules": {
+      "artifact_import": {
+        "requested": true,
+        "executed": true,
+        "blocking_conditions": [
+          "read_parse_or_schema_failure_routes_to_regenerate"
+        ],
+        "coverage_behavior": "failure_prevents_downstream_execution",
+        "advisory_behavior": "none"
+      },
+      "alt_hard_integrity": {
+        "requested": true,
+        "executed": true,
+        "blocking_conditions": [
+          "p0_score_below_one_routes_to_fix_regenerate_or_human"
+        ],
+        "coverage_behavior": "reported_separately",
+        "advisory_behavior": "non_p0_measurements_do_not_directly_block"
+      },
+      "coverage": {
+        "requested": true,
+        "executed": true,
+        "blocking_conditions": [
+          "zero_routes_to_human"
+        ],
+        "coverage_behavior": "nonzero_does_not_imply_full_coverage",
+        "advisory_behavior": "none"
+      },
+      "structure_signature": {
+        "requested": false,
+        "executed": false,
+        "blocking_conditions": [
+          "fail_routes_to_regenerate"
+        ],
+        "coverage_behavior": "unknown_is_nonblocking",
+        "advisory_behavior": "none"
+      },
+      "token_policy": {
+        "requested": false,
+        "executed": false,
+        "blocking_conditions": [
+          "any_violation_routes_to_regenerate"
+        ],
+        "coverage_behavior": "no_separate_coverage_state",
+        "advisory_behavior": "none"
+      },
+      "known_bad_signatures": {
+        "requested": false,
+        "executed": false,
+        "blocking_conditions": [
+          "high_findings_route_to_regenerate_only_when_vuln_gate_enabled"
+        ],
+        "coverage_behavior": "scanner_coverage_does_not_independently_block",
+        "advisory_behavior": "ungated_high_findings_add_advisory_reasons"
+      },
+      "html_pattern_scan": {
+        "requested": false,
+        "executed": false,
+        "blocking_conditions": [
+          "branch_1_when_html_measured_and_p0_exists_regenerate",
+          "branch_2_else_when_html_measured_and_gate_enabled_and_p1_exists_regenerate",
+          "branch_3_else_when_html_measured_and_p0_signature_unmeasured_human"
+        ],
+        "coverage_behavior": "whole_scan_unmeasurable_is_nonblocking",
+        "advisory_behavior": "branch_4_only_p2_findings_add_reasons_after_no_prior_branch_p1_ungated_does_not"
+      },
+      "contract_criteria": {
+        "requested": true,
+        "executed": true,
+        "blocking_conditions": [
+          "non_p0_criterion_failure_routes_to_regenerate"
+        ],
+        "coverage_behavior": "p0_only_contract_failure_is_nonblocking_in_contract_branch",
+        "advisory_behavior": "none"
+      }
+    },
+    "does_not_establish": [
+      "reader_comprehension",
+      "pixel_output_equivalence",
+      "host_application_behavior",
+      "human_approval"
+    ]
+  },
+  "binding": {
+    "schema": "aesthete.binding/v2",
+    "algorithm": "sha256",
+    "integrity": "content_freshness_and_internal_consistency_not_authenticity",
+    "completeness": "complete",
+    "artifact": {
+      "status": "bound",
+      "sha256": "1c5a9dcd2797514790792fe10c579c327027d708a43292a4d0c52efdba52ba11"
+    },
+    "contract": {
+      "status": "bound",
+      "sha256": "a1213bcd2b950a145a23dd9bb00c796a324412a9bdd28a00f61d813b6f994e93"
+    },
+    "intent": {
+      "status": "bound",
+      "sha256": "d83dfe33f0d843af1b8cde49a4f734149b58a835398171e866b6a1398e411f50"
+    },
+    "action_inputs": {
+      "status": "not_required",
+      "runtime_executable_locator_sha256": null,
+      "script_locator_sha256": null,
+      "artifact_locator_sha256": null,
+      "contract_locator_sha256": null,
+      "contract_sha256": null,
+      "adapter": null,
+      "slide": null,
+      "profile": null
+    },
+    "policy": {
+      "adapter": {
+        "id": "svg",
+        "effective_slide": null
+      },
+      "profile": null,
+      "structure": null,
+      "lint": false,
+      "vuln": false,
+      "vuln_gate": false,
+      "slop": false,
+      "slop_gate": false,
+      "slop_autofix": false,
+      "human_on_unfixable": false,
+      "artifact_type": null,
+      "resources": {
+        "params_sha256": "6ce74c693d974fd6de130d58521076d62b8cae0dd729135aaa415f4fc4ddd762",
+        "tokens_sha256": null,
+        "schemas": {
+          "files": [
+            {
+              "relative_path": "schemas/alt.schema.json",
+              "sha256": "2c685c5aa3cb6eed891772003b4cdc8aa0db53d70da18b2d4c3c4a09aecab291"
+            },
+            {
+              "relative_path": "schemas/brief.schema.json",
+              "sha256": "266bd0fa3f523b91533c0302311bfabc745f5d1c8e99fab81ecaf3230e958e78"
+            },
+            {
+              "relative_path": "schemas/common.schema.json",
+              "sha256": "5659db308e067f177e90135b65abcb19a8672b1d76cd186e5eb49c92e67d17b8"
+            },
+            {
+              "relative_path": "schemas/contract.schema.json",
+              "sha256": "46a49cf3ebdbeb91806809e2af298744a36c2a7434ddf846d8ccd8b0bfe4fe0c"
+            },
+            {
+              "relative_path": "schemas/decision.schema.json",
+              "sha256": "75bb06d4522473201b878fdf68b32aef62c0892080f8944e14dabe8a16b116cc"
+            },
+            {
+              "relative_path": "schemas/intent.schema.json",
+              "sha256": "fa6dcfd5afa707ba9613c0b16011fa256a39875627f6f53f58e93bc8dd35b014"
+            },
+            {
+              "relative_path": "schemas/pre.schema.json",
+              "sha256": "b0de5d2abe89a480ae55acde816421f93f5df4e07cd3d4ae7a32b7a2bc6b03f7"
+            },
+            {
+              "relative_path": "schemas/report.schema.json",
+              "sha256": "cc4ed9fc626cefe00fbabf1f0dffb33aa07965b96691c9e91124d70771f190d0"
+            },
+            {
+              "relative_path": "schemas/slop-report.schema.json",
+              "sha256": "b99f7125089a9236315fec5164494e229371df454466abb81022cc5af169d21e"
+            },
+            {
+              "relative_path": "schemas/validation-corpus.schema.json",
+              "sha256": "0de1e900ea92bc0432461c2dd1add856a553b4dbfb83ff5cce6e5ae1907aaf48"
+            },
+            {
+              "relative_path": "schemas/vuln-report.schema.json",
+              "sha256": "8c267dc84250d572432af35dbb74c707fd59dafaba710008ebda0b4045858925"
+            }
+          ],
+          "sha256": "006bbd7d6cb1290d5383720cbb728a3dce61954efedc73bd1f0fa2af1bbb0b14"
+        },
+        "on_disk_installation": {
+          "files": [
+            {
+              "relative_path": "bun.lock",
+              "sha256": "e272961673ecc48414213c722aa353929b3a6e4eacc3e4afc01f697ceed9d900"
+            },
+            {
+              "relative_path": "lib/adapters/emu.mjs",
+              "sha256": "ee9834e32d96feb0fd1453626c47fc2e86b396c3bbc9ac1504b2e374e12d0a21"
+            },
+            {
+              "relative_path": "lib/adapters/html.mjs",
+              "sha256": "6ef4fc5910ac8cb5fc5b3459415831b7e5539778ec466949155745a7f57143ca"
+            },
+            {
+              "relative_path": "lib/adapters/image.mjs",
+              "sha256": "6ecf3b66fa24f4f3b0e2f6cd18309ba76a90f551b715878338a3fe93691ae420"
+            },
+            {
+              "relative_path": "lib/adapters/index.mjs",
+              "sha256": "0a8acb66f1b4ff7cf5b8cd1229a6da0b8d1c185924c35e10abe2133cd606067d"
+            },
+            {
+              "relative_path": "lib/adapters/ooxml.mjs",
+              "sha256": "1dd91931f173c96dfc7d257e572a5e6ebe88e1cac9bc1a3d94fa0ea7edd39d1f"
+            },
+            {
+              "relative_path": "lib/adapters/pptx.mjs",
+              "sha256": "52827170b80381e0e5d50c617b136ad93aad24e9c2eecdacb623c5a689abc6cc"
+            },
+            {
+              "relative_path": "lib/adapters/svg.mjs",
+              "sha256": "56f13c48897a626c8c715896f81192fb9b7db8afd5e23813ff0003dad7f9676e"
+            },
+            {
+              "relative_path": "lib/adapters/xml.mjs",
+              "sha256": "acc1de78abce412442a67c9bf34374e9812707a694d441733bdd702b41346448"
+            },
+            {
+              "relative_path": "lib/adapters/zip.mjs",
+              "sha256": "97b799a408841792dd2effd7c8fdfec913059ff0a3a5c73cd7d83fec540681a5"
+            },
+            {
+              "relative_path": "lib/bradley-terry.mjs",
+              "sha256": "3511739cd8d503f05d7971d546baa8667df3cbb3ee2f15d842a5f14d8dd50773"
+            },
+            {
+              "relative_path": "lib/color.mjs",
+              "sha256": "031a3479bd7975e7422344622c9fb36d282f975815b09f7a22f4048449966134"
+            },
+            {
+              "relative_path": "lib/contract.mjs",
+              "sha256": "11b77dcc358673c9157405fc2e0275d81bdc399f592a7e7fa68e2e1bad788ce5"
+            },
+            {
+              "relative_path": "lib/designspec.mjs",
+              "sha256": "216a42a7f180e075e58677b7073f3a0111cda84e5141c3835b902e0f61b12f7c"
+            },
+            {
+              "relative_path": "lib/diffview.mjs",
+              "sha256": "d8517f7065a388719a10c50220e63c153a2a8614dab3677f933fd201d3295241"
+            },
+            {
+              "relative_path": "lib/diversify.mjs",
+              "sha256": "e9c0eddd8401674d861381d9cebe15fdca78b0e0de1e130a50b5702d6d8258fe"
+            },
+            {
+              "relative_path": "lib/emit.mjs",
+              "sha256": "4af7973431ebf2b85c5dc7786440459a8b4bfc61d9e7b9b4febc7ec23bcfd615"
+            },
+            {
+              "relative_path": "lib/fix.mjs",
+              "sha256": "597edaea7cd7dc2b3249196b09a6ec0bf9110f20523c9900223ba31f37f8ee68"
+            },
+            {
+              "relative_path": "lib/fixkind.mjs",
+              "sha256": "c6667d210944ea067a4da1b0803598fb8a43fda425f7e9a09d53ecda1ea39a85"
+            },
+            {
+              "relative_path": "lib/geometry.mjs",
+              "sha256": "aab2e7ae9f5f6a3e6cf120d5d988a413bb665682bf9d617941acf42f4a227ffd"
+            },
+            {
+              "relative_path": "lib/graph.mjs",
+              "sha256": "794937203b8e5228d28b518048fb1862d66ab3c10404fa4c572260b2b04a91c1"
+            },
+            {
+              "relative_path": "lib/harness.mjs",
+              "sha256": "1d148d2268cb41f456c856abeb48f247a549e25492827ed33ef4cec5bcfc9d57"
+            },
+            {
+              "relative_path": "lib/hooks/browser-hook.mjs",
+              "sha256": "2f02419809c78c7dc91b1bd5c03b6ae3d5c3dc8bd7c47e151a9fbaee00862feb"
+            },
+            {
+              "relative_path": "lib/hooks/region-provider.mjs",
+              "sha256": "adea246dc2f6632f646baff9a236b845026e19d5dcb7c70041222a6d0549d658"
+            },
+            {
+              "relative_path": "lib/hooks/sam-hook.mjs",
+              "sha256": "0f93b4835c0b24b3dcd2539decd5059631b7c0fbc094e68d281bcd5c09be50bd"
+            },
+            {
+              "relative_path": "lib/lint.mjs",
+              "sha256": "660d12e7b706c3dbf3a0e6a40a11750bf8b513f7ebf81fb15a26944bc772b086"
+            },
+            {
+              "relative_path": "lib/measure.mjs",
+              "sha256": "64e39ec0f043dba2d5ae07301f6f770c519e9aaa8a99388821bc6dce8ef7111d"
+            },
+            {
+              "relative_path": "lib/neural.mjs",
+              "sha256": "eb3d995811b959aedf9a59dfc0750fdbf93a3084f3289ffc150a63eaefac644b"
+            },
+            {
+              "relative_path": "lib/overlay/pptx.mjs",
+              "sha256": "87ff8adaf04eec16a49c85d09571640c6f40bf214fbfeaa33e0684fbff4c1c69"
+            },
+            {
+              "relative_path": "lib/overlay/svg.mjs",
+              "sha256": "493bdd5e308da1fd56aeb9156a53d57de57a264937ee6c3d25c7b2a6a52dbb79"
+            },
+            {
+              "relative_path": "lib/preflight.mjs",
+              "sha256": "ef3a908d6100c18edcc067f129541fa5adf20c1a102ad09c634ebec85f5e8772"
+            },
+            {
+              "relative_path": "lib/profiles.mjs",
+              "sha256": "51ba19fa55f9f1e8792c57669ab2a446f6acd7a104805d669cbf85fd0b4f7248"
+            },
+            {
+              "relative_path": "lib/quadtree.mjs",
+              "sha256": "bde61bcb0440cbaf35476e08ae6f78ad04092fa76fac907d88811fda2d8c1591"
+            },
+            {
+              "relative_path": "lib/shared/canonical-json.mjs",
+              "sha256": "b98af4decf614952829dcb527550545f9ad40e254920dccc66a8840bbf80af6b"
+            },
+            {
+              "relative_path": "lib/shared/cli.mjs",
+              "sha256": "90babb14660197bdc4724b18474f93d27ac7c4804d73854ce1e1f31ba8395f23"
+            },
+            {
+              "relative_path": "lib/shared/validator.mjs",
+              "sha256": "b90015598ba927577bb7f9b973012a4db3e80d5da082342f1b34aaca253c4690"
+            },
+            {
+              "relative_path": "lib/similarity.mjs",
+              "sha256": "4afdfe7152ea580e0480b6f8c2ae33da45398df787c1d3bf9be3b1c116bffe5d"
+            },
+            {
+              "relative_path": "lib/skill-action.mjs",
+              "sha256": "bd2b4b5503a2d0b531d090e544922c2f4fe69f3657b89f727d49e5a295c901ce"
+            },
+            {
+              "relative_path": "lib/skill-decision.mjs",
+              "sha256": "9adc4b82e44f5c797f07f68d616a67ba31f7c09c11b74004d7bf451167b0e2f9"
+            },
+            {
+              "relative_path": "lib/skill-gate.mjs",
+              "sha256": "07073c84b3cac905b525a726926412a6a76249640c3c70a7d43e9f665ca79f1d"
+            },
+            {
+              "relative_path": "lib/skill-intent.mjs",
+              "sha256": "d13b70c21f73ab869a19b44d5780bc2e8cd511b2140dd5aced4bc116dd731aab"
+            },
+            {
+              "relative_path": "lib/skill-params.mjs",
+              "sha256": "a1667ba1f601ea7b3e211e9b6481ac83d991976e106cf8ceb29e0edc6ba7c5b8"
+            },
+            {
+              "relative_path": "lib/skill-post-args.mjs",
+              "sha256": "00c6d039a0f3817120c9218ee38ee4a45ea6fa71148306c8ebaecd57d96979c2"
+            },
+            {
+              "relative_path": "lib/skill-post.mjs",
+              "sha256": "f13d04c88caf6bbecf443eb7e15cc53a25531376584f2bd375b47d5b54075f80"
+            },
+            {
+              "relative_path": "lib/skill-pre.mjs",
+              "sha256": "19a9833a6b9ccf6e4809becccf03d6ee54f7a5b6f152d1a192a63b4afc4a1a56"
+            },
+            {
+              "relative_path": "lib/skill-receipt-core.mjs",
+              "sha256": "8a36dd0e464c6e63db6e3c5e387300a9946f7855a1a80bbdcc2e000c350c5514"
+            },
+            {
+              "relative_path": "lib/skill-receipt.mjs",
+              "sha256": "554524f937c4351ac4f180b086503ef90eaed6236b6bbd73d61ca29ce71becf6"
+            },
+            {
+              "relative_path": "lib/skill-snapshot.mjs",
+              "sha256": "657d7010d08728f438fa315ff8fd16f382d31b8fb9e9f123e008abb1edbd48c9"
+            },
+            {
+              "relative_path": "lib/skills/balance.mjs",
+              "sha256": "e99e52a0e2fd898846432031c5e4f11a248fd60433c732354cf76b138721d865"
+            },
+            {
+              "relative_path": "lib/skills/boundary.mjs",
+              "sha256": "869798d1089b3943eccdbbada7ae2d7899b6a6c305028e317d9c5cb55b5c59ca"
+            },
+            {
+              "relative_path": "lib/skills/collision.mjs",
+              "sha256": "00262df1118b788dda75874e88c7aff94b35e141df67959223a61789e89fd668"
+            },
+            {
+              "relative_path": "lib/skills/fluency.mjs",
+              "sha256": "f24b45527450b32bc03b2fb8846606250eb55da113229112174b0c75d0c49fbc"
+            },
+            {
+              "relative_path": "lib/skills/harmony.mjs",
+              "sha256": "e29edc4e8118735ba4722b6d8a32cc281c2713101b1d0d620ec773f7e7c79039"
+            },
+            {
+              "relative_path": "lib/skills/hierarchy.mjs",
+              "sha256": "8cb906cf21db79fdd1aad8154cfbdd377c4b567d89db168ce79cc4ac4cda1e26"
+            },
+            {
+              "relative_path": "lib/skills/index.mjs",
+              "sha256": "585059599afa810e0032cf5201573ccc1e31be2a7afee60b2b30ccbec0adfdc8"
+            },
+            {
+              "relative_path": "lib/skills/proximity.mjs",
+              "sha256": "b2ef9233827bf44f22b34db9d9438d1220b80f397adb4e8de260d8315f4eb2cd"
+            },
+            {
+              "relative_path": "lib/skills/similarity.mjs",
+              "sha256": "952ce38b8eb760a70846e92032cae1cdd1e7ff1a4a35ee4c2344717f760b3bb9"
+            },
+            {
+              "relative_path": "lib/skills/symmetry.mjs",
+              "sha256": "eba7b8d6cd587681c66b7bac1ca00c8b3b2ff06a95e771cc0b4aa225694ced18"
+            },
+            {
+              "relative_path": "lib/skills/whitespace.mjs",
+              "sha256": "407330aa8e012d06850400a7ac76b2fe766274d4b0e0266f41edc4041f6697eb"
+            },
+            {
+              "relative_path": "lib/slop-rules.mjs",
+              "sha256": "536d25334c62b3d276363492d3b88c86f842cd059ec54626605e391981057153"
+            },
+            {
+              "relative_path": "lib/slop.mjs",
+              "sha256": "9ce8fa2ed6483a88457f35a31345b33d9ad8d838bee23ff9450828deeae83153"
+            },
+            {
+              "relative_path": "lib/slop/html-source-scan.mjs",
+              "sha256": "a1b29ac566213f43801e17476338191c66a1610a140f44fd7efa5e347595e5c2"
+            },
+            {
+              "relative_path": "lib/slop/signatures/copy.mjs",
+              "sha256": "eff5227e71ad03fd8ee1a7006637f2735b361bc87a85e77fd4d4072b3547939f"
+            },
+            {
+              "relative_path": "lib/slop/signatures/decoration.mjs",
+              "sha256": "a4cd330751876612f829ab0bcfd6d7a309e1a474489e41baeb7d73a2dd6e8da8"
+            },
+            {
+              "relative_path": "lib/slop/signatures/palette.mjs",
+              "sha256": "889ff0ee0a9414736197559cfe8efab66be64df2f081728625eae97e7b6fbda5"
+            },
+            {
+              "relative_path": "lib/slop/signatures/template.mjs",
+              "sha256": "10f70e81924e478edfbc403c9bc0aaa85d65241aa8665e97ba42d9d232358a98"
+            },
+            {
+              "relative_path": "lib/structure.mjs",
+              "sha256": "6dd9a8facc43e843c56d40b2049db5036833662a17ac6d27092aeda5cbfb5484"
+            },
+            {
+              "relative_path": "lib/tokens.mjs",
+              "sha256": "253cd05a0aff4857e561e4956790c3fb8c4e537aaf5bf28c1814d420a7ce854b"
+            },
+            {
+              "relative_path": "lib/tune.mjs",
+              "sha256": "48fafade3ef3c72a2749e412ab2c03cf4e05cd9944e657164c0632e63e0f2e3f"
+            },
+            {
+              "relative_path": "lib/validate.mjs",
+              "sha256": "4847779f271ed8f10c558e5d4b3811654124cffb659d37d08de7c09064e2eb39"
+            },
+            {
+              "relative_path": "lib/vuln.mjs",
+              "sha256": "9222708a35efe707c16eefc5b74921d29192bec2f6e76a0710da0d171297667b"
+            },
+            {
+              "relative_path": "package-lock.json",
+              "sha256": "c0ed49bea836284c44330aa9a1f000d8abdafd4f6f144e0d5d8dd130c33677b6"
+            },
+            {
+              "relative_path": "package.json",
+              "sha256": "7bcc4df707070e21fc4bfb03eee8119b0f24d250d3fce65ae214db8af87a0559"
+            }
+          ],
+          "sha256": "4bb3e1cb7528d07a7c2c57ac084f6a29ad252dbf241784422ea0df736b3b96d7"
+        }
+      },
+      "validation": {
+        "mode": "ajv",
+        "version": "8.20.0"
+      },
+      "runtime": {
+        "engine": "bun",
+        "version": "1.3.6",
+        "platform": "linux",
+        "arch": "x64",
+        "locale": "en-US",
+        "versions_sha256": "98d94faa299b469cf8d7eba65e54fb93b0caccff0fc8076bc3bd1ed7a21b11d2"
+      }
+    },
+    "policy_sha256": "ca9816ea18c077fa1987cff98f4636534177aa442da83f4dc06fcfcdbd119d39",
+    "decision_core_sha256": "9c6dc82d1a1017f66ae855b1d88ae961f3a8f2fb53ffa9941b8908550187a4d0"
+  }
+}

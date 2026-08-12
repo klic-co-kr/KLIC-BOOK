@@ -1,5 +1,6 @@
 # korean_ebook_to_skill/chapters.py
 import re
+import unicodedata
 from pathlib import Path
 from .models import Segment, ChapterFile
 
@@ -23,6 +24,10 @@ def detect_chapters(text: str) -> list:
     return segs
 
 def _kind_number(name: str) -> tuple[str, str | None]:
+    # macOS(APFS/HFS+)는 파일명을 NFD(자모 분리)로 돌려주는 경로가 있다(대표적으로
+    # ZIP 다운로드본 압축 해제). 소스의 NFC 한글 리터럴("부록"/"후기")과 직접
+    # 비교하면 매칭에 실패하므로 NFC로 정규화한 뒤 비교한다.
+    name = unicodedata.normalize("NFC", name)
     m = FILENAME_RE.match(name)
     if not m: return "chapter", None
     num, rest = m.group(1), m.group(2)

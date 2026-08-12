@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="FIG-003-title FIG-003-desc">
+  <title id="FIG-003-title">고밀도 랙의 전력·열·수랭 경로</title>
+  <desc id="FIG-003-desc">전력 입력, 고밀도 랙, CDU와 열 교환, 시설 공급수, 누수·온도 관측이 순환하는 도식.</desc>
+  <defs>
+    <style>.paper { fill: #f7f5ef; }
+.band { fill: #10324a; }
+.surface { fill: #dce8e8; stroke: #10324a; stroke-width: 3; }
+.surface-teal { fill: #d7eceb; stroke: #087e8b; stroke-width: 3; }
+.surface-amber { fill: #f4e5c9; stroke: #d18b24; stroke-width: 3; }
+.line { stroke: #7f9ba0; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+.rule { stroke: #7f9ba0; stroke-width: 2; }
+.title { font-family: 'Noto Serif CJK KR', serif; font-size: 38px; font-weight: 700; fill: #f7f5ef; }
+.subtitle { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 22px; fill: #18313f; }
+.body { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; fill: #18313f; }
+.small { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 17px; fill: #18313f; }
+.value { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 24px; font-weight: 700; fill: #10324a; }
+.node-label { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; font-weight: 700; fill: #18313f; }
+.bar-teal { fill: #087e8b; }
+.bar-navy { fill: #10324a; }
+.bar-amber { fill: #d18b24; }</style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><polygon points="0,0 12,6 0,12" fill="#7f9ba0"/></marker>
+  </defs>
+  <rect class="paper" width="1600" height="900"/>
+  <rect class="band" width="1600" height="112"/>
+  <text x="90.0" y="68.0" class="title" text-anchor="start"><tspan x="90.0" dy="0">고밀도 랙의 전력·열·수랭 경로</tspan></text>
+  <text x="90.0" y="154.0" class="subtitle" text-anchor="start"><tspan x="90.0" dy="0">랙 전력, CDU, 냉각 루프, 운영 관측을 하나의 시설 경로로 읽는다.</tspan></text>
+  <line class="rule" x1="90" y1="182" x2="1510" y2="182"/>
+  <line class="line" x1="345.0" y1="360.0" x2="430.0" y2="360.0"/>
+  <line class="line" x1="700.0" y1="360.0" x2="790.0" y2="360.0"/>
+  <line class="line" x1="1060.0" y1="360.0" x2="1145.0" y2="360.0"/>
+  <line class="line" x1="887.8" y1="420.0" x2="807.2" y2="550.0"/>
+  <rect class="surface" x="100.0" y="300.0" width="245.0" height="120.0" rx="14"/>
+  <text x="222.5" y="345.0" class="node-label" text-anchor="middle"><tspan x="222.5" dy="0">전력 입력</tspan><tspan x="222.5" dy="30">보호·분배</tspan></text>
+  <rect class="surface-teal" x="430.0" y="300.0" width="270.0" height="120.0" rx="14"/>
+  <text x="565.0" y="345.0" class="node-label" text-anchor="middle"><tspan x="565.0" dy="0">고밀도 랙</tspan><tspan x="565.0" dy="30">75 kW급 공개 설명</tspan></text>
+  <rect class="surface-amber" x="790.0" y="300.0" width="270.0" height="120.0" rx="14"/>
+  <text x="925.0" y="345.0" class="node-label" text-anchor="middle"><tspan x="925.0" dy="0">CDU·콜드플레이트</tspan><tspan x="925.0" dy="30">열 포획</tspan></text>
+  <rect class="surface" x="1145.0" y="300.0" width="245.0" height="120.0" rx="14"/>
+  <text x="1267.5" y="345.0" class="node-label" text-anchor="middle"><tspan x="1267.5" dy="0">시설 공급수</tspan><tspan x="1267.5" dy="30">환경 클래스</tspan></text>
+  <rect class="surface-teal" x="620.0" y="550.0" width="300.0" height="120.0" rx="14"/>
+  <text x="770.0" y="595.0" class="node-label" text-anchor="middle"><tspan x="770.0" dy="0">누수·온도·압력</tspan><tspan x="770.0" dy="30">사건 대응</tspan></text>
+  <line class="rule" x1="90" y1="790" x2="1510" y2="790"/>
+  <text x="90.0" y="830.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">근거: 공식 발표 | SRC-003 · SRC-010 · SRC-019 · SRC-020 · SRC-021 · SRC-022</tspan></text>
+  <text x="90.0" y="862.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">FIG-003 | 전력 입력, 고밀도 랙, CDU와 열 교환, 시설 공급수, 누수·온도 관측이 순환하는 도식.</tspan></text>
+</svg>

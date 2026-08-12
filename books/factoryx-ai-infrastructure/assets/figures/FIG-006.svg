@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="FIG-006-title FIG-006-desc">
+  <title id="FIG-006-title">서로 다른 성능 축을 분리해 읽기</title>
+  <desc id="FIG-006-desc">FP8 EFlops 공개 발표와 TOP500 Rmax·Rpeak 원자료를 서로 다른 상자로 배치하고 비교 금지를 가운데에 표시한 도식.</desc>
+  <defs>
+    <style>.paper { fill: #f7f5ef; }
+.band { fill: #10324a; }
+.surface { fill: #dce8e8; stroke: #10324a; stroke-width: 3; }
+.surface-teal { fill: #d7eceb; stroke: #087e8b; stroke-width: 3; }
+.surface-amber { fill: #f4e5c9; stroke: #d18b24; stroke-width: 3; }
+.line { stroke: #7f9ba0; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+.rule { stroke: #7f9ba0; stroke-width: 2; }
+.title { font-family: 'Noto Serif CJK KR', serif; font-size: 38px; font-weight: 700; fill: #f7f5ef; }
+.subtitle { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 22px; fill: #18313f; }
+.body { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; fill: #18313f; }
+.small { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 17px; fill: #18313f; }
+.value { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 24px; font-weight: 700; fill: #10324a; }
+.node-label { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; font-weight: 700; fill: #18313f; }
+.bar-teal { fill: #087e8b; }
+.bar-navy { fill: #10324a; }
+.bar-amber { fill: #d18b24; }</style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><polygon points="0,0 12,6 0,12" fill="#7f9ba0"/></marker>
+  </defs>
+  <rect class="paper" width="1600" height="900"/>
+  <rect class="band" width="1600" height="112"/>
+  <text x="90.0" y="68.0" class="title" text-anchor="start"><tspan x="90.0" dy="0">서로 다른 성능 축을 분리해 읽기</tspan></text>
+  <text x="90.0" y="154.0" class="subtitle" text-anchor="start"><tspan x="90.0" dy="0">FactoryX의 FP8 발표값과 TOP500 LINPACK 축을 같은 척도로 합치지 않는다.</tspan></text>
+  <line class="rule" x1="90" y1="182" x2="1510" y2="182"/>
+  <line class="line" x1="490.0" y1="370.0" x2="635.0" y2="370.0"/>
+  <line class="line" x1="965.0" y1="370.0" x2="1110.0" y2="370.0"/>
+  <line class="line" x1="800.0" y1="440.0" x2="800.0" y2="565.0"/>
+  <rect class="surface" x="160.0" y="300.0" width="330.0" height="140.0" rx="14"/>
+  <text x="325.0" y="355.0" class="node-label" text-anchor="middle"><tspan x="325.0" dy="0">FactoryX 공개</tspan><tspan x="325.0" dy="30">27.4 EFlops FP8</tspan></text>
+  <rect class="surface-teal" x="635.0" y="300.0" width="330.0" height="140.0" rx="14"/>
+  <text x="800.0" y="355.0" class="node-label" text-anchor="middle"><tspan x="800.0" dy="0">같은 축 비교 금지</tspan><tspan x="800.0" dy="30">워크로드·측정법이 다름</tspan></text>
+  <rect class="surface-amber" x="1110.0" y="300.0" width="330.0" height="140.0" rx="14"/>
+  <text x="1275.0" y="355.0" class="node-label" text-anchor="middle"><tspan x="1275.0" dy="0">TOP500 원자료</tspan><tspan x="1275.0" dy="30">Rmax·Rpeak LINPACK</tspan></text>
+  <rect class="surface" x="635.0" y="565.0" width="330.0" height="120.0" rx="14"/>
+  <text x="800.0" y="610.0" class="node-label" text-anchor="middle"><tspan x="800.0" dy="0">설계 질문</tspan><tspan x="800.0" dy="30">어떤 작업의 완료 조건인가</tspan></text>
+  <line class="rule" x1="90" y1="790" x2="1510" y2="790"/>
+  <text x="90.0" y="830.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">근거: 공식 발표 | SRC-003 · SRC-011 · SRC-012</tspan></text>
+  <text x="90.0" y="862.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">FIG-006 | FP8 EFlops 공개 발표와 TOP500 Rmax·Rpeak 원자료를 서로 다른 상자로 배치하고 비교 금지를 가운데에 표시한 도식.</tspan></text>
+</svg>

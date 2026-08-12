@@ -40,7 +40,7 @@ def sha256_file(path: Path) -> str:
 def normalize_text(value: str) -> str:
     value = unicodedata.normalize("NFKC", value)
     value = value.replace("–", "-").replace("—", "-")
-    return re.sub(r"\s+", "", value)
+    return re.sub(r"[\s-]+", "", value)
 
 
 def extract_pdf_text(path: Path) -> tuple[str, str]:

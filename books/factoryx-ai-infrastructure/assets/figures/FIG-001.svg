@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="FIG-001-title FIG-001-desc">
+  <title id="FIG-001-title">FactoryX 공개 레이어와 설계 경계</title>
+  <desc id="FIG-001-desc">FactoryX의 세 공개 레이어와 각 레이어에서 확인해야 할 운영 질문을 왼쪽에서 오른쪽으로 연결한 도식.</desc>
+  <defs>
+    <style>.paper { fill: #f7f5ef; }
+.band { fill: #10324a; }
+.surface { fill: #dce8e8; stroke: #10324a; stroke-width: 3; }
+.surface-teal { fill: #d7eceb; stroke: #087e8b; stroke-width: 3; }
+.surface-amber { fill: #f4e5c9; stroke: #d18b24; stroke-width: 3; }
+.line { stroke: #7f9ba0; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+.rule { stroke: #7f9ba0; stroke-width: 2; }
+.title { font-family: 'Noto Serif CJK KR', serif; font-size: 38px; font-weight: 700; fill: #f7f5ef; }
+.subtitle { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 22px; fill: #18313f; }
+.body { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; fill: #18313f; }
+.small { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 17px; fill: #18313f; }
+.value { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 24px; font-weight: 700; fill: #10324a; }
+.node-label { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; font-weight: 700; fill: #18313f; }
+.bar-teal { fill: #087e8b; }
+.bar-navy { fill: #10324a; }
+.bar-amber { fill: #d18b24; }</style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><polygon points="0,0 12,6 0,12" fill="#7f9ba0"/></marker>
+  </defs>
+  <rect class="paper" width="1600" height="900"/>
+  <rect class="band" width="1600" height="112"/>
+  <text x="90.0" y="68.0" class="title" text-anchor="start"><tspan x="90.0" dy="0">FactoryX 공개 레이어와 설계 경계</tspan></text>
+  <text x="90.0" y="154.0" class="subtitle" text-anchor="start"><tspan x="90.0" dy="0">공개된 Infrastructure·Platform·Service를 운영 질문과 분리한다.</tspan></text>
+  <line class="rule" x1="90" y1="182" x2="1510" y2="182"/>
+  <line class="line" x1="400.0" y1="365.0" x2="510.0" y2="365.0"/>
+  <line class="line" x1="810.0" y1="365.0" x2="920.0" y2="365.0"/>
+  <line class="line" x1="660.0" y1="430.0" x2="660.0" y2="555.0"/>
+  <rect class="surface" x="100.0" y="300.0" width="300.0" height="130.0" rx="14"/>
+  <text x="250.0" y="350.0" class="node-label" text-anchor="middle"><tspan x="250.0" dy="0">Infrastructure</tspan><tspan x="250.0" dy="30">전력·냉각·GPU</tspan></text>
+  <rect class="surface-teal" x="510.0" y="300.0" width="300.0" height="130.0" rx="14"/>
+  <text x="660.0" y="350.0" class="node-label" text-anchor="middle"><tspan x="660.0" dy="0">Platform</tspan><tspan x="660.0" dy="30">GPU Live·AI EasyMaker</tspan></text>
+  <rect class="surface-amber" x="920.0" y="300.0" width="300.0" height="130.0" rx="14"/>
+  <text x="1070.0" y="350.0" class="node-label" text-anchor="middle"><tspan x="1070.0" dy="0">Service</tspan><tspan x="1070.0" dy="30">ProjectX 공개 위치</tspan></text>
+  <rect class="surface" x="510.0" y="555.0" width="300.0" height="130.0" rx="14"/>
+  <text x="660.0" y="605.0" class="node-label" text-anchor="middle"><tspan x="660.0" dy="0">공개 자료의 경계</tspan><tspan x="660.0" dy="30">내부 구현은 미공개</tspan></text>
+  <line class="rule" x1="90" y1="790" x2="1510" y2="790"/>
+  <text x="90.0" y="830.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">근거: 공식 발표 | SRC-001 · SRC-003</tspan></text>
+  <text x="90.0" y="862.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">FIG-001 | FactoryX의 세 공개 레이어와 각 레이어에서 확인해야 할 운영 질문을 왼쪽에서 오른쪽으로 연결한 도식.</tspan></text>
+</svg>

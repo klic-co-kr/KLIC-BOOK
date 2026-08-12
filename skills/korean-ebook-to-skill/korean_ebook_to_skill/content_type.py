@@ -1,5 +1,6 @@
 # korean_ebook_to_skill/content_type.py
 import re
+import unicodedata
 from .models import ChapterFile, ContentType
 
 # 부록C 제1부 챕터 헤더: N장 / N장 N.M절 / N~M장, 괄호 안 텍스트+건
@@ -9,7 +10,8 @@ INDEX_KEYWORDS = ("사례 색인", "사례색인")
 GLOSSARY_METRIC_RE = re.compile(r"\*\*[^*]{2,40}[:：]")  # **메트릭명:**
 
 def classify_content_type(cf: ChapterFile) -> ContentType:
-    name = cf.path; text = cf.raw_text
+    # 경로도 NFD로 들어올 수 있으므로 한글 키워드 비교 전에 NFC로 정규화한다.
+    name = unicodedata.normalize("NFC", cf.path); text = cf.raw_text
     if cf.kind == "afterword": return ContentType.AFTERWORD
     if any(k in name for k in INDEX_KEYWORDS) or INDEX_CASES_RE.search(text):
         return ContentType.INDEX

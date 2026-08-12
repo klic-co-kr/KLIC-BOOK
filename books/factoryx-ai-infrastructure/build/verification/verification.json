@@ -1,0 +1,909 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-11T19:06:19.061777+00:00",
+  "summary": {
+    "status": "pass",
+    "high_issues": 0,
+    "medium_issues": 0
+  },
+  "pdf": {
+    "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/build/NHN_FactoryX_실전_설계_nhn-factoryx-ai-infrastructure-ko.pdf",
+    "sha256": "d7b41c49db7143f36182fc65a599ee4858685eb960ce94116ca74f203b0b5a06",
+    "size_bytes": 1340404,
+    "pages": 100,
+    "metadata": {
+      "/Producer": "WeasyPrint 68.0",
+      "/Title": "NHN FactoryX 실전 설계: GPU 데이터센터에서 AI 에이전트 실행 환경까지",
+      "/Author": "KLIC",
+      "/Subject": "NHN FactoryX 공개 자료를 기반으로 한 AI 인프라 설계·운영 실무서",
+      "/Keywords": "NHN FactoryX, AI 인프라, GPU 클러스터, 수랭식 데이터센터, GPUaaS, MLOps, 프라이빗 AI, AI 에이전트"
+    },
+    "text_extractor": "pdftotext"
+  },
+  "structure": {
+    "page_sizes": [
+      {
+        "page": 1,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 2,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 3,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 4,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 5,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 6,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 7,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 8,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 9,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 10,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 11,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 12,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 13,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 14,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 15,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 16,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 17,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 18,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 19,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 20,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 21,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 22,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 23,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 24,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 25,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 26,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 27,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 28,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 29,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 30,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 31,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 32,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 33,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 34,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 35,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 36,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 37,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 38,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 39,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 40,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 41,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 42,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 43,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 44,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 45,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 46,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 47,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 48,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 49,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 50,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 51,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 52,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 53,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 54,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 55,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 56,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 57,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 58,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 59,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 60,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 61,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 62,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 63,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 64,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 65,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 66,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 67,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 68,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 69,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 70,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 71,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 72,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 73,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 74,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 75,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 76,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 77,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 78,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 79,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 80,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 81,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 82,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 83,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 84,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 85,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 86,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 87,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 88,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 89,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 90,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 91,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 92,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 93,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 94,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 95,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 96,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 97,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 98,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 99,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      },
+      {
+        "page": 100,
+        "width_pt": 595.276,
+        "height_pt": 841.89,
+        "a4": true
+      }
+    ],
+    "non_a4_pages": [],
+    "outline_items": 134,
+    "annotations": 502,
+    "link_annotations": 502,
+    "blank_page_candidates": []
+  },
+  "fonts": {
+    "status": "pass",
+    "fonts": [
+      {
+        "name": "SNHPLV+NanumSquare",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "SNHPLV+NanumSquare                   CID TrueType      Identity-H       yes yes yes    855  0"
+      },
+      {
+        "name": "PZABUF+NanumSquare-Bold",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "PZABUF+NanumSquare-Bold              CID TrueType      Identity-H       yes yes yes    859  0"
+      },
+      {
+        "name": "TIQLGY+NanumMyeongjo",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "TIQLGY+NanumMyeongjo                 CID TrueType      Identity-H       yes yes yes    863  0"
+      },
+      {
+        "name": "AHGCQF+NanumGothicCoding",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "AHGCQF+NanumGothicCoding             CID TrueType      Identity-H       yes yes yes    867  0"
+      },
+      {
+        "name": "NEOSIL+NanumMyeongjo-Bold",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "NEOSIL+NanumMyeongjo-Bold            CID TrueType      Identity-H       yes yes yes    871  0"
+      },
+      {
+        "name": "UZGYGC+Noto-Serif-CJK-KR-Bold",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "UZGYGC+Noto-Serif-CJK-KR-Bold        CID Type 0C (OT)  Identity-H       yes yes yes    875  0"
+      },
+      {
+        "name": "DSVEWC+Noto-Sans-CJK-KR",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "DSVEWC+Noto-Sans-CJK-KR              CID Type 0C (OT)  Identity-H       yes yes yes    879  0"
+      },
+      {
+        "name": "SXAUFQ+Noto-Sans-CJK-KR-Bold",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "SXAUFQ+Noto-Sans-CJK-KR-Bold         CID Type 0C (OT)  Identity-H       yes yes yes    883  0"
+      },
+      {
+        "name": "LAIQKC+NanumMyeongjo-Oblique",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "LAIQKC+NanumMyeongjo-Oblique         CID TrueType      Identity-H       yes yes yes    887  0"
+      },
+      {
+        "name": "BAWKYD+DejaVu-Serif",
+        "embedded": "yes",
+        "subset": "yes",
+        "unicode": "yes",
+        "raw": "BAWKYD+DejaVu-Serif                  CID TrueType      Identity-H       yes yes yes    891  0"
+      }
+    ],
+    "raw": "name                                 type              encoding         emb sub uni object ID\n------------------------------------ ----------------- ---------------- --- --- --- ---------\nSNHPLV+NanumSquare                   CID TrueType      Identity-H       yes yes yes    855  0\nPZABUF+NanumSquare-Bold              CID TrueType      Identity-H       yes yes yes    859  0\nTIQLGY+NanumMyeongjo                 CID TrueType      Identity-H       yes yes yes    863  0\nAHGCQF+NanumGothicCoding             CID TrueType      Identity-H       yes yes yes    867  0\nNEOSIL+NanumMyeongjo-Bold            CID TrueType      Identity-H       yes yes yes    871  0\nUZGYGC+Noto-Serif-CJK-KR-Bold        CID Type 0C (OT)  Identity-H       yes yes yes    875  0\nDSVEWC+Noto-Sans-CJK-KR              CID Type 0C (OT)  Identity-H       yes yes yes    879  0\nSXAUFQ+Noto-Sans-CJK-KR-Bold         CID Type 0C (OT)  Identity-H       yes yes yes    883  0\nLAIQKC+NanumMyeongjo-Oblique         CID TrueType      Identity-H       yes yes yes    887  0\nBAWKYD+DejaVu-Serif                  CID TrueType      Identity-H       yes yes yes    891  0\n"
+  },
+  "integrity": {
+    "source_file_status": [
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/00-들어가며.md",
+        "relative_path": "00-들어가며.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "0e9d14d4118df2009775e89360bd90bfb489e8fa2f27a41420e3a94d0b1ce57a",
+        "expected_sha256": "0e9d14d4118df2009775e89360bd90bfb489e8fa2f27a41420e3a94d0b1ce57a"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/01-factoryx-풀스택.md",
+        "relative_path": "01-factoryx-풀스택.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "466706e21c101b07ef3efcc5a2f8a1771ff2ba3921c2cd34eb739ec0750c9bf1",
+        "expected_sha256": "466706e21c101b07ef3efcc5a2f8a1771ff2ba3921c2cd34eb739ec0750c9bf1"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/02-워크로드-요구사항.md",
+        "relative_path": "02-워크로드-요구사항.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "49fc19b7f0897a3bdc78b6c8b5a554aba0a7ef46182879768c12b300b96fc61a",
+        "expected_sha256": "49fc19b7f0897a3bdc78b6c8b5a554aba0a7ef46182879768c12b300b96fc61a"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/03-전력-열-수랭.md",
+        "relative_path": "03-전력-열-수랭.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "1b07846239712e39d73a119b9195ce67ae5044955dccf900428898a86aa22089",
+        "expected_sha256": "1b07846239712e39d73a119b9195ce67ae5044955dccf900428898a86aa22089"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/04-gpu-노드.md",
+        "relative_path": "04-gpu-노드.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "4b878c4e54ca8bf303308b53c1d246a42857af29b10b751a4db576e8c3dfb0ee",
+        "expected_sha256": "4b878c4e54ca8bf303308b53c1d246a42857af29b10b751a4db576e8c3dfb0ee"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/05-패브릭-스토리지.md",
+        "relative_path": "05-패브릭-스토리지.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "75fb28760a40866910c027822c14bb4e3b6136c8f6792d140117ef2db5197dd9",
+        "expected_sha256": "75fb28760a40866910c027822c14bb4e3b6136c8f6792d140117ef2db5197dd9"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/06-성능-용량.md",
+        "relative_path": "06-성능-용량.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "432b1f8485531101528ec7d2976aa5dac28ca0877a34489b6bbb91c62e277992",
+        "expected_sha256": "432b1f8485531101528ec7d2976aa5dac28ca0877a34489b6bbb91c62e277992"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/07-gpuaas-제어면.md",
+        "relative_path": "07-gpuaas-제어면.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "386bb047dd188df4216e63589246eb1af6a0920995a4c600751b342e15d88c72",
+        "expected_sha256": "386bb047dd188df4216e63589246eb1af6a0920995a4c600751b342e15d88c72"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/08-mlops-수명주기.md",
+        "relative_path": "08-mlops-수명주기.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "282c063cff8be06f3ba40191bd0218db4931d183517b249410f6fd2f5cdbd13c",
+        "expected_sha256": "282c063cff8be06f3ba40191bd0218db4931d183517b249410f6fd2f5cdbd13c"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/09-관측-신뢰성-비용.md",
+        "relative_path": "09-관측-신뢰성-비용.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "a79ce8bc9dfae54754f1b3292cb4bfc0f0a01393e4adc6981bbaee0406788b20",
+        "expected_sha256": "a79ce8bc9dfae54754f1b3292cb4bfc0f0a01393e4adc6981bbaee0406788b20"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/10-프라이빗-ai.md",
+        "relative_path": "10-프라이빗-ai.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "b07def1ed7eaaa847cc83f8bdf24a459b51a02736e852b9e3d5bd2cdbc1806e9",
+        "expected_sha256": "b07def1ed7eaaa847cc83f8bdf24a459b51a02736e852b9e3d5bd2cdbc1806e9"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/11-에이전트-실행환경.md",
+        "relative_path": "11-에이전트-실행환경.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "6b07ff9c4396127460161058482820ddc79ebbef38e45fd1e16e0c52dae385ca",
+        "expected_sha256": "6b07ff9c4396127460161058482820ddc79ebbef38e45fd1e16e0c52dae385ca"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/12-도입-로드맵.md",
+        "relative_path": "12-도입-로드맵.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "69ed1ec8abb94c09c79c0b2e63bdfe873c4b1c6b4c5817a7b046206defb9f673",
+        "expected_sha256": "69ed1ec8abb94c09c79c0b2e63bdfe873c4b1c6b4c5817a7b046206defb9f673"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/13-부록-a-출처-원장.md",
+        "relative_path": "13-부록-a-출처-원장.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "e673925bc287615b6e52db9ae70d3edaaf15db4a0f85471f2b20baac7f86d7f0",
+        "expected_sha256": "e673925bc287615b6e52db9ae70d3edaaf15db4a0f85471f2b20baac7f86d7f0"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/14-부록-b-검증-체크리스트.md",
+        "relative_path": "14-부록-b-검증-체크리스트.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "9d678c6fdf36fa7be3fc39ea8e6fd7e4d4d1d78c866c02dc198071e2697e0316",
+        "expected_sha256": "9d678c6fdf36fa7be3fc39ea8e6fd7e4d4d1d78c866c02dc198071e2697e0316"
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/.worktrees/factoryx-book/books/factoryx-ai-infrastructure/manuscript/15-부록-c-용어와-색인.md",
+        "relative_path": "15-부록-c-용어와-색인.md",
+        "exists": true,
+        "hash_matches": true,
+        "source_location": "build-path",
+        "actual_sha256": "e6e8ac51ecabf42ceb0e61e5b8d25c98509d6340de1bf59e2af617d1afdb0257",
+        "expected_sha256": "e6e8ac51ecabf42ceb0e61e5b8d25c98509d6340de1bf59e2af617d1afdb0257"
+      }
+    ],
+    "probe_count": 471,
+    "missing_probe_count": 0,
+    "missing_probe_ratio": 0.0,
+    "missing_probes": [],
+    "heading_count": 138,
+    "missing_heading_count": 0,
+    "missing_headings": []
+  },
+  "reference_isolation": {
+    "references": [
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/books/ai-agent-book-ko/build/AI_에이전트_깊이_이해하기_ai-agent-book-ko.pdf",
+        "exists": true,
+        "extractor": "pdftotext",
+        "characters": 718690,
+        "status": "checked",
+        "unique_ngrams": 1139,
+        "matches": 0
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/books/forward-deployed-engineer/FDE_포워드_디플로이드_엔지니어_한국어판_최종편집본.pdf",
+        "exists": true,
+        "extractor": "pdftotext",
+        "characters": 161814,
+        "status": "checked",
+        "unique_ngrams": 85,
+        "matches": 0
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/books/github-guide/GitHub_협업_실무_가이드.pdf",
+        "exists": true,
+        "extractor": "pdftotext",
+        "characters": 21365,
+        "status": "checked",
+        "unique_ngrams": 31,
+        "matches": 0
+      },
+      {
+        "path": "/mnt/d/DEV/KLIC-BOOK/books/practical-system-design-2026-book/build/실전_시스템_설계_2026_practical-system-design-2026-ko.pdf",
+        "exists": true,
+        "extractor": "pdftotext",
+        "characters": 448869,
+        "status": "checked",
+        "unique_ngrams": 5134,
+        "matches": 0
+      }
+    ],
+    "match_count": 0,
+    "matches": [],
+    "ngram_words": 8,
+    "ngram_min_chars": 44
+  },
+  "issues": [],
+  "manual_review_required": true
+}
