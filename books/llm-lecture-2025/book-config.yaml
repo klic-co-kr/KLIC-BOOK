@@ -1,0 +1,38 @@
+book:
+  title: "대규모 언어모델(LLM) 강좌 2025 — 한국어 번역판"
+  metadata_title: "대규모 언어모델 강좌 2025"
+  subtitle: "동경대 마츠오·이와사와 연구실 LLM 강좌 (8일)"
+  author: "동경대 마츠오·이와사와 연구실 (한국어 번역판)"
+  language: "ko-KR"
+  short_title: "LLM 강좌 2025"
+  output_name: "편집본"
+  subject: "대규모 언어모델"
+  keywords: ["LLM", "Transformer", "사전학습", "파인튜닝", "강화학습"]
+  edition_label: "한국어 PDF 편집본"
+  copyright_notice: "© 2025 東京大学 松尾・岩澤研究室 CC BY-NC-ND 4.0 (교육 목적 번역, 원문 의미 보존)"
+  build_date: "auto"
+
+files:
+  include:
+    - "*.md"
+  exclude:
+    - "00-frontmatter.md"
+  front_matter_file: "00-frontmatter.md"
+  order:
+    - day1.md
+    - day2.md
+    - day3.md
+    - day4.md
+    - day5.md
+    - day6.md
+    - day7.md
+    - day8.md
+  chapter_file_pattern: "^day\\d+\\.md$"
+  strip_front_matter_sections:
+    - "목차"
+
+toc:
+  include_generated_toc: true
+  toc_depth: 2
+  include_chapter_openers: true
+  chapter_eyebrow: "DAY"

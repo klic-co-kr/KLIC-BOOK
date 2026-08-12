@@ -11,6 +11,12 @@
                                        └─ 일→한 번역·가다듬기 ──▶ manuscript-ko/ (한국어 출간 원고)
 ```
 
+## ⬇️ 완성본 PDF
+
+- **[LLM_강좌_2025_한국어번역판.pdf](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/llm-lecture-2025/LLM_강좌_2025_한국어번역판.pdf)** (118페이지, 807K) — raw 직접 다운로드
+- korean-ebook 스킬로 빌드 (A4, 목차·장표제지 포함)
+
+
 ## 폴더
 
 - `manuscript/` — 일본어 원문(`pdf-to-md` 변환)
