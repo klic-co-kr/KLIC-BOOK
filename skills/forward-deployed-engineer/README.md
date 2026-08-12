@@ -64,6 +64,12 @@ skills/forward-deployed-engineer/
 - **회상율은 프록시** — 의미론적 정답 증명 아님. 사람 게이트가 최종 판정.
 - **전책 추출** — ch1-8 + 후기. 다만 비자명 통찰 위주 엄선이라 부록C 사례 120건 중 34건만 직접 매핑 (회상 28.3%). 회상율은 품질 프록시일 뿐 정답 증명 아님.
 
+## 다운로드/설치
+
+- **zip**: [forward-deployed-engineer-skill-v1.0.zip](https://github.com/klic-co-kr/KLIC-BOOK/releases/download/v1.0-fde-skill/forward-deployed-engineer-skill-v1.0.zip)
+- 풀기: `unzip forward-deployed-engineer-skill-v1.0.zip -d ~/.claude/skills/`
+- 또는 이 repo의 `skills/forward-deployed-engineer/` 직접 참조
+
 ## 링크
 
 - 원본 책: [`books/forward-deployed-engineer/`](../../books/forward-deployed-engineer/) (저자 판빙, 무료 공개)

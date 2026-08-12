@@ -52,6 +52,24 @@ flowchart LR
 - `korean-ebook`(출판 PDF)은 같은 책 원문의 다른 산출 경로(지식 추출 아님).
 - 변환 파이프라인 상세는 변환기 [README](skills/korean-ebook-to-skill/README.ko.md#파이프라인-연계도) 참고.
 
+## ⬇️ 예시 스킬 다운로드
+
+`forward-deployed-engineer` 스킬 — `korean-ebook-to-skill` 변환기로 FDE 책에서 추출한 **첫 예시 산출물**. 통찰 55개(방법·원리·연구·해법·안티), 부록C 회상 28.3%.
+
+**zip 직접 다운로드**:
+👉 [forward-deployed-engineer-skill-v1.0.zip](https://github.com/klic-co-kr/KLIC-BOOK/releases/download/v1.0-fde-skill/forward-deployed-engineer-skill-v1.0.zip)
+
+**설치**:
+```bash
+# Claude Code 스킬 디렉토리에 풀기
+unzip forward-deployed-engineer-skill-v1.0.zip -d ~/.claude/skills/
+```
+또는 이 저장소를 `git clone` 한 뒤 `skills/forward-deployed-engineer/` 참조.
+
+**사용**: FDE 주제 질문 시 SKILL.md 색인에서 항목 식별 → `insights/<카테고리>.md` 본문 로드 → 항목 + 근거(부록C 사례 / 원문 §)로 응답.
+
+> 이 스킬은 **참조형**(발동형 아님). 능동 트리거 없이 쿼리에만 응답. 변환 과정은 [`skills/korean-ebook-to-skill/`](skills/korean-ebook-to-skill/) 참조.
+
 ## 폴더 규칙
 
 - `books/<책-슬러그>/` — 책 한 권 단위. 자체 `README.md`(소개+목차), 챕터, 표지, 통권 PDF.
