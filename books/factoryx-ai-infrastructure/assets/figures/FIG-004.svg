@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="FIG-004-title FIG-004-desc">
+  <title id="FIG-004-title">GPU 노드의 확인된 범위와 일반 참조</title>
+  <desc id="FIG-004-desc">GPU 연산, CPU·메모리, NIC·PCIe, 패브릭을 연결하고 일반 벤더 참조와 FactoryX 공개 범위를 구분한 노드 도식.</desc>
+  <defs>
+    <style>.paper { fill: #f7f5ef; }
+.band { fill: #10324a; }
+.surface { fill: #dce8e8; stroke: #10324a; stroke-width: 3; }
+.surface-teal { fill: #d7eceb; stroke: #087e8b; stroke-width: 3; }
+.surface-amber { fill: #f4e5c9; stroke: #d18b24; stroke-width: 3; }
+.line { stroke: #7f9ba0; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+.rule { stroke: #7f9ba0; stroke-width: 2; }
+.title { font-family: 'Noto Serif CJK KR', serif; font-size: 38px; font-weight: 700; fill: #f7f5ef; }
+.subtitle { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 22px; fill: #18313f; }
+.body { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; fill: #18313f; }
+.small { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 17px; fill: #18313f; }
+.value { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 24px; font-weight: 700; fill: #10324a; }
+.node-label { font-family: 'Noto Sans CJK KR', sans-serif; font-size: 21px; font-weight: 700; fill: #18313f; }
+.bar-teal { fill: #087e8b; }
+.bar-navy { fill: #10324a; }
+.bar-amber { fill: #d18b24; }</style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><polygon points="0,0 12,6 0,12" fill="#7f9ba0"/></marker>
+  </defs>
+  <rect class="paper" width="1600" height="900"/>
+  <rect class="band" width="1600" height="112"/>
+  <text x="90.0" y="68.0" class="title" text-anchor="start"><tspan x="90.0" dy="0">GPU 노드의 확인된 범위와 일반 참조</tspan></text>
+  <text x="90.0" y="154.0" class="subtitle" text-anchor="start"><tspan x="90.0" dy="0">공개된 NHN 맥락과 일반 DGX B200 참조 구조를 구분한다.</tspan></text>
+  <line class="rule" x1="90" y1="182" x2="1510" y2="182"/>
+  <line class="line" x1="385.0" y1="345.0" x2="470.0" y2="345.0"/>
+  <line class="line" x1="730.0" y1="345.0" x2="815.0" y2="345.0"/>
+  <line class="line" x1="1075.0" y1="345.0" x2="1160.0" y2="345.0"/>
+  <line class="line" x1="902.0" y1="405.0" x2="798.0" y2="550.0"/>
+  <rect class="surface" x="125.0" y="285.0" width="260.0" height="120.0" rx="14"/>
+  <text x="255.0" y="330.0" class="node-label" text-anchor="middle"><tspan x="255.0" dy="0">GPU 연산</tspan><tspan x="255.0" dy="30">메모리 가까운 계산</tspan></text>
+  <rect class="surface-teal" x="470.0" y="285.0" width="260.0" height="120.0" rx="14"/>
+  <text x="600.0" y="330.0" class="node-label" text-anchor="middle"><tspan x="600.0" dy="0">CPU·메모리</tspan><tspan x="600.0" dy="30">입출력 조정</tspan></text>
+  <rect class="surface-amber" x="815.0" y="285.0" width="260.0" height="120.0" rx="14"/>
+  <text x="945.0" y="330.0" class="node-label" text-anchor="middle"><tspan x="945.0" dy="0">NIC·PCIe</tspan><tspan x="945.0" dy="30">토폴로지 확인</tspan></text>
+  <rect class="surface" x="1160.0" y="285.0" width="260.0" height="120.0" rx="14"/>
+  <text x="1290.0" y="330.0" class="node-label" text-anchor="middle"><tspan x="1290.0" dy="0">패브릭</tspan><tspan x="1290.0" dy="30">노드 간 통신</tspan></text>
+  <rect class="surface-teal" x="540.0" y="550.0" width="430.0" height="120.0" rx="14"/>
+  <text x="755.0" y="595.0" class="node-label" text-anchor="middle"><tspan x="755.0" dy="0">일반 참조 아키텍처</tspan><tspan x="755.0" dy="30">FactoryX 내부 구성 미공개</tspan></text>
+  <line class="rule" x1="90" y1="790" x2="1510" y2="790"/>
+  <text x="90.0" y="830.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">근거: 원자료 | SRC-011 · SRC-013 · SRC-014 · SRC-017</tspan></text>
+  <text x="90.0" y="862.0" class="small" text-anchor="start"><tspan x="90.0" dy="0">FIG-004 | GPU 연산, CPU·메모리, NIC·PCIe, 패브릭을 연결하고 일반 벤더 참조와 FactoryX 공개 범위를 구분한 노드 도식.</tspan></text>
+</svg>

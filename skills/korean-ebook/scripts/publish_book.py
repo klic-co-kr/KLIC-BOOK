@@ -1382,18 +1382,18 @@ def embed_figure_specs(
         fid = html.escape(fig_id)
         if exists:
             return (
-                f'\n<figure class="book-figure" id="{fid}">'
+                f'\n\n<figure class="book-figure" id="{fid}">'
                 f'<img src="{html.escape(resolved)}" alt="{alt_html}"/>'
                 f"<figcaption>{cap_html}</figcaption>"
-                f"</figure>\n"
+                f"</figure>\n\n"
             )
         return (
-            f'\n<figure class="book-figure book-figure-pending" id="{fid}">'
+            f'\n\n<figure class="book-figure book-figure-pending" id="{fid}">'
             f'<div class="figure-pending"><span class="figure-pending-mark">시각자료</span>'
             f'<span class="figure-pending-caption">{cap_html}</span></div>'
             f"<figcaption>{cap_html}"
             f'<span class="figure-pending-note"> — 제작 예정</span>'
-            f"</figcaption></figure>\n"
+            f"</figcaption></figure>\n\n"
         )
 
     new_text = FIGURE_SPEC_RE.sub(replace, markdown_text)

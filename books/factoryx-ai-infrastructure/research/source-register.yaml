@@ -1,0 +1,454 @@
+schema_version: 1
+checked: 2026-08-12
+policy:
+  evidence_grades:
+    A: 공개 데이터, 표준, 원 논문 또는 정부 기술 문서
+    B: 당사자 공식 제품 문서, 사용자 가이드 또는 공식 발표
+    C: A·B 근거를 사용한 저자 계산
+    D: 기존 KLIC 책에서 발견한 조사 질문이며 본문 사실 근거로 사용하지 않음
+  direct_quotes: 원칙적으로 사용하지 않으며 제품명과 표준 명칭만 원문 표기를 유지한다.
+sources:
+  - id: SRC-001
+    title: NHN FactoryX 공식 홈페이지
+    publisher: NHN Cloud
+    url: https://www.nhnfactoryx.com/
+    published: null
+    version: current-page
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-product-page
+    chapters: [1, 7, 11]
+    supports: [FactoryX의 Infrastructure·Platform·Service 3계층, GPU Live·AI EasyMaker·ProjectX의 공개 위치]
+    compare_guard: [FP8 EFlops를 TOP500 Rmax와 같은 축에서 비교하지 않는다.]
+  - id: SRC-002
+    title: NHN FactoryX 기술 백서 안내
+    publisher: NHN FactoryX
+    url: https://info.nhncloud.com/factoryx-whitepaper
+    published: 2026-06
+    version: v1.0-landing-page
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-landing-page
+    chapters: [1, 3, 5, 7, 10]
+    supports: [공개된 백서 주제와 약 60쪽·8개 구성]
+    compare_guard: [신청형 백서 본문·도표·세부 구현을 추정하지 않는다.]
+  - id: SRC-003
+    title: NHN클라우드, AI 풀스택 브랜드 FactoryX 공개
+    publisher: INSIDE NHN
+    url: https://inside.nhn.com/news/942
+    published: 2026-05-28
+    version: official-newsroom
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-newsroom
+    chapters: [1, 3, 6, 7, 8, 11, 12]
+    supports: [FactoryX 출범과 세 계층, 7,656 B200 GPU, 27.4 EF, 4,080 GPU 단일 클러스터, 랙당 75 kW, GPU Live·AI EasyMaker·ProjectX 공개 설명]
+    compare_guard: [장애율·무고장시간 개선은 비교 기간과 모집단이 공개되지 않은 NHN 발표값으로 표시한다.]
+  - id: SRC-004
+    title: NHN FactoryX, 슈퍼컴퓨터 TOP500 국내 최고 순위 등재
+    publisher: INSIDE NHN
+    url: https://inside.nhn.com/news/948
+    published: 2026-06-26
+    version: official-newsroom
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-newsroom
+    chapters: [1, 5, 6]
+    supports: [NIPA-CL-1·CL-2의 NHN 발표 순위와 구성 맥락, FactoryX 서울의 NDR400·수랭식 설명]
+    compare_guard: [순위와 성능값은 TOP500 원자료 SRC-011로 재확인한다.]
+  - id: SRC-005
+    title: 서울 양평데이터센터 가동 개시
+    publisher: INSIDE NHN
+    url: https://inside.nhn.com/news/939
+    published: 2026-05-13
+    version: official-newsroom
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-newsroom
+    chapters: [1, 3, 7, 12]
+    supports: [7,656 GPU 기반 AI 전용 데이터센터와 GPUaaS 공급 개시]
+    compare_guard: [GPU 물량을 NIPA-CL-1·CL-2의 물량 합으로 해석하지 않는다.]
+  - id: SRC-006
+    title: NHN Cloud AI 인프라
+    publisher: NHN Cloud
+    url: https://www.nhncloud.com/kr/solution/technology/gpuaas
+    published: null
+    version: current-page
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-product-page
+    chapters: [1, 2, 7, 8]
+    supports: [GPUaaS 서비스 맥락과 연계 서비스]
+    compare_guard: [고객 수와 서비스 라인업은 페이지 확인일 기준으로만 사용한다.]
+  - id: SRC-007
+    title: AI EasyMaker Overview
+    publisher: NHN Cloud
+    url: https://docs.nhncloud.com/en/Machine%20Learning/AI%20EasyMaker/en/overview/
+    published: null
+    version: current-user-guide
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-user-guide
+    chapters: [8]
+    supports: [개발 환경, 학습, 최대 10노드 분산 학습, 모델·엔드포인트 관리]
+    compare_guard: [영문 안내의 현재 기능을 FactoryX 출시 시점의 모든 기능으로 일반화하지 않는다.]
+  - id: SRC-008
+    title: AI EasyMaker 릴리스 노트
+    publisher: NHN Cloud
+    url: https://docs.nhncloud.com/ko/Machine%20Learning/AI%20EasyMaker/ko/release-notes/
+    published: null
+    version: rolling-release-notes
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-release-notes
+    chapters: [8]
+    supports: [AI EasyMaker 기능 변경의 기준일 확인]
+    compare_guard: [current·volatile 기능은 출판 직전 재확인한다.]
+  - id: SRC-009
+    title: 제조업 AX·DX 플래닝 가이드
+    publisher: NHN Cloud
+    url: https://mnfguide.nhncloud.com/
+    published: 2026-05-14
+    version: public-summary-page
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-research-summary
+    chapters: [2, 12]
+    supports: [제조업 109개사 조사와 78.9%·45.2%·49% 공개 요약값]
+    compare_guard: [모집단과 설문 문항 원문이 없는 요약값이며 FactoryX 고객 성과로 해석하지 않는다.]
+  - id: SRC-010
+    title: GPU 확보 사업 최다 구축 사업자 선정
+    publisher: INSIDE NHN
+    url: https://inside.nhn.com/news/785
+    published: 2025-07-31
+    version: official-newsroom
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-newsroom
+    chapters: [1, 3, 12]
+    supports: [7,656 B200 확보 계획, 75 kW 랙, 4,000장 이상 단일 클러스터 계획]
+    compare_guard: [계획 발표와 2026년 실제 가동 발표를 구분한다.]
+  - id: SRC-011
+    title: TOP500 List — June 2026
+    publisher: TOP500
+    url: https://www.top500.org/lists/top500/list/2026/06/?page=1
+    published: 2026-06
+    version: June-2026
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: public-benchmark-data
+    chapters: [5, 6]
+    supports: [NIPA-NHN-Cloud-CL-1 순위 20·643072 cores·Rmax 137.40 PFlop/s·Rpeak 156.48 PFlop/s, NIPA-NHN-Cloud-CL-2 순위 40·320280 cores·Rmax 68.42 PFlop/s·Rpeak 77.94 PFlop/s]
+    compare_guard: [TOP500 cores를 CPU 코어 또는 GPU 장수로 단순 해석하지 않는다.]
+  - id: SRC-012
+    title: TOP500 Description
+    publisher: TOP500
+    url: https://www.top500.org/project/top500_description/
+    published: null
+    version: current-method-description
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: benchmark-methodology
+    chapters: [6]
+    supports: [Rmax·Rpeak의 정의와 TOP500 정렬 방법]
+    compare_guard: [LINPACK 결과를 학습·추론 처리량으로 대체하지 않는다.]
+  - id: SRC-013
+    title: NVIDIA DGX SuperPOD B200 Reference Architecture
+    publisher: NVIDIA
+    url: https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-b200/latest/
+    published: 2025-04-24
+    version: RA-11334-001-V08
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-reference-architecture
+    chapters: [3, 4, 5]
+    supports: [DGX B200 일반 참조 구성, 32시스템 SU, NDR 400 Gbps, 스토리지·관리 패브릭 분리]
+    compare_guard: [FactoryX의 HPE 시스템이 DGX SuperPOD 토폴로지를 그대로 사용한다고 단정하지 않는다.]
+  - id: SRC-014
+    title: NVIDIA DGX B200 User Guide
+    publisher: NVIDIA
+    url: https://docs.nvidia.com/dgx/dgxb200-user-guide/introduction-to-dgxb200.html
+    published: null
+    version: updated-2026-06-29
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-user-guide
+    chapters: [3, 4]
+    supports: [DGX B200의 8 GPU 일반 구성, 최대 전력과 PSU 장애 동작]
+    compare_guard: [DGX 전력·PSU 값을 FactoryX HPE 시스템 값으로 사용하지 않는다.]
+  - id: SRC-015
+    title: NVIDIA NCCL Documentation
+    publisher: NVIDIA
+    url: https://docs.nvidia.com/deeplearning/nccl/
+    published: null
+    version: 2.30.7
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-library-documentation
+    chapters: [4, 5]
+    supports: [토폴로지 인지 multi-GPU collective communication의 역할]
+    compare_guard: [라이브러리 기능을 네트워크 성능 보장으로 해석하지 않는다.]
+  - id: SRC-016
+    title: NVIDIA GPUDirect Storage Overview
+    publisher: NVIDIA
+    url: https://docs.nvidia.com/gpudirect-storage/overview-guide/
+    published: null
+    version: current-guide
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-technology-guide
+    chapters: [5]
+    supports: [GPU 메모리와 스토리지 사이 직접 DMA 경로, O_DIRECT와 지원 구성 제약]
+    compare_guard: [지원 파일시스템·드라이버와 토폴로지를 확인하지 않고 zero-copy를 보장하지 않는다.]
+  - id: SRC-017
+    title: NVIDIA GPUDirect RDMA Guide
+    publisher: NVIDIA
+    url: https://docs.nvidia.com/cuda/gpudirect-rdma/
+    published: null
+    version: CUDA-13.3
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-technology-guide
+    chapters: [4, 5]
+    supports: [GPU와 PCIe peer device 사이 직접 RDMA 경로]
+    compare_guard: [RDMA 가능성을 실제 애플리케이션 처리량과 동일시하지 않는다.]
+  - id: SRC-018
+    title: MPI Standard 4.1
+    publisher: MPI Forum
+    url: https://www.mpi-forum.org/docs/mpi-4.1/mpi41-report.pdf
+    published: 2023-11-02
+    version: 4.1
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: open-standard
+    chapters: [5]
+    supports: [collective communication과 process topology의 표준 의미]
+    compare_guard: [MPI 표준 의미와 NCCL 구현 세부를 혼동하지 않는다.]
+  - id: SRC-019
+    title: AI Data Center Energy Performance Framework — Integrated Design Principles
+    publisher: ASHRAE
+    url: https://www.ashrae.org/technical-resources/ai-data-center-framework/integrated-design-principles
+    published: 2026
+    version: current-framework-page
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: industry-framework
+    chapters: [2, 3, 9]
+    supports: [AI 데이터센터 전력·냉각 통합 설계와 고밀도·수랭의 일반 배경]
+    compare_guard: [프레임워크 예시 PUE를 FactoryX PUE로 사용하지 않는다.]
+  - id: SRC-020
+    title: ASHRAE Handbook Chapter 20 — Liquid-Cooled Equipment Classes
+    publisher: ASHRAE
+    url: https://handbook.ashrae.org/Handbooks/A19/IP/a19_ch20/a19_ch20_ip.aspx
+    published: 2019
+    version: handbook-chapter-20
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: technical-handbook
+    chapters: [3]
+    supports: [W1·W2·W3·W4·W5 시설수 환경 클래스와 적용 의미]
+    compare_guard: [시설 공급수 온도와 GPU 접합부 온도를 비교하지 않는다.]
+  - id: SRC-021
+    title: Best Practices Guide for Energy-Efficient Data Center Design
+    publisher: U.S. Department of Energy
+    url: https://www.energy.gov/sites/default/files/2024-07/best-practice-guide-data-center-design.pdf
+    published: 2024-07-26
+    version: 2024-guide
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: government-technical-guide
+    chapters: [3, 9]
+    supports: [CDU, cold plate, immersion, 전력·냉각·에너지 지표의 일반 설계 배경]
+    compare_guard: [사례 수치를 FactoryX 운영값으로 대체하지 않는다.]
+  - id: SRC-022
+    title: OCP Liquid Cooling Cold Plate Requirements
+    publisher: Open Compute Project
+    url: https://www.opencompute.org/documents/ocp-acs-liquid-cooling-cold-plate-requirements-pdf
+    published: 2019-10-09
+    version: revision-1.0
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: open-hardware-requirements
+    chapters: [3]
+    supports: [cold plate·센서·누수 대응·열포획의 일반 요구사항]
+    compare_guard: [100% 수랭식 표현을 전체 랙 열의 100% 액체 포획으로 해석하지 않는다.]
+  - id: SRC-023
+    title: Kubernetes Dynamic Resource Allocation
+    publisher: Kubernetes
+    url: https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-project-documentation
+    chapters: [7]
+    supports: [ResourceClaim 기반 특수 자원 표현·할당과 장치 건강 상태]
+    compare_guard: [FactoryX GPU Live의 내부 구현으로 단정하지 않는다.]
+  - id: SRC-024
+    title: Kueue Overview
+    publisher: Kubernetes SIG Scheduling
+    url: https://kueue.sigs.k8s.io/docs/overview/
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-project-documentation
+    chapters: [7]
+    supports: [job admission, quota, priority, resource flavor, cohort의 책임]
+    compare_guard: [Kueue는 pod-to-node scheduling을 대체하지 않는다.]
+  - id: SRC-025
+    title: Kueue Fair Sharing
+    publisher: Kubernetes SIG Scheduling
+    url: https://kueue.sigs.k8s.io/docs/concepts/fair_sharing/
+    published: null
+    version: stable-since-v0.7
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-project-documentation
+    chapters: [7]
+    supports: [cohort 간 borrowable resource의 가중 공정 공유]
+    compare_guard: [공정성 수치를 FactoryX GPU 활용률로 환산하지 않는다.]
+  - id: SRC-026
+    title: NVIDIA GPU Operator — MIG
+    publisher: NVIDIA
+    url: https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-operator-documentation
+    chapters: [7]
+    supports: [Kubernetes에서 MIG 구성 전략과 노드 관리의 일반 패턴]
+    compare_guard: [FactoryX 또는 B200 전체의 MIG 지원·구성을 단정하지 않는다.]
+  - id: SRC-027
+    title: Slurm Generic Resource Scheduling
+    publisher: SchedMD
+    url: https://slurm.schedmd.com/gres.html
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-project-documentation
+    chapters: [7]
+    supports: [GPU GRES, AutoDetect, affinity, MIG·sharding 제약]
+    compare_guard: [Slurm은 MIG 동적 파티셔닝을 수행하지 않으며 FactoryX 내부 사용 여부는 미공개다.]
+  - id: SRC-028
+    title: NVIDIA DCGM Exporter
+    publisher: NVIDIA
+    url: https://docs.nvidia.com/datacenter/dcgm/latest/installation/install-dcgm-exporter.html
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-observability-documentation
+    chapters: [7, 9]
+    supports: [GPU telemetry의 Prometheus 노출 일반 패턴]
+    compare_guard: [수집 가능성과 FactoryX의 실제 텔레메트리 보존 정책을 구분한다.]
+  - id: SRC-029
+    title: Kubernetes Observability
+    publisher: Kubernetes
+    url: https://kubernetes.io/docs/concepts/cluster-administration/observability/
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-project-documentation
+    chapters: [9]
+    supports: [metrics·logs·traces 기반 클러스터 관측의 일반 원칙]
+    compare_guard: [플랫폼 신호만으로 모델·업무 품질을 대체하지 않는다.]
+  - id: SRC-030
+    title: AI Risk Management Framework 1.0
+    publisher: NIST
+    url: https://www.nist.gov/itl/ai-risk-management-framework
+    published: 2023-01
+    version: 1.0
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: government-framework
+    chapters: [10, 11, 12]
+    supports: [Govern·Map·Measure·Manage 위험관리 기능]
+    compare_guard: [자발적 프레임워크를 법적 인증이나 제품 보증으로 표현하지 않는다.]
+  - id: SRC-031
+    title: Generative AI Profile — NIST AI 600-1
+    publisher: NIST
+    url: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
+    published: 2024-07-26
+    version: NIST-AI-600-1
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: government-profile
+    chapters: [10, 11]
+    supports: [생성형 AI 위험을 AI RMF에 적용하는 교차 산업 프로필]
+    compare_guard: [프로필 항목을 ProjectX 내장 기능으로 표현하지 않는다.]
+  - id: SRC-032
+    title: LLM06:2025 Excessive Agency
+    publisher: OWASP GenAI Security Project
+    url: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/
+    published: 2025
+    version: LLM06-2025
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: open-security-guidance
+    chapters: [10, 11]
+    supports: [도구 권한·과도한 자율성·간접 prompt injection 위험]
+    compare_guard: [위험 분류를 실제 취약점 존재 증거로 사용하지 않는다.]
+  - id: SRC-033
+    title: OpenTelemetry Semantic Conventions
+    publisher: OpenTelemetry
+    url: https://opentelemetry.io/docs/specs/semconv/
+    published: null
+    version: 1.43.0
+    checked: 2026-08-12
+    evidence_grade: A
+    source_type: open-specification
+    chapters: [9, 11]
+    supports: [trace·metric·log 의미 규약과 GenAI 속성의 버전 경계]
+    compare_guard: [민감한 prompt·tool argument를 기본 기록하지 않는다.]
+  - id: SRC-034
+    title: GitHub Rulesets
+    publisher: GitHub
+    url: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-product-documentation
+    chapters: [12]
+    supports: [branch·tag 변경 규칙과 우회 권한의 일반 기능]
+    compare_guard: [조직 요금제와 설정 차이를 확인한다.]
+  - id: SRC-035
+    title: GitHub CODEOWNERS
+    publisher: GitHub
+    url: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-product-documentation
+    chapters: [12]
+    supports: [경로별 변경 책임자와 검토 요청]
+    compare_guard: [CODEOWNERS를 승인 정책 전체와 동일시하지 않는다.]
+  - id: SRC-036
+    title: GitHub Deployment Environments
+    publisher: GitHub
+    url: https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-product-documentation
+    chapters: [12]
+    supports: [환경 보호 규칙·승인·배포 단계의 일반 기능]
+    compare_guard: [기능 가용성은 저장소 공개성·요금제·조직 정책에 따라 확인한다.]
+  - id: SRC-037
+    title: Exporting GitHub Enterprise Audit Log Activity
+    publisher: GitHub
+    url: https://docs.github.com/en/enterprise-cloud%40latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/exporting-audit-log-activity-for-your-enterprise
+    published: null
+    version: current-docs
+    checked: 2026-08-12
+    evidence_grade: B
+    source_type: official-product-documentation
+    chapters: [11, 12]
+    supports: [감사 로그 내보내기의 일반 기능]
+    compare_guard: [애플리케이션 실행 감사와 저장소 감사 로그의 범위를 구분한다.]

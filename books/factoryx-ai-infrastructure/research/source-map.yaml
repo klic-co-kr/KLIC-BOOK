@@ -1,0 +1,29 @@
+schema_version: 1
+content:
+  - path: manuscript/
+    reason: 최종 PDF에 들어갈 독립 집필 원고
+  - path: assets/figures/
+    reason: 원고의 figure-spec과 연결된 독립 제작 기술 도형
+  - path: assets/charts/
+    reason: claim-register의 수치·계산과 연결된 독립 제작 차트
+reference:
+  - path: ../../forward-deployed-engineer/
+    reason: 현장 전달 질문을 발견하는 참고자료이며 문장·사례·구조를 본문에 가져오지 않음
+  - path: ../../practical-system-design-2026-book/
+    reason: 설계 검토 질문과 출처 재조사 후보를 찾는 참고자료
+  - path: ../../ai-agent-book-ko/
+    reason: 에이전트 실행 경계의 조사 질문을 찾는 참고자료이며 번역문·도형을 재사용하지 않음
+  - path: ../../github-guide/
+    reason: 변경 통제의 조사 질문을 찾는 참고자료이며 문장·프롬프트를 재사용하지 않음
+  - path: /mnt/d/DEV/KLIC-BOOK/tmp/factoryx-book-workers/
+    reason: 모델 고정 읽기 전용 조사 메모이며 최종 사실은 source-register의 원문 URL로 재검증
+config:
+  - path: book-config.yaml
+    reason: 제목·판본·파일 순서·편집·시각 설정
+exclude:
+  - path: build/
+    reason: 이전 또는 현재 생성 산출물이며 원고 입력에서 제외
+  - path: /mnt/d/DEV/KLIC-BOOK/practical-system-design-2026-book-md.zip
+    reason: 기존 책 패키지이며 새 책 본문 입력이 아님
+  - path: gated-factoryx-whitepaper.pdf
+    reason: 제공되거나 다운로드되지 않았으며 내용 추정 금지
