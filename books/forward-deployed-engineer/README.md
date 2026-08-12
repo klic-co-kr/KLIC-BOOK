@@ -41,7 +41,7 @@ MIT의 보고서에 따르면, 지난 3년간 전 세계 기업은 생성형 AI�
 ## 읽는 법
 
 - **온라인 열람**: 아래 목차를 클릭하면 GitHub에서 챕터별로 바로 읽을 수 있다
-- **PDF 통권**: [FDE_포워드_디플로이드_엔지니어_한국어판_최종편집본.pdf](FDE_포워드_디플로이드_엔지니어_한국어판_최종편집본.pdf) — 전체 완성본 한 번에 받기
+- **PDF 통권**: [FDE_포워드_디플로이드_엔지니어_한국어판_최종편집본.pdf](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/forward-deployed-engineer/FDE_포워드_디플로이드_엔지니어_한국어판_최종편집본.pdf) — 전체 완성본 한 번에 받기 (raw 직접 다운로드)
 
 ## 목차
 
