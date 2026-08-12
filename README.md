@@ -22,6 +22,35 @@
 | [korean-ebook](skills/korean-ebook/) | 한국어 원고를 출판형 A4 PDF로 편집·렌더링·검수 + 요약본(용어집·챕터 요약) 생성하는 에이전트 스킬. Codex·Claude 양쪽 호환 |
 | [korean-ebook-to-skill](skills/korean-ebook-to-skill/) | 한국어 책에서 AI가 진짜 가치를 판단해 추출(방법론·연구·해결책·원칙·안티패턴)하는 근거-chained 쿼리 지식층 스킬. 부록C 사례 회상율로 품질 검증. Claude 호환 |
 
+## 🔗 연계도
+
+책장의 자원이 어떻게 연결되는가. 책 원문 → 변환기 스킬 → 지식 스킬(예시 산출물) 흐름.
+
+```mermaid
+flowchart LR
+  classDef book fill:#e8f4f8,stroke:#2196f3,color:#0d47a1
+  classDef conv fill:#fff3e0,stroke:#ff9800,color:#e65100
+  classDef out  fill:#e8f5e9,stroke:#4caf50,color:#1b5e20
+
+  subgraph 책장["📚 책 (정제 MD 원문)"]
+    FDE["포워드 디플로이드<br/>엔지니어"]:::book
+  end
+  subgraph 변환기["🛠 변환기 스킬"]
+    KE2S["korean-ebook-to-skill<br/>AI 판단추출 + 근거연쇄"]:::conv
+    KE["korean-ebook<br/>출판 PDF 렌더링"]:::conv
+  end
+  subgraph 지식스킬["✨ 지식 스킬 (예시 산출물)"]
+    FDES["forward-deployed-engineer<br/>참조형 쿼리 스킬"]:::out
+  end
+
+  FDE -->|"Step 0-5 파이프라인"| KE2S -->|"판단추출 + 게이트"| FDES
+  FDE -.->|"원문 편집·렌더링"| KE
+```
+
+- **책 원문**(`books/`)이 **변환기 스킬**(`skills/korean-ebook-to-skill`)로 들어가 **지식 스킬**(참조형 쿼리 스킬)로 산출된다. FDE가 첫 예시.
+- `korean-ebook`(출판 PDF)은 같은 책 원문의 다른 산출 경로(지식 추출 아님).
+- 변환 파이프라인 상세는 변환기 [README](skills/korean-ebook-to-skill/README.ko.md#파이프라인-연계도) 참고.
+
 ## 폴더 규칙
 
 - `books/<책-슬러그>/` — 책 한 권 단위. 자체 `README.md`(소개+목차), 챕터, 표지, 통권 PDF.
