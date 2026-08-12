@@ -94,6 +94,7 @@ python3 scripts/render_md.py --work <work_dir> --out <out_dir> --book-slug <slug
 ```bash
 pip install -r scripts/requirements.txt   # pymupdf paddleocr paddlepaddle pyyaml
 ```
+> **paddleocr 3.x 주의**: 3.x는 CPU 환경에서 PIR/onednn 추론 버그(NotImplementedError). **2.x 안정선 사용**(`paddleocr>=2.7,<3`). requirements.txt에 상한 고정.
 **PEP 668 환경**(externally-managed): venv 권장
 ```bash
 python3 -m venv .venv && source .venv/bin/activate && pip install -r scripts/requirements.txt
