@@ -21,6 +21,7 @@
 | --- | --- |
 | [korean-ebook](skills/korean-ebook/) | 한국어 원고를 출판형 A4 PDF로 편집·렌더링·검수 + 요약본(용어집·챕터 요약) 생성하는 에이전트 스킬. Codex·Claude 양쪽 호환 |
 | [korean-ebook-to-skill](skills/korean-ebook-to-skill/) | 한국어 책에서 AI가 진짜 가치를 판단해 추출(방법론·연구·해결책·원칙·안티패턴)하는 근거-chained 쿼리 지식층 스킬. 부록C 사례 회상율로 품질 검증. Claude 호환 |
+| [forward-deployed-engineer](skills/forward-deployed-engineer/) | FDE 책에서 추출한 참조형 쿼리 스킬 1개(통찰 55개, 회상 28.3%). korean-ebook-to-skill 변환기의 첫 예시 산출물 |
 
 ## 🔗 연계도
 
