@@ -50,103 +50,47 @@ RLHF에서 자주 사용되는 강화학습 알고리즘은 **PPO**입니다. PP
 
 정책(Actor)과 가치 모델(Critic)은 파라미터를 가진 신경망으로 표현됩니다. **정책 경사법**은 𝜃로 파라미터화된 정책을 기울기로 직접 최적화하는 기법입니다.
 
-
-
-![수식](eq-svg/eq-078cca7b5a.png)
-
-
+$$> 𝐽(𝜋𝜃) = 𝑉𝜙(s0)$$
 $$> \nabla𝐽(𝜋𝜃) = 𝐸t[\nabla𝜃 log 𝜋𝜃(at|st) · 𝐴t(st, at)]$$
+$$> 𝜃 ← 𝜃 + 𝛼 \nabla𝜃𝐽(𝜋𝜃)$$
 
-
-![수식](eq-svg/eq-f8ca1199e9.png)
-
-
-
-
-
-![수식](eq-svg/eq-f4d527d906.png)
-
-
+$$𝑉𝜙(st)는 가치 함수, 𝜋𝜃(at|st)는 정책, 𝐴t는 어드밴티지 함수(어떤 상태 st에 대해 행동 at가 얼마나 가치 있는지의 추정값)입니다$$
 
 PPO는 TRPO를 단순화한 기법입니다. TRPO는 정책 경사법의 갱신 폭에 KL 거리 제약을 걸어 정책 열화를 방지하고, PPO는 갱신 폭을 clip해 계산 복잡함을 경감합니다. 가치 모델은 보상 합과의 MSE로 학습됩니다.
 
+$$> 𝐿^PPO(𝜃) = 𝐸t[min(rt(𝜃)·𝐴t , clip(rt(𝜃), 1−𝜖, 1+𝜖)·𝐴t)]$$
+$$> 𝐿^critic(𝜙) = 𝐸t[(𝑉𝜙(st) − 𝑅t)2]$$
+$$> rt(𝜃) = 𝜋𝜃(at|st) / 𝜋_old(at|st)$$
 
-
-![수식](eq-svg/eq-a0d22e1c20.png)
-
-
-
-
-![수식](eq-svg/eq-539565c1ff.png)
-
-
-
-
-![수식](eq-svg/eq-532bde36de.png)
-
-
-
-
-
-![수식](eq-svg/eq-a94fb46f03.png)
-
-
+$$𝜖는 clipping 파라미터, 𝑅t는 기대 보상 합입니다$$
 
 강화학습 학습 자료로는 영어권의 Coursera RL Specialization, Reinforcement Learning Lecture Series 2021(DeepMind x UCL), Stanford CS234: Reinforcement Learning, David Silver의 Introduction to Reinforcement Learning, UC Berkeley CS 285: Deep Reinforcement Learning, Deep RL BootCamp, HuggingFace의 Deep Reinforcement Learning Course가 있으며, 일본어 자료로는 도쿄대학교 마쓰오 연구실 심층 강화학습 서머 스쿨 강의 자료와 『강화학습(제2판)』 등이 있습니다.
 
 ### 보상 모델 학습
 
+$$Labeler가 프롬프트 출력에 순위를 매기고 그 데이터로 보상 모델을 학습합니다. K=4~9개 출력으로부터 2개 조합에 대해 모든 순위 매기기를 수행합니다(K=4이면 4C2=6가지). 보상 모델 r𝜃(x, y)는 다음 손실 함수로 학습합니다(yw가 yl보다 좋은 답변, w: win, l: lose)$$
 
+$$> loss(𝜃) = −𝐸_(x,yw,yl~𝐷)[log(𝜎(r𝜃(x, yw) − r𝜃(x, yl)))]$$
 
-![수식](eq-svg/eq-c3b37719b3.png)
-
-
-
-
-
-![수식](eq-svg/eq-ebe7409ea8.png)
-
-
-
-
-
-![수식](eq-svg/eq-fb28edcccc.png)
-
-
+$$즉 좋은 답변 (x, yw)의 보상이 나쁜 답변 (x, yl)의 보상보다 높아질 확률을 학습합니다. 𝜎는 시그모이드 함수이며, Bradley-Terry 모델을 따른다고 가정합니다. Bradley-Terry 모델에 따르면 p*(yw ≻ yl | x) = 𝜎(r*(x, yw) − r*(x, yl))입니다$$
 
 ### 언어모델 강화학습의 문제와 해결책
 
 언어모델 강화학습은 "어떤 문장을 생성할 것인가"를 정책으로 하고 보상 모델 출력을 최대화하도록 학습합니다. 단순히 보상 기댓값을 최대화하면 학습이 잘 되지 않아 별도 장치가 필요합니다.
 
-
-
-![수식](eq-svg/eq-250657986b.png)
-
-
+$$> objective1(𝜙) = 𝐸_(x,y~𝐷_𝜋^RL_𝜙)[r𝜃(x, y)]$$
 
 두 가지 문제가 있습니다. 첫째, **Reward Hacking**입니다. 보상을 최대화하려는 모델이 바람직하지 않은 정책을 학습해 버리는 현상으로, 대책으로 **KL Penalty**를 사용합니다. 생성 문장이 SFT 모델로부터 크게 변하지 않도록 하며, 𝛽 하이퍼파라미터로 균형을 조정합니다(크면 안정적이지만 목적 함수가 커지기 어렵고, 작으면 목적 함수는 커지지만 정책이 붕괴하기 쉽습니다).
 
-
-
-![수식](eq-svg/eq-bf48f4e6a5.png)
-
-
+$$> objective1(𝜙) = 𝐸_(x,y~𝐷_𝜋^RL_𝜙)[r𝜃(x, y) − 𝛽·log(𝜋^RL_𝜙(y|x) / 𝜋^SFT(y|x))]$$
 
 둘째, **Alignment Tax(얼라인먼트 세금)**입니다. 인간의 의도대로 학습시키면 일반화 성능이 열화(사전 지식 망각)하는 현상으로, 대책으로 **Replay**를 사용합니다. 사전학습 데이터 𝐷_pretrain로 대수 우도(log-likelihood)를 최대화해 망각을 방지하며, 𝛾로 균형을 조정합니다.
 
-
-
-![수식](eq-svg/eq-28dc484d2a.png)
-
-
+$$> objective2(𝜙) = 𝛾·𝐸_(x~𝐷_pretrain)[log(𝜋^RL_𝜃(x))]$$
 
 둘을 조합한 것이 **PPO-ptx**입니다.
 
-
-
-![수식](eq-svg/eq-67a9f05461.png)
-
-
+$$> objective(𝜙) = 𝐸_(x,y~𝐷_𝜋^RL_𝜙)[r𝜃(x, y) − 𝛽·log(𝜋^RL_𝜙(y|x) / 𝜋^SFT(y|x))] + 𝛾·𝐸_(x~𝐷_pretrain)[log(𝜋^RL_𝜃(x))]$$
 
 PPO-ptx는 GPT, SFT와 비교해 큰 성능 개선을 보였으며 PPO 대비로도 개선이 확인되었습니다. InstructGPT는 GPT-3보다 지시를 잘 따르고 환각이 억제되며, 사용자와 동일 언어를 사용하는 비율도 높아졌습니다.
 
@@ -182,97 +126,41 @@ RLHF 구현 라이브러리로는 trl(HuggingFace, PPO 기반), trlx(CarperAI, P
 
 ### DPO의 기초와 이론
 
-
-
-![수식](eq-svg/eq-125db09318.png)
-
-
+$$**DPO**(Direct Preference Optimization)는 Reward Model을 거치지 않고 직접 Preference를 고려한 최적화를 수행합니다. Reward Model은 암묵적으로 정의되며, 결과적으로 "보상 모델 학습 + 강화학습"이 "지도학습만"과 동등해집니다. 보상 추정이 틀린 만큼 가중치를 부여하며 𝜋(yw|x) 우도를 최대화하고 𝜋(yl|x) 우도를 최소화합니다$$
 
 DPO와 RLHF는 근사나 가정 없이 수학적으로 동등함이 보여졌습니다(증명은 Appendix).
 
-
-
-![수식](eq-svg/eq-fcd00346ee.png)
-
-
+$$> Loss_DPO(𝜃) = −𝐸_(x,yw,yl~𝐷)[log 𝜎(𝛽·log(𝜋𝜃(yw|x) / 𝜋^SFT(yw|x)) − 𝛽·log(𝜋𝜃(yl|x) / 𝜋^SFT(yl|x)))]$$
 
 증명은 RLHF 목적 함수로부터 출발합니다.
 
-
-
-![수식](eq-svg/eq-0f090d09b0.png)
-
-
+$$> max_𝜋 𝐸_(x,y~𝐷_𝜋)[r(x, y) − 𝛽·𝐷_KL[𝜋(y|x) || 𝜋^SFT(y|x)]]$$
 
 이 문제의 최적해는 해석적으로 풀 수 있습니다.
 
+$$> 𝜋*(y|x) = (1/𝑍(x)) · 𝜋^SFT(y|x) · exp((1/𝛽)r(x, y))$$
+$$> 𝑍(x) = \Sigma_y 𝜋^SFT(y|x)exp((1/𝛽)r(x, y))$$
 
+$$즉 보상 r(x, y)를 구하면 최적 정책 𝜋*(y|x)가, 정책 𝜋(y|x)가 구해지면 보상 r(x, y)가 구해집니다$$
 
-![수식](eq-svg/eq-dd44aa60cb.png)
+$$> r(x, y) = 𝛽·log(𝜋(y|x) / 𝜋^SFT(y|x)) + 𝛽·log 𝑍(x)$$
 
+$$이를 보상 모델 학습 손실 함수에 대입하면 분배 함수가 사라집니다. 분배 함수 𝑍(x)는 모든 y에 대한 총합이라 본래 계산 불가능하지만, 대입하면 소거됩니다$$
 
+$$> loss(𝜃) = −𝐸_(x,yw,yl~𝐷)[log(𝜎(r𝜃(x, yw) − r𝜃(x, yl)))]$$
+$$> = −𝐸_(x,yw,yl~𝐷)[log 𝜎(𝛽·log(𝜋𝜃(yw|x) / 𝜋^SFT(yw|x)) − 𝛽·log(𝜋𝜃(yl|x) / 𝜋^SFT(yl|x)))]$$
 
-
-![수식](eq-svg/eq-2c4b1f83f4.png)
-
-
-
-
-
-![수식](eq-svg/eq-8da1d289ba.png)
-
-
-
-
-
-![수식](eq-svg/eq-4729e354c4.png)
-
-
-
-
-
-![수식](eq-svg/eq-3a0fb79996.png)
-
-
-
-
-
-![수식](eq-svg/eq-ebe7409ea8.png)
-
-
-
-
-![수식](eq-svg/eq-f9ccabb991.png)
-
-
-
-
-
-![수식](eq-svg/eq-7294cb3703.png)
-
-
+$$보상 모델 r𝜃(x, y)을 𝛽·log(𝜋𝜃(y|x) / 𝜋^SFT(y|x))로 간주하고 있다고 해석할 수 있습니다. 논문 제목 "Your Language Model is Secretly a Reward Model"이 이를 가리킵니다$$
 
 ### DPO의 파생 기법
 
+$$DPO를 일반화한 **ΨPO**는 Ψ: {0,1} → ℝ+인 비감소 함수를 도입해 목적 함수를 최소화하며, Ψ를 특정 형태로 두면 DPO와 같아집니다. Ψ = q라는 항등 함수를 사용한 경우를 **IPO**(Identity Preference Optimization)라 합니다$$
 
-
-![수식](eq-svg/eq-5327cb8f78.png)
-
-
-
-
-
-![수식](eq-svg/eq-410cef0a29.png)
-
-
+$$**KTO**(Kahneman-Tversky Optimization)는 전망 이론(prospect theory)에 기반해 인간의 효용 모델을 도입합니다(예: "5만엔을 얻은 기쁨보다 잃은 슬픔이 더 크다"). (x, yw, yl) Preference 데이터가 필요 없고 단일 쌍 (x, y)만으로 학습 가능합니다$$
 
 DPO, ΨPO/IPO, KTO 등은 데이터셋과 보상 함수 가정을 변경한 기법들입니다. DPO가 가장 성능이 높지만, 학습 비용을 줄이려면 KTO나 CPO가 권장됩니다. 한편 "현 시점에서 DPO는 PPO에게 이길 수 없다"는 평가도 있으며, PPO > filtered DPO / iterative DPO > DPO > SFT의 순위로 알려져 있습니다. 그 이유는 PPO를 이용함으로써 Reward Model의 외삽 데이터에 접근할 수 있기 때문으로 추정됩니다.
 
-
-
-![수식](eq-svg/eq-33ce0cfbcb.png)
-
-
+$$DPO 계열 Reverse KL의 근본 문제로 exp((1/𝛽)r(x, y)) 항이 지수 함수적으로 SFT 분포를 뾰족하게 만들어 출력 다양성이 훼손되는 현상이 있으며, 이를 해결하기 위해 KL-divergence 대신 f-divergence를 이용하는 연구도 존재합니다. 이 밖에 Iterative/Online DPO, Self-Rewarding, Token-level DPO, TDPO, ORPO, SimPO, NPO, CPO, Nash Learning(SPPO, DNO) 등 다양한 파생 기법이 제안되어 있습니다$$
 
 ### 기타 얼라인먼트 기법
 
@@ -304,11 +192,7 @@ RLHF를 둘러싼 근본 질문들이 남아 있습니다. (1) 왜 RLHF로 성�
 
 ### GRPO와 그 발전판
 
-
-
-![수식](eq-svg/eq-75d60389ae.png)
-
-
+$$**GRPO**(Group Relative Policy Optimization)는 PPO를 추론 향상에 특화시킨 기법입니다. 어드밴티지(A)를 에피소드 보상(r)로부터 직접 산출함으로써 상태 가치 𝑉(s) 함수 근사를 불필요하게 만들었다는 것이 핵심입니다. 가치 함수 학습 대신 동일한 프롬프트에 대한 복수 응답의 통계로 베이스라인을 계산합니다. PPO로부터의 clipping logic, loss 내 KL penalty, 동일 프롬프트의 샘플 그룹 보상 r_i 상대 할당, 토큰 길이 정규화를 조합합니다$$
 
 RLVR에 의해 흥미로운 **"아하 체험"**이 관찰됩니다. 자신의 시행착오 결과가 틀렸을 때 "Wait, wait. That's an aha moment"라며 올바른 풀이를 깨닫는 현상입니다. 또한 강화학습으로 Verification, Backtrack 행동이 증가하며 스코어도 향상됩니다. RL 전 모델에서 이 두 행동이 보이지 않으면 RL을 해도 성능이 향상되지 않습니다.
 
