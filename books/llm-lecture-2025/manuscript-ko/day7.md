@@ -52,23 +52,23 @@ RLHF에서 자주 사용되는 강화학습 알고리즘은 **PPO**입니다. PP
 
 
 
-![수식](eq-svg/eq-078cca7b5a.svg)
+![수식](eq-svg/eq-078cca7b5a.png)
 
 
 
 
-![수식](eq-svg/eq-539fb934c6.svg)
+![수식](eq-svg/eq-539fb934c6.png)
 
 
 
 
-![수식](eq-svg/eq-f8ca1199e9.svg)
+![수식](eq-svg/eq-f8ca1199e9.png)
 
 
 
 
 
-![수식](eq-svg/eq-f4d527d906.svg)
+![수식](eq-svg/eq-f4d527d906.png)
 
 
 
@@ -76,23 +76,23 @@ PPO는 TRPO를 단순화한 기법입니다. TRPO는 정책 경사법의 갱신 
 
 
 
-![수식](eq-svg/eq-a0d22e1c20.svg)
+![수식](eq-svg/eq-a0d22e1c20.png)
 
 
 
 
-![수식](eq-svg/eq-539565c1ff.svg)
+![수식](eq-svg/eq-539565c1ff.png)
 
 
 
 
-![수식](eq-svg/eq-532bde36de.svg)
+![수식](eq-svg/eq-532bde36de.png)
 
 
 
 
 
-![수식](eq-svg/eq-a94fb46f03.svg)
+![수식](eq-svg/eq-a94fb46f03.png)
 
 
 
@@ -102,19 +102,19 @@ PPO는 TRPO를 단순화한 기법입니다. TRPO는 정책 경사법의 갱신 
 
 
 
-![수식](eq-svg/eq-c3b37719b3.svg)
+![수식](eq-svg/eq-c3b37719b3.png)
 
 
 
 
 
-![수식](eq-svg/eq-ebe7409ea8.svg)
+![수식](eq-svg/eq-ebe7409ea8.png)
 
 
 
 
 
-![수식](eq-svg/eq-fb28edcccc.svg)
+![수식](eq-svg/eq-fb28edcccc.png)
 
 
 
@@ -124,7 +124,7 @@ PPO는 TRPO를 단순화한 기법입니다. TRPO는 정책 경사법의 갱신 
 
 
 
-![수식](eq-svg/eq-250657986b.svg)
+![수식](eq-svg/eq-250657986b.png)
 
 
 
@@ -132,7 +132,7 @@ PPO는 TRPO를 단순화한 기법입니다. TRPO는 정책 경사법의 갱신 
 
 
 
-![수식](eq-svg/eq-bf48f4e6a5.svg)
+![수식](eq-svg/eq-bf48f4e6a5.png)
 
 
 
@@ -140,7 +140,7 @@ PPO는 TRPO를 단순화한 기법입니다. TRPO는 정책 경사법의 갱신 
 
 
 
-![수식](eq-svg/eq-28dc484d2a.svg)
+![수식](eq-svg/eq-28dc484d2a.png)
 
 
 
@@ -148,7 +148,7 @@ PPO는 TRPO를 단순화한 기법입니다. TRPO는 정책 경사법의 갱신 
 
 
 
-![수식](eq-svg/eq-67a9f05461.svg)
+![수식](eq-svg/eq-67a9f05461.png)
 
 
 
@@ -186,13 +186,17 @@ RLHF 구현 라이브러리로는 trl(HuggingFace, PPO 기반), trlx(CarperAI, P
 
 ### DPO의 기초와 이론
 
-$$**DPO**(Direct Preference Optimization)는 Reward Model을 거치지 않고 직접 Preference를 고려한 최적화를 수행합니다. Reward Model은 암묵적으로 정의되며, 결과적으로 "보상 모델 학습 + 강화학습"이 "지도학습만"과 동등해집니다. 보상 추정이 틀린 만큼 가중치를 부여하며 𝜋(yw|x) 우도를 최대화하고 𝜋(yl|x) 우도를 최소화합니다$$
+
+
+![수식](eq-svg/eq-125db09318.png)
+
+
 
 DPO와 RLHF는 근사나 가정 없이 수학적으로 동등함이 보여졌습니다(증명은 Appendix).
 
 
 
-![수식](eq-svg/eq-fcd00346ee.svg)
+![수식](eq-svg/eq-fcd00346ee.png)
 
 
 
@@ -200,7 +204,7 @@ DPO와 RLHF는 근사나 가정 없이 수학적으로 동등함이 보여졌습
 
 
 
-![수식](eq-svg/eq-0f090d09b0.svg)
+![수식](eq-svg/eq-0f090d09b0.png)
 
 
 
@@ -208,61 +212,69 @@ DPO와 RLHF는 근사나 가정 없이 수학적으로 동등함이 보여졌습
 
 
 
-![수식](eq-svg/eq-dd44aa60cb.svg)
+![수식](eq-svg/eq-dd44aa60cb.png)
 
 
 
 
-![수식](eq-svg/eq-2c4b1f83f4.svg)
-
-
-
-
-
-![수식](eq-svg/eq-8da1d289ba.svg)
+![수식](eq-svg/eq-2c4b1f83f4.png)
 
 
 
 
 
-![수식](eq-svg/eq-4729e354c4.svg)
+![수식](eq-svg/eq-8da1d289ba.png)
 
 
 
 
 
-![수식](eq-svg/eq-3a0fb79996.svg)
+![수식](eq-svg/eq-4729e354c4.png)
 
 
 
 
 
-![수식](eq-svg/eq-ebe7409ea8.svg)
+![수식](eq-svg/eq-3a0fb79996.png)
 
 
 
 
-![수식](eq-svg/eq-f9ccabb991.svg)
+
+![수식](eq-svg/eq-ebe7409ea8.png)
 
 
 
-$$보상 모델 r𝜃(x, y)을 𝛽·log(𝜋𝜃(y|x) / 𝜋^SFT(y|x))로 간주하고 있다고 해석할 수 있습니다. 논문 제목 "Your Language Model is Secretly a Reward Model"이 이를 가리킵니다$$
+
+![수식](eq-svg/eq-f9ccabb991.png)
+
+
+
+
+
+![수식](eq-svg/eq-7294cb3703.png)
+
+
 
 ### DPO의 파생 기법
 
 
 
-![수식](eq-svg/eq-5327cb8f78.svg)
+![수식](eq-svg/eq-5327cb8f78.png)
 
 
 
-$$**KTO**(Kahneman-Tversky Optimization)는 전망 이론(prospect theory)에 기반해 인간의 효용 모델을 도입합니다(예: "5만엔을 얻은 기쁨보다 잃은 슬픔이 더 크다"). (x, yw, yl) Preference 데이터가 필요 없고 단일 쌍 (x, y)만으로 학습 가능합니다$$
+
+
+![수식](eq-svg/eq-410cef0a29.png)
+
+
 
 DPO, ΨPO/IPO, KTO 등은 데이터셋과 보상 함수 가정을 변경한 기법들입니다. DPO가 가장 성능이 높지만, 학습 비용을 줄이려면 KTO나 CPO가 권장됩니다. 한편 "현 시점에서 DPO는 PPO에게 이길 수 없다"는 평가도 있으며, PPO > filtered DPO / iterative DPO > DPO > SFT의 순위로 알려져 있습니다. 그 이유는 PPO를 이용함으로써 Reward Model의 외삽 데이터에 접근할 수 있기 때문으로 추정됩니다.
 
 
 
-![수식](eq-svg/eq-33ce0cfbcb.svg)
+![수식](eq-svg/eq-33ce0cfbcb.png)
 
 
 
@@ -298,7 +310,7 @@ RLHF를 둘러싼 근본 질문들이 남아 있습니다. (1) 왜 RLHF로 성�
 
 
 
-![수식](eq-svg/eq-75d60389ae.svg)
+![수식](eq-svg/eq-75d60389ae.png)
 
 
 

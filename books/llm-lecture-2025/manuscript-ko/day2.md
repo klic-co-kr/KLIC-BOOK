@@ -18,23 +18,23 @@ ChatGPT는 주당 7억 명이 이용하고 180억 메시지가 오가며, 업무
 
 **언어 모델**이란 단어 열(문장)이 얼마나 발생하기 쉬운지를 모델화한 확률 모델로, 단어 열 
 
-![수식](eq-svg/eq-4ca10c5ef1.svg)
+![수식](eq-svg/eq-4ca10c5ef1.png)
 
  에 생성 확률 
 
-![수식](eq-svg/eq-fa2cc19a92.svg)
+![수식](eq-svg/eq-fa2cc19a92.png)
 
  을 할당한다. "좋은" 언어 모델은 문법적·상식적 오류가 있는 문장에는 낮은 확률을 준다. 예컨대 
 
-![수식](eq-svg/eq-2601014e91.svg)
+![수식](eq-svg/eq-2601014e91.png)
 
 , 
 
-![수식](eq-svg/eq-767bca946a.svg)
+![수식](eq-svg/eq-767bca946a.png)
 
 , 
 
-![수식](eq-svg/eq-d871dbd9f6.svg)
+![수식](eq-svg/eq-d871dbd9f6.png)
 
  와 같다.
 
@@ -42,49 +42,49 @@ ChatGPT는 주당 7억 명이 이용하고 180억 메시지가 오가며, 업무
 
 
 
-![수식](eq-svg/eq-c99caceb54.svg)
+![수식](eq-svg/eq-c99caceb54.png)
 
 
 
 예로 
 
-![수식](eq-svg/eq-e62e3053f8.svg)
+![수식](eq-svg/eq-e62e3053f8.png)
 
  이다. 조건부 확률을 알면 생성도 가능하다. 
 
-![수식](eq-svg/eq-862db69bb4.svg)
+![수식](eq-svg/eq-862db69bb4.png)
 
 , 
 
-![수식](eq-svg/eq-4a1ee0da63.svg)
+![수식](eq-svg/eq-4a1ee0da63.png)
 
 , 
 
-![수식](eq-svg/eq-3f411586fd.svg)
+![수식](eq-svg/eq-3f411586fd.png)
 
  이므로 "일본의 수도는" 다음에는 "도쿄"가 생성된다. 이 조건부 확률은 번역(영어 문장 → 일본어 문장), 질의응답(질문 → 답변), 요약(문서 → 짧은 서술) 등 다양한 과제로 일반화되며, 수식으로는 
 
-![수식](eq-svg/eq-6234b52e59.svg)
+![수식](eq-svg/eq-6234b52e59.png)
 
  로 쓴다.
 
 모델에서 어떻게 출력을 얻을 것인가가 **디코딩**(Decoding)의 문제이며, 이는 알고리즘과 스코어 함수의 선택이라는 관점으로도 정의된다[2]. 대표적 기법은 다섯 가지다. **Greedy decoding**은 매 스텝 가장 확률이 높은 토큰을 선택하지만, 문장 전체로는 최적이 아닐 수 있고 반복이 잦다[2]. **Beam search**는 빔 수(num_beams)만큼 후보를 남겨 여러 스텝 단위로 점수가 높은 것을 선택하나, 계산량이 많고 출력이 지루하며 짧아지는 경향이 있다[2]. **Top-k sampling**은 상위 k개에서 샘플링하지만 long-tail 문제가 있고 유망 선택지가 배제될 수 있다[2]. **Top-p sampling**(핵 샘플링, Holtzman et al., 2020)은 상위부터 누적해 누적 확률이 
 
-![수식](eq-svg/eq-e398b71125.svg)
+![수식](eq-svg/eq-e398b71125.png)
 
  가 되는 후보 안에서 샘플링하며, Top-k보다 유연하다[2].
 
 샘플링의 무작위성은 **temperature** $T
 
-![수식](eq-svg/eq-5246f66f3f.svg)
+![수식](eq-svg/eq-5246f66f3f.png)
 
 p(w) = \exp(z_w / T) / \sum_{j=1}^{|V|} \exp(z_j / T)
 
-![수식](eq-svg/eq-420e118c0f.svg)
+![수식](eq-svg/eq-420e118c0f.png)
 
 T
 
-![수식](eq-svg/eq-513b9eeae3.svg)
+![수식](eq-svg/eq-513b9eeae3.png)
 
 T=0$으로 설정해도 완전히 결정적이지 않은 경우가 있는데, 부동소수점 연산 순서와 배치 처리의 분할 방식 차이 때문이며, GPU 처리를 수정하면 결정적으로 만들 수 있다[4].
 
@@ -140,7 +140,7 @@ Welleck et al. (2024)[18]가 정리한 **메타 생성 알고리즘**은 모델�
 
 모델 접근은 세 가지다. **API 전용**은 가중치 비공개·사용량 과금으로, 자체 컴퓨터 없이 GPT·Gemini·Claude 등을 쓴다(GPT는 1M 토큰 입력당 
 
-![수식](eq-svg/eq-9bed27262e.svg)
+![수식](eq-svg/eq-9bed27262e.png)
 
 10). **공개 모델**은 가중치까지 공개되어 분석에도 적합하고 로컬에서 실행 가능하며(Llama·Mistral·DeepSeek·Qwen·gpt-oss), **비공개 모델**은 일부 연구기관만 이용 가능하다(PaLM·Gopher). 공개 모델을 다룰 때는 **Transformers**(HuggingFace의 모델·데이터셋 허브, 연습에서도 사용, 버그 주의)와 **vLLM**(고속 추론)이 핵심이다.
 

@@ -36,7 +36,7 @@ LLM 학습에 필요한 연산량은 파라미터 수(N)와 토큰 수(D)를 이
 
 
 
-![수식](eq-svg/eq-003b4c7ab3.svg)
+![수식](eq-svg/eq-003b4c7ab3.png)
 
 
 

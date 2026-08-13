@@ -48,11 +48,15 @@ RefinedWeb[12]은 필터링 공학적 개선을 통해 대규모 데이터를 �
 
 ### MinHash 알고리즘에 의한 중복 판정
 
-$$MinHash는 텍스트 유사도 계산 기법인 Jaccard 계수를 효율적으로 추정하는 기법이다[17]. 문장 A, B의 MinHash가 일치할 확률이 Jaccard 계수와 같다는 점을 이용한다. Jaccard 계수는 J(A, B) = |A \cap B| / |A \cup B|로 정의된다. 예를 들어 A 문장 "I have a pen"(집합 {I, have, a, pen})과 B 문장 "I have an orange"(집합 {I, have, an, orange})의 Jaccard 계수는 {I, have} / {I, have, a, pen, an, orange} = 2/6 = 1/3이다$$
+
+
+![수식](eq-svg/eq-49b18c81a8.png)
 
 
 
-![수식](eq-svg/eq-7eae5a52a9.svg)
+
+
+![수식](eq-svg/eq-7eae5a52a9.png)
 
 
 

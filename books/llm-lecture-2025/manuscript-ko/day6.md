@@ -40,7 +40,7 @@ PEFT의 필요성은 Full-FT의 비용에서 비롯됩니다. Full-FT는 사전�
 
 
 
-![수식](eq-svg/eq-2a109ec649.svg)
+![수식](eq-svg/eq-2a109ec649.png)
 
 
 
@@ -52,7 +52,7 @@ Lialin 등[15]은 다양한 PEFT 기법을 추론 시의 오버헤드 관점에�
 
 
 
-![수식](eq-svg/eq-1326598b2a.svg)
+![수식](eq-svg/eq-1326598b2a.png)
 
 
 
@@ -62,7 +62,7 @@ Lialin 등[15]은 다양한 PEFT 기법을 추론 시의 오버헤드 관점에�
 
 
 
-![수식](eq-svg/eq-870b842a27.svg)
+![수식](eq-svg/eq-870b842a27.png)
 
 
 
