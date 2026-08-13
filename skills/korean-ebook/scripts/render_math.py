@@ -15,11 +15,32 @@ TYPST = shutil.which('typst') or str(Path.home() / '.local/bin/typst')
 MITEX = '0.2.7'
 
 
+def deitalicize(latex: str) -> str:
+    """수학 Unicode(U+1D400-1D7FF) 이탤릭/볼드 → 보통 라틴. mitex 호환."""
+    out = []
+    for c in latex:
+        cp = ord(c)
+        # 볼드 대문자 U+1D400-1D419 / 소문자 U+1D41A-1D433
+        if 0x1D400 <= cp <= 0x1D419:
+            out.append(chr(cp - 0x1D400 + 0x41))
+        elif 0x1D41A <= cp <= 0x1D433:
+            out.append(chr(cp - 0x1D41A + 0x61))
+        # 이탤릭 대문자 U+1D434-1D44D / 소문자 U+1D44E-1D467
+        elif 0x1D434 <= cp <= 0x1D44D:
+            out.append(chr(cp - 0x1D434 + 0x41))
+        elif 0x1D44E <= cp <= 0x1D467:
+            out.append(chr(cp - 0x1D44E + 0x61))
+        else:
+            out.append(c)
+    return ''.join(out)
+
+
 def render_one(latex: str, png_path: Path, root: str) -> bool:
+    latex = deitalicize(latex)
     src = (
         f'#import "@preview/mitex:{MITEX}": mitex\n'
-        f'#set page(width: auto, height: auto, margin: 4pt)\n'
-        f'#set text(size: 11pt, font: ("NanumSquare_ac", "Noto Sans CJK KR", "NanumGothic"))\n'
+        f'#set page(width: auto, height: auto, margin: 2pt)\n'
+        f'#set text(size: 8.5pt, font: ("NanumSquare_ac", "Noto Sans CJK KR", "NanumGothic"))\n'
         f'#mitex(`{latex}`)\n'
     )
     typ_file = png_path.with_suffix('.typ')

@@ -55,11 +55,7 @@ RLHF에서 자주 사용되는 강화학습 알고리즘은 **PPO**입니다. PP
 ![수식](eq-svg/eq-078cca7b5a.png)
 
 
-
-
-![수식](eq-svg/eq-539fb934c6.png)
-
-
+$$> \nabla𝐽(𝜋𝜃) = 𝐸t[\nabla𝜃 log 𝜋𝜃(at|st) · 𝐴t(st, at)]$$
 
 
 ![수식](eq-svg/eq-f8ca1199e9.png)
