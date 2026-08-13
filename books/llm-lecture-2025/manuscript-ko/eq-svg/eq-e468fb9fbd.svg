@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="164.5pt" height="18.42pt" viewBox="0 0 164.5 18.42" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-13T09:23:25.304221</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M -0 18.42 
+L 164.5 18.42 
+L 164.5 0 
+L -0 0 
+L -0 18.42 
+z
+" style="fill: none"/>
+  </g>
+  <g id="text_1">
+   <!-- $의 내적 값(분산)이 커지므로, 이를 억제하기 위해 차원 수의 제곱근$ -->
+   <g transform="translate(3.6 13.28) scale(0.11 -0.11)">
+    <defs>
+     <path id="STIXGeneral-Regular-66" d="M 3341 256 
+L 3034 -64 
+L 2406 563 
+Q 2029 301 1606 301 
+Q 1171 301 794 563 
+L 179 -64 
+L -141 256 
+L 486 870 
+Q 224 1248 224 1677 
+Q 224 2118 486 2483 
+L -141 3110 
+L 179 3418 
+L 794 2803 
+Q 1184 3053 1606 3053 
+Q 2048 3053 2406 2803 
+L 3034 3418 
+L 3341 3110 
+L 2726 2483 
+Q 2976 2112 2976 1683 
+Q 2976 1261 2726 870 
+L 3341 256 
+z
+M 2541 1690 
+Q 2541 2086 2265 2364 
+Q 1990 2643 1594 2643 
+Q 1210 2643 934 2361 
+Q 659 2080 659 1683 
+Q 659 1280 937 995 
+Q 1216 710 1606 710 
+Q 2003 710 2272 995 
+Q 2541 1280 2541 1690 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-b" d="M 1984 4856 
+Q 1566 4138 1362 3434 
+Q 1159 2731 1159 2009 
+Q 1159 1288 1364 580 
+Q 1569 -128 1984 -844 
+L 1484 -844 
+Q 1016 -109 783 600 
+Q 550 1309 550 2009 
+Q 550 2706 781 3412 
+Q 1013 4119 1484 4856 
+L 1984 4856 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-c" d="M 513 4856 
+L 1013 4856 
+Q 1481 4119 1714 3412 
+Q 1947 2706 1947 2009 
+Q 1947 1309 1714 600 
+Q 1481 -109 1013 -844 
+L 513 -844 
+Q 928 -128 1133 580 
+Q 1338 1288 1338 2009 
+Q 1338 2731 1133 3434 
+Q 928 4138 513 4856 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-f" d="M 750 794 
+L 1409 794 
+L 1409 256 
+L 897 -744 
+L 494 -744 
+L 750 256 
+L 750 794 
+z
+" transform="scale(0.015625)"/>
+    </defs>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(0 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(49.999954 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(99.999908 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(149.999863 0.125)"/>
+    <use xlink:href="#DejaVuSans-b" transform="translate(199.999817 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(239.013489 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(289.013443 0.125)"/>
+    <use xlink:href="#DejaVuSans-c" transform="translate(339.013397 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(378.027069 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(428.027023 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(478.026978 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(528.026932 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(578.026886 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(628.02684 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(679.296371 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(729.296326 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(779.29628 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(829.296234 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(879.296188 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(929.296143 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(979.296097 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1029.296051 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1079.296005 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1129.295959 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1179.295914 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1229.295868 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1279.295822 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1329.295776 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1379.295731 0.125)"/>
+   </g>
+  </g>
+ </g>
+</svg>

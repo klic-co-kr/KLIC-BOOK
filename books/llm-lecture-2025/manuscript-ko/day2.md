@@ -16,17 +16,77 @@ ChatGPT는 주당 7억 명이 이용하고 180억 메시지가 오가며, 업무
 
 ## 디코딩의 기초: 언어 모델에서 출력을 얻는 방법
 
-**언어 모델**이란 단어 열(문장)이 얼마나 발생하기 쉬운지를 모델화한 확률 모델로, 단어 열 $(x_1, x_2, \ldots, x_L)$ 에 생성 확률 $p(x_1, x_2, \ldots, x_L)$ 을 할당한다. "좋은" 언어 모델은 문법적·상식적 오류가 있는 문장에는 낮은 확률을 준다. 예컨대 $p(\text{일본, 의, 수도, 는, 도쿄}) = 0.02$, $p(\text{일본, 의, 수도, 는, 파리}) = 0.00001$, $p(\text{도쿄, 의, 수도, 는, 일본}) = 0.0005$ 와 같다.
+**언어 모델**이란 단어 열(문장)이 얼마나 발생하기 쉬운지를 모델화한 확률 모델로, 단어 열 
+
+![수식](eq-svg/eq-4ca10c5ef1.svg)
+
+ 에 생성 확률 
+
+![수식](eq-svg/eq-fa2cc19a92.svg)
+
+ 을 할당한다. "좋은" 언어 모델은 문법적·상식적 오류가 있는 문장에는 낮은 확률을 준다. 예컨대 
+
+![수식](eq-svg/eq-2601014e91.svg)
+
+, 
+
+![수식](eq-svg/eq-767bca946a.svg)
+
+, 
+
+![수식](eq-svg/eq-d871dbd9f6.svg)
+
+ 와 같다.
 
 이 결합 확률은 확률의 연쇄법칙으로 조건부 분포의 곱으로 분해할 수 있으며, 이렇게 분해한 모델을 **자기회귀 언어 모델**(autoregressive language model)이라 한다.
 
-$$p(x_1, x_2, \ldots, x_L) = p(x_1) \cdot p(x_2 \mid x_1) \cdot \ldots \cdot p(x_L \mid x_1, x_2, \ldots, x_{L-1})$$
 
-예로 $p(\text{일본, 의, 수도}) = p(\text{일본}) \cdot p(\text{의} \mid \text{일본}) \cdot p(\text{수도} \mid \text{일본, 의})$ 이다. 조건부 확률을 알면 생성도 가능하다. $p(\text{도쿄} \mid \text{일본, 의, 수도, 는}) = 0.2$, $p(\text{파리} \mid \ldots) = 0.001$, $p(\text{카이로} \mid \ldots) = 0.0005$ 이므로 "일본의 수도는" 다음에는 "도쿄"가 생성된다. 이 조건부 확률은 번역(영어 문장 → 일본어 문장), 질의응답(질문 → 답변), 요약(문서 → 짧은 서술) 등 다양한 과제로 일반화되며, 수식으로는 $p(x_{i+1:L} \mid x_1, \ldots, x_i) = \prod_{j=i+1}^{L} p(x_j \mid x_{1:i}, x_{i+1:j-1})$ 로 쓴다.
 
-모델에서 어떻게 출력을 얻을 것인가가 **디코딩**(Decoding)의 문제이며, 이는 알고리즘과 스코어 함수의 선택이라는 관점으로도 정의된다[2]. 대표적 기법은 다섯 가지다. **Greedy decoding**은 매 스텝 가장 확률이 높은 토큰을 선택하지만, 문장 전체로는 최적이 아닐 수 있고 반복이 잦다[2]. **Beam search**는 빔 수(num_beams)만큼 후보를 남겨 여러 스텝 단위로 점수가 높은 것을 선택하나, 계산량이 많고 출력이 지루하며 짧아지는 경향이 있다[2]. **Top-k sampling**은 상위 k개에서 샘플링하지만 long-tail 문제가 있고 유망 선택지가 배제될 수 있다[2]. **Top-p sampling**(핵 샘플링, Holtzman et al., 2020)은 상위부터 누적해 누적 확률이 $p \times 100\%$ 가 되는 후보 안에서 샘플링하며, Top-k보다 유연하다[2].
+![수식](eq-svg/eq-c99caceb54.svg)
 
-샘플링의 무작위성은 **temperature** $T$ 로 조절한다. softmax 식 $p(w) = \exp(z_w / T) / \sum_{j=1}^{|V|} \exp(z_j / T)$ 에서 $T$를 0에 가깝게 하면 분포가 뾰족해져 거의 결정적이 되고, 크게 하면 무작위성이 높아진다[3]. 다만 $T=0$으로 설정해도 완전히 결정적이지 않은 경우가 있는데, 부동소수점 연산 순서와 배치 처리의 분할 방식 차이 때문이며, GPU 처리를 수정하면 결정적으로 만들 수 있다[4].
+
+
+예로 
+
+![수식](eq-svg/eq-e62e3053f8.svg)
+
+ 이다. 조건부 확률을 알면 생성도 가능하다. 
+
+![수식](eq-svg/eq-862db69bb4.svg)
+
+, 
+
+![수식](eq-svg/eq-4a1ee0da63.svg)
+
+, 
+
+![수식](eq-svg/eq-3f411586fd.svg)
+
+ 이므로 "일본의 수도는" 다음에는 "도쿄"가 생성된다. 이 조건부 확률은 번역(영어 문장 → 일본어 문장), 질의응답(질문 → 답변), 요약(문서 → 짧은 서술) 등 다양한 과제로 일반화되며, 수식으로는 
+
+![수식](eq-svg/eq-6234b52e59.svg)
+
+ 로 쓴다.
+
+모델에서 어떻게 출력을 얻을 것인가가 **디코딩**(Decoding)의 문제이며, 이는 알고리즘과 스코어 함수의 선택이라는 관점으로도 정의된다[2]. 대표적 기법은 다섯 가지다. **Greedy decoding**은 매 스텝 가장 확률이 높은 토큰을 선택하지만, 문장 전체로는 최적이 아닐 수 있고 반복이 잦다[2]. **Beam search**는 빔 수(num_beams)만큼 후보를 남겨 여러 스텝 단위로 점수가 높은 것을 선택하나, 계산량이 많고 출력이 지루하며 짧아지는 경향이 있다[2]. **Top-k sampling**은 상위 k개에서 샘플링하지만 long-tail 문제가 있고 유망 선택지가 배제될 수 있다[2]. **Top-p sampling**(핵 샘플링, Holtzman et al., 2020)은 상위부터 누적해 누적 확률이 
+
+![수식](eq-svg/eq-e398b71125.svg)
+
+ 가 되는 후보 안에서 샘플링하며, Top-k보다 유연하다[2].
+
+샘플링의 무작위성은 **temperature** $T
+
+![수식](eq-svg/eq-5246f66f3f.svg)
+
+p(w) = \exp(z_w / T) / \sum_{j=1}^{|V|} \exp(z_j / T)
+
+![수식](eq-svg/eq-420e118c0f.svg)
+
+T
+
+![수식](eq-svg/eq-513b9eeae3.svg)
+
+T=0$으로 설정해도 완전히 결정적이지 않은 경우가 있는데, 부동소수점 연산 순서와 배치 처리의 분할 방식 차이 때문이며, GPU 처리를 수정하면 결정적으로 만들 수 있다[4].
 
 어떤 기법을 선택할까. 기준은 다양성이 필요한지이다. 이야기 생성·아이디어 발산에는 샘플링 기반 기법이, 지식 질의·번역에는 Greedy decoding이나 Beam search가 적합하다. 실제로는 Greedy 결과와 temperature·Top-p를 바꿔 여러 번 비교해 보는 것이 좋다(참고: *A Thorough Examination of Decoding Methods in the Era of LLMs*, *The Curious Case of Neural Text Degeneration*, *It's MBR All the Way Down*). "확률이 높은 것이 정말로 원하는 출력인가?"라는 물음은 뒤의 Reward model·LLM-as-a-Judge 기반 Best-of-N으로 이어진다.
 
@@ -78,7 +138,11 @@ Welleck et al. (2024)[18]가 정리한 **메타 생성 알고리즘**은 모델�
 
 이 핵심 역량을 Andrej Karpathy(2025)[35]는 **"context engineering"**, 즉 "다음 단계·처리를 위해 컨텍스트 윈도우를 최적의 정보로 채우는 정밀한 예술이자 과학"이라 불렀다. 기본 프롬프팅(이번 회), RAG·tool-use(응용편 제2회), 상태 관리·멀티모달(응용편 제7회)이 모두 이 맥락이며, Gemini_Plays_Pokemon[36]이나 Gemini 2.5[37]의 에이전트 능력이 보여주듯 컨텍스트 설계는 곧 시스템 설계다. 강사는 DeepLearning.ai의 ChatGPT Prompt Engineering for Developers, Building Systems with the ChatGPT API, How Diffusion Models Work, LangChain 강의 두 종을 일본어로 번역했다(deeplearning.ai/courses[38]).
 
-모델 접근은 세 가지다. **API 전용**은 가중치 비공개·사용량 과금으로, 자체 컴퓨터 없이 GPT·Gemini·Claude 등을 쓴다(GPT는 1M 토큰 입력당 $1.25, 출력당 $10). **공개 모델**은 가중치까지 공개되어 분석에도 적합하고 로컬에서 실행 가능하며(Llama·Mistral·DeepSeek·Qwen·gpt-oss), **비공개 모델**은 일부 연구기관만 이용 가능하다(PaLM·Gopher). 공개 모델을 다룰 때는 **Transformers**(HuggingFace의 모델·데이터셋 허브, 연습에서도 사용, 버그 주의)와 **vLLM**(고속 추론)이 핵심이다.
+모델 접근은 세 가지다. **API 전용**은 가중치 비공개·사용량 과금으로, 자체 컴퓨터 없이 GPT·Gemini·Claude 등을 쓴다(GPT는 1M 토큰 입력당 
+
+![수식](eq-svg/eq-9bed27262e.svg)
+
+10). **공개 모델**은 가중치까지 공개되어 분석에도 적합하고 로컬에서 실행 가능하며(Llama·Mistral·DeepSeek·Qwen·gpt-oss), **비공개 모델**은 일부 연구기관만 이용 가능하다(PaLM·Gopher). 공개 모델을 다룰 때는 **Transformers**(HuggingFace의 모델·데이터셋 허브, 연습에서도 사용, 버그 주의)와 **vLLM**(고속 추론)이 핵심이다.
 
 공개 모델의 계산 자원은 세 갈래다. 자체 GPU(H100 80GB 1장 약 600만엔 + 전력·유지보수; 양자화 적용 gpt-oss-120b 이용 가능), 클라우드 GPU(시간당 과금, H100 $1.49/시간도 가능; AWS·GCP·Azure·Lambda·HPC-AI·Hyperbolic), 그리고 **모델 호스팅 서비스**(모델 선택만으로 입출력 과금; Cerebras[40]·Groq·Together.ai·Fireworks, 각 사 독자적 고속화 기술로 성능 차이[39])다.
 

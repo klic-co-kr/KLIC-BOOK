@@ -50,7 +50,11 @@ RefinedWeb[12]은 필터링 공학적 개선을 통해 대규모 데이터를 �
 
 $$MinHash는 텍스트 유사도 계산 기법인 Jaccard 계수를 효율적으로 추정하는 기법이다[17]. 문장 A, B의 MinHash가 일치할 확률이 Jaccard 계수와 같다는 점을 이용한다. Jaccard 계수는 J(A, B) = |A \cap B| / |A \cup B|로 정의된다. 예를 들어 A 문장 "I have a pen"(집합 {I, have, a, pen})과 B 문장 "I have an orange"(집합 {I, have, an, orange})의 Jaccard 계수는 {I, have} / {I, have, a, pen, an, orange} = 2/6 = 1/3이다$$
 
-$$처리 흐름은 다음과 같다. 먼저 문장을 r개의 버킷으로 분할한다. 각 버킷에 대해 k개의 해시 함수를 이용하여 k개의 해시를 얻는다. 그리고 적어도 1개의 버킷에 대해 MinHash가 일치하면 중복으로 취급한다. 구체적으로는 (1) 해시 함수 h로 집합의 각 원소를 해시값으로 변환하여 h(A) = {h(a1), h(a2), …, h(aₙ)}, h(B) = {h(b1), h(b2), …, h(bₘ)}을 얻고, (2) 집합 A, B의 해시값에 대해 최솟값(MinHash)을 취득하여 h_min(A) = min(h(A)), h_min(B) = min(h(B))를 구하면, (3) 이때 P(h_min(A) = h_min(B)) = Jaccard(A, B)가 성립한다$$
+
+
+![수식](eq-svg/eq-7eae5a52a9.svg)
+
+
 
 ### FineWeb과 모델 기반 필터링
 

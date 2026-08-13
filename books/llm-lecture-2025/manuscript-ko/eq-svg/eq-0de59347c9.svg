@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="536.41pt" height="19.19pt" viewBox="0 0 536.41 19.19" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-13T09:23:23.949502</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 19.19 
+L 536.41 19.19 
+L 536.41 0 
+L 0 0 
+L 0 19.19 
+z
+" style="fill: none"/>
+  </g>
+  <g id="text_1">
+   <!-- $이런 일은 어떻게 실현되는 걸까요? 단어의 열(문장)을 x1, x2, ⋯, x_𝐿이라 할 때, 언어 모델은 그 생성 확률 p(x1, x2, ⋯, x_𝐿)을 할당하는 확률 모델 p로, 자연스러운 문장일수록 높은 확률을 줍니다$ -->
+   <g transform="translate(3.6 13.28) scale(0.11 -0.11)">
+    <defs>
+     <path id="STIXGeneral-Regular-66" d="M 3341 256 
+L 3034 -64 
+L 2406 563 
+Q 2029 301 1606 301 
+Q 1171 301 794 563 
+L 179 -64 
+L -141 256 
+L 486 870 
+Q 224 1248 224 1677 
+Q 224 2118 486 2483 
+L -141 3110 
+L 179 3418 
+L 794 2803 
+Q 1184 3053 1606 3053 
+Q 2048 3053 2406 2803 
+L 3034 3418 
+L 3341 3110 
+L 2726 2483 
+Q 2976 2112 2976 1683 
+Q 2976 1261 2726 870 
+L 3341 256 
+z
+M 2541 1690 
+Q 2541 2086 2265 2364 
+Q 1990 2643 1594 2643 
+Q 1210 2643 934 2361 
+Q 659 2080 659 1683 
+Q 659 1280 937 995 
+Q 1216 710 1606 710 
+Q 2003 710 2272 995 
+Q 2541 1280 2541 1690 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-22" d="M 1222 794 
+L 1856 794 
+L 1856 0 
+L 1222 0 
+L 1222 794 
+z
+M 1838 1253 
+L 1241 1253 
+L 1241 1734 
+Q 1241 2050 1328 2253 
+Q 1416 2456 1697 2725 
+L 1978 3003 
+Q 2156 3169 2236 3316 
+Q 2316 3463 2316 3616 
+Q 2316 3894 2111 4066 
+Q 1906 4238 1569 4238 
+Q 1322 4238 1042 4128 
+Q 763 4019 459 3809 
+L 459 4397 
+Q 753 4575 1054 4662 
+Q 1356 4750 1678 4750 
+Q 2253 4750 2601 4447 
+Q 2950 4144 2950 3647 
+Q 2950 3409 2837 3195 
+Q 2725 2981 2444 2713 
+L 2169 2444 
+Q 2022 2297 1961 2214 
+Q 1900 2131 1875 2053 
+Q 1856 1988 1847 1894 
+Q 1838 1800 1838 1638 
+L 1838 1253 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-b" d="M 1984 4856 
+Q 1566 4138 1362 3434 
+Q 1159 2731 1159 2009 
+Q 1159 1288 1364 580 
+Q 1569 -128 1984 -844 
+L 1484 -844 
+Q 1016 -109 783 600 
+Q 550 1309 550 2009 
+Q 550 2706 781 3412 
+Q 1013 4119 1484 4856 
+L 1984 4856 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-c" d="M 513 4856 
+L 1013 4856 
+Q 1481 4119 1714 3412 
+Q 1947 2706 1947 2009 
+Q 1947 1309 1714 600 
+Q 1481 -109 1013 -844 
+L 513 -844 
+Q 928 -128 1133 580 
+Q 1338 1288 1338 2009 
+Q 1338 2731 1133 3434 
+Q 928 4138 513 4856 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-Oblique-5b" d="M 3841 3500 
+L 2234 1784 
+L 3219 0 
+L 2559 0 
+L 1819 1388 
+L 531 0 
+L -166 0 
+L 1556 1844 
+L 641 3500 
+L 1300 3500 
+L 1972 2234 
+L 3144 3500 
+L 3841 3500 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-14" d="M 794 531 
+L 1825 531 
+L 1825 4091 
+L 703 3866 
+L 703 4441 
+L 1819 4666 
+L 2450 4666 
+L 2450 531 
+L 3481 531 
+L 3481 0 
+L 794 0 
+L 794 531 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-f" d="M 750 794 
+L 1409 794 
+L 1409 256 
+L 897 -744 
+L 494 -744 
+L 750 256 
+L 750 794 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-15" d="M 1228 531 
+L 3431 531 
+L 3431 0 
+L 469 0 
+L 469 531 
+Q 828 903 1448 1529 
+Q 2069 2156 2228 2338 
+Q 2531 2678 2651 2914 
+Q 2772 3150 2772 3378 
+Q 2772 3750 2511 3984 
+Q 2250 4219 1831 4219 
+Q 1534 4219 1204 4116 
+Q 875 4013 500 3803 
+L 500 4441 
+Q 881 4594 1212 4672 
+Q 1544 4750 1819 4750 
+Q 2544 4750 2975 4387 
+Q 3406 4025 3406 3419 
+Q 3406 3131 3298 2873 
+Q 3191 2616 2906 2266 
+Q 2828 2175 2409 1742 
+Q 1991 1309 1228 531 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-d79" d="M 737 2388 
+L 1397 2388 
+L 1397 1594 
+L 737 1594 
+L 737 2388 
+z
+M 2868 2388 
+L 3528 2388 
+L 3528 1594 
+L 2868 1594 
+L 2868 2388 
+z
+M 5000 2388 
+L 5660 2388 
+L 5660 1594 
+L 5000 1594 
+L 5000 2388 
+z
+" transform="scale(0.015625)"/>
+     <path id="STIXGeneral-Regular-93a" d="M 4275 1216 
+L 3885 0 
+L 243 0 
+L 269 102 
+L 378 102 
+Q 966 102 1062 499 
+L 1818 3552 
+Q 1862 3731 1862 3840 
+Q 1862 4077 1376 4077 
+L 1261 4077 
+L 1286 4179 
+L 3379 4179 
+L 3354 4077 
+L 3238 4077 
+Q 2906 4077 2762 3974 
+Q 2618 3872 2566 3674 
+L 1786 595 
+Q 1754 474 1754 397 
+Q 1754 243 2010 243 
+L 2790 243 
+Q 3296 243 3574 393 
+Q 3853 544 4064 979 
+Q 4122 1069 4173 1216 
+L 4275 1216 
+z
+" transform="scale(0.015625)"/>
+     <path id="DejaVuSans-Oblique-53" d="M 3175 2156 
+Q 3175 2616 2975 2859 
+Q 2775 3103 2400 3103 
+Q 2144 3103 1911 2972 
+Q 1678 2841 1497 2591 
+Q 1319 2344 1212 1994 
+Q 1106 1644 1106 1300 
+Q 1106 863 1306 627 
+Q 1506 391 1875 391 
+Q 2147 391 2380 519 
+Q 2613 647 2778 891 
+Q 2956 1147 3065 1494 
+Q 3175 1841 3175 2156 
+z
+M 1394 2969 
+Q 1625 3272 1939 3428 
+Q 2253 3584 2638 3584 
+Q 3175 3584 3472 3232 
+Q 3769 2881 3769 2247 
+Q 3769 1728 3584 1258 
+Q 3400 788 3053 416 
+Q 2822 169 2531 39 
+Q 2241 -91 1919 -91 
+Q 1547 -91 1294 64 
+Q 1041 219 916 525 
+L 556 -1331 
+L -19 -1331 
+L 922 3500 
+L 1497 3500 
+L 1394 2969 
+z
+" transform="scale(0.015625)"/>
+    </defs>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(0 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(49.999954 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(99.999908 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(149.999863 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(199.999817 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(249.999771 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(299.999725 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(349.99968 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(399.999634 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(449.999588 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(499.999542 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(549.999496 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(599.999451 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(649.999405 0.125)"/>
+    <use xlink:href="#DejaVuSans-22" transform="translate(699.999359 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(753.075531 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(803.075485 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(853.075439 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(903.075394 0.125)"/>
+    <use xlink:href="#DejaVuSans-b" transform="translate(953.075348 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(992.08902 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1042.088974 0.125)"/>
+    <use xlink:href="#DejaVuSans-c" transform="translate(1092.088928 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1131.1026 0.125)"/>
+    <use xlink:href="#DejaVuSans-Oblique-5b" transform="translate(1181.102554 0.125)"/>
+    <use xlink:href="#DejaVuSans-14" transform="translate(1240.282242 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(1303.905289 0.125)"/>
+    <use xlink:href="#DejaVuSans-Oblique-5b" transform="translate(1355.17482 0.125)"/>
+    <use xlink:href="#DejaVuSans-15" transform="translate(1414.354507 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(1477.977554 0.125)"/>
+    <use xlink:href="#DejaVuSans-d79" transform="translate(1529.247086 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(1629.247086 0.125)"/>
+    <use xlink:href="#DejaVuSans-Oblique-5b" transform="translate(1680.516617 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-93a" transform="translate(1739.696304 -14.874951) scale(0.7)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1791.990628 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1841.990582 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1891.990536 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(1941.990491 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(1991.990445 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2043.259976 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2093.25993 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2143.259885 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2193.259839 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2243.259793 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2293.259747 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2343.259702 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2393.259656 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2443.25961 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(2493.259564 0.125)"/>
+    <use xlink:href="#DejaVuSans-Oblique-53" transform="translate(2543.259518 0.125)"/>
+    <use xlink:href="#DejaVuSans-b" transform="translate(2606.736081 0.125)"/>
+    <use xlink:href="#DejaVuSans-Oblique-5b" transform="translate(2645.749753 0.125)"/>
+    <use xlink:href="#DejaVuSans-14" transform="translate(2704.92944 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(2768.552487 0.125)"/>
+    <use xlink:href="#DejaVuSans-Oblique-5b" transform="translate(2819.822018 0.125)"/>
+    <use xlink:href="#DejaVuSans-15" transform="translate(2879.001706 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(2942.624753 0.125)"/>
+    <use xlink:href="#DejaVuSans-d79" transform="translate(2993.894284 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(3093.894284 0.125)"/>
+    <use xlink:href="#DejaVuSans-Oblique-5b" transform="translate(3145.163815 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-93a" transform="translate(3204.343503 -14.874951) scale(0.7)"/>
+    <use xlink:href="#DejaVuSans-c" transform="translate(3256.637827 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3295.651498 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3345.651453 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3395.651407 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3445.651361 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3495.651315 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3545.65127 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3595.651224 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3645.651178 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3695.651132 0.125)"/>
+    <use xlink:href="#DejaVuSans-Oblique-53" transform="translate(3745.651086 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3809.127649 0.125)"/>
+    <use xlink:href="#DejaVuSans-f" transform="translate(3859.127603 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3910.397134 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(3960.397089 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4010.397043 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4060.396997 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4110.396951 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4160.396906 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4210.39686 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4260.396814 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4310.396768 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4360.396722 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4410.396677 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4460.396631 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4510.396585 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4560.396539 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4610.396494 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4660.396448 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4710.396402 0.125)"/>
+    <use xlink:href="#STIXGeneral-Regular-66" transform="translate(4760.396356 0.125)"/>
+   </g>
+  </g>
+ </g>
+</svg>
