@@ -10,7 +10,7 @@ import re, sys, hashlib, subprocess, shutil
 from pathlib import Path
 
 BLOCK = re.compile(r'\$\$(.+?)\$\$', re.S)
-INLINE = re.compile(r'(?<!\$)\$([^\$\n]{3,})\$(?!\$)')
+INLINE = re.compile(r'(?<!\$)\$([A-Za-z][^\$\n]{0,80})\$(?!\$)')
 TYPST = shutil.which('typst') or str(Path.home() / '.local/bin/typst')
 MITEX = '0.2.7'
 
