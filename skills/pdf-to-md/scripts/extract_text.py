@@ -12,16 +12,13 @@ import fitz  # pymupdf
 
 HEADING_SIZE = 14.0
 
-# 수학 Unicode 기호 → LaTeX 매핑
+# 수학 Unicode 기호 → LaTeX 매핑.
+# 일반 텍스트에도 쓰이는 기호(· × ÷ ± → … 등)는 제외 — 오팅 방지.
 MATH_MAP = {
     '∑': r'\sum', '∏': r'\prod', '∫': r'\int', '∇': r'\nabla', '√': r'\sqrt',
-    '≤': r'\le', '≥': r'\ge', '≠': r'\ne', '≈': r'\approx', '→': r'\to',
-    '←': r'\leftarrow', '⇒': r'\Rightarrow', '×': r'\times', '÷': r'\div',
-    '±': r'\pm', '∞': r'\infty', '·': r'\cdot', '…': r'\ldots',
-    'Δ': r'\Delta', 'Σ': r'\Sigma', 'Π': r'\Pi', 'Ω': r'\Omega', 'Θ': r'\Theta',
-    'α': r'\alpha', 'β': r'\beta', 'γ': r'\gamma', 'δ': r'\delta', 'ε': r'\epsilon',
-    'θ': r'\theta', 'λ': r'\lambda', 'μ': r'\mu', 'π': r'\pi', 'σ': r'\sigma',
-    'φ': r'\phi', 'ω': r'\omega', 'ρ': r'\rho', 'τ': r'\tau', 'η': r'\eta',
+    '≤': r'\le', '≥': r'\ge', '≠': r'\ne', '≈': r'\approx',
+    '⇒': r'\Rightarrow', '∞': r'\infty',
+    'Σ': r'\Sigma', 'Π': r'\Pi', 'Ω': r'\Omega', 'Θ': r'\Theta',
     '∈': r'\in', '∉': r'\notin', '⊂': r'\subset', '⊆': r'\subseteq',
     '∪': r'\cup', '∩': r'\cap', '∀': r'\forall', '∃': r'\exists',
 }
