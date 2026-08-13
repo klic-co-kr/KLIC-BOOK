@@ -186,6 +186,13 @@ Step 2 판단 시 각 후보에 4기준(각 1-5) + genericity 벌점을 채점�
 관련 eval 산출물:
 - `evals/judgment_cases.json` — 판단 골든(eval 전용 스키마).
 - `evals/judgment_comparator.py` — 결정론 회그(source절 커버 검사).
+- `evals/eval_metrics.py` — **판단 품질 정량 메트릭**(논문 Human-AI Synergy 시사점):
+  - `precision`: AI 후보 중 골든(인간 정답) 매칭 비율 — chapter 한정. 낮으면 AI 후보 노이즈 다수(게이트 강화 신호).
+  - `recall`: 골든 중 AI 후보 커버 비율(인간 정답 재현).
+  - `f1`: precision/recall 조화평균.
+  - `adoption`: 승인 후보/전체(게이트 통과율 — 논문: AI 채택률).
+  - `rounds`: approval_log 라운드 수(인간 개입 — 논문: 피드백 라운드).
+  - 임계 가이드: precision < 0.3 → AI 판단 노이즈, 게이트 라운드 증가 권장.
 - `evals/stability.md` — Jaccard 3×2 안정성 게이트.
 - `evals/recall_cases.md` — 사례 단위 회상 케이스.
 
