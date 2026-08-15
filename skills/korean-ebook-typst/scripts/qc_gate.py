@@ -123,6 +123,18 @@ def check_chars_band(pdf: Path, band: dict, body_size_pt: float,
     return warns
 
 
+def allowed_fonts(tokens: dict) -> set:
+    """tokens fonts → 정규화 허용 집합(stack + 선택 ps 별칭).
+
+    KoPubWorld바탕처럼 임베드 PostScript명(KoPubWorldBatang)이 스택
+    표기와 달라 정규화 결과가 어긋나는 폰트는 스택 항목의 "ps" 배열로
+    임베드명을 추가 등록한다.
+    """
+    allowed = {norm_font(f) for fs in tokens["fonts"].values() for f in fs["stack"]}
+    allowed |= {norm_font(p) for fs in tokens["fonts"].values() for p in fs.get("ps", [])}
+    return allowed
+
+
 def run(book_dir: Path) -> int:
     build = book_dir / "build"
     draft = book_dir / "draft"
@@ -138,7 +150,7 @@ def run(book_dir: Path) -> int:
     pdf = pdfs[0]
     frame = load_frame(tokens_path)
     overflow = check_overflow(pdf, frame)
-    allowed = {norm_font(f) for fs in tokens["fonts"].values() for f in fs["stack"]}
+    allowed = allowed_fonts(tokens)
     fonts = check_fonts(pdf, allowed)
     band = tokens.get("chars_per_line")
     frame_w = frame[2] - frame[0]
