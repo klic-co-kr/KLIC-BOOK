@@ -2,6 +2,8 @@
 """korean-ebook-typst QC 게이트 — PASS 시에만 final/ 생성."""
 import json
 import re
+import shutil
+import sys
 from pathlib import Path
 import fitz  # PyMuPDF
 
@@ -60,3 +62,109 @@ def check_overflow(pdf: Path, frame: tuple, skip_pages: int = 1) -> list:
                         f"p{pno + 1} bbox=({bx0:.1f},{by0:.1f},{bx1:.1f},{by1:.1f}) "
                         f"frame=({x0},{y0},{x1},{y1}) text={text[:30]!r}")
     return violations
+
+
+MATH_FONT_ALLOWLIST = {
+    "newcomputermodern", "newcomputermodernmath", "newcmmath",
+    "libertinusserif", "libertinussans", "libertinusmath",
+    "lmroman", "lmmono",
+}
+
+
+def norm_font(name: str) -> str:
+    """basefont → 정규화된 폰트 패밀리명.
+
+    PDF basefont 실측 형태: "KVHFRP+NotoSansCJKkr-Regular-Identity-H".
+    서브셋 접두(ABCDE+)와 스타일·인코딩 접미사(-Regular-Identity-H)를
+    잘라야 tokens.json 스택 이름("Noto Sans CJK KR")과 매칭된다.
+    """
+    if "+" in name:
+        name = name.split("+", 1)[1]
+    name = name.split("-", 1)[0]
+    return "".join(ch for ch in name.lower() if ch.isalnum())
+
+
+def check_fonts(pdf: Path, allowed: set) -> list:
+    violations, seen = [], set()
+    with fitz.open(pdf) as doc:
+        for page in doc:
+            for f in page.get_fonts():
+                basefont = f[3]
+                n = norm_font(basefont)
+                if n in seen:
+                    continue
+                seen.add(n)
+                if n in allowed or n in MATH_FONT_ALLOWLIST or not n:
+                    continue
+                violations.append(f"계약 외 폰트: {basefont}")
+    return violations
+
+
+def check_chars_band(pdf: Path, band: dict, body_size_pt: float,
+                     frame_width_pt: float) -> list:
+    warns = []
+    with fitz.open(pdf) as doc:
+        for pno in range(2, len(doc)):  # 표지(1쪽)·목차(2쪽) 제외
+            for block in doc[pno].get_text("dict")["blocks"]:
+                if block["type"] != 0:
+                    continue
+                for line in block["lines"]:
+                    spans = [s for s in line["spans"]
+                             if abs(s["size"] - body_size_pt) <= 0.3]
+                    if not spans:
+                        continue
+                    w = line["bbox"][2] - line["bbox"][0]
+                    if w < frame_width_pt * 0.80:
+                        continue  # 문단 마지막 줄 등 정렬 줄 아님
+                    text = "".join(s["text"] for s in spans).strip()
+                    n = len(text.replace(" ", ""))
+                    if n < band["min"] or n > band["max"]:
+                        warns.append(f"p{pno + 1} {n}자/줄: {text[:20]!r}")
+    return warns
+
+
+def run(book_dir: Path) -> int:
+    build = book_dir / "build"
+    draft = book_dir / "draft"
+    tokens_path = build / "tokens.json"
+    if not tokens_path.exists():
+        print("[qc] build/ 없음 — 먼저 build.py 실행", file=sys.stderr)
+        return 1
+    tokens = json.loads(tokens_path.read_text(encoding="utf-8"))
+    pdfs = sorted(draft.glob("*.pdf"))
+    if not pdfs:
+        print("[qc] draft/*.pdf 없음", file=sys.stderr)
+        return 1
+    pdf = pdfs[0]
+    frame = load_frame(tokens_path)
+    overflow = check_overflow(pdf, frame)
+    allowed = {norm_font(f) for fs in tokens["fonts"].values() for f in fs["stack"]}
+    fonts = check_fonts(pdf, allowed)
+    band = tokens.get("chars_per_line")
+    frame_w = frame[2] - frame[0]
+    warns = check_chars_band(pdf, band, tokens["fonts"]["body"]["size_pt"],
+                             frame_w) if band else []
+    report = {"g1_overflow": overflow, "g2_fonts": fonts, "g3_band_warns": warns,
+              "pass": not overflow and not fonts}
+    (book_dir / "gate-report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    if not report["pass"]:
+        print(f"[qc] FAIL — gate-report.json 참조: {overflow[:3]} {fonts[:3]}",
+              file=sys.stderr)
+        return 1
+    final = book_dir / "final"
+    final.mkdir(exist_ok=True)
+    shutil.copy2(pdf, final / pdf.name)
+    print(f"[qc] PASS → {final / pdf.name} (WARN {len(warns)}건)")
+    return 0
+
+
+def main() -> None:
+    if len(sys.argv) != 2:
+        print("사용법: qc_gate.py <책디렉터리>", file=sys.stderr)
+        raise SystemExit(1)
+    raise SystemExit(run(Path(sys.argv[1]).resolve()))
+
+
+if __name__ == "__main__":
+    main()
