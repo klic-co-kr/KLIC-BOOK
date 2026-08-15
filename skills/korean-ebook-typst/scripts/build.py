@@ -88,3 +88,28 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     main = build / "main.typ"
     main.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return main
+
+def compile_pdf(main: Path, out_name: str) -> Path:
+    """main.typ → draft/<out_name>.pdf 컴파일."""
+    draft = main.parent.parent / "draft"
+    draft.mkdir(exist_ok=True)
+    out = draft / f"{out_name}.pdf"
+    r = subprocess.run(
+        ["typst", "compile", str(main), str(out), "--root", str(main.parent)],
+        capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        _fail(f"typst compile 실패: {r.stderr.strip()}")
+    return out
+
+def main() -> None:
+    if len(sys.argv) != 2:
+        _fail("사용법: build.py <책디렉터리>")
+    book_dir = Path(sys.argv[1]).resolve()
+    cfg = load_config(book_dir / "typst-build.yaml")
+    main_typ = assemble(cfg, book_dir)
+    pdf = compile_pdf(main_typ, cfg["title"])
+    print(f"[build] draft 산출: {pdf}")
+
+if __name__ == "__main__":
+    main()
