@@ -9,7 +9,8 @@ import shutil
 from pathlib import Path
 import pytest
 from scripts.build import load_config, assemble, compile_pdf
-from scripts.qc_gate import allowed_fonts, check_overflow, load_frame, run as qc_run
+from scripts.qc_gate import allowed_fonts, check_overflow, load_frame, \
+    norm_font, run as qc_run
 
 FIXTURE = Path(__file__).parent / "fixtures" / "sample-manuscript"
 SKIP = pytest.mark.skipif(not shutil.which("typst"), reason="typst 미설치")
@@ -74,3 +75,48 @@ def test_practical_qc_gate_full_pass(tmp_path):
     compile_pdf(assemble(cfg, book), cfg["title"])
     assert qc_run(book) == 0
     assert (book / "final").is_dir()
+
+@SKIP
+def test_raw_code_font_stays_in_contract(tmp_path):
+    """코드(한글 포함)가 mono+body 계약 폰트로만 렌더링되어야 한다.
+
+    base.typ이 raw 폰트를 지정하지 않으면 typst 기본 DejaVu Sans Mono로
+    렌더링되고 코드 내 한글이 Unifont 마지막 폴백으로 떨어져 G2 위반
+    (실전시스템설계 코드 블록 실측). mono 스택이 허용 집합에 들어가야 한다.
+    """
+    import fitz
+    book = tmp_path / "b"
+    book.mkdir()
+    (book / "ch01.md").write_text(
+        "# 1장\n\n```\nQPS = 25,000 events/s · 보존 기간 30일\n```\n",
+        encoding="utf-8")
+    (book / "typst-build.yaml").write_text(
+        "style: practical\ntitle: 코드 샘플\nchapters:\n  - ch01.md\n",
+        encoding="utf-8")
+    cfg = load_config(book / "typst-build.yaml")
+    pdf = compile_pdf(assemble(cfg, book), cfg["title"])
+    basefonts = {norm_font(f[3]) for p in fitz.open(pdf) for f in p.get_fonts()}
+    assert "dejavusansmono" in basefonts          # mono 스택이 실제로 적용
+    assert not any("unifont" in f for f in basefonts)  # 한글이 Unifont 폴백 아님
+
+@SKIP
+def test_long_middledot_heading_stays_in_frame(tmp_path):
+    """·연쇄+하이픈 장 제목이 양쪽정렬 늘어남으로 프레임을 넘치지 않아야 한다.
+
+    헤딩이 par(justify: true)를 상속하면 ZWSP/공백이 늘어나며 안쪽여백을
+    침범한다(실전시스템설계 ch20 실측 +3.2pt). 헤딩은 양쪽정렬 대상이
+    아니다 — show heading에서 justify를 끈다.
+    """
+    book = tmp_path / "b"
+    book.mkdir()
+    (book / "ch01.md").write_text(
+        "# 20. Key-Value·Document·Wide-column·Graph\n\n"
+        "본문 문단이다. 제목이 길어도 본문 정렬은 그대로다.\n",
+        encoding="utf-8")
+    (book / "typst-build.yaml").write_text(
+        "style: practical\ntitle: 제목 샘플\nchapters:\n  - ch01.md\n",
+        encoding="utf-8")
+    cfg = load_config(book / "typst-build.yaml")
+    pdf = compile_pdf(assemble(cfg, book), cfg["title"])
+    frame = load_frame(book / "build" / "tokens.json")
+    assert check_overflow(pdf, frame) == []

@@ -22,6 +22,17 @@
     lang: "ko", region: "kr", fill: rgb(tokens.colors.ink))
   set par(leading: em(tokens.leading_em), justify: true)
 
+  // 헤딩은 양쪽정렬 대상이 아니다 — justify를 상속하면 여러 줄 제목에서
+  // 공백·제로폭공백이 늘어나 안쪽여백을 침범한다(실전시스템설계 ch20
+  // 실측 +3.2pt). theme의 헤딩 오버라이드와도 조합된다.
+  show heading: set par(justify: false)
+
+  // 코드(raw) — mono 스택 + body 폴백. 미지정 시 typst 기본 DejaVu Sans
+  // Mono로 렌더링되고 코드 내 한글이 Unifont 마지막 폴백으로 떨어져
+  // 폰트 계약(G2) 위반이 된다(실전시스템설계 코드 블록 실측).
+  show raw: set text(font: tokens.fonts.at("mono", default: tokens.fonts.body).stack
+    + tokens.fonts.body.stack)
+
   // 공통 헤딩 — theme.typ의 show 규칙이 뒤에서 오버라이드 가능
   show heading.where(level: 1): it => {
     pagebreak(weak: true)

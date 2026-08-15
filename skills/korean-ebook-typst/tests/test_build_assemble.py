@@ -93,3 +93,28 @@ def test_assemble_removes_stale_typ_on_rebuild(tmp_path):
     assert not stale.exists()
     assert (tmp_path / "build" / "typ" / "ch01.typ").exists()
     assert '#include "typ/removed-chapter.typ"' not in main.read_text(encoding="utf-8")
+
+def test_assemble_rebases_manuscript_images_into_build(tmp_path):
+    # 원고 ![](path)는 md 기준 상대경로 → typst --root가 build/라
+    # 그대로면 root 탈출. build/assets/로 복사해 재작성해야 한다.
+    (tmp_path / "img").mkdir()
+    (tmp_path / "img" / "pic.png").write_bytes(b"\x89PNG fake")
+    (tmp_path / "ch01.md").write_text(
+        "# 1장\n\n![그림](img/pic.png)\n", encoding="utf-8")
+    _write_config(tmp_path, chapters=("ch01.md",))
+
+    cfg = load_config(tmp_path / "typst-build.yaml")
+    assemble(cfg, tmp_path)
+
+    assert (tmp_path / "build" / "assets" / "pic.png").exists()
+    typ = (tmp_path / "build" / "typ" / "ch01.typ").read_text(encoding="utf-8")
+    assert '#figure(image("../assets/pic.png"))' in typ
+
+def test_assemble_missing_image_aborts(tmp_path):
+    (tmp_path / "ch01.md").write_text(
+        "# 1장\n\n![깨진 그림](img/ghost.png)\n", encoding="utf-8")
+    _write_config(tmp_path, chapters=("ch01.md",))
+
+    cfg = load_config(tmp_path / "typst-build.yaml")
+    with pytest.raises(SystemExit):
+        assemble(cfg, tmp_path)
