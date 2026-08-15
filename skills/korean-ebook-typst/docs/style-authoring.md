@@ -3,7 +3,7 @@
 새 스타일 팩(`styles/<이름>/`)을 작성하는 절차. 스타일 = **숫자 계약(tokens.json) +
 문서 계약(STYLE.md) + 렌더 규칙(theme.typ)** — 세 파일이 하나의 팩이다.
 
-기존 4종 참조: `practical`(신국판 실용서)·`essay`(46판 산문)·`business`(백서판)·
+기존 4종 참조: `practical`(신국판 실용서)·`essay`(46판(B6) 산문)·`business`(백서판)·
 `lecture`(A4 강의자료).
 
 ---

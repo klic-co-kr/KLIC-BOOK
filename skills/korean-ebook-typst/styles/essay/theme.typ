@@ -1,6 +1,6 @@
 #import "base.typ": tokens, pt, mm, em
 
-// essay — 46판 미니멀 에세이. 여백 낙차형 장 시작.
+// essay — 46판(B6) 미니멀 에세이. 여백 낙차형 장 시작.
 // main.typ의 `#show: theme`로 적용 — base 이후에 적용되어 base 헤딩을 오버라이드.
 // typst 0.15.1 실측: numbering 없는 heading 내장 counter는 show 규칙 시점에
 // 아직 0이다(프로브: 00/00/00). 전용 카운터를 step해 2자리 장번호를 낸다.
@@ -11,7 +11,7 @@
   // 목차 리더 점선 금지 — outline.entry 필드는 level/element/fill뿐(0.15.1
   // 실측)이라 엔트리를 재구성한다: 제목 + 1fr + 쪽수. link()는 SVG 내보내기에서
   // 글자보다 큰 투명 히트영역 rect(26pt)를 만들어 인접 엔트리와 P0 collision
-  // 오탐을 유발하므로 쓰지 않는다(프린트 우선 46판 — TOC 하이퍼링크 포기).
+  // 오탐을 유발하므로 쓰지 않는다(프린트 우선 46판(B6) — TOC 하이퍼링크 포기).
   show outline.entry: it => {
     v(2.5pt, weak: true)
     box(width: 100%)[
