@@ -106,9 +106,9 @@ def test_assemble_rebases_manuscript_images_into_build(tmp_path):
     cfg = load_config(tmp_path / "typst-build.yaml")
     assemble(cfg, tmp_path)
 
-    assert (tmp_path / "build" / "assets" / "pic.png").exists()
+    assert (tmp_path / "build" / "assets" / "000-pic.png").exists()
     typ = (tmp_path / "build" / "typ" / "000-ch01.typ").read_text(encoding="utf-8")
-    assert '#figure(image("../assets/pic.png"))' in typ
+    assert '#figure(image("../assets/000-pic.png"))' in typ
 
 def test_assemble_missing_image_aborts(tmp_path):
     (tmp_path / "ch01.md").write_text(
@@ -166,3 +166,90 @@ def test_assemble_output_count_and_include_uniqueness(tmp_path):
     includes = [ln for ln in main.read_text(encoding="utf-8").splitlines()
                 if ln.startswith("#include")]
     assert len(includes) == len(set(includes)) == 2
+
+
+def test_assemble_same_name_images_namespaced(tmp_path):
+    # 동명 이미지(pic.png)가 챕터별로 존재하면 assets/{name} 덮어쓰기로
+    # 한쪽 그림이 유실된다(2회차 검토 Important). 챕터 인덱스 prefix로
+    # 네임스페이스화 — assets 2개, .typ 참조 각각, 내용 각각 보존.
+    for part in ("p1", "p2"):
+        (tmp_path / part).mkdir()
+        (tmp_path / part / "pic.png").write_bytes(b"\x89PNG fake " + part.encode())
+        (tmp_path / part / "ch.md").write_text(
+            f"## {part}\n\n![그림](pic.png)\n", encoding="utf-8")
+    _write_config(tmp_path, chapters=("p1/ch.md", "p2/ch.md"))
+
+    cfg = load_config(tmp_path / "typst-build.yaml")
+    assemble(cfg, tmp_path)
+
+    assets = sorted((tmp_path / "build" / "assets").glob("*.png"))
+    assert [a.name for a in assets] == ["000-pic.png", "001-pic.png"]
+    assert assets[0].read_bytes() != assets[1].read_bytes()
+    typ0 = (tmp_path / "build" / "typ" / "000-ch.typ").read_text(encoding="utf-8")
+    typ1 = (tmp_path / "build" / "typ" / "001-ch.typ").read_text(encoding="utf-8")
+    assert '#figure(image("../assets/000-pic.png"))' in typ0
+    assert '#figure(image("../assets/001-pic.png"))' in typ1
+
+
+def test_assemble_resets_stale_assets(tmp_path):
+    # 재빌드 시 삭제된 챕터의 stale 에셋이 남으면 qc·추적이 꼬인다 —
+    # assemble 시작 시 build/assets 리셋.
+    (tmp_path / "ch01.md").write_text("## 1장\n", encoding="utf-8")
+    _write_config(tmp_path, chapters=("ch01.md",))
+    stale_dir = tmp_path / "build" / "assets"
+    stale_dir.mkdir(parents=True)
+    (stale_dir / "gone.png").write_bytes(b"\x89PNG stale")
+
+    cfg = load_config(tmp_path / "typst-build.yaml")
+    assemble(cfg, tmp_path)
+    assert not (stale_dir / "gone.png").exists()
+
+
+def test_assemble_escapes_title_metadata(tmp_path):
+    # title/subtitle/author의 \·" 는 make-cover 문자열 리터럴을 깨뜨린다
+    # (2회차 검토 Important). 이스케이프 후 main.typ이 유효해야 한다.
+    (tmp_path / "ch01.md").write_text("## 1장\n", encoding="utf-8")
+    (tmp_path / "typst-build.yaml").write_text(
+        'style: lecture\n'
+        'title: \'검증용 "제목" 메타\'\n'
+        'subtitle: "부제 \\\\ 역슬래시"\n'
+        'author: \'"저자"\'\n'
+        "chapters:\n"
+        "  - ch01.md\n", encoding="utf-8")
+
+    cfg = load_config(tmp_path / "typst-build.yaml")
+    main = assemble(cfg, tmp_path)
+
+    text = main.read_text(encoding="utf-8")
+    assert '"검증용 \\"제목\\" 메타"' in text       # " → \"
+    assert '"부제 \\\\ 역슬래시"' in text          # \ → \\
+    assert '"\\"저자\\""' in text
+    # 원시 이스케이프 없는 리터럴은 main.typ 파싱을 깨뜨리므로 부재 확인
+    assert '"검증용 "제목" 메타"' not in text
+
+
+def test_sanitize_filename_replaces_path_chars():
+    from scripts.build import sanitize_filename
+    raw = 'a/b\\c:d*e?f"g<h>i|j'
+    out = sanitize_filename(raw)
+    assert "/" not in out and "\\" not in out and '"' not in out
+    assert set(out) <= set("abcdefghij_")
+    assert sanitize_filename("정상 제목 2026") == "정상 제목 2026"
+    assert sanitize_filename("///")  # 전부 치환돼도 비지 않는다
+
+
+def test_typst_binary_fallback_and_fail(tmp_path, monkeypatch):
+    # PATH에 없으면 ~/.local/bin/typst 폴백, 둘 다 없으면 _fail.
+    import shutil as _shutil
+    from scripts import build as b
+
+    monkeypatch.setattr(_shutil, "which", lambda _: None)
+    monkeypatch.setattr(b.Path, "home", staticmethod(lambda: tmp_path))
+    local = tmp_path / ".local" / "bin" / "typst"
+    local.parent.mkdir(parents=True)
+    local.write_text("#!/bin/sh\n")
+    assert b.typst_binary() == str(local)
+
+    local.unlink()
+    with pytest.raises(SystemExit):
+        b.typst_binary()

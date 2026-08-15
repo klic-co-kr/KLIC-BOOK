@@ -44,12 +44,33 @@ STYLE_DIR = SKILL_DIR / "styles"
 
 IMAGE_RE = re.compile(r'#figure\(image\("([^"]+)"\)\)')
 
-def rebase_images(typ_file: Path, src_md: Path, build: Path) -> None:
+def _esc(s: str) -> str:
+    """make-cover 문자열 리터럴용 이스케이프 — \·" 만 main.typ을 깨뜨린다."""
+    return s.replace("\\", "\\\\").replace('"', '\\"')
+
+def sanitize_filename(name: str) -> str:
+    """PDF 파일명 sanitize — 경로 구분자 등 파일시스템 위험 문자 치환."""
+    out = re.sub(r'[\\/:*?"<>|]', "_", name).strip()
+    return out or "book"
+
+def typst_binary() -> str:
+    """typst 바이너리 해석 — PATH → ~/.local/bin/typst 폴백."""
+    found = shutil.which("typst")
+    if found:
+        return found
+    fallback = Path.home() / ".local" / "bin" / "typst"
+    if fallback.exists():
+        return str(fallback)
+    _fail("typst 바이너리 없음 — PATH 등록 또는 ~/.local/bin/typst 설치")
+
+def rebase_images(typ_file: Path, src_md: Path, build: Path, idx: int) -> None:
     """원고 이미지 경로를 build/ 루트로 재배치(복사 + 경로 재작성).
 
     원고 ![](path)는 md 파일 위치 기준 상대경로다. typst --root가
     build/라 변환 결과를 그대로 두면 root를 탈출해 컴파일이 실패한다.
     이미지를 build/assets/로 복사하고 typ/ 기준 상대경로로 다시 쓴다.
+    챕터 인덱스 prefix로 네임스페이스화 — 동명 이미지(pic.png)가 챕터별로
+    존재해도 덮어쓰지 않는다(2회차 검토 Important).
     """
     text = typ_file.read_text(encoding="utf-8")
     if not IMAGE_RE.search(text):
@@ -63,8 +84,9 @@ def rebase_images(typ_file: Path, src_md: Path, build: Path) -> None:
             _fail(f"이미지 파일 없음: {src}")
         assets = build / "assets"
         assets.mkdir(exist_ok=True)
-        shutil.copy2(src, assets / src.name)
-        return f'#figure(image("../assets/{src.name}"))'
+        dst = f"{idx:03d}-{src.name}"
+        shutil.copy2(src, assets / dst)
+        return f'#figure(image("../assets/{dst}"))'
     typ_file.write_text(IMAGE_RE.sub(rewrite, text), encoding="utf-8")
 
 def assemble(cfg: dict, book_dir: Path) -> Path:
@@ -73,6 +95,8 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     # 재빌드 시 삭제·개명된 챕터의 stale .typ이 include에 섞이지 않도록 리셋
     shutil.rmtree(build / "typ", ignore_errors=True)
     (build / "typ").mkdir(parents=True, exist_ok=True)
+    # stale 에셋도 동일하게 리셋(2회차 검토 Important)
+    shutil.rmtree(build / "assets", ignore_errors=True)
 
     style = STYLE_DIR / cfg["style"]
     shutil.copy2(style / "tokens.json", build / "tokens.json")
@@ -105,7 +129,7 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
         # 챕터 인덱스 prefix로 개명해 네임스페이스화 — md2typst 자체 불변.
         namespaced = build / "typ" / f"{idx:03d}-{src.stem}.typ"
         raw.rename(namespaced)
-        rebase_images(namespaced, src, build)
+        rebase_images(namespaced, src, build, idx)
         converted.append(namespaced.name)
 
     # 콘텐츠 정합 불변식: 산출 파일 수 == 챕터 수, include 대상 중복 0.
@@ -124,13 +148,14 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
         "#show: theme",
         "",
     ]
+    title, subtitle, author = (_esc(cfg[k]) for k in ("title", "subtitle", "author"))
     if cover_name:
         cover = f'#image("{cover_name}", width: 100%, height: 100%)'
-        lines.append(f'#make-cover("{cfg["title"]}", "{cfg["subtitle"]}", '
-                     f'"{cfg["author"]}", cover: [{cover}])')
+        lines.append(f'#make-cover("{title}", "{subtitle}", '
+                     f'"{author}", cover: [{cover}])')
     else:
-        lines.append(f'#make-cover("{cfg["title"]}", "{cfg["subtitle"]}", '
-                     f'"{cfg["author"]}", cover: none)')
+        lines.append(f'#make-cover("{title}", "{subtitle}", '
+                     f'"{author}", cover: none)')
     lines.append("#make-toc()")
     lines.append("")
     # 챕터 순서는 cfg["chapters"] 순서를 따른다(파일명 정렬 아님)
@@ -146,7 +171,7 @@ def compile_pdf(main: Path, out_name: str) -> Path:
     draft.mkdir(exist_ok=True)
     out = draft / f"{out_name}.pdf"
     r = subprocess.run(
-        ["typst", "compile", str(main), str(out), "--root", str(main.parent)],
+        [typst_binary(), "compile", str(main), str(out), "--root", str(main.parent)],
         capture_output=True, text=True,
     )
     if r.returncode != 0:
@@ -159,7 +184,7 @@ def main() -> None:
     book_dir = Path(sys.argv[1]).resolve()
     cfg = load_config(book_dir / "typst-build.yaml")
     main_typ = assemble(cfg, book_dir)
-    pdf = compile_pdf(main_typ, cfg["title"])
+    pdf = compile_pdf(main_typ, sanitize_filename(cfg["title"]))
     print(f"[build] draft 산출: {pdf}")
 
 if __name__ == "__main__":

@@ -77,10 +77,16 @@ PASS 조건은 G1·G2 무위반. `gate-report.json`(책 디렉터리에 생성)�
 ## md2typst 변환 규칙
 
 - 헤딩: 위 규약 참조(`#`·`##`→`=`, `###`→`==`, `####`→`===`)
-- `![](img)` → `#figure(image("img"))`
+- 선두 YAML frontmatter(`---` 쌍) 제거 — 메타데이터 누출 방지
+- HTML 주석(`<!-- ... -->`) 제거 — 코드 스팬 내부는 보존
+- markdown 강조 `**굵게**`/`*기울임*` → typst `*strong*`/`_emph_` (코드 스팬은 리터럴)
+- `![](img)` → `#figure(image("img"))` — build.py가 에셋을 build/assets/로
+  복사(챕터 인덱스 prefix)하고 경로를 재작성
 - `$$...$$`(블록)·`$...$`(인라인) → `#mitex[...]` (LaTeX 그대로, 한국어 \text 포함)
 - 화폐 `$<숫자>/<단위>` escape
 - `>` 블록 인용 → `#quote[...]`
+- 헤딩 중간점(`·`) 뒤 줄바꿈 기회 삽입(U+200B ZWSP) — typst는 U+00B7을
+  break 기회로 안 씀. 수식·코드 헤딩 제외
 - 본문 typst 특수(`# [ ] < > @ * _ \ $`) escape, 비헤딩 `##` 잔재 escape
 
 ## 의존성

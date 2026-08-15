@@ -21,6 +21,22 @@ pip install -r requirements.txt   # pymupdf, pyyaml
 ```
 mitex 패키지는 첫 빌드 시 자동 다운로드(@preview/mitex:0.2.7).
 
+### 폰트 확인
+
+스타일별 **1순위 폰트**가 설치돼 있어야 임베드 폰트 계약(G2)이 성립한다.
+스택 하위 폰트의 typst "폴백" 경고는 무해하지만, 1순위가 없으면 G2가 FAIL한다.
+
+| 스타일 | 본문 1순위 | 확인 |
+|---|---|---|
+| practical | Noto Serif CJK KR | `fc-list \| grep "Noto Serif CJK KR"` |
+| essay | Noto Serif CJK KR | 동일 |
+| business | Noto Sans KR | `fc-list \| grep "Noto Sans KR"` |
+| lecture | Noto Sans CJK KR | `fc-list \| grep "Noto Sans CJK KR"` |
+
+```bash
+fc-list | grep -i noto   # 없으면: apt install fonts-noto-cjk 등으로 설치
+```
+
 ## 워크플로우
 
 책 디렉터리에 `typst-build.yaml`을 작성한다.
