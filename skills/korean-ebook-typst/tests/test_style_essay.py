@@ -68,6 +68,29 @@ def test_essay_smoke(tmp_path):
 
 
 @SKIP
+def test_essay_toc_no_dot_leaders(tmp_path):
+    """목차 리더 점선 금지(STYLE.md) — TOC 면에 점선 잉크가 없어야 한다.
+
+    base.typ make-toc는 outline() 기본 리더를 쓰므로, theme.typ이
+    outline.entry 쇼 규칙으로 무점선 엔트리(제목 + 1fr + 쪽수, 링크 유지)로
+    오버라이드한다.
+    """
+    import fitz
+    book = tmp_path / "b"
+    book.mkdir()
+    (book / "typst-build.yaml").write_text(
+        "style: essay\ntitle: 에세이 샘플\nchapters:\n  - ch01.md\n  - ch02.md\n",
+        encoding="utf-8")
+    for f in FIXTURE.glob("*.md"):
+        (book / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
+    cfg = load_config(book / "typst-build.yaml")
+    pdf = compile_pdf(assemble(cfg, book), cfg["title"])
+    toc_text = fitz.open(pdf)[1].get_text()
+    assert ". ." not in toc_text
+    assert "첫째 장" in toc_text  # 엔트리 본문은 유지
+
+
+@SKIP
 def test_essay_qc_gate_full_pass(tmp_path):
     """G1+G2+G3 전체 게이트가 essay 스모크북에서 PASS(final/ 생성)해야 한다.
 

@@ -8,6 +8,18 @@
 
 #let theme(body) = {
   set page(fill: rgb(tokens.colors.paper))
+  // 목차 리더 점선 금지 — outline.entry 필드는 level/element/fill뿐(0.15.1
+  // 실측)이라 엔트리를 재구성한다: 제목 + 1fr + 쪽수. link()는 SVG 내보내기에서
+  // 글자보다 큰 투명 히트영역 rect(26pt)를 만들어 인접 엔트리와 P0 collision
+  // 오탐을 유발하므로 쓰지 않는다(프린트 우선 사륙판 — TOC 하이퍼링크 포기).
+  show outline.entry: it => {
+    v(2.5pt, weak: true)
+    box(width: 100%)[
+      #it.element.body
+      #h(1fr)
+      #context str(counter(page).at(it.element.location()).first())
+    ]
+  }
   show heading.where(level: 1): it => {
     pagebreak(weak: true)
     chapter-counter.update(n => n + 1)
