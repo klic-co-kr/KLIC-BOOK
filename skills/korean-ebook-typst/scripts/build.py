@@ -44,12 +44,23 @@ STYLE_DIR = SKILL_DIR / "styles"
 def assemble(cfg: dict, book_dir: Path) -> Path:
     """스타일 팩 + 변환된 챕터를 build/에 조립해 main.typ 생성."""
     build = book_dir / "build"
+    # 재빌드 시 삭제·개명된 챕터의 stale .typ이 include에 섞이지 않도록 리셋
+    shutil.rmtree(build / "typ", ignore_errors=True)
     (build / "typ").mkdir(parents=True, exist_ok=True)
 
     style = STYLE_DIR / cfg["style"]
     shutil.copy2(style / "tokens.json", build / "tokens.json")
     shutil.copy2(style / "theme.typ", build / "theme.typ")
     shutil.copy2(SKILL_DIR / "templates" / "base.typ", build / "base.typ")
+
+    # 표지: typst --root가 build/이므로 build/로 복사 후 파일명만 삽입
+    cover_name = None
+    if cfg["cover"]:
+        cover_src = book_dir / cfg["cover"]
+        if not cover_src.exists():
+            _fail(f"표지 파일 없음: {cover_src}")
+        cover_name = Path(cfg["cover"]).name
+        shutil.copy2(cover_src, build / cover_name)
 
     for ch in cfg["chapters"]:
         src = book_dir / ch
@@ -62,7 +73,6 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
         if not (build / "typ" / (src.stem + ".typ")).exists():
             _fail(f"변환 결과 없음: {src.stem}.typ")
 
-    typ_files = sorted((build / "typ").glob("*.typ"))
     # typst 0.15.1: set/show 규칙은 include 밖으로 전파되지 않으므로
     # 함수 템플릿을 #show: 로 적용(base 먼저, theme이 나중 — 헤딩 오버라이드).
     lines = [
@@ -70,12 +80,10 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
         '#import "theme.typ": theme',
         "#show: base",
         "#show: theme",
-        '#include "base.typ"',
-        '#include "theme.typ"',
         "",
     ]
-    if cfg["cover"]:
-        cover = f'#image("{cfg["cover"]}", width: 100%, height: 100%)'
+    if cover_name:
+        cover = f'#image("{cover_name}", width: 100%, height: 100%)'
         lines.append(f'#make-cover("{cfg["title"]}", "{cfg["subtitle"]}", '
                      f'"{cfg["author"]}", cover: [{cover}])')
     else:
@@ -83,7 +91,8 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
                      f'"{cfg["author"]}", cover: none)')
     lines.append("#make-toc()")
     lines.append("")
-    lines += [f'#include "typ/{p.name}"' for p in typ_files if p.name != "main.typ"]
+    # 챕터 순서는 cfg["chapters"] 순서를 따른다(파일명 정렬 아님)
+    lines += [f'#include "typ/{Path(ch).stem}.typ"' for ch in cfg["chapters"]]
 
     main = build / "main.typ"
     main.write_text("\n".join(lines) + "\n", encoding="utf-8")
