@@ -13,3 +13,14 @@ books/*/build/_work/
 books/*/build/qa/
 books/*/build/contact-sheet-*.jpg
 docs/superpowers/
+
+# korean-ebook-typst 빌드 산물 — 조립·draft/final PDF·게이트 리포트는 재생성 가능
+# (레거시 WeasyPrint 책의 기추적 build/ 파일은 유지 추적 — gitignore는 추적 파일에 미적용)
+books/*/build/
+books/*/draft/
+books/*/final/
+books/*/gate-report.json
+
+# 저작·QC 스크래치북
+**/.smoke/
+**/.tmp-qcprobe/
