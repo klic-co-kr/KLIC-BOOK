@@ -1,6 +1,6 @@
 ---
 name: korean-ebook-typst
-description: "Markdown 원고를 한국어 출판형 PDF로 빌드 — 스타일 팩 4종(practical 신국판/essay 사륙판/business 백서판/lecture A4). typst 엔진(한국어 CJK + 수식 mitex 네이티브). QC 게이트(판면 오버플로 G1·폰트 계약 G2·글자수 밴드 G3) 통과 시에만 final/ 생성. korean-ebook(WeasyPrint) 대체."
+description: "Markdown 원고를 한국어 출판형 PDF로 빌드 — 스타일 팩 4종(practical 신국판/essay 46판/business 백서판/lecture A4). typst 엔진(한국어 CJK + 수식 mitex 네이티브). QC 게이트(판면 오버플로 G1·폰트 계약 G2·글자수 밴드 G3) 통과 시에만 final/ 생성. korean-ebook(WeasyPrint) 대체."
 ---
 
 # korean-ebook-typst
@@ -52,7 +52,7 @@ cover: assets/cover.png   # 선택. 없으면 타이포그래픽 표지
 | 스타일 | 판형 | G3 밴드(자/줄) | 대상 |
 |---|---|---|---|
 | practical | 153×225 신국판 | 30–40 | IT 실용서·가이드 |
-| essay | 128×188 사륙판 | 22–26 | 산문·회고 |
+| essay | 128×188 46판 | 22–26 | 산문·회고 |
 | business | 200×280 백서판 | 36–48 | 백서·컨설팅 리포트 |
 | lecture | 210×297 A4 | 40–52 | 강의자료 |
 

@@ -25,7 +25,7 @@ def _tokens() -> dict:
 def test_essay_frame_matches_trim_margins():
     """body_frame_pt는 trim/margin 유도값과 일치해야 한다(G1 프레임 정합성).
 
-    사륙판 128×188, inner/outer 20, top 24, bottom 26mm:
+    46판 128×188, inner/outer 20, top 24, bottom 26mm:
     x0=inner, y0=top, x1=width-inner, y1=height-bottom(pt 환산).
     """
     t = _tokens()
@@ -75,7 +75,7 @@ def test_essay_toc_no_dot_leaders(tmp_path):
     outline.entry 쇼 규칙으로 무점선 엔트리(제목 + 1fr + 쪽수)로 오버라이드한다.
     하이퍼링크는 없다 — link()가 SVG에서 글자보다 큰 투명 히트영역 rect를
     만들어 인접 엔트리와 collision 오탐을 유발하므로 제거한 트레이드오프
-    (프린트 우선 사륙판).
+    (프린트 우선 46판).
     """
     import fitz
     book = tmp_path / "b"
