@@ -9,7 +9,7 @@ import shutil
 from pathlib import Path
 import pytest
 from scripts.build import load_config, assemble, compile_pdf
-from scripts.qc_gate import allowed_fonts, check_overflow, load_frame
+from scripts.qc_gate import allowed_fonts, check_overflow, load_frame, run as qc_run
 
 FIXTURE = Path(__file__).parent / "fixtures" / "sample-manuscript"
 SKIP = pytest.mark.skipif(not shutil.which("typst"), reason="typst 미설치")
@@ -53,3 +53,24 @@ def test_practical_smoke(tmp_path):
     assert pdf.exists()
     frame = load_frame(book / "build" / "tokens.json")
     assert check_overflow(pdf, frame) == []
+
+
+@SKIP
+def test_practical_qc_gate_full_pass(tmp_path):
+    """G1+G2+G3 전체 게이트가 practical 스모크북에서 PASS(final/ 생성)해야 한다.
+
+    빌드 머신 설치 폰트가 스택 1순위(Noto Serif CJK KR)이므로 폴백 임베드
+    없이 G2가 성립한다. 스택 전체가 없는 머신에서는 이 테스트가 폴백 폰트
+    계약 위반으로 실패한다 — 설치 폰트에 맞춰 ps를 보정할 것.
+    """
+    book = tmp_path / "b"
+    book.mkdir()
+    (book / "typst-build.yaml").write_text(
+        "style: practical\ntitle: 실용서 샘플\nchapters:\n  - ch01.md\n  - ch02.md\n",
+        encoding="utf-8")
+    for f in FIXTURE.glob("*.md"):
+        (book / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
+    cfg = load_config(book / "typst-build.yaml")
+    compile_pdf(assemble(cfg, book), cfg["title"])
+    assert qc_run(book) == 0
+    assert (book / "final").is_dir()
