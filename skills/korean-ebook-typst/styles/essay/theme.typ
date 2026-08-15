@@ -1,6 +1,6 @@
 #import "base.typ": tokens, pt, mm, em
 
-// essay — 사륙판 미니멀 에세이. 여백 낙차형 장 시작(bookforge essay 계승 적응).
+// essay — 사륙판 미니멀 에세이. 여백 낙차형 장 시작.
 // main.typ의 `#show: theme`로 적용 — base 이후에 적용되어 base 헤딩을 오버라이드.
 // typst 0.15.1 실측: numbering 없는 heading 내장 counter는 show 규칙 시점에
 // 아직 0이다(프로브: 00/00/00). 전용 카운터를 step해 2자리 장번호를 낸다.

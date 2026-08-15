@@ -2,9 +2,8 @@
 
 ## 정체성
 - 128×188 사륙판. 여백이 주인공. 위계는 크기·여백·정렬로만. 먹 1도 + 포인트 1색(terracotta).
-- 근거: bookforge styles/essay/STYLE.md 허용 범위 참고(공개 규칙서) + bookforge 실측치.
 
-## 규칙 (근거: bookforge essay 참고값 + 우리 프로브 실측)
+## 규칙 (근거: 설계 참고값 + 우리 프로브 실측)
 - 판면: top 24 / bottom 26 / inner 20 / outer 20 mm — 하단 2mm 크게(시각 중심 보정). 본문 88×138mm
 - 본문: Noto Serif CJK KR 10pt / 행간 1.9em / 양끝맞춤 / 들여쓰기 없음
 - 장 시작: 여백 낙차형 — 판면 상단 52mm 비우고 제목(theme.typ `mm(52) - mm(margin.top)` 산식)
@@ -29,4 +28,4 @@
 - 목차 리더 점선
 
 ## 근거 표기
-bookforge 참고값 + typst 0.15.1 프로브 실측(장번호 카운터). 우리 자체 조판 실측 아님.
+설계 참고값 + typst 0.15.1 프로브 실측(장번호 카운터). 우리 자체 조판 실측 아님.

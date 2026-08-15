@@ -12,9 +12,9 @@
 - 쪽번호: 하단 중앙, label 9pt, ink-mute
 
 ## 금지 사항
-- 자간(tracking) 조정 금지 — bookforge 실측에서 Noto Serif KR −25/1000em에서 잉크 겹침 보고(참고: bookforge references/pagination.md)
+- 자간(tracking) 조정 금지 — Noto Serif KR −25/1000em에서 잉크 겹침 보고 있음
 - 본문 폰트 크기 10pt 미만 축소 금지
 - 한 줄 26자 초과 지속(밴드 22–26, WARN 게이트)
 
 ## 근거 표기
-수치는 레거시 book.typ 실측 + bookforge 참고값. 우리 자체 상업본 실측 아님.
+수치는 레거시 book.typ 실측 + 설계 참고값. 우리 자체 상업본 실측 아님.
