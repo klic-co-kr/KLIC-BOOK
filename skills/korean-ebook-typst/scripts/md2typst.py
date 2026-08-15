@@ -37,11 +37,13 @@ def convert(md: str) -> str:
     md = md.replace('*', r'\*').replace('_', r'\_')
     # 7. 보호 복원
     md = re.sub(r'\x00(\d+)\x00', lambda m: protected[int(m.group(1))], md)
-    # 8. 헤딩
-    md = re.sub(r'^\\?####\s+(.+)$', r'=== \1', md, flags=re.M)
-    md = re.sub(r'^\\?###\s+(.+)$', r'== \1', md, flags=re.M)
-    md = re.sub(r'^\\?##\s+(.+)$', r'= \1', md, flags=re.M)
-    md = re.sub(r'^\\?#\s+(.+)$', r'= \1', md, flags=re.M)
+    # 8. 헤딩 (step 6에서 # → \# escape되므로 escape된 형태에 매치)
+    md = re.sub(r'^\\#\\#\\#\\#\s+(.+)$', r'=== \1', md, flags=re.M)
+    md = re.sub(r'^\\#\\#\\#\s+(.+)$', r'== \1', md, flags=re.M)
+    md = re.sub(r'^\\#\\#\s+(.+)$', r'= \1', md, flags=re.M)
+    md = re.sub(r'^\\#\s+(.+)$', r'= \1', md, flags=re.M)
+    # 8.5 블록 인용 (step 6에서 > → \> escape되므로 escape된 형태에 매치)
+    md = re.sub(r'^\\>\s?(.+)$', r'#quote[\1]', md, flags=re.M)
     # 9. 남은 비헤딩 ## (markdown 잔재) escape
     md = re.sub(r'(?<!\\)##(?=\w)', r'\#\#', md)
     return md
