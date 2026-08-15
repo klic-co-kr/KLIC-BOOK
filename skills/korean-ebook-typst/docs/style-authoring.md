@@ -63,7 +63,7 @@ base.typ가 `json()`으로 읽고, qc_gate.py가 G1 프레임·G2 폰트·G3 밴
 
 ### 1.3 theme.typ — 렌더 규칙
 
-**반드시 `#let theme(body) = { show ...; body }` 함수 패턴**을 쓴다. typst 0.15.1에서
+**반드시 `#let theme(body) = { show ...; body }` 함수 패턴**을 쓴다. typst 0.15+에서
 set/show 규칙은 include된 파일 스코프에만 적용되므로, 베어 `#show` + `#include`는
 본문에 전파되지 않는다. build.py가 생성하는 main.typ이 `#show: base` 다음 `#show: theme`
 로 적용한다(base가 먼저, theme이 나중 — 나중 규칙이 헤딩을 오버라이드).
@@ -83,7 +83,7 @@ set/show 규칙은 include된 파일 스코프에만 적용되므로, 베어 `#s
 - 하이픈 키(`label-top`, `ink-mute`)는 `tokens.at("label-top")` 접근 — dot-access는 마이너스 파싱 실패
 - show 규칙 내부 코드 모드에서 `#line(...)`처럼 `#` 접두를 붙이면 컴파일 에러 — `line(...)`으로
 - 표지 오버라이드는 base의 `make-cover` 기본형을 그대로 쓰거나 theme에서 별도 정의
-- 목차 커스텀은 `show outline.entry`(0.15.1 entry 필드는 level/element/fill뿐 — 엔트리 재구성 필요. essay 참조)
+- 목차 커스텀은 `show outline.entry`(0.15+ entry 필드는 level/element/fill뿐 — 엔트리 재구성 필요. essay 참조)
 - 자간 `tracking` 조정 금지(공통 금지 사항)
 
 ---

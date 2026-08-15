@@ -148,6 +148,11 @@ def run(book_dir: Path) -> int:
         print("[qc] draft/*.pdf 없음", file=sys.stderr)
         return 1
     pdf = pdfs[0]
+    if len(pdfs) > 1:
+        # build.py는 항상 pdf 1개만 남기므로 2개 이상은 이전 빌드 잔여 —
+        # 어떤 pdf가 검사됐는지 알려야 낡은 결과를 잘못 읽지 않는다.
+        print(f"[qc] 경고: draft/*.pdf {len(pdfs)}개 — {pdf.name}만 검사"
+              f"(무시: {', '.join(p.name for p in pdfs[1:])})", file=sys.stderr)
     frame = load_frame(tokens_path)
     overflow = check_overflow(pdf, frame)
     allowed = allowed_fonts(tokens)
@@ -161,6 +166,12 @@ def run(book_dir: Path) -> int:
     (book_dir / "gate-report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     if not report["pass"]:
+        # FAIL 시 낡은 final/<책>.pdf가 남으면 직전 PASS 결과로 오탐된다 —
+        # 폐기한다(2026-08-15 종단 검증 발견, 컨트롤러 판정).
+        final = book_dir / "final"
+        if final.is_dir():
+            for old in final.glob("*.pdf"):
+                old.unlink()
         print(f"[qc] FAIL — gate-report.json 참조: {overflow[:3]} {fonts[:3]}",
               file=sys.stderr)
         return 1

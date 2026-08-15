@@ -11,9 +11,55 @@
 import shutil, subprocess, json
 from pathlib import Path
 import pytest
-from scripts.qc_gate import check_fonts, check_chars_band, norm_font
+import fitz
+from scripts.qc_gate import check_fonts, check_chars_band, norm_font, run
 
 SKIP = pytest.mark.skipif(not shutil.which("typst"), reason="typst 미설치")
+
+
+def _make_book(tmp_path: Path, texts: list) -> None:
+    """게이트용 책 스캐폴드 — texts별 draft pdf 1개씩 생성.
+
+    texts가 비어 있으면 빈 페이지(오버플로 0 → PASS), 텍스트가 있으면
+    프레임 밖 잉크(오버플로 → FAIL).
+    """
+    build = tmp_path / "build"
+    build.mkdir(parents=True, exist_ok=True)
+    draft = tmp_path / "draft"
+    draft.mkdir(parents=True, exist_ok=True)
+    (build / "tokens.json").write_text(json.dumps({
+        "body_frame_pt": {"x0": 10, "y0": 10, "x1": 90, "y1": 90},
+        "fonts": {"body": {"stack": ["Noto Sans CJK KR"], "size_pt": 10}},
+    }), encoding="utf-8")
+    for i, page_texts in enumerate(texts):
+        doc = fitz.open()
+        for t in page_texts or [None]:
+            page = doc.new_page(width=100, height=100)
+            if t:
+                page.insert_text((5, 50), t)  # x0=5 < 10 → 프레임 밖
+        doc.save(draft / f"book-{i}.pdf")
+        doc.close()
+
+
+def test_run_fail_deletes_stale_final(tmp_path):
+    # FAIL 시 기존 final/<책>.pdf가 남으면 낡은 PASS 결과로 오탐된다 —
+    # 삭제해야 한다(2026-08-15 컨트롤러 판정).
+    _make_book(tmp_path, [["프레임 밖 텍스트"]])
+    final = tmp_path / "final"
+    final.mkdir()
+    stale = final / "실전 시스템 설계 2026.pdf"
+    stale.write_bytes(b"%PDF-stale")
+    rc = run(tmp_path)
+    assert rc == 1
+    assert not stale.exists()
+
+
+def test_run_multiple_draft_pdfs_warns(tmp_path, capsys):
+    # draft에 pdf 2개 이상이면 첫 번째만 조용히 검사하지 않고 경고한다.
+    _make_book(tmp_path, [[], []])
+    run(tmp_path)
+    err = capsys.readouterr().err
+    assert "2개" in err and "book-1.pdf" in err
 
 def test_norm_font_strips_subset_prefix():
     assert norm_font("SIFNZL+NanumSquareB") == "nanumsquareb"

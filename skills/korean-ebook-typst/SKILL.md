@@ -85,7 +85,7 @@ PASS 조건은 G1·G2 무위반. `gate-report.json`(책 디렉터리에 생성)�
 
 ## 의존성
 
-- typst 바이너리(0.14+, PATH / ~/.local/bin/typst)
+- typst 바이너리(0.15+, PATH / ~/.local/bin/typst)
 - python3 + `requirements.txt` (pymupdf>=1.23, pyyaml>=6.0) — `pip install -r requirements.txt`
 - @preview/mitex:0.2.7(첫 빌드 시 자동 다운)
 - aesthete 스킬(스타일 저작 시에만, bun)
