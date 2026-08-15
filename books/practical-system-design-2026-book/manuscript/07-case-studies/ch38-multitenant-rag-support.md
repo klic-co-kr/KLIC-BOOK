@@ -40,23 +40,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 38. 멀티테넌트 RAG·AI 고객지원 플랫폼
+## 38. 멀티테넌트 RAG·AI 고객지원 플랫폼
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 AI 고객지원 플랫폼은 챗봇 화면 하나가 아니라 tenant onboarding, 문서 수집, ACL, RAG, model routing, conversation, tool action, human handoff, evaluation, billing, deletion을 결합한 플랫폼이다. shared infrastructure에서도 모든 단계가 tenant context를 잃지 않아야 한다.
 
 이 절의 기준 출처: [@azure-multitenant; @rag-paper].
 
-### 학습 목표
+#### 학습 목표
 
 - 멀티테넌트 문서·검색·model·agent 경계를 종합 설계한다.
 - tenant별 권한·품질·비용·데이터 위치를 강제한다.
 - human handoff와 감사 가능한 고객지원 workflow를 만든다.
 
-## 먼저 결론
+### 먼저 결론
 
 - tenant context는 gateway에서 생성해 문서·index·cache·model·tool·telemetry까지 전달하고 각 계층이 검증한다.
 - 답변 생성과 고객 계정 변경·환불 같은 tool action은 별도 권한·승인 경계다.
@@ -67,7 +67,7 @@ AI 고객지원 플랫폼은 챗봇 화면 하나가 아니라 tenant onboarding
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2026-11-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -79,47 +79,47 @@ AI 고객지원 플랫폼은 챗봇 화면 하나가 아니라 tenant onboarding
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### Tenant control plane
+#### Tenant control plane
 
 계약·region·quota·model policy·connector·retention을 관리한다.
 
-### Tenant context
+#### Tenant context
 
 검증된 tenant ID, user, role, region, policy version을 가진 요청 범위다.
 
-### Knowledge plane
+#### Knowledge plane
 
 문서 원장·ingestion·chunk·index·ACL을 제공한다.
 
-### Conversation plane
+#### Conversation plane
 
 session·message·summary·handoff 상태를 관리한다.
 
-### Inference plane
+#### Inference plane
 
 retrieval·rerank·model route·streaming을 수행한다.
 
-### Action plane
+#### Action plane
 
 CRM·ticket·refund 등 tool을 policy와 approval 아래 실행한다.
 
-### Human handoff
+#### Human handoff
 
 AI가 중단·escalate할 때 evidence와 context를 상담원에게 전달한다.
 
-### Evaluation plane
+#### Evaluation plane
 
 tenant별 golden set·online quality·safety·cost를 관리한다.
 
-### Metering
+#### Metering
 
 token·retrieval·tool·storage·human review 사용량을 계약 단위로 집계한다.
 
 핵심 개념의 정의와 범위는 [@azure-multitenant; @rag-paper; @nist-genai-profile; @owasp-llm; @otel-spec]를 기준으로 재검토해야 한다.
 
-### 서비스 계층 제안
+#### 서비스 계층 제안
 
 | 계층 | 기본 격리 | 승격 조건 | 주요 제한 |
 |---|---|---|---|
@@ -129,7 +129,7 @@ token·retrieval·tool·storage·human review 사용량을 계약 단위로 집�
 
 승격은 영업 요청만으로 결정하지 않는다. 실제 사용량, noisy-neighbor 지표, 데이터 지역, 보안 위험, unit economics를 함께 판단하고 되돌림·export 경로를 유지한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -186,7 +186,7 @@ spec_file: assets/specs/svg/fig-ch38-01.md
 > 대체 텍스트: control plane·knowledge·conversation·inference·action·evaluation plane과 tenant 경계를 보여준다.
 
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. tenant admin이 region·connector·retention·model/tool policy를 설정한다.
 2. connector가 tenant-scoped credential로 문서를 수집하고 ACL·version을 보존한다.
@@ -201,7 +201,7 @@ spec_file: assets/specs/svg/fig-ch38-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -213,7 +213,7 @@ spec_file: assets/specs/svg/fig-ch38-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@azure-multitenant; @rag-paper; @nist-genai-profile]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -265,7 +265,7 @@ spec_file: assets/specs/svg/fig-ch38-02.md
 > 대체 텍스트: 사용자 message가 tenant auth·RAG·model·citation·tool approval·human handoff를 거치는 end-to-end 흐름을 보여준다.
 
 
-## 종합 설계 보조 도표
+### 종합 설계 보조 도표
 
 이 장은 앞의 원리를 하나의 서비스로 연결하므로 다음 보조 도표까지 제작한다.
 
@@ -389,7 +389,7 @@ spec_file: assets/specs/svg/fig-ch38-05.md
 > 대체 텍스트: 탈퇴 요청이 원문·index·cache·conversation·evaluation·backup에 전파되고 증거가 남는 흐름을 보여준다.
 
 
-## 확장 전략
+### 확장 전략
 
 - ingestion·retrieval·inference·tool을 tenant별 별도 quota와 bulkhead로 나눈다.
 - shared index는 tenant filter selectivity와 shard hotspot을 관측하고 대형 tenant를 전용 index로 이동한다.
@@ -399,7 +399,7 @@ spec_file: assets/specs/svg/fig-ch38-05.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - tenant identity를 모든 저장·event·cache·trace key에 포함하고 서버가 파생한다.
 - connector credential과 tool capability는 tenant·source·action에 한정하고 짧은 수명으로 발급한다.
@@ -409,7 +409,7 @@ spec_file: assets/specs/svg/fig-ch38-05.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -424,7 +424,7 @@ spec_file: assets/specs/svg/fig-ch38-05.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - tenant별 cost는 storage·index·embedding·retrieval·model token·tool API·human handoff를 합쳐야 한다.
 - shared tier는 효율이 높지만 noisy-neighbor 방지용 여유와 격리 control 비용이 있다.
@@ -433,14 +433,14 @@ spec_file: assets/specs/svg/fig-ch38-05.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - tenant ID를 prompt 문자열에만 넣고 인프라 key와 권한에서 강제하지 않는다.
 - shared vector index의 post-filter만으로 격리가 충분하다고 생각한다.
 - AI가 생성한 답변과 실제 고객 계정 action을 같은 권한으로 처리한다.
 - 평균 품질과 전체 token 비용만 보고 tenant별 불공정·손실을 숨긴다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] tenant context가 모든 sync/async 경계에서 보존·검증되는가?
 - [ ] shared와 dedicated tier의 승격 조건이 객관적인가?
@@ -450,13 +450,13 @@ spec_file: assets/specs/svg/fig-ch38-05.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 공유 vector index에서 tenant ACL을 pre-filter·post-filter·citation 검증으로 구현하라.
 2. 대형 tenant를 dedicated index와 model endpoint로 무중단 이동하는 계획을 작성하라.
 3. 환불 tool을 호출할 수 있는 고객지원 agent의 승인·감사·보상 흐름을 설계하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - 멀티테넌트 AI는 모든 계층에서 tenant context를 강제한다.
 - knowledge·conversation·inference·action·evaluation plane을 분리한다.
@@ -464,7 +464,7 @@ spec_file: assets/specs/svg/fig-ch38-05.md
 - shared와 dedicated tier를 규모·위험·지역에 따라 선택한다.
 - 품질·안전·비용을 tenant와 사용자 segment별로 운영한다.
 
-## 출처
+### 출처
 
 - [@azure-multitenant] Microsoft. **Azure Architecture Center — Multitenant solutions** (2026). https://learn.microsoft.com/azure/architecture/guide/multitenant/overview
 - [@rag-paper] Patrick Lewis et al.. **Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks** (2020). https://arxiv.org/abs/2005.11401

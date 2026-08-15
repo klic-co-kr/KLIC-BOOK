@@ -34,23 +34,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 28. 인증·인가·Zero Trust·Secrets·공급망 보안
+## 28. 인증·인가·Zero Trust·Secrets·공급망 보안
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 보안은 외곽 방화벽 한 겹이 아니라 모든 자원 접근에서 주체, 장치, workload, 요청 맥락, 정책을 검증하는 연속된 결정이다. 네트워크 위치는 신뢰의 근거 중 하나일 뿐이며, 인증 성공과 업무 권한 승인은 분리해야 한다.
 
 이 절의 기준 출처: [@nist-zero-trust; @rfc9700].
 
-### 학습 목표
+#### 학습 목표
 
 - 인증·인가·세션·서비스 identity를 구분한다.
 - zero trust 원칙을 자원 접근 흐름에 적용한다.
 - secret·artifact·배포 공급망을 검증 가능하게 만든다.
 
-## 먼저 결론
+### 먼저 결론
 
 - 인증은 누구인지, 인가는 무엇을 할 수 있는지 결정한다.
 - zero trust는 내부망이라는 이유만으로 암묵적 신뢰를 부여하지 않는다.
@@ -61,7 +61,7 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2027-02-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -73,43 +73,43 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### 인증
+#### 인증
 
 사용자·서비스·장치가 주장한 identity를 검증한다.
 
-### 인가
+#### 인가
 
 검증된 주체가 특정 자원에 특정 action을 수행할 수 있는지 결정한다.
 
-### 세션
+#### 세션
 
 인증 상태를 일정 기간 유지하는 server/client 계약이다.
 
-### Zero trust
+#### Zero trust
 
 위치나 소유만으로 신뢰하지 않고 접근마다 명시적 검증과 최소 권한을 적용하는 접근법이다.
 
-### Workload identity
+#### Workload identity
 
 서비스 instance가 장기 공유 secret 없이 자신을 증명하는 identity다.
 
-### Secret
+#### Secret
 
 password, API key, private key처럼 노출되면 권한을 행사할 수 있는 값이다.
 
-### Attestation/Provenance
+#### Attestation/Provenance
 
 artifact가 어떤 source·builder·dependency로 생성됐는지 검증하는 증거다.
 
-### FIDO/WebAuthn
+#### FIDO/WebAuthn
 
 공개키 credential로 phishing-resistant 인증을 제공하는 웹 표준 계열이다.
 
 핵심 개념의 정의와 범위는 [@nist-zero-trust; @rfc9700; @webauthn3; @slsa12]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -163,7 +163,7 @@ spec_file: assets/specs/svg/fig-ch28-01.md
 > 제작 명세: `assets/specs/svg/fig-ch28-01.md`  
 > 대체 텍스트: 사용자·장치·workload identity와 정책 결정·강제·resource 접근 경계를 보여준다.
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 사용자 또는 workload가 강한 인증으로 identity를 얻는다.
 2. 요청이 audience·scope·expiry가 제한된 token을 제시한다.
@@ -175,7 +175,7 @@ spec_file: assets/specs/svg/fig-ch28-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -186,7 +186,7 @@ spec_file: assets/specs/svg/fig-ch28-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@nist-zero-trust; @rfc9700; @webauthn3]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -236,7 +236,7 @@ spec_file: assets/specs/svg/fig-ch28-02.md
 > 제작 명세: `assets/specs/svg/fig-ch28-02.md`  
 > 대체 텍스트: source·dependency·builder·artifact·registry·admission·runtime의 서명과 provenance 검증을 보여준다.
 
-## 확장 전략
+### 확장 전략
 
 - 정책 평가를 중앙 논리와 지역 cache로 분리하되 revoke·version 정책을 둔다.
 - resource별 권한을 token에 모두 넣어 비대해지지 않게 최소 claim과 server lookup을 조합한다.
@@ -245,7 +245,7 @@ spec_file: assets/specs/svg/fig-ch28-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - 개인정보 최소 수집·목적 제한·보존·삭제를 데이터 설계에 포함한다.
 - 인증 로그에도 user agent·IP·device 정보가 민감할 수 있어 접근과 보존을 제한한다.
@@ -254,7 +254,7 @@ spec_file: assets/specs/svg/fig-ch28-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -267,7 +267,7 @@ spec_file: assets/specs/svg/fig-ch28-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - 세밀한 정책과 짧은 credential은 control plane·KMS·audit 비용을 만든다.
 - 장기 secret는 초기 비용이 낮지만 침해 탐지·회전·사고 비용이 크다.
@@ -275,14 +275,14 @@ spec_file: assets/specs/svg/fig-ch28-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - 내부망 요청은 인증을 생략한다.
 - JWT 서명만 검증하면 권한 검사가 끝났다고 생각한다.
 - secret를 암호화해 repo에 넣으면 안전하다고 본다.
 - SBOM이나 서명 파일이 존재하면 실제 배포 artifact가 검증됐다고 가정한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 주체·resource·action·context가 권한 결정에 포함되는가?
 - [ ] token·policy cache·revocation의 시간 경계가 정의됐는가?
@@ -292,13 +292,13 @@ spec_file: assets/specs/svg/fig-ch28-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 관리자·상담사·학생이 있는 교육 시스템의 RBAC/ABAC 정책을 설계하라.
 2. IdP가 20분 중단될 때 신규 로그인과 기존 session의 정책을 구분하라.
 3. source commit에서 production container까지 SLSA형 provenance 검증 경로를 그려라.
 
-## 핵심 요약
+### 핵심 요약
 
 - 인증과 인가는 별도 결정이다.
 - zero trust는 위치 기반 암묵 신뢰를 제거한다.
@@ -306,7 +306,7 @@ spec_file: assets/specs/svg/fig-ch28-02.md
 - policy cache와 revoke 경계를 설계한다.
 - 공급망 증거는 배포 시 검증돼야 가치가 있다.
 
-## 출처
+### 출처
 
 - [@nist-zero-trust] NIST. **NIST SP 800-207 — Zero Trust Architecture** (2020). https://csrc.nist.gov/pubs/sp/800/207/final
 - [@rfc9700] IETF. **RFC 9700 — Best Current Practice for OAuth 2.0 Security** (2025). https://www.rfc-editor.org/rfc/rfc9700.html

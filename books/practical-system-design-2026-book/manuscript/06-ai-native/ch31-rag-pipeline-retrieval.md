@@ -36,23 +36,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 31. RAG 데이터 파이프라인과 Retrieval 품질
+## 31. RAG 데이터 파이프라인과 Retrieval 품질
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 RAG 품질 문제를 모델 prompt 하나로 해결할 수는 없다. 답변 품질은 원문 수집, parsing, chunk 경계, metadata, embedding, candidate retrieval, reranking, context 구성, 생성, citation 검증의 연쇄 결과다. 각 단계를 독립적으로 평가해야 한다.
 
 이 절의 기준 출처: [@rag-paper; @dpr-paper].
 
-### 학습 목표
+#### 학습 목표
 
 - RAG를 수집·정제·검색·생성·근거 검증 파이프라인으로 분해한다.
 - chunk·embedding·index·reranking의 version과 품질을 관리한다.
 - tenant 권한·freshness·provenance를 retrieval 경로에 적용한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - 원문과 metadata를 진실의 원천으로 보존하고 vector/text index는 재구축 가능한 파생 상태로 둔다.
 - retrieval 품질은 answer quality와 분리해 recall·ranking·coverage를 먼저 측정한다.
@@ -63,7 +63,7 @@ RAG 품질 문제를 모델 prompt 하나로 해결할 수는 없다. 답변 품
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2027-02-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -75,43 +75,43 @@ RAG 품질 문제를 모델 prompt 하나로 해결할 수는 없다. 답변 품
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### RAG
+#### RAG
 
 외부 지식을 검색해 생성 모델의 입력 context에 결합하는 구조다.
 
-### Chunking
+#### Chunking
 
 문서를 검색·context 단위로 나누는 과정이며 구조·중첩·overlap이 품질과 비용에 영향을 준다.
 
-### Embedding
+#### Embedding
 
 query와 문서 조각을 vector 공간에 표현한다.
 
-### Candidate retrieval
+#### Candidate retrieval
 
 lexical·dense·hybrid 방식으로 상위 후보를 빠르게 찾는다.
 
-### Reranking
+#### Reranking
 
 더 비싼 모델이나 규칙으로 후보 순서를 다시 평가한다.
 
-### Grounding
+#### Grounding
 
 답변이 제공된 근거에 기반하도록 만드는 설계와 검증이다.
 
-### Provenance
+#### Provenance
 
 원문·version·위치·수집 시각·변환 이력을 추적하는 metadata다.
 
-### Freshness
+#### Freshness
 
 원문 변경이 검색·답변에 반영되기까지의 시간이다.
 
 핵심 개념의 정의와 범위는 [@rag-paper; @dpr-paper; @beir-paper; @hnsw-paper; @owasp-llm]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -168,7 +168,7 @@ spec_file: assets/specs/svg/fig-ch31-01.md
 > 제작 명세: `assets/specs/svg/fig-ch31-01.md`  
 > 대체 텍스트: source 수집에서 parse·chunk·embedding·index와 query retrieval·rerank·generation까지 전체 파이프라인을 보여준다.
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. source connector가 권한과 change cursor를 확인해 문서를 수집한다.
 2. parser가 격리 환경에서 구조와 원문 span을 추출한다.
@@ -182,7 +182,7 @@ spec_file: assets/specs/svg/fig-ch31-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -192,7 +192,7 @@ spec_file: assets/specs/svg/fig-ch31-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@rag-paper; @dpr-paper; @beir-paper]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -241,7 +241,7 @@ spec_file: assets/specs/svg/fig-ch31-02.md
 > 제작 명세: `assets/specs/svg/fig-ch31-02.md`  
 > 대체 텍스트: candidate recall·rerank precision·context coverage·grounded answer로 이어지는 품질 funnel을 보여준다.
 
-## 확장 전략
+### 확장 전략
 
 - tenant·source·language별 index 분리와 shared index filter 비용을 비교한다.
 - batch embedding은 throughput을 높이되 freshness tier에 따라 priority를 둔다.
@@ -250,7 +250,7 @@ spec_file: assets/specs/svg/fig-ch31-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - connector credential은 source별 최소 read 권한과 짧은 수명을 사용한다.
 - 문서 parser·archive extraction을 sandbox에 격리한다.
@@ -260,7 +260,7 @@ spec_file: assets/specs/svg/fig-ch31-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -273,7 +273,7 @@ spec_file: assets/specs/svg/fig-ch31-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - embedding·reindex·vector memory·reranker inference·context token이 주요 비용 축이다.
 - 문서를 무조건 작은 chunk로 나누면 index와 retrieval 후보·token 비용이 늘어난다.
@@ -281,14 +281,14 @@ spec_file: assets/specs/svg/fig-ch31-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - vector DB를 추가하면 RAG가 완성된다고 생각한다.
 - 답변 평가만 하고 retrieval 누락 원인을 측정하지 않는다.
 - 모든 문서를 같은 chunk 크기와 embedding model로 처리한다.
 - citation URL만 붙이면 grounding이 검증됐다고 본다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 원문·chunk·index·model version의 계보가 추적되는가?
 - [ ] retrieval 품질과 generation 품질이 분리 평가되는가?
@@ -298,13 +298,13 @@ spec_file: assets/specs/svg/fig-ch31-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 사내 규정 PDF의 표·부록·개정 이력을 보존하는 chunk 전략을 설계하라.
 2. Recall@20은 높지만 answer가 틀린 RAG를 retrieval·rerank·generation 단계로 진단하라.
 3. embedding model 교체의 dual-index와 quality gate를 작성하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - RAG는 end-to-end 데이터 파이프라인이다.
 - 원문은 원장이고 index는 파생 상태다.
@@ -312,7 +312,7 @@ spec_file: assets/specs/svg/fig-ch31-02.md
 - version·freshness·provenance를 모든 chunk에 붙인다.
 - ACL과 citation 검증은 품질이 아니라 보안 경계이기도 하다.
 
-## 출처
+### 출처
 
 - [@rag-paper] Patrick Lewis et al.. **Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks** (2020). https://arxiv.org/abs/2005.11401
 - [@dpr-paper] Vladimir Karpukhin et al.. **Dense Passage Retrieval for Open-Domain Question Answering** (2020). https://arxiv.org/abs/2004.04906

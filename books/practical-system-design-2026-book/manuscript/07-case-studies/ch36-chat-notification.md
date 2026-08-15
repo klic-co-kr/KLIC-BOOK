@@ -39,23 +39,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 36. 실시간 채팅과 알림 플랫폼
+## 36. 실시간 채팅과 알림 플랫폼
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 채팅은 WebSocket 연결만으로 완성되지 않는다. 연결은 일시적이고 메시지는 내구성이 있어야 하며, 방 단위 순서·중복·읽음 상태·offline sync·push provider·차단·보존 정책이 별도 상태 기계로 동작한다.
 
 이 절의 기준 출처: [@rfc6455; @html-sse].
 
-### 학습 목표
+#### 학습 목표
 
 - 실시간 연결과 내구 메시지 원장을 분리한다.
 - 방·사용자 단위 순서, 전송 상태, offline sync를 설계한다.
 - 알림 채널의 provider 실패·중복·사용자 선호를 다룬다.
 
-## 먼저 결론
+### 먼저 결론
 
 - gateway connection state와 message history 원장을 분리한다.
 - 전역 순서 대신 conversation별 sequence를 제공한다.
@@ -66,7 +66,7 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2027-02-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -78,43 +78,43 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### Connection session
+#### Connection session
 
 한 장치의 WebSocket/SSE 연결과 heartbeat·auth 상태다.
 
-### Conversation sequence
+#### Conversation sequence
 
 한 대화방 안에서 메시지 순서를 결정하는 증가 version이다.
 
-### Message state
+#### Message state
 
 accepted, persisted, delivered, read, failed 같은 단계다.
 
-### Fan-out
+#### Fan-out
 
 한 메시지를 다수 참가자 connection·inbox로 전달하는 과정이다.
 
-### Presence
+#### Presence
 
 사용자 장치의 최근 활동과 연결 상태에 대한 근사 정보다.
 
-### Offline cursor
+#### Offline cursor
 
 마지막으로 동기화한 conversation 위치다.
 
-### Notification intent
+#### Notification intent
 
 메시지 자체와 분리된 “이 사용자에게 이 채널로 알림” 요청이다.
 
-### Channel provider
+#### Channel provider
 
 APNs/FCM/SMS/email 등 외부 전달 시스템이다.
 
 핵심 개념의 정의와 범위는 [@rfc6455; @html-sse; @kafka-docs; @aws-timeouts-retries]를 기준으로 재검토해야 한다.
 
-### 메시지 상태와 사용자에게 보이는 의미
+#### 메시지 상태와 사용자에게 보이는 의미
 
 - `local`: 장치에만 존재하며 서버가 보지 못했다.
 - `accepted`: 서버가 형식과 권한을 확인했지만 아직 내구 commit 의미를 명확히 해야 한다.
@@ -124,7 +124,7 @@ APNs/FCM/SMS/email 등 외부 전달 시스템이다.
 
 UI의 체크 표시를 설계하기 전에 각 상태의 증거와 실패 시 되돌림을 정의해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -180,7 +180,7 @@ spec_file: assets/specs/svg/fig-ch36-01.md
 > 대체 텍스트: client·gateway·message service·conversation store·event log·fan-out·sync 경로를 보여준다.
 
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 클라이언트가 device session과 auth로 gateway에 연결한다.
 2. 메시지를 client message ID와 conversation ID로 전송한다.
@@ -193,7 +193,7 @@ spec_file: assets/specs/svg/fig-ch36-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -205,7 +205,7 @@ spec_file: assets/specs/svg/fig-ch36-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@rfc6455; @html-sse; @kafka-docs]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -256,7 +256,7 @@ spec_file: assets/specs/svg/fig-ch36-02.md
 > 대체 텍스트: notification intent가 사용자 선호·quiet hours·dedup·provider·fallback을 거치는 흐름을 보여준다.
 
 
-## 종합 설계 보조 도표
+### 종합 설계 보조 도표
 
 이 장은 앞의 원리를 하나의 서비스로 연결하므로 다음 보조 도표까지 제작한다.
 
@@ -374,7 +374,7 @@ spec_file: assets/specs/svg/fig-ch36-05.md
 > 대체 텍스트: gateway 장애 후 jitter reconnect·cursor sync·gap recovery를 보여준다.
 
 
-## 확장 전략
+### 확장 전략
 
 - conversation ID를 event partition key로 사용하되 초대형 방은 별도 broadcast 경로를 둔다.
 - connection gateway는 state를 최소화하고 session registry와 durable sync로 재연결을 허용한다.
@@ -384,7 +384,7 @@ spec_file: assets/specs/svg/fig-ch36-05.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - 대화 membership과 메시지 접근은 fan-out과 sync 단계 모두 검증한다.
 - 차단·방 탈퇴·계정 정지 변경이 오래된 session에 반영되게 version을 확인한다.
@@ -394,7 +394,7 @@ spec_file: assets/specs/svg/fig-ch36-05.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -407,7 +407,7 @@ spec_file: assets/specs/svg/fig-ch36-05.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - 동시 connection이 gateway memory와 file descriptor의 주요 비용이다.
 - fan-out event와 notification provider 호출·egress가 message 저장보다 크게 비용이 들 수 있다.
@@ -415,14 +415,14 @@ spec_file: assets/specs/svg/fig-ch36-05.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - WebSocket 연결 자체를 메시지 원장으로 취급한다.
 - presence를 강한 실시간 사실로 표시한다.
 - 읽음 상태를 모든 참가자에게 동기 transaction으로 fan-out한다.
 - push provider 오류를 무기한 재시도한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 메시지 성공 ack가 어떤 내구성을 의미하는가?
 - [ ] conversation 순서와 client dedup이 정의됐는가?
@@ -432,13 +432,13 @@ spec_file: assets/specs/svg/fig-ch36-05.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 1:1 채팅의 메시지 상태 기계와 client retry를 설계하라.
 2. 100만 명 broadcast 방을 fan-out-on-read로 처리하는 구조를 설계하라.
 3. push provider 2시간 장애 시 오래된 알림을 보내지 않는 expiry 정책을 작성하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - 실시간 연결은 일시적이고 메시지 원장은 내구적이어야 한다.
 - 순서는 conversation 범위로 제한한다.
@@ -446,7 +446,7 @@ spec_file: assets/specs/svg/fig-ch36-05.md
 - slow consumer는 gap 후 sync API로 전환한다.
 - 알림은 별도 intent·선호·expiry workflow다.
 
-## 출처
+### 출처
 
 - [@rfc6455] IETF. **RFC 6455 — The WebSocket Protocol** (2011). https://www.rfc-editor.org/rfc/rfc6455.html
 - [@html-sse] WHATWG. **HTML Living Standard — Server-sent events** (2026). https://html.spec.whatwg.org/multipage/server-sent-events.html

@@ -31,30 +31,30 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 26. Circuit Breaker·Bulkhead·Backpressure·Load Shedding
+## 26. Circuit Breaker·Bulkhead·Backpressure·Load Shedding
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 복원력 패턴은 실패한 하위를 숨기는 장식이 아니다. circuit breaker는 반복 실패 호출을 줄이고, bulkhead는 자원 풀을 격리하며, backpressure는 생산 속도를 늦추고, load shedding은 감당할 수 없는 요청을 명시적으로 버린다.
 
 이 절의 기준 출처: [@google-sre-overload; @aws-timeouts-retries].
 
-### 학습 목표
+#### 학습 목표
 
 - 장애 격리와 과부하 제어 패턴의 역할을 구분한다.
 - backpressure를 생산자까지 전달한다.
 - load shedding과 graceful degradation 우선순위를 설계한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - 과부하를 queue 증가로 숨기지 말고 admission 단계에서 제한한다.
 - circuit breaker는 health oracle이 아니라 최근 실패를 바탕으로 한 로컬 보호 장치다.
 - bulkhead는 중요한 workload가 비핵심 workload에 자원을 빼앗기지 않게 한다.
 - shed 정책은 우선순위·공정성·사용자에게 보이는 오류 의미를 가져야 한다.
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -66,39 +66,39 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### Circuit breaker
+#### Circuit breaker
 
 실패율·지연이 임계치를 넘으면 일정 기간 호출을 빠르게 실패시키고 probe로 회복을 확인한다.
 
-### Bulkhead
+#### Bulkhead
 
 thread·connection·queue·tenant capacity를 분리해 실패 전파를 줄인다.
 
-### Backpressure
+#### Backpressure
 
 consumer가 감당할 수 있는 속도를 producer에게 전달하거나 수신을 늦추는 메커니즘이다.
 
-### Load shedding
+#### Load shedding
 
 처리 능력을 넘은 요청을 의도적으로 거부·축소하는 전략이다.
 
-### Admission control
+#### Admission control
 
 요청을 작업 큐에 넣기 전에 현재 자원과 정책으로 허용 여부를 결정한다.
 
-### Graceful degradation
+#### Graceful degradation
 
 전체 실패 대신 비핵심 기능·정확도·신선도를 낮춰 핵심 여정을 유지한다.
 
-### Adaptive concurrency
+#### Adaptive concurrency
 
 관측된 지연·queue로 허용 동시성을 동적으로 조절한다.
 
 핵심 개념의 정의와 범위는 [@google-sre-overload; @aws-timeouts-retries]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -150,7 +150,7 @@ spec_file: assets/specs/svg/fig-ch26-01.md
 > 제작 명세: `assets/specs/svg/fig-ch26-01.md`  
 > 대체 텍스트: ingress에서 admission·bulkhead·circuit·backpressure·degradation이 적용되는 위치를 보여준다.
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 요청에 우선순위·tenant·비용 추정치를 붙인다.
 2. ingress quota와 현재 동시성 한도를 검사한다.
@@ -162,7 +162,7 @@ spec_file: assets/specs/svg/fig-ch26-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -173,7 +173,7 @@ spec_file: assets/specs/svg/fig-ch26-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@google-sre-overload; @aws-timeouts-retries]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -220,7 +220,7 @@ spec_file: assets/specs/svg/fig-ch26-02.md
 > 제작 명세: `assets/specs/svg/fig-ch26-02.md`  
 > 대체 텍스트: 정상·압박·shed·복구 상태와 진입·복원 조건을 보여준다.
 
-## 확장 전략
+### 확장 전략
 
 - global limit와 instance limit를 조합해 scale-out 중 double admission을 막는다.
 - 비용 추정치가 큰 요청은 별도 pool·async job으로 분리한다.
@@ -229,7 +229,7 @@ spec_file: assets/specs/svg/fig-ch26-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - quota·priority를 client가 임의 조작하지 못하게 서버 정책에서 결정한다.
 - shed 응답이 사용자 존재·권한 여부를 노출하지 않게 일관된 오류를 사용한다.
@@ -237,7 +237,7 @@ spec_file: assets/specs/svg/fig-ch26-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -250,7 +250,7 @@ spec_file: assets/specs/svg/fig-ch26-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - 여유 용량과 격리 pool은 직접 비용이지만 전체 장애 비용을 줄인다.
 - 무한 queue는 인프라 비용뿐 아니라 이미 가치 없는 작업 처리 비용을 만든다.
@@ -258,14 +258,14 @@ spec_file: assets/specs/svg/fig-ch26-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - circuit breaker를 모든 오류에 복사하면 안정적이라고 생각한다.
 - queue를 키워 overload를 해결한다.
 - 429/503 없이 연결을 느리게 하는 것만 backpressure라고 부른다.
 - load shedding을 무작위 오류로 구현한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 포화 신호와 admission 기준이 실제 병목을 반영하는가?
 - [ ] 핵심·비핵심 workload가 자원 수준에서 격리되는가?
@@ -275,13 +275,13 @@ spec_file: assets/specs/svg/fig-ch26-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 검색 API에서 철자 교정·추천·개인화를 단계적으로 끄는 degradation 정책을 설계하라.
 2. 무한 queue가 2초 deadline 작업을 30초 뒤 처리하는 문제를 고쳐라.
 3. tenant별 fair shedding과 global overload limit를 함께 설계하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - circuit breaker·bulkhead·backpressure·shedding은 서로 다른 문제를 해결한다.
 - 무한 queue는 overload를 숨기고 tail을 악화한다.
@@ -289,7 +289,7 @@ spec_file: assets/specs/svg/fig-ch26-02.md
 - degradation은 핵심 사용자 여정을 보존한다.
 - 회복도 점진적이고 관측 가능해야 한다.
 
-## 출처
+### 출처
 
 - [@google-sre-overload] Google. **Site Reliability Engineering — Handling Overload** (2016). https://sre.google/sre-book/handling-overload/
 - [@aws-timeouts-retries] Amazon Web Services. **Timeouts, retries, and backoff with jitter** (2026). https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/

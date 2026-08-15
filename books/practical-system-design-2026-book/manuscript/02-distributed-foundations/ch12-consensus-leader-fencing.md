@@ -33,30 +33,30 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 12. Consensus·Leader Election·Fencing
+## 12. Consensus·Leader Election·Fencing
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 합의는 모든 데이터를 전역 정렬하는 만능 도구가 아니다. 소수의 중요한 메타데이터, leader, membership, lock ownership처럼 단일 결정을 공유해야 할 때 사용하며, 장애 중 안전성과 가용성의 경계를 명확히 한다.
 
 이 절의 기준 출처: [@raft-paper; @paxos-made-simple].
 
-### 학습 목표
+#### 학습 목표
 
 - 합의가 필요한 문제와 불필요한 문제를 구분한다.
 - term·log replication·majority의 역할을 설명한다.
 - lease와 fencing으로 stale leader를 차단한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - majority가 없으면 안전한 새 leader를 선출할 수 없으므로 쓰기를 중단하는 편이 낡은 leader 두 개보다 낫다.
 - leader election만으로 stale writer가 사라지지 않으므로 저장소가 term·fencing token을 검증해야 한다.
 - 합의 그룹 크기와 지리적 배치는 지연·장애 허용·운영 비용을 함께 결정한다.
 - 대용량 사용자 데이터보다 작은 제어 메타데이터에 합의를 집중한다.
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -68,39 +68,39 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### 합의
+#### 합의
 
 비동기 통신과 일부 실패가 있는 노드들이 하나의 값 또는 로그 순서에 동의하는 문제다.
 
-### Term/Epoch
+#### Term/Epoch
 
 leader 세대를 증가시키는 논리 번호다.
 
-### Majority quorum
+#### Majority quorum
 
 구성원 절반 초과가 참여한 겹치는 집합으로 두 개의 독립 leader 결정을 막는다.
 
-### Log replication
+#### Log replication
 
 leader가 명령 순서를 복제하고 commit된 prefix를 모든 노드가 동일하게 적용하도록 한다.
 
-### Lease
+#### Lease
 
 일정 시간 동안 권한이 유효하다는 계약이며 시계 오차와 지연 상한을 고려해야 한다.
 
-### Fencing token
+#### Fencing token
 
 새 소유자가 더 큰 번호를 받아 하위 저장소가 오래된 소유자의 쓰기를 거부하게 하는 값이다.
 
-### Membership change
+#### Membership change
 
 합의 그룹 구성원을 안전하게 추가·제거하는 절차다.
 
 핵심 개념의 정의와 범위는 [@raft-paper; @paxos-made-simple; @chubby-paper]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -153,7 +153,7 @@ spec_file: assets/specs/svg/fig-ch12-01.md
 > 제작 명세: `assets/specs/svg/fig-ch12-01.md`  
 > 대체 텍스트: leader가 term·index를 가진 log를 복제하고 majority commit하는 과정을 보여준다.
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 클라이언트가 요청 ID와 명령을 leader에 보낸다.
 2. leader가 현재 term과 log index를 붙여 replica에 전송한다.
@@ -165,7 +165,7 @@ spec_file: assets/specs/svg/fig-ch12-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -175,7 +175,7 @@ spec_file: assets/specs/svg/fig-ch12-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@raft-paper; @paxos-made-simple; @chubby-paper]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -223,7 +223,7 @@ spec_file: assets/specs/svg/fig-ch12-02.md
 > 제작 명세: `assets/specs/svg/fig-ch12-02.md`  
 > 대체 텍스트: 오래된 worker와 새 worker가 같은 자원에 접근할 때 fencing token이 stale write를 막는 모습을 보여준다.
 
-## 확장 전략
+### 확장 전략
 
 - 합의 그룹을 지나치게 크게 만들지 않고 여러 독립 그룹으로 분할한다.
 - read-only 요청은 linearizable read 필요 여부에 따라 lease/read-index/stale replica를 선택한다.
@@ -232,7 +232,7 @@ spec_file: assets/specs/svg/fig-ch12-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - membership·leader 강제 이전·snapshot 접근 권한을 분리한다.
 - 합의 로그에 비밀 원문을 넣지 않고 암호화 또는 참조를 사용한다.
@@ -240,7 +240,7 @@ spec_file: assets/specs/svg/fig-ch12-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -252,7 +252,7 @@ spec_file: assets/specs/svg/fig-ch12-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - 합의 노드는 소수라도 상시 다중 장애 도메인 비용이 든다.
 - 원격 quorum은 매 쓰기에 네트워크 왕복을 추가한다.
@@ -260,14 +260,14 @@ spec_file: assets/specs/svg/fig-ch12-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - 분산 lock API를 호출했으니 오래 걸리는 작업이 안전하다고 믿는다.
 - heartbeats만으로 lease 안전성을 보장한다.
 - 합의 그룹에 대용량 blob과 모든 이벤트를 넣는다.
 - quorum 수만 맞추고 failure domain과 membership 변경을 무시한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 합의가 필요한 단일 결정이 정확히 무엇인가?
 - [ ] quorum 상실 시 안전한 동작이 정의됐는가?
@@ -277,13 +277,13 @@ spec_file: assets/specs/svg/fig-ch12-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 작업 스케줄러 leader가 GC pause 후 돌아오는 상황을 fencing token으로 해결하라.
 2. 5노드 합의 그룹이 두 zone에 3:2로 배치될 때 zone 장애별 가용성을 분석하라.
 3. 합의 로그에 비결정적 명령을 넣었을 때 상태가 갈라지는 예를 만들라.
 
-## 핵심 요약
+### 핵심 요약
 
 - 합의는 중요한 단일 결정과 로그 순서를 공유하는 도구다.
 - majority quorum은 서로 겹쳐 두 leader 결정을 막는다.
@@ -291,7 +291,7 @@ spec_file: assets/specs/svg/fig-ch12-02.md
 - fencing token은 하위 자원이 검증해야 한다.
 - membership·snapshot·disk도 합의 시스템의 핵심 운영 영역이다.
 
-## 출처
+### 출처
 
 - [@raft-paper] Diego Ongaro and John Ousterhout. **In Search of an Understandable Consensus Algorithm** (2014). https://raft.github.io/raft.pdf
 - [@paxos-made-simple] Leslie Lamport. **Paxos Made Simple** (2001). https://lamport.azurewebsites.net/pubs/paxos-simple.pdf

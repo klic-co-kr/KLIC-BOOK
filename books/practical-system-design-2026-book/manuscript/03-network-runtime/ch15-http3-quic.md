@@ -36,23 +36,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 15. HTTP/1.1·HTTP/2·HTTP/3와 QUIC
+## 15. HTTP/1.1·HTTP/2·HTTP/3와 QUIC
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 HTTP/3가 항상 더 빠른 것은 아니다. HTTP semantics는 유지되지만 전송은 QUIC 위에서 이루어지고, 독립 스트림·TLS 통합·connection migration 같은 특성을 얻는 대신 UDP 경로, 관측 도구, proxy 지원, QPACK 동작을 함께 검증해야 한다.
 
 이 절의 기준 출처: [@rfc9110; @rfc9112].
 
-### 학습 목표
+#### 학습 목표
 
 - HTTP 세대별 연결·스트림·head-of-line 특성을 비교한다.
 - QUIC의 연결 설정·암호화·경로 변경이 운영에 미치는 영향을 설명한다.
 - 프로토콜 선택을 실제 client·network·proxy 지원 조건과 연결한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - HTTP/1.1은 여러 연결과 순차 요청, HTTP/2는 한 TCP 연결의 다중 스트림, HTTP/3는 QUIC 연결의 다중 스트림을 사용한다.
 - HTTP/2의 서로 다른 스트림도 TCP packet loss 때문에 전송 계층 head-of-line 영향을 함께 받을 수 있다.
@@ -63,7 +63,7 @@ HTTP/3가 항상 더 빠른 것은 아니다. HTTP semantics는 유지되지만 
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2027-02-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -75,39 +75,39 @@ HTTP/3가 항상 더 빠른 것은 아니다. HTTP semantics는 유지되지만 
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### HTTP semantics
+#### HTTP semantics
 
 method, status, field, representation 같은 의미는 HTTP 버전 간 공유된다.
 
-### Multiplexing
+#### Multiplexing
 
 한 연결에서 여러 요청·응답 스트림을 동시에 진행하는 방식이다.
 
-### Head-of-line blocking
+#### Head-of-line blocking
 
 앞선 손실이나 작업 때문에 뒤의 독립 작업도 대기하는 현상이다.
 
-### QUIC connection
+#### QUIC connection
 
 UDP 위에서 암호화·신뢰성·혼잡 제어·다중 스트림을 제공한다.
 
-### Connection ID
+#### Connection ID
 
 IP·port 변경과 독립적으로 연결을 식별해 경로 변경을 지원한다.
 
-### QPACK
+#### QPACK
 
 HTTP/3에서 field compression을 수행하며 동적 table 의존과 blocking 한계를 관리한다.
 
-### 0-RTT
+#### 0-RTT
 
 이전 연결 상태를 이용해 handshake 완료 전 application data를 보내는 방식으로 replay 위험이 있다.
 
 핵심 개념의 정의와 범위는 [@rfc9110; @rfc9112; @rfc9113; @rfc9000; @rfc9114; @rfc9204]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -159,7 +159,7 @@ spec_file: assets/specs/svg/fig-ch15-01.md
 > 제작 명세: `assets/specs/svg/fig-ch15-01.md`  
 > 대체 텍스트: HTTP/1.1·HTTP/2·HTTP/3의 application·compression·transport·security stack을 비교한다.
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 클라이언트가 DNS와 이전 Alt-Svc 정보를 확인한다.
 2. HTTP/3 가능 시 QUIC handshake와 TLS 인증을 수행한다.
@@ -171,7 +171,7 @@ spec_file: assets/specs/svg/fig-ch15-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -181,7 +181,7 @@ spec_file: assets/specs/svg/fig-ch15-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@rfc9110; @rfc9112; @rfc9113]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -229,7 +229,7 @@ spec_file: assets/specs/svg/fig-ch15-02.md
 > 제작 명세: `assets/specs/svg/fig-ch15-02.md`  
 > 대체 텍스트: HTTP/2 TCP packet loss와 HTTP/3 QUIC stream 손실의 영향 범위를 비교한다.
 
-## 확장 전략
+### 확장 전략
 
 - 연결 수보다 stream 수·congestion·CPU 암호화 비용을 함께 본다.
 - 모바일 경로 변경과 NAT rebinding을 실제 환경에서 시험한다.
@@ -238,7 +238,7 @@ spec_file: assets/specs/svg/fig-ch15-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - QUIC은 기본적으로 암호화되지만 endpoint 인증과 애플리케이션 권한은 여전히 필요하다.
 - 0-RTT 데이터는 replay 가능성을 전제로 민감한 부작용 요청에서 금지한다.
@@ -247,7 +247,7 @@ spec_file: assets/specs/svg/fig-ch15-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -259,7 +259,7 @@ spec_file: assets/specs/svg/fig-ch15-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - HTTP/3는 지연을 줄일 수 있지만 edge·CPU·관측·운영 도구 비용을 늘릴 수 있다.
 - 한 connection의 효율은 좋아져도 장거리 egress 비용 자체는 줄지 않는다.
@@ -267,14 +267,14 @@ spec_file: assets/specs/svg/fig-ch15-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - HTTP/3를 UDP 기반이라 신뢰성이 없다고 설명한다.
 - HTTP/2면 애플리케이션의 모든 head-of-line 문제가 사라진다고 생각한다.
 - 0-RTT를 모든 POST 요청에 허용한다.
 - 벤치마크 한 번으로 모든 네트워크에서 HTTP/3가 빠르다고 결론낸다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 지원 client·network·proxy 조합이 실제 트래픽으로 검증됐는가?
 - [ ] fallback이 빠르고 이유를 관측할 수 있는가?
@@ -284,13 +284,13 @@ spec_file: assets/specs/svg/fig-ch15-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 같은 리전 내부 RPC와 모바일 글로벌 API에 서로 다른 HTTP 버전 전략을 선택하라.
 2. 0-RTT로 중복 결제가 발생할 수 있는 요청 흐름을 그리고 방지책을 제시하라.
 3. HTTP/2 TCP loss와 HTTP/3 stream loss 격리를 시간축으로 비교하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - HTTP semantics는 버전 간 공유되지만 transport 특성이 다르다.
 - HTTP/2는 TCP, HTTP/3는 QUIC 위에서 다중 stream을 제공한다.
@@ -298,7 +298,7 @@ spec_file: assets/specs/svg/fig-ch15-02.md
 - 0-RTT는 replay 위험 때문에 제한적으로 사용한다.
 - 실제 이득은 client·network·proxy별 관측으로 판단한다.
 
-## 출처
+### 출처
 
 - [@rfc9110] IETF. **RFC 9110 — HTTP Semantics** (2022). https://www.rfc-editor.org/rfc/rfc9110.html
 - [@rfc9112] IETF. **RFC 9112 — HTTP/1.1** (2022). https://www.rfc-editor.org/rfc/rfc9112.html

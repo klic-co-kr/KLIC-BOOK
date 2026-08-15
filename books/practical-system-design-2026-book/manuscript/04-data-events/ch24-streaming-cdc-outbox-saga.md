@@ -32,23 +32,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 24. Event Streaming·CDC·Outbox·Saga
+## 24. Event Streaming·CDC·Outbox·Saga
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 이벤트 기반 아키텍처는 transaction을 없애지 않는다. 각 서비스 내부 transaction은 유지하고, 경계를 넘는 상태 변화는 outbox·CDC·멱등 consumer·보상으로 연결한다. 이벤트는 사실의 기록이어야 하며 명령과 통지의 의미를 구분해야 한다.
 
 이 절의 기준 출처: [@debezium-docs; @kafka-docs].
 
-### 학습 목표
+#### 학습 목표
 
 - DB 변경을 이벤트로 전달하는 안전한 경로를 설계한다.
 - outbox와 CDC의 원자성 경계를 설명한다.
 - saga의 보상·timeout·관찰 가능성을 구현한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - DB commit과 event publish를 별도 dual write로 수행하지 않는다.
 - outbox는 업무 상태와 발행할 record를 같은 local transaction에 저장한다.
@@ -59,7 +59,7 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2027-02-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -71,43 +71,43 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### Domain event
+#### Domain event
 
 도메인에서 이미 발생한 사실을 과거형으로 표현한 record다.
 
-### Command
+#### Command
 
 특정 수신자에게 작업 수행을 요청하며 거부될 수 있다.
 
-### Transactional outbox
+#### Transactional outbox
 
 업무 변경과 발행 record를 같은 DB transaction에 저장하는 패턴이다.
 
-### CDC
+#### CDC
 
 database change log를 읽어 삽입·수정·삭제를 event stream으로 전달하는 방식이다.
 
-### Saga
+#### Saga
 
 여러 local transaction과 보상 action을 순서·이벤트로 조정하는 장기 업무 과정이다.
 
-### Orchestration
+#### Orchestration
 
 중앙 coordinator가 다음 단계와 보상을 결정한다.
 
-### Choreography
+#### Choreography
 
 서비스들이 event에 반응해 분산적으로 다음 단계를 진행한다.
 
-### Reconciliation
+#### Reconciliation
 
 최종 상태와 원장 증거를 비교해 누락·불일치를 찾는 과정이다.
 
 핵심 개념의 정의와 범위는 [@debezium-docs; @kafka-docs; @saga-paper]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -160,7 +160,7 @@ spec_file: assets/specs/svg/fig-ch24-01.md
 > 대체 텍스트: 서비스 transaction이 업무 row와 outbox를 커밋하고 CDC·broker·inbox로 전달되는 흐름을 보여준다.
 
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 업무 service가 상태 변경과 outbox insert를 한 transaction으로 커밋한다.
 2. CDC가 log position을 보존하며 outbox row를 event로 변환한다.
@@ -172,7 +172,7 @@ spec_file: assets/specs/svg/fig-ch24-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -183,7 +183,7 @@ spec_file: assets/specs/svg/fig-ch24-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@debezium-docs; @kafka-docs; @saga-paper]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -233,7 +233,7 @@ spec_file: assets/specs/svg/fig-ch24-02.md
 > 대체 텍스트: 주문·재고·결제 단계의 성공·실패·timeout·보상 상태 전이를 보여준다.
 
 
-## 확장 전략
+### 확장 전략
 
 - aggregate key와 event partition을 맞춰 필요한 순서만 유지한다.
 - CDC connector와 broker를 scale-out하기 전에 DB log retention과 source I/O를 확인한다.
@@ -242,7 +242,7 @@ spec_file: assets/specs/svg/fig-ch24-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - CDC 계정은 필요한 table/log 권한만 갖고 secret rotation을 지원한다.
 - event payload의 개인정보를 최소화하고 삭제·암호화·retention 정책을 적용한다.
@@ -251,7 +251,7 @@ spec_file: assets/specs/svg/fig-ch24-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -263,7 +263,7 @@ spec_file: assets/specs/svg/fig-ch24-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - outbox/CDC는 broker·connector·storage·on-call 비용을 추가한다.
 - saga는 lock을 오래 잡지 않지만 상태 기계·보상·수동 처리 비용을 만든다.
@@ -271,14 +271,14 @@ spec_file: assets/specs/svg/fig-ch24-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - dual write에 재시도만 추가해 안전하다고 생각한다.
 - DB row 변경을 그대로 domain event로 공개한다.
 - 보상을 원래 transaction의 완전한 rollback으로 가정한다.
 - choreography가 중앙 결합이 없으니 항상 단순하다고 생각한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 업무 commit과 event 생성이 같은 원자 경계에 있는가?
 - [ ] event가 사실·명령·통지 중 무엇인지 명확한가?
@@ -288,13 +288,13 @@ spec_file: assets/specs/svg/fig-ch24-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 주문·결제·재고 saga를 orchestration 상태 기계로 설계하라.
 2. DB schema 변경과 event schema 변경을 분리하는 envelope을 작성하라.
 3. outbox dispatcher가 같은 row를 두 번 발행해도 안전한 consumer를 설계하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - 이벤트 아키텍처도 local transaction을 필요로 한다.
 - outbox는 상태 변경과 발행 record를 원자적으로 저장한다.
@@ -302,7 +302,7 @@ spec_file: assets/specs/svg/fig-ch24-02.md
 - saga 보상은 새로운 업무 action이다.
 - end-to-end reconciliation과 수동 개입이 필수다.
 
-## 출처
+### 출처
 
 - [@debezium-docs] Debezium Authors. **Debezium Documentation** (2026). https://debezium.io/documentation/reference/stable/
 - [@kafka-docs] Apache Software Foundation. **Apache Kafka Documentation** (2026). https://kafka.apache.org/documentation/

@@ -1,4 +1,4 @@
-# 부록 C. 이미지 제작과 검수 흐름
+## 부록 C. 이미지 제작과 검수 흐름
 
 1. 본문의 `figure-spec`과 `manifests/assets.yaml`이 일치하는지 확인한다.
 2. 기술도는 `assets/specs/svg/`의 프롬프트로 순수 SVG를 생성한다.

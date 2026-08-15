@@ -34,23 +34,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 16. REST·gRPC·GraphQL·WebSocket·SSE
+## 16. REST·gRPC·GraphQL·WebSocket·SSE
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 REST, gRPC, GraphQL, WebSocket, SSE는 서로를 완전히 대체하는 경쟁 제품이 아니다. 자원 중심 공개 API, 타입이 강한 내부 RPC, 클라이언트 조합 조회, 양방향 실시간 연결, 서버 단방향 이벤트라는 서로 다른 상호작용을 해결한다.
 
 이 절의 기준 출처: [@rfc9110; @grpc-core].
 
-### 학습 목표
+#### 학습 목표
 
 - 요청·스트리밍·구독 패턴에 맞춰 통신 방식을 선택한다.
 - deadline·취소·버전·오류 계약을 protocol보다 먼저 설계한다.
 - 실시간 연결의 재연결·순서·backpressure를 다룬다.
 
-## 먼저 결론
+### 먼저 결론
 
 - protocol 이름보다 호출 방향, 메시지 빈도, 연결 수명, 브라우저 지원, 캐시, 실패 복구 요구를 먼저 적는다.
 - deadline·취소·idempotency·오류 의미는 어떤 protocol에서도 필요하다.
@@ -61,7 +61,7 @@ REST, gRPC, GraphQL, WebSocket, SSE는 서로를 완전히 대체하는 경쟁 �
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2027-02-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -73,39 +73,39 @@ REST, gRPC, GraphQL, WebSocket, SSE는 서로를 완전히 대체하는 경쟁 �
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### REST 스타일
+#### REST 스타일
 
 HTTP method와 resource representation을 활용하는 API 설계 방식이다.
 
-### gRPC
+#### gRPC
 
 IDL 기반 service/method와 unary·streaming RPC를 제공한다.
 
-### GraphQL
+#### GraphQL
 
 클라이언트가 schema의 field를 선택해 query/mutation/subscription을 수행한다.
 
-### WebSocket
+#### WebSocket
 
 HTTP handshake 후 양방향 message channel을 제공한다.
 
-### SSE
+#### SSE
 
 HTTP response를 유지하며 서버가 text event stream을 단방향 전송한다.
 
-### Deadline propagation
+#### Deadline propagation
 
 상위 요청의 남은 시간을 하위 호출에 전달하는 계약이다.
 
-### Resume token
+#### Resume token
 
 재연결 시 마지막으로 처리한 위치에서 이어받기 위한 cursor·event ID다.
 
 핵심 개념의 정의와 범위는 [@rfc9110; @grpc-core; @graphql-spec; @rfc6455; @html-sse]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -160,7 +160,7 @@ spec_file: assets/specs/svg/fig-ch16-01.md
 > 대체 텍스트: unary·server streaming·client streaming·bidirectional과 REST/gRPC/GraphQL/WebSocket/SSE의 적합도를 비교한다.
 
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 클라이언트의 상호작용 패턴을 unary·server stream·client stream·bidirectional로 분류한다.
 2. 공개·내부·브라우저 경계에 맞는 protocol을 선택한다.
@@ -172,7 +172,7 @@ spec_file: assets/specs/svg/fig-ch16-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -183,7 +183,7 @@ spec_file: assets/specs/svg/fig-ch16-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@rfc9110; @grpc-core; @graphql-spec]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -233,7 +233,7 @@ spec_file: assets/specs/svg/fig-ch16-02.md
 > 대체 텍스트: 실시간 연결 단절 후 cursor·replay window·deduplication으로 이어받는 흐름을 보여준다.
 
 
-## 확장 전략
+### 확장 전략
 
 - realtime connection state를 stateless gateway와 shared subscription index로 분리한다.
 - fan-out은 연결별 반복 DB query 대신 event backbone과 batch delivery를 사용한다.
@@ -242,7 +242,7 @@ spec_file: assets/specs/svg/fig-ch16-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - field·method 단위 권한을 schema와 함께 검증한다.
 - WebSocket upgrade 이후에도 token 만료·권한 변경을 재평가한다.
@@ -251,7 +251,7 @@ spec_file: assets/specs/svg/fig-ch16-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -263,7 +263,7 @@ spec_file: assets/specs/svg/fig-ch16-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - IDL/codegen은 개발 효율을 높이지만 다언어 toolchain 유지 비용이 있다.
 - 실시간 연결은 요청 수보다 동시 연결·메모리·egress 비용이 중요하다.
@@ -271,14 +271,14 @@ spec_file: assets/specs/svg/fig-ch16-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - 모든 내부 호출을 REST로 해야 단순하다고 단정한다.
 - GraphQL 하나로 서비스 경계를 대체한다.
 - WebSocket이면 메시지가 자동으로 내구성 있고 순서 보장된다고 생각한다.
 - streaming API에 deadline과 backpressure를 두지 않는다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 상호작용 방향과 연결 수명이 protocol 선택 근거인가?
 - [ ] 오류·deadline·취소·idempotency가 계약에 포함됐는가?
@@ -288,13 +288,13 @@ spec_file: assets/specs/svg/fig-ch16-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 배송 진행 상태를 SSE와 WebSocket으로 각각 설계하고 선택 근거를 쓰라.
 2. GraphQL query 하나가 1만 개 DB 호출을 만드는 경로를 비용 모델로 차단하라.
 3. gRPC deadline이 REST gateway를 거쳐 하위 서비스까지 전달되는 규칙을 정의하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - 통신 방식은 상호작용 패턴에 맞춰 선택한다.
 - deadline·오류·idempotency는 protocol 공통 계약이다.
@@ -302,7 +302,7 @@ spec_file: assets/specs/svg/fig-ch16-02.md
 - 실시간 연결은 단절·resume·중복을 정상 조건으로 처리한다.
 - schema compatibility는 배포 전 자동 검증한다.
 
-## 출처
+### 출처
 
 - [@rfc9110] IETF. **RFC 9110 — HTTP Semantics** (2022). https://www.rfc-editor.org/rfc/rfc9110.html
 - [@grpc-core] gRPC Authors. **gRPC Core Concepts** (2026). https://grpc.io/docs/what-is-grpc/core-concepts/

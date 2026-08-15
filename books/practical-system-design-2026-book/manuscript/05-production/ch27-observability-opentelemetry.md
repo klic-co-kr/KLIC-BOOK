@@ -33,23 +33,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 27. Metrics·Logs·Traces와 OpenTelemetry
+## 27. Metrics·Logs·Traces와 OpenTelemetry
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 관측 가능성은 telemetry를 많이 저장하는 것이 아니라 내부 상태를 외부 신호로 설명할 수 있게 만드는 능력이다. SLO와 장애 질문에서 출발해 metrics, logs, traces를 최소한으로 연결하고, correlation ID와 semantic convention을 일관되게 사용해야 한다.
 
 이 절의 기준 출처: [@otel-spec; @w3c-trace-context].
 
-### 학습 목표
+#### 학습 목표
 
 - metrics·logs·traces의 서로 다른 질문을 구분한다.
 - OpenTelemetry 계측·수집·export 경계를 설계한다.
 - cardinality·sampling·민감 데이터 비용을 통제한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - metrics는 집계 추세, logs는 개별 사건, traces는 분산 요청의 인과 경로에 강하다.
 - OpenTelemetry는 계측과 telemetry 파이프라인의 vendor-neutral 경계를 제공하지만 backend·보존·경보 설계까지 자동으로 결정하지 않는다.
@@ -60,7 +60,7 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2027-02-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -107,43 +107,43 @@ spec_file: assets/specs/charts/chart-ch27-01.md
 > 대체 텍스트: label dimension을 추가할 때 조합 가능한 time series 수가 곱셈으로 증가하는 모습을 보여준다.
 
 
-## 핵심 개념
+### 핵심 개념
 
-### Metric
+#### Metric
 
 시간에 따른 수치 집계로 rate·histogram·gauge 등을 표현한다.
 
-### Log
+#### Log
 
 특정 시점의 구조화된 사건 record다.
 
-### Trace
+#### Trace
 
 하나의 분산 작업을 span과 parent-child 관계로 표현한다.
 
-### Context propagation
+#### Context propagation
 
 trace ID, baggage, deadline 같은 context를 hop 사이 전달하는 과정이다.
 
-### Collector
+#### Collector
 
 telemetry를 수신·처리·batch·filter·export하는 구성 요소다.
 
-### Cardinality
+#### Cardinality
 
 label/attribute 값 조합의 수로 metric storage와 query 비용에 큰 영향을 준다.
 
-### Sampling
+#### Sampling
 
 전체 trace 중 일부를 선택하는 정책으로 head·tail·rule-based 방식이 있다.
 
-### Semantic convention
+#### Semantic convention
 
 HTTP, DB, messaging 등 공통 attribute 이름과 의미를 정의하는 규칙이다.
 
 핵심 개념의 정의와 범위는 [@otel-spec; @w3c-trace-context; @google-sre-slo]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -197,7 +197,7 @@ spec_file: assets/specs/svg/fig-ch27-01.md
 > 대체 텍스트: 애플리케이션 instrumentation에서 collector 처리와 metrics/logs/traces backend로 가는 흐름을 보여준다.
 
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 사용자 여정과 장애 질문에서 필요한 신호를 정한다.
 2. 공통 resource·service·deployment 식별자를 정의한다.
@@ -209,7 +209,7 @@ spec_file: assets/specs/svg/fig-ch27-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -219,7 +219,7 @@ spec_file: assets/specs/svg/fig-ch27-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@otel-spec; @w3c-trace-context; @google-sre-slo]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -268,7 +268,7 @@ spec_file: assets/specs/svg/fig-ch27-02.md
 > 대체 텍스트: SLO 경보에서 exemplar·trace·span log·deployment change로 조사하는 경로를 보여준다.
 
 
-## 확장 전략
+### 확장 전략
 
 - collector를 지역·cluster 단위로 계층화하되 제어 설정과 pipeline version을 관리한다.
 - high-volume signal은 aggregation·sampling·short retention을 사용한다.
@@ -277,7 +277,7 @@ spec_file: assets/specs/svg/fig-ch27-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - telemetry는 운영 데이터이지만 개인정보·비밀·인증 token을 포함할 수 있어 별도 보안 영역으로 다룬다.
 - collector와 backend 사이를 인증·암호화하고 tenant 접근을 분리한다.
@@ -286,7 +286,7 @@ spec_file: assets/specs/svg/fig-ch27-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -299,7 +299,7 @@ spec_file: assets/specs/svg/fig-ch27-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - observability 비용은 ingest×retention×index cardinality×query로 커진다.
 - 모든 trace를 영구 저장하기보다 목적별 sampling과 tiered retention을 사용한다.
@@ -307,14 +307,14 @@ spec_file: assets/specs/svg/fig-ch27-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - 로그가 많으면 관측 가능하다고 생각한다.
 - 모든 값을 metric label로 넣는다.
 - trace sampling을 각 서비스가 독립 결정한다.
 - telemetry pipeline 실패가 서비스 요청을 실패시키게 한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 각 signal이 답하려는 운영 질문이 명확한가?
 - [ ] SLO에서 trace·log로 내려가는 조사 경로가 있는가?
@@ -324,13 +324,13 @@ spec_file: assets/specs/svg/fig-ch27-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 사용자 ID를 metric label로 쓰지 않고 고객별 장애를 조사하는 방식을 설계하라.
 2. 비동기 queue consumer trace를 producer trace와 link하는 context를 설계하라.
 3. 월 telemetry 예산을 기준으로 trace sampling·retention 정책을 작성하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - metrics·logs·traces는 서로 다른 질문에 답한다.
 - OpenTelemetry는 계측·수집 경계를 표준화한다.
@@ -338,7 +338,7 @@ spec_file: assets/specs/svg/fig-ch27-02.md
 - context propagation이 end-to-end 인과 관계를 만든다.
 - telemetry 자체도 장애·보안·SLO 대상이다.
 
-## 출처
+### 출처
 
 - [@otel-spec] OpenTelemetry Authors. **OpenTelemetry Specification** (2026). https://opentelemetry.io/docs/specs/otel/
 - [@w3c-trace-context] W3C. **Trace Context** (2021). https://www.w3.org/TR/trace-context/

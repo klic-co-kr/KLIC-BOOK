@@ -35,23 +35,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 32. LLM Inference·Batching·KV Cache·Model Routing
+## 32. LLM Inference·Batching·KV Cache·Model Routing
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 LLM 서빙의 병목은 단순히 GPU 연산량 하나가 아니다. 입력 token을 처리하는 prefill과 token을 순차 생성하는 decode는 자원 특성이 다르고, 각 요청의 KV cache가 동적으로 메모리를 점유한다. scheduler와 routing이 품질·지연·처리량·비용을 함께 결정한다.
 
 이 절의 기준 출처: [@vllm-paper; @orca-paper].
 
-### 학습 목표
+#### 학습 목표
 
 - LLM 추론을 prefill·decode·KV cache·scheduler로 설명한다.
 - continuous batching과 memory pressure의 trade-off를 이해한다.
 - model routing·fallback·capacity를 품질·지연·비용으로 설계한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - time-to-first-token과 inter-token latency를 전체 latency에서 분리한다.
 - batch 크기를 고정하지 않고 도착·sequence 길이·deadline에 따라 연속적으로 관리한다.
@@ -62,7 +62,7 @@ LLM 서빙의 병목은 단순히 GPU 연산량 하나가 아니다. 입력 toke
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2026-11-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -109,47 +109,47 @@ spec_file: assets/specs/charts/chart-ch32-01.md
 > 제작 명세: `assets/specs/charts/chart-ch32-01.md`  
 > 대체 텍스트: 입력 sequence 길이 증가가 KV cache 점유와 TTFT·unit cost를 어떻게 키우는지 개념적으로 보여준다.
 
-## 핵심 개념
+### 핵심 개념
 
-### Prefill
+#### Prefill
 
 입력 token 전체를 처리해 첫 KV 상태와 첫 출력 준비를 만드는 단계다.
 
-### Decode
+#### Decode
 
 기존 KV cache를 재사용하며 token을 하나씩 생성하는 단계다.
 
-### KV cache
+#### KV cache
 
 attention의 과거 key/value를 요청·layer별로 보존해 반복 계산을 줄이는 메모리다.
 
-### Continuous batching
+#### Continuous batching
 
 완료된 요청을 batch에서 빼고 새 요청을 즉시 넣으며 decode iteration을 공유하는 scheduling이다.
 
-### TTFT
+#### TTFT
 
 요청부터 첫 token까지의 시간이다.
 
-### ITL/TPOT
+#### ITL/TPOT
 
 출력 token 사이 지연 또는 token당 시간이다.
 
-### Model router
+#### Model router
 
 요청 특성·품질·비용·capacity에 따라 model/endpoint를 선택한다.
 
-### Speculative decoding
+#### Speculative decoding
 
 작은 모델이 제안한 token을 큰 모델이 검증해 decode 속도를 높이는 계열의 방법이다.
 
-### Admission control
+#### Admission control
 
 예상 token·memory·deadline으로 요청을 수락·queue·거부하는 정책이다.
 
 핵심 개념의 정의와 범위는 [@vllm-paper; @orca-paper; @nist-genai-profile]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -203,7 +203,7 @@ spec_file: assets/specs/svg/fig-ch32-01.md
 > 제작 명세: `assets/specs/svg/fig-ch32-01.md`  
 > 대체 텍스트: gateway·router·prefill queue·decode scheduler·GPU worker·KV cache·streaming response를 보여준다.
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. gateway가 auth·quota·max input/output token을 검증한다.
 2. router가 task class·quality tier·deadline·capacity를 평가한다.
@@ -216,7 +216,7 @@ spec_file: assets/specs/svg/fig-ch32-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -227,7 +227,7 @@ spec_file: assets/specs/svg/fig-ch32-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@vllm-paper; @orca-paper; @nist-genai-profile]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -277,7 +277,7 @@ spec_file: assets/specs/svg/fig-ch32-02.md
 > 제작 명세: `assets/specs/svg/fig-ch32-02.md`  
 > 대체 텍스트: task risk·quality threshold·latency·cost·capacity에 따라 model과 fallback을 선택하는 decision flow를 보여준다.
 
-## 확장 전략
+### 확장 전략
 
 - request count보다 input/output token과 sequence length 분포로 capacity를 계획한다.
 - prefill-heavy와 decode-heavy workload를 분리하거나 scheduler weight를 다르게 둔다.
@@ -287,7 +287,7 @@ spec_file: assets/specs/svg/fig-ch32-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - prompt·output·KV·cache에 tenant 민감 데이터가 남는 수명과 격리를 명시한다.
 - model endpoint와 tool access 권한을 분리하고 route 결과가 보안 정책을 낮추지 않게 한다.
@@ -296,7 +296,7 @@ spec_file: assets/specs/svg/fig-ch32-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -309,7 +309,7 @@ spec_file: assets/specs/svg/fig-ch32-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - GPU cost는 할당 시간과 utilization뿐 아니라 idle floor·model load·replica redundancy로 결정된다.
 - 긴 output은 decode 시간과 egress·사용자 대기를 동시에 늘린다.
@@ -318,14 +318,14 @@ spec_file: assets/specs/svg/fig-ch32-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - GPU utilization 하나로 사용자 성능을 판단한다.
 - batch를 크게 하면 항상 처리량과 지연이 모두 좋아진다고 생각한다.
 - 요청 수만으로 capacity를 계산하고 token 길이를 무시한다.
 - router가 평가 없이 가장 싼 model을 선택하게 한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] TTFT와 ITL SLO가 분리됐는가?
 - [ ] token·KV memory 기반 admission이 있는가?
@@ -335,13 +335,13 @@ spec_file: assets/specs/svg/fig-ch32-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 동시 요청 100개가 각각 input 8K, output 1K일 때 KV cache와 latency 위험을 정성적으로 분석하라.
 2. prefill-heavy 문서 요약과 decode-heavy 채팅을 같은 cluster에서 scheduling하는 정책을 설계하라.
 3. 고위험 법률 질문은 큰 model, 일반 FAQ는 작은 model로 route하는 평가 gate를 작성하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - LLM inference는 prefill과 decode의 자원 특성이 다르다.
 - KV cache가 동시성과 sequence 길이 한계를 결정한다.
@@ -349,7 +349,7 @@ spec_file: assets/specs/svg/fig-ch32-02.md
 - model routing은 품질 threshold 안에서 비용을 최적화한다.
 - token·memory·취소를 admission과 관측에 포함한다.
 
-## 출처
+### 출처
 
 - [@vllm-paper] Woosuk Kwon et al.. **Efficient Memory Management for Large Language Model Serving with PagedAttention** (2023). https://arxiv.org/abs/2309.06180
 - [@orca-paper] Gyeong-In Yu et al.. **Orca: A Distributed Serving System for Transformer-Based Generative Models** (2022). https://www.usenix.org/conference/osdi22/presentation/yu

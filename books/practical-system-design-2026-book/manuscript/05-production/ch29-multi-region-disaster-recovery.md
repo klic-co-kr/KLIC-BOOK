@@ -33,30 +33,30 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 29. Multi-region·Backup·재해 복구
+## 29. Multi-region·Backup·재해 복구
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 다중 리전은 backup을 대체하지 않고 backup도 즉시 failover를 제공하지 않는다. 인프라 장애, 리전 장애, 운영 실수, 논리적 데이터 손상, 자격증명 침해는 서로 다른 복구 수단과 증거를 요구한다.
 
 이 절의 기준 출처: [@nist-contingency; @google-sre-book].
 
-### 학습 목표
+#### 학습 목표
 
 - RTO·RPO를 사용자 여정과 데이터별로 정의한다.
 - multi-region active/standby·active/active를 비교한다.
 - backup·restore·failover·failback을 반복 검증한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - RTO는 서비스 복구 시간, RPO는 허용 가능한 데이터 손실 시점이다.
 - 복제는 최신 상태를 빠르게 전달하지만 잘못된 삭제와 오염도 복제한다.
 - backup은 운영 계정·region·자격증명과 독립돼야 한다.
 - DR 계획은 트래픽 전환 후 데이터 검증·외부 의존성·failback까지 포함한다.
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -102,43 +102,43 @@ spec_file: assets/specs/charts/chart-ch29-01.md
 > 대체 텍스트: backup/restore, pilot light, warm standby, active-active를 상대 RTO와 정상 비용으로 비교한다.
 
 
-## 핵심 개념
+### 핵심 개념
 
-### RTO
+#### RTO
 
 중단 후 허용 가능한 서비스 복구 시간 목표다.
 
-### RPO
+#### RPO
 
 복구 시 허용 가능한 데이터 손실 시점 목표다.
 
-### Backup
+#### Backup
 
 운영 상태와 분리된 복구용 데이터 사본이다.
 
-### PITR
+#### PITR
 
 log와 base snapshot을 이용해 특정 시점으로 복구하는 방식이다.
 
-### Active/Standby
+#### Active/Standby
 
 한 region이 주 처리하고 다른 region이 대기한다.
 
-### Active/Active
+#### Active/Active
 
 둘 이상의 region이 동시에 사용자 요청을 처리한다.
 
-### Failback
+#### Failback
 
 비상 region에서 정상 배치로 돌아가며 데이터·트래픽을 다시 정렬하는 과정이다.
 
-### Recovery dependency
+#### Recovery dependency
 
 DNS, IdP, KMS, CI, 연락망처럼 복구에 필요한 외부·제어 구성 요소다.
 
 핵심 개념의 정의와 범위는 [@nist-contingency; @google-sre-book]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -190,7 +190,7 @@ spec_file: assets/specs/svg/fig-ch29-01.md
 > 대체 텍스트: pilot light·warm standby·active-active를 RTO·RPO·비용·복잡도로 비교한다.
 
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 여정·데이터별 RTO/RPO tier를 정한다.
 2. 각 실패 유형에 failover·restore·rebuild 중 수단을 매핑한다.
@@ -202,7 +202,7 @@ spec_file: assets/specs/svg/fig-ch29-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -212,7 +212,7 @@ spec_file: assets/specs/svg/fig-ch29-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@nist-contingency; @google-sre-book]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -260,7 +260,7 @@ spec_file: assets/specs/svg/fig-ch29-02.md
 > 대체 텍스트: 장애 선언·쓰기 차단·restore/승격·검증·traffic 전환·failback 순서를 보여준다.
 
 
-## 확장 전략
+### 확장 전략
 
 - DR 용량은 정상 평균이 아니라 장애 시 합류 트래픽과 복구 작업을 합쳐 계산한다.
 - backup restore throughput이 데이터 증가를 따라가는지 정기 측정한다.
@@ -269,7 +269,7 @@ spec_file: assets/specs/svg/fig-ch29-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - backup vault의 삭제·retention 변경 권한을 운영 admin과 분리한다.
 - ransomware·credential compromise 시나리오에서 독립 계정과 offline recovery credential을 검증한다.
@@ -278,7 +278,7 @@ spec_file: assets/specs/svg/fig-ch29-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -290,7 +290,7 @@ spec_file: assets/specs/svg/fig-ch29-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - 다중 region은 compute·storage·replication egress·운영 인력 비용을 크게 늘린다.
 - backup 보존 기간과 restore 속도는 storage tier·index·catalog 비용을 교환한다.
@@ -298,14 +298,14 @@ spec_file: assets/specs/svg/fig-ch29-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - replica가 있으니 backup이 필요 없다고 생각한다.
 - RTO/RPO를 모든 데이터에 한 숫자로 적는다.
 - DNS 전환만 DR 완료로 본다.
 - restore 성공 여부를 파일 존재로만 판단하고 애플리케이션 검증을 하지 않는다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 실패 유형별 복구 수단이 구분됐는가?
 - [ ] RTO/RPO가 실제 restore/failover 결과로 입증되는가?
@@ -315,13 +315,13 @@ spec_file: assets/specs/svg/fig-ch29-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 주문 DB의 5분 RPO, 검색 index의 24시간 RPO를 각각 복구 설계하라.
 2. 잘못된 DELETE가 20분 뒤 발견됐을 때 PITR과 신규 쓰기 보존 절차를 작성하라.
 3. warm standby를 분기마다 시험할 게임데이 체크리스트를 만들라.
 
-## 핵심 요약
+### 핵심 요약
 
 - 복제·backup·DR은 서로 다른 실패를 담당한다.
 - RTO/RPO는 사용자 여정과 데이터별로 정한다.
@@ -329,7 +329,7 @@ spec_file: assets/specs/svg/fig-ch29-02.md
 - restore는 업무 불변조건으로 검증한다.
 - failover 후 failback까지 하나의 절차다.
 
-## 출처
+### 출처
 
 - [@nist-contingency] NIST. **NIST SP 800-34 Rev. 1 — Contingency Planning Guide for Federal Information Systems** (2010). https://csrc.nist.gov/pubs/sp/800/34/r1/final
 - [@google-sre-book] Google. **Site Reliability Engineering** (2016). https://sre.google/sre-book/table-of-contents/

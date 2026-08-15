@@ -32,23 +32,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 14. L4/L7 Load Balancing·Proxy·Gateway
+## 14. L4/L7 Load Balancing·Proxy·Gateway
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 트래픽 분산 계층은 단순한 round-robin 장치가 아니다. 연결과 요청의 수명, 건강 상태, 정책, 재시도, TLS, 헤더 신뢰, 배포 전환을 다루기 때문에 계층을 늘릴 때마다 책임과 중복 기능을 명확히 해야 한다.
 
 이 절의 기준 출처: [@rfc9110; @rfc9112].
 
-### 학습 목표
+#### 학습 목표
 
 - L4와 L7 분산의 관측·정책 차이를 설명한다.
 - reverse proxy·API gateway·service proxy의 책임을 구분한다.
 - 건강 검사·connection draining·재시도가 장애에 미치는 영향을 설계한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - L4는 연결 단위, L7은 HTTP 요청 의미를 활용해 라우팅한다.
 - health check 통과와 실제 사용자 요청 성공은 다를 수 있다.
@@ -59,7 +59,7 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2027-02-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -71,39 +71,39 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### L4 load balancing
+#### L4 load balancing
 
 IP·포트·연결 정보를 중심으로 전달한다.
 
-### L7 load balancing
+#### L7 load balancing
 
 Host, path, method, header 등 애플리케이션 프로토콜 정보를 활용한다.
 
-### Reverse proxy
+#### Reverse proxy
 
 서버 앞에서 연결 종료·라우팅·캐시·정책을 수행한다.
 
-### API gateway
+#### API gateway
 
 외부 API의 인증, quota, 버전, routing, 변환 같은 공통 경계를 제공한다.
 
-### Connection draining
+#### Connection draining
 
 배포·제거 중 신규 연결을 막고 기존 요청을 제한 시간 동안 마치는 절차다.
 
-### Passive health
+#### Passive health
 
 실제 요청 오류를 건강 판단에 반영하는 방식이다.
 
-### Outlier detection
+#### Outlier detection
 
 비정상 endpoint를 일시 격리하는 정책이다.
 
 핵심 개념의 정의와 범위는 [@rfc9110; @rfc9112; @google-sre-overload]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -155,7 +155,7 @@ spec_file: assets/specs/svg/fig-ch14-01.md
 > 대체 텍스트: 전역 ingress·L7 gateway·L4 balancer·service proxy·endpoint의 책임을 계층별로 보여준다.
 
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 연결이 L4 또는 L7 ingress에 도착한다.
 2. TLS 종료 위치와 client identity 전달 방식을 결정한다.
@@ -167,7 +167,7 @@ spec_file: assets/specs/svg/fig-ch14-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -177,7 +177,7 @@ spec_file: assets/specs/svg/fig-ch14-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@rfc9110; @rfc9112; @google-sre-overload]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -226,7 +226,7 @@ spec_file: assets/specs/svg/fig-ch14-02.md
 > 대체 텍스트: 배포 중 endpoint 제외·기존 연결 drain·deadline 대기·강제 종료 순서를 보여준다.
 
 
-## 확장 전략
+### 확장 전략
 
 - 연결 수와 요청 수를 모두 고려해 endpoint 부하를 계산한다.
 - long-lived connection은 신규 endpoint에 자동 재분배되지 않으므로 reconnect 정책을 둔다.
@@ -235,7 +235,7 @@ spec_file: assets/specs/svg/fig-ch14-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - TLS 종료 지점마다 평문 구간과 키 보유 범위를 기록한다.
 - gateway 인증 결과를 서명·mTLS·짧은 수명 토큰으로 하위에 전달한다.
@@ -244,7 +244,7 @@ spec_file: assets/specs/svg/fig-ch14-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -256,7 +256,7 @@ spec_file: assets/specs/svg/fig-ch14-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - proxy hop은 컴퓨팅·TLS·네트워크 비용을 추가한다.
 - 중복 gateway·mesh 기능은 라이선스보다 설정·디버깅 인력 비용이 더 클 수 있다.
@@ -264,14 +264,14 @@ spec_file: assets/specs/svg/fig-ch14-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - L4와 L7을 “빠름/느림” 한 문장으로만 비교한다.
 - 모든 공통 로직을 gateway에 넣는다.
 - health check endpoint 하나로 실제 사용자 경로를 대표한다.
 - 재시도와 timeout을 각 계층이 독립 설정한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] 각 proxy 계층의 단일 책임이 명확한가?
 - [ ] TLS와 identity 신뢰 경계가 hop별로 문서화됐는가?
@@ -281,13 +281,13 @@ spec_file: assets/specs/svg/fig-ch14-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. WebSocket 서비스의 L4/L7 분산과 배포 drain 절차를 설계하라.
 2. client·gateway·service가 모두 3회 재시도할 때 최대 시도 수를 계산하고 단일 retry budget으로 바꾸라.
 3. 신뢰할 수 있는 client IP 전달 헤더 체인을 설계하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - L4는 연결, L7은 요청 의미를 중심으로 분산한다.
 - proxy 계층마다 책임과 재시도 소유자를 하나로 둔다.
@@ -295,7 +295,7 @@ spec_file: assets/specs/svg/fig-ch14-02.md
 - 배포에는 endpoint 제거와 connection draining이 필요하다.
 - 전달 헤더와 TLS 종료는 보안 경계다.
 
-## 출처
+### 출처
 
 - [@rfc9110] IETF. **RFC 9110 — HTTP Semantics** (2022). https://www.rfc-editor.org/rfc/rfc9110.html
 - [@rfc9112] IETF. **RFC 9112 — HTTP/1.1** (2022). https://www.rfc-editor.org/rfc/rfc9112.html

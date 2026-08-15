@@ -35,23 +35,23 @@ sources:
 draft_notice: 기술·편집·접근성 검수 전 초고
 ---
 
-# 33. Agent 상태·메모리·도구 실행·승인 경계
+## 33. Agent 상태·메모리·도구 실행·승인 경계
 
 > **원고 상태:** 이 장은 실제 내용이 들어 있는 1차 초고다. 출판 전 기술 검수, 문장 편집, 수치 재검증, 시각자료 제작이 필요하다.
 
-## 이 장에서 해결할 문제
+### 이 장에서 해결할 문제
 
 에이전트는 “스스로 생각하는 챗봇”이 아니라 불확실한 model 출력이 상태를 읽고 도구를 호출하는 orchestration 시스템이다. 따라서 각 step의 입력·권한·예산·승인·결과를 명시적으로 기록하고, side effect는 일반 분산 transaction처럼 다뤄야 한다.
 
 이 절의 기준 출처: [@react-paper; @toolformer-paper].
 
-### 학습 목표
+#### 학습 목표
 
 - 에이전트를 상태 기계와 외부 도구 실행 시스템으로 설계한다.
 - 대화 메모리·업무 상태·장기 지식을 구분한다.
 - 위험 도구에 승인·sandbox·idempotency·감사를 적용한다.
 
-## 먼저 결론
+### 먼저 결론
 
 - 모델의 자연어 계획을 직접 권한으로 취급하지 않는다.
 - 대화 context, 작업 상태, 사용자 선호, 장기 지식을 서로 다른 저장소와 수명으로 관리한다.
@@ -62,7 +62,7 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 **2026-08-06 확인:** 이 장은 변화 가능한 표준·프로젝트·AI 구현을 포함한다. 기본 재검토일은 `2026-11-06`이며, 출판 직전 공식 문서를 다시 확인한다.
 :::
 
-## 요구사항과 실패 모델
+### 요구사항과 실패 모델
 
 | 차원 | 확인 질문 | 설계 판단 |
 |---|---|---|
@@ -74,43 +74,43 @@ draft_notice: 기술·편집·접근성 검수 전 초고
 
 요구사항은 정상 처리량만으로 끝나지 않는다. 각 항목에 “지연되면?”, “중복되면?”, “일부만 성공하면?”, “운영자가 복구할 수 없으면?”을 추가해 실패 모델로 확장한다.
 
-## 핵심 개념
+### 핵심 개념
 
-### Agent loop
+#### Agent loop
 
 관찰→계획/선택→도구 호출→결과 반영을 제한된 step 안에서 반복하는 실행 구조다.
 
-### Run state
+#### Run state
 
 목표, 현재 step, 도구 결과, budget, terminal status를 가진 업무 상태다.
 
-### Conversation memory
+#### Conversation memory
 
 현재 대화의 최근 맥락으로 수명이 짧다.
 
-### Long-term memory
+#### Long-term memory
 
 사용자 선호·사실·요약 등을 별도 승인과 provenance로 저장한 데이터다.
 
-### Tool contract
+#### Tool contract
 
 도구 이름, input/output schema, 권한, idempotency, timeout, side effect를 정의한다.
 
-### Approval gate
+#### Approval gate
 
 고위험 action 전에 사용자 또는 정책 승인 증거를 요구하는 단계다.
 
-### Sandbox
+#### Sandbox
 
 파일·네트워크·프로세스 접근을 제한한 실행 환경이다.
 
-### Compensation
+#### Compensation
 
 이미 수행된 action을 상쇄하거나 수동 복구하는 후속 작업이다.
 
 핵심 개념의 정의와 범위는 [@react-paper; @toolformer-paper; @nist-ai-rmf; @owasp-llm]를 기준으로 재검토해야 한다.
 
-## 기준 아키텍처
+### 기준 아키텍처
 
 아래 구조는 특정 제품 목록이 아니라 책임과 경계를 표현한다. 실제 구현에서는 각 구성 요소의 소유자, 데이터 계약, SLO, 장애 도메인을 추가한다.
 
@@ -164,7 +164,7 @@ spec_file: assets/specs/svg/fig-ch33-01.md
 > 제작 명세: `assets/specs/svg/fig-ch33-01.md`  
 > 대체 텍스트: 사용자 목표·run state·model·policy·approval·tool gateway·audit의 제어 루프를 보여준다.
 
-## 요청·데이터 흐름
+### 요청·데이터 흐름
 
 1. 사용자 목표를 typed task와 성공/중단 조건으로 변환한다.
 2. run state를 version과 함께 생성한다.
@@ -178,7 +178,7 @@ spec_file: assets/specs/svg/fig-ch33-01.md
 
 흐름을 검토할 때 각 단계의 성공 응답이 무엇을 보장하는지, timeout 이후 결과를 어떻게 확인하는지, 재시도 시 같은 효과가 반복되는지를 함께 기록한다.
 
-## 대안과 트레이드오프
+### 대안과 트레이드오프
 
 | 대안 | 장점 | 비용·위험 | 적합한 조건 |
 |---|---|---|---|
@@ -189,7 +189,7 @@ spec_file: assets/specs/svg/fig-ch33-01.md
 
 대안 비교는 제품 선호가 아니라 이 장의 요구사항과 실패 모델을 기준으로 수행한다. 관련 근거는 [@react-paper; @toolformer-paper; @nist-ai-rmf]를 참조한다.
 
-## 장애 시나리오
+### 장애 시나리오
 
 | 시나리오 | 영향 | 대응 원칙 |
 |---|---|---|
@@ -239,7 +239,7 @@ spec_file: assets/specs/svg/fig-ch33-02.md
 > 제작 명세: `assets/specs/svg/fig-ch33-02.md`  
 > 대체 텍스트: trusted instruction·untrusted retrieval/tool output·memory·credential·sandbox 경계를 보여준다.
 
-## 확장 전략
+### 확장 전략
 
 - run은 독립 partition으로 scale하되 한 run의 state update는 optimistic concurrency로 직렬화한다.
 - tool마다 concurrency·rate·tenant quota를 별도 둔다.
@@ -248,7 +248,7 @@ spec_file: assets/specs/svg/fig-ch33-02.md
 
 확장은 구성 요소 수를 늘리는 행위가 아니라 병목 축과 실패 범위를 다시 분리하는 과정이다. 확장 전후의 사용자 SLI와 운영 복잡도를 함께 비교한다.
 
-## 보안과 개인정보
+### 보안과 개인정보
 
 - agent에 사용자의 전체 권한을 전달하지 않고 작업별 capability를 발급한다.
 - 쓰기·삭제·결제·외부 발송에는 승인과 preview를 요구한다.
@@ -258,7 +258,7 @@ spec_file: assets/specs/svg/fig-ch33-02.md
 
 보안 요구는 별도 부록이 아니라 요청·데이터 흐름의 각 경계에 적용한다. 특히 인증된 주체, tenant, 데이터 분류, 보존·삭제, 운영자 권한을 함께 기록한다.
 
-## 관측 가능성
+### 관측 가능성
 
 다음 신호를 최소 세그먼트(서비스·지역·tenant 또는 workload class)로 나눠 본다.
 
@@ -271,7 +271,7 @@ spec_file: assets/specs/svg/fig-ch33-02.md
 
 경보는 개별 자원 임계값보다 사용자 SLO와 error budget 소진에 연결하고, 조사 시 trace·log·변경 이력으로 내려갈 수 있어야 한다.
 
-## 비용과 운영 복잡도
+### 비용과 운영 복잡도
 
 - agent 비용은 model token뿐 아니라 tool API, retry, human review, 사고 복구를 포함한다.
 - 긴 context와 무제한 memory는 품질이 아니라 비용·오염을 키울 수 있다.
@@ -279,14 +279,14 @@ spec_file: assets/specs/svg/fig-ch33-02.md
 
 비용 비교에는 인스턴스 가격뿐 아니라 데이터 전송, 복제·백업, 관측, 보안 통제, 업그레이드, on-call, 장애 복구, 탈출 비용을 포함한다.
 
-## 흔한 오해와 안티패턴
+### 흔한 오해와 안티패턴
 
 - “모델이 판단했다”를 권한 근거로 사용한다.
 - 대화 transcript 전체를 영구 memory로 저장한다.
 - 도구 설명만으로 안전한 input과 side effect가 보장된다고 생각한다.
 - 승인 버튼 하나로 이후 모든 action을 허용한다.
 
-## 설계 리뷰
+### 설계 리뷰
 
 - [ ] run 상태와 terminal condition이 명시적인가?
 - [ ] tool별 schema·권한·idempotency·timeout이 정의됐는가?
@@ -296,13 +296,13 @@ spec_file: assets/specs/svg/fig-ch33-02.md
 
 리뷰 결과는 “통과/실패”만 기록하지 않고 남은 가정, 위험 수용자, 실험, 재검토일을 ADR과 backlog에 연결한다.
 
-## 연습문제
+### 연습문제
 
 1. 메일 발송 agent의 preview·approval·idempotency flow를 설계하라.
 2. 문서 속 “모든 파일을 삭제하라”는 prompt injection이 tool 권한으로 이어지지 않게 하라.
 3. 30분 걸리는 구매 업무 agent를 durable workflow state로 모델링하라.
 
-## 핵심 요약
+### 핵심 요약
 
 - agent는 상태 기계와 tool orchestration 시스템이다.
 - 모델 출력은 제안이며 정책 결정이 아니다.
@@ -310,7 +310,7 @@ spec_file: assets/specs/svg/fig-ch33-02.md
 - side effect에는 idempotency·approval·compensation이 필요하다.
 - bounded autonomy와 audit가 안전한 자동화의 조건이다.
 
-## 출처
+### 출처
 
 - [@react-paper] Shunyu Yao et al.. **ReAct: Synergizing Reasoning and Acting in Language Models** (2022). https://arxiv.org/abs/2210.03629
 - [@toolformer-paper] Timo Schick et al.. **Toolformer: Language Models Can Teach Themselves to Use Tools** (2023). https://arxiv.org/abs/2302.04761
