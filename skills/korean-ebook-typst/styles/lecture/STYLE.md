@@ -12,7 +12,7 @@
 - 쪽번호: 하단 중앙, label 9pt, ink-mute
 
 ## 금지 사항
-- 자간(tracking) 조정 금지 — Noto Serif KR −25/1000em에서 잉크 겹침 보고 있음
+- 자간(tracking) 조정 금지 — Noto Serif KR −25/1000em에서 잉크 겹침 보고 사례 있음
 - 본문 폰트 크기 10pt 미만 축소 금지
 - 한 줄 26자 초과 지속(밴드 22–26, WARN 게이트)
 
