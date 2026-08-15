@@ -34,14 +34,14 @@ def test_assemble_copies_style_and_converts(tmp_path):
     assert (tmp_path / "build" / "tokens.json").exists()
     assert (tmp_path / "build" / "theme.typ").exists()
     assert (tmp_path / "build" / "base.typ").exists()
-    assert (tmp_path / "build" / "typ" / "ch01.typ").exists()
-    assert (tmp_path / "build" / "typ" / "ch02.typ").exists()
+    assert (tmp_path / "build" / "typ" / "000-ch01.typ").exists()
+    assert (tmp_path / "build" / "typ" / "001-ch02.typ").exists()
 
     text = main.read_text(encoding="utf-8")
     assert "#show: base" in text
     assert "#show: theme" in text
-    assert '#include "typ/ch01.typ"' in text
-    assert '#include "typ/ch02.typ"' in text
+    assert '#include "typ/000-ch01.typ"' in text
+    assert '#include "typ/001-ch02.typ"' in text
 
 
 def test_assemble_missing_chapter_aborts(tmp_path):
@@ -77,7 +77,7 @@ def test_assemble_preserves_chapter_order(tmp_path):
     main = assemble(cfg, tmp_path)
 
     text = main.read_text(encoding="utf-8")
-    assert text.index('#include "typ/ch02.typ"') < text.index('#include "typ/ch01.typ"')
+    assert text.index('#include "typ/000-ch02.typ"') < text.index('#include "typ/001-ch01.typ"')
 
 
 def test_assemble_removes_stale_typ_on_rebuild(tmp_path):
@@ -91,7 +91,7 @@ def test_assemble_removes_stale_typ_on_rebuild(tmp_path):
 
     main = assemble(cfg, tmp_path)
     assert not stale.exists()
-    assert (tmp_path / "build" / "typ" / "ch01.typ").exists()
+    assert (tmp_path / "build" / "typ" / "000-ch01.typ").exists()
     assert '#include "typ/removed-chapter.typ"' not in main.read_text(encoding="utf-8")
 
 def test_assemble_rebases_manuscript_images_into_build(tmp_path):
@@ -107,7 +107,7 @@ def test_assemble_rebases_manuscript_images_into_build(tmp_path):
     assemble(cfg, tmp_path)
 
     assert (tmp_path / "build" / "assets" / "pic.png").exists()
-    typ = (tmp_path / "build" / "typ" / "ch01.typ").read_text(encoding="utf-8")
+    typ = (tmp_path / "build" / "typ" / "000-ch01.typ").read_text(encoding="utf-8")
     assert '#figure(image("../assets/pic.png"))' in typ
 
 def test_assemble_missing_image_aborts(tmp_path):
@@ -118,3 +118,51 @@ def test_assemble_missing_image_aborts(tmp_path):
     cfg = load_config(tmp_path / "typst-build.yaml")
     with pytest.raises(SystemExit):
         assemble(cfg, tmp_path)
+
+
+def _typ_name(idx: int, ch: str) -> str:
+    return f"{idx:03d}-{Path(ch).stem}.typ"
+
+
+def test_assemble_same_stem_chapters_preserved(tmp_path):
+    # 서로 다른 디렉터리의 동명 챕터(예: */00-part-introduction.md)가
+    # md2typst 출력명 stem.typ에서 서로 덮어써 유실되던 결함(2026-08-15
+    # 최종 리뷰 Critical 1). 인덱스 prefix 개명으로 각각 보존되어야 한다.
+    for part, body in (("p1", "첫 번째 파트 서문 고유 내용"),
+                       ("p2", "두 번째 파트 서문 고유 내용")):
+        (tmp_path / part).mkdir()
+        (tmp_path / part / "00-part-introduction.md").write_text(
+            f"## {part}\n\n{body}\n", encoding="utf-8")
+    _write_config(tmp_path, chapters=("p1/00-part-introduction.md",
+                                      "p2/00-part-introduction.md"))
+
+    cfg = load_config(tmp_path / "typst-build.yaml")
+    main = assemble(cfg, tmp_path)
+
+    typ0 = (tmp_path / "build" / "typ" / _typ_name(0, "p1/00-part-introduction.md"))
+    typ1 = (tmp_path / "build" / "typ" / _typ_name(1, "p2/00-part-introduction.md"))
+    assert typ0.exists() and typ1.exists()
+    assert "첫 번째 파트 서문 고유 내용" in typ0.read_text(encoding="utf-8")
+    assert "두 번째 파트 서문 고유 내용" in typ1.read_text(encoding="utf-8")
+
+    text = main.read_text(encoding="utf-8")
+    assert f'#include "typ/{typ0.name}"' in text
+    assert f'#include "typ/{typ1.name}"' in text
+
+
+def test_assemble_output_count_and_include_uniqueness(tmp_path):
+    # 콘텐츠 정합 불변식: 변환 산출 .typ 수 == 챕터 수, include 대상 중복 0.
+    # (동일 stem 2챕터 — 개명 없이는 둘 다 성립 불가)
+    for part in ("p1", "p2"):
+        (tmp_path / part).mkdir()
+        (tmp_path / part / "same.md").write_text(f"## {part}\n", encoding="utf-8")
+    _write_config(tmp_path, chapters=("p1/same.md", "p2/same.md"))
+
+    cfg = load_config(tmp_path / "typst-build.yaml")
+    main = assemble(cfg, tmp_path)
+
+    typs = list((tmp_path / "build" / "typ").glob("*.typ"))
+    assert len(typs) == len(cfg["chapters"]) == 2
+    includes = [ln for ln in main.read_text(encoding="utf-8").splitlines()
+                if ln.startswith("#include")]
+    assert len(includes) == len(set(includes)) == 2

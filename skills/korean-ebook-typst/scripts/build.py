@@ -88,7 +88,8 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
         cover_name = Path(cfg["cover"]).name
         shutil.copy2(cover_src, build / cover_name)
 
-    for ch in cfg["chapters"]:
+    converted = []
+    for idx, ch in enumerate(cfg["chapters"]):
         src = book_dir / ch
         r = subprocess.run(
             [sys.executable, str(MD2TYPST), str(src), "--out", str(build / "typ")],
@@ -96,9 +97,23 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
         )
         if r.returncode != 0:
             _fail(f"md2typst 실패 ({src}): {r.stderr.strip()}")
-        if not (build / "typ" / (src.stem + ".typ")).exists():
+        raw = build / "typ" / (src.stem + ".typ")
+        if not raw.exists():
             _fail(f"변환 결과 없음: {src.stem}.typ")
-        rebase_images(build / "typ" / (src.stem + ".typ"), src, build)
+        # md2typst 출력명은 stem.typ이라 동명 챕터(*/00-part-introduction.md
+        # 7개)가 서로 덮어써 유실됐다(2026-08-15 최종 리뷰 Critical 1).
+        # 챕터 인덱스 prefix로 개명해 네임스페이스화 — md2typst 자체 불변.
+        namespaced = build / "typ" / f"{idx:03d}-{src.stem}.typ"
+        raw.rename(namespaced)
+        rebase_images(namespaced, src, build)
+        converted.append(namespaced.name)
+
+    # 콘텐츠 정합 불변식: 산출 파일 수 == 챕터 수, include 대상 중복 0.
+    typs = list((build / "typ").glob("*.typ"))
+    if len(typs) != len(cfg["chapters"]):
+        _fail(f"변환 산출 {len(typs)}개 != 챕터 {len(cfg['chapters'])}개 — 덮어쓰기 의심")
+    if len(set(converted)) != len(converted):
+        _fail(f"include 대상 중복: {converted}")
 
     # typst 0.15.1: set/show 규칙은 include 밖으로 전파되지 않으므로
     # 함수 템플릿을 #show: 로 적용(base 먼저, theme이 나중 — 헤딩 오버라이드).
@@ -119,7 +134,7 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     lines.append("#make-toc()")
     lines.append("")
     # 챕터 순서는 cfg["chapters"] 순서를 따른다(파일명 정렬 아님)
-    lines += [f'#include "typ/{Path(ch).stem}.typ"' for ch in cfg["chapters"]]
+    lines += [f'#include "typ/{name}"' for name in converted]
 
     main = build / "main.typ"
     main.write_text("\n".join(lines) + "\n", encoding="utf-8")

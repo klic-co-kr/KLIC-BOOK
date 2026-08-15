@@ -43,24 +43,24 @@ def check_overflow(pdf: Path, frame: tuple, skip_pages: int = 1) -> list:
     tol = 3.0  # pt 허용 오차 — 글리프 어센트가 행 bbox를 프레임 위로
     # 끌어올린다(lecture 실측: 20pt 헤딩 +2.94pt). 1pt면 정상 콘텐츠 오탐.
     violations = []
-    doc = fitz.open(pdf)
-    for pno in range(skip_pages, len(doc)):
-        for block in doc[pno].get_text("rawdict")["blocks"]:
-            if block["type"] != 0:
-                continue
-            for line in block["lines"]:
-                ink, text = _ink_bbox(line)
-                if ink is None:
+    with fitz.open(pdf) as doc:
+        for pno in range(skip_pages, len(doc)):
+            for block in doc[pno].get_text("rawdict")["blocks"]:
+                if block["type"] != 0:
                     continue
-                bx0, by0, bx1, by1 = ink
-                outside = bx0 < x0 - tol or bx1 > x1 + tol or \
-                    by0 < y0 - tol or by1 > y1 + tol
-                if outside:
-                    if by0 > y1 and re.fullmatch(r"\d{1,3}", text):
-                        continue  # 푸터 쪽번호
-                    violations.append(
-                        f"p{pno + 1} bbox=({bx0:.1f},{by0:.1f},{bx1:.1f},{by1:.1f}) "
-                        f"frame=({x0},{y0},{x1},{y1}) text={text[:30]!r}")
+                for line in block["lines"]:
+                    ink, text = _ink_bbox(line)
+                    if ink is None:
+                        continue
+                    bx0, by0, bx1, by1 = ink
+                    outside = bx0 < x0 - tol or bx1 > x1 + tol or \
+                        by0 < y0 - tol or by1 > y1 + tol
+                    if outside:
+                        if by0 > y1 and re.fullmatch(r"\d{1,3}", text):
+                            continue  # 푸터 쪽번호
+                        violations.append(
+                            f"p{pno + 1} bbox=({bx0:.1f},{by0:.1f},{bx1:.1f},{by1:.1f}) "
+                            f"frame=({x0},{y0},{x1},{y1}) text={text[:30]!r}")
     return violations
 
 
