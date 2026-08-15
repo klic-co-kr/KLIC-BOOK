@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """korean-ebook-typst 빌드 — typst-build.yaml → 스타일 팩 조립 → PDF."""
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 import yaml
@@ -35,3 +37,54 @@ def load_config(path: Path) -> dict:
         "chapters": list(cfg["chapters"]),
         "cover": cfg.get("cover"),
     }
+
+MD2TYPST = SKILL_DIR / "scripts" / "md2typst.py"
+STYLE_DIR = SKILL_DIR / "styles"
+
+def assemble(cfg: dict, book_dir: Path) -> Path:
+    """스타일 팩 + 변환된 챕터를 build/에 조립해 main.typ 생성."""
+    build = book_dir / "build"
+    (build / "typ").mkdir(parents=True, exist_ok=True)
+
+    style = STYLE_DIR / cfg["style"]
+    shutil.copy2(style / "tokens.json", build / "tokens.json")
+    shutil.copy2(style / "theme.typ", build / "theme.typ")
+    shutil.copy2(SKILL_DIR / "templates" / "base.typ", build / "base.typ")
+
+    for ch in cfg["chapters"]:
+        src = book_dir / ch
+        r = subprocess.run(
+            [sys.executable, str(MD2TYPST), str(src), "--out", str(build / "typ")],
+            capture_output=True, text=True,
+        )
+        if r.returncode != 0:
+            _fail(f"md2typst 실패 ({src}): {r.stderr.strip()}")
+        if not (build / "typ" / (src.stem + ".typ")).exists():
+            _fail(f"변환 결과 없음: {src.stem}.typ")
+
+    typ_files = sorted((build / "typ").glob("*.typ"))
+    # typst 0.15.1: set/show 규칙은 include 밖으로 전파되지 않으므로
+    # 함수 템플릿을 #show: 로 적용(base 먼저, theme이 나중 — 헤딩 오버라이드).
+    lines = [
+        '#import "base.typ": base, make-cover, make-toc',
+        '#import "theme.typ": theme',
+        "#show: base",
+        "#show: theme",
+        '#include "base.typ"',
+        '#include "theme.typ"',
+        "",
+    ]
+    if cfg["cover"]:
+        cover = f'#image("{cfg["cover"]}", width: 100%, height: 100%)'
+        lines.append(f'#make-cover("{cfg["title"]}", "{cfg["subtitle"]}", '
+                     f'"{cfg["author"]}", cover: [{cover}])')
+    else:
+        lines.append(f'#make-cover("{cfg["title"]}", "{cfg["subtitle"]}", '
+                     f'"{cfg["author"]}", cover: none)')
+    lines.append("#make-toc()")
+    lines.append("")
+    lines += [f'#include "typ/{p.name}"' for p in typ_files if p.name != "main.typ"]
+
+    main = build / "main.typ"
+    main.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return main
