@@ -72,8 +72,10 @@ def test_essay_toc_no_dot_leaders(tmp_path):
     """목차 리더 점선 금지(STYLE.md) — TOC 면에 점선 잉크가 없어야 한다.
 
     base.typ make-toc는 outline() 기본 리더를 쓰므로, theme.typ이
-    outline.entry 쇼 규칙으로 무점선 엔트리(제목 + 1fr + 쪽수, 링크 유지)로
-    오버라이드한다.
+    outline.entry 쇼 규칙으로 무점선 엔트리(제목 + 1fr + 쪽수)로 오버라이드한다.
+    하이퍼링크는 없다 — link()가 SVG에서 글자보다 큰 투명 히트영역 rect를
+    만들어 인접 엔트리와 collision 오탐을 유발하므로 제거한 트레이드오프
+    (프린트 우선 사륙판).
     """
     import fitz
     book = tmp_path / "b"
