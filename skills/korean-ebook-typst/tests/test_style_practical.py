@@ -120,3 +120,19 @@ def test_long_middledot_heading_stays_in_frame(tmp_path):
     pdf = compile_pdf(assemble(cfg, book), cfg["title"])
     frame = load_frame(book / "build" / "tokens.json")
     assert check_overflow(pdf, frame) == []
+
+def test_practical_body_stack_sans_first():
+    # IT 실용서 본문은 산세리프 우선 — 이전 WeasyPrint 책(실전시스템설계)이
+    # Noto Sans KR 본문으로 출간된 전례에 맞춘다. 명조 우선이면 책이
+    # 낡아 보인다는 사용자 피드백 반영.
+    import json
+    from pathlib import Path
+    tokens = json.loads((Path(__file__).parent.parent / "styles/practical/tokens.json").read_text(encoding="utf-8"))
+    assert tokens["fonts"]["body"]["stack"][0] == "Noto Sans KR"
+
+def test_practical_toc_depth_is_two():
+    # 467면 책의 인쇄 차례는 장급만으론 부족하다 — 절급(depth 2)까지.
+    import json
+    from pathlib import Path
+    tokens = json.loads((Path(__file__).parent.parent / "styles/practical/tokens.json").read_text(encoding="utf-8"))
+    assert tokens.get("toc_depth") == 2

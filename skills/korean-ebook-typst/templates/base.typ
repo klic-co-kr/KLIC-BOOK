@@ -64,13 +64,14 @@
   ]
 }
 
-// 목차
+// 목차 — toc_depth 토큰(기본 1=장급). 스타일 팩이 절급(2)으로 확장 가능.
 #let make-toc() = {
   page[
+    #v(0.4em)
     #text(size: pt(tokens.fonts.heading1.size_pt), weight: "bold")[차례]
     #v(1em)
     // title: none — outline 기본 제목이 lang별 헤딩으로 붙어 theme H1 규칙과
     // 중복 렌더링되므로(make-toc가 직접 제목을 냄) 억제.
-    #outline(title: none, indent: 1.5em, depth: 1)
+    #outline(title: none, indent: 1.5em, depth: tokens.at("toc_depth", default: 1))
   ]
 }

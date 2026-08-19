@@ -58,6 +58,8 @@ def check_overflow(pdf: Path, frame: tuple, skip_pages: int = 1) -> list:
                     if outside:
                         if by0 > y1 and re.fullmatch(r"\d{1,3}", text):
                             continue  # 푸터 쪽번호
+                        if by1 < y0:
+                            continue  # 헤더 러닝헤드 — 상단 여백 전용 영역
                         violations.append(
                             f"p{pno + 1} bbox=({bx0:.1f},{by0:.1f},{bx1:.1f},{by1:.1f}) "
                             f"frame=({x0},{y0},{x1},{y1}) text={text[:30]!r}")

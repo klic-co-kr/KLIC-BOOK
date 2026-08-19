@@ -68,3 +68,12 @@ def test_ink_bbox_all_whitespace():
         {"c": " ", "bbox": (2, 1, 3, 2)},
     ]}]}
     assert _ink_bbox(line) == (None, "")
+
+@SKIP
+def test_running_header_top_margin_allowed(tmp_path):
+    # 러닝헤드(상단 여백 장 제목)는 쪽번호와 동일하게 판면 밖 여백 요소다.
+    # 미면제 시 practical 러닝헤드가 G1 위반으로 오탐된다.
+    pdf = _compile(tmp_path,
+        '#set page(header: align(right)[CHAPTER 01 · 확장])\n'
+        '정상 본문.\n#pagebreak()\n둘째 쪽 정상 본문.')
+    assert check_overflow(pdf, FRAME) == []
