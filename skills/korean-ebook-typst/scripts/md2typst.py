@@ -12,18 +12,53 @@ from pathlib import Path
 
 def convert(md: str) -> str:
     protected = []
-    def stash(m):
-        protected.append(m.group(0))
+    def stash_str(s: str) -> str:
+        protected.append(s)
         return f"\x00{len(protected) - 1}\x00"
+    def stash(m):
+        return stash_str(m.group(0))
     # 0. 선두 YAML frontmatter 제거 — 표준 markdown 관행. 미제거 시
     # id/order/status 메타데이터가 본문 산문으로 인쇄된다(실전시스템설계 실측).
     # 파일 시작의 --- 쌍만 취급(파일 중간 ---는 수평선 등 다른 용법).
     md = re.sub(r'\A---[ \t]*\n.*?\n---[ \t]*\n', '', md, count=1, flags=re.S)
+    # 0.5 코드펜스(```...```) 통째로 stash — typst도 ``` 를 raw block으로
+    # 쓰므로 내용은 한 글자도 건드리지 않고 전달한다. 미보호 시 인라인
+    # 코드스팬 regex(step 4)가 우연히 삼켜 "우발적 보호"되는데, 펜스 내부에
+    # 백틱이 있으면 페어링이 어긋나 내용이 step 6 이스케이프에 오염된다
+    # (system-design-notes ch16·22 SQL 블록 실측).
+    md = re.sub(r'```.*?```', stash, md, flags=re.S)
     # 1. 화폐 $<숫자>/<단위|통화> → escape
     md = re.sub(r'\$(\d[\d,.]*(?:\s*/\s*\w+|\s*(?:원|엔|달러|USD|시간)))',
                 lambda m: r'\$' + m.group(1), md)
     # 2. 이미지
     md = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', r'#figure(image("\2"))', md)
+    # 2.5 md 파이프 표 → typst #table(). 미변환 시 | A | B | 가 리터럴
+    # 파이프 문자로 인쇄된다(system-design-notes 표 148줄 실측).
+    # 구분행(|---|---|)이 있는 블록만 표로 판정 — 본문의 홑파이프 줄은
+    # 그대로 둔다. 셀 내부는 강조 변환 + typst 특수 escape를 여기서
+    # 수행하고 결과를 stash해 step 6이 다시 건드리지 않게 한다.
+    def _table_cell(c: str) -> str:
+        c = c.replace('\\', r'\\').replace('#', r'\#').replace('[', r'\[').replace(']', r'\]')
+        c = c.replace('$', r'\$').replace('<', r'\<').replace('>', r'\>').replace('@', r'\@')
+        c = c.replace('_', r'\_')
+        c = re.sub(r'\*\*(.+?)\*\*', '\x02\\1\x02', c)
+        c = re.sub(r'(?<!\w)\*(?=\S)([^*]+?)(?<=\S)\*(?!\*)', '_\\1_', c)
+        return c.replace('\x02', '*')
+    def _table_block(m):
+        block = m.group(0)
+        if not re.search(r'^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$', block, flags=re.M):
+            return block  # 구분행 없음 — 표 아님
+        rows = []
+        for line in block.split('\n'):
+            if not line.strip() or re.match(r'^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$', line):
+                continue
+            rows.append([c.strip() for c in line.strip().strip('|').split('|')])
+        if not rows:
+            return block
+        ncols = max(len(r) for r in rows)
+        cells = ', '.join(f'[{_table_cell(c)}]' for r in rows for c in r)
+        return stash_str(f'#table(columns: {ncols}, {cells})')
+    md = re.sub(r'(?:^[ \t]*\|.*\|[ \t]*$\n?)+', _table_block, md, flags=re.M)
     # 3. 블록 수식 $$...$$ → #mitex
     md = re.sub(r'\$\$(.+?)\$\$', lambda m: f'#mitex[`{m.group(1).strip()}`]',
                 md, flags=re.S)

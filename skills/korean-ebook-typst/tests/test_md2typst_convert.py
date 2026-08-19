@@ -97,3 +97,64 @@ def test_html_comment_stripped():
 def test_html_comment_in_code_span_kept():
     out = convert("예시 `<!-- note -->` 코드\n")
     assert "`<!-- note -->`" in out
+
+def test_fenced_code_block_content_not_escaped():
+    # 코드펜스 내부는 typst raw block으로 그대로 전달되어야 한다.
+    # 미보호 시 # [ ] < 등이 step 6에서 이스케이프되어 \# 형태로 인쇄된다
+    # (system-design-notes 번역서 코드블록 57개 실측).
+    md = "```\n# comment\narr[0] < 10\n```\n"
+    out = convert(md)
+    assert "# comment" in out
+    assert "\\# comment" not in out
+    assert "arr[0] < 10" in out
+
+def test_fenced_code_block_lang_tag_kept():
+    md = "```json\n{\"a\": 1}\n```\n"
+    out = convert(md)
+    assert "```json" in out
+
+def test_fenced_code_block_keeps_inline_dollar():
+    # 코드 내 $는 수식도 화폐도 아니다 — raw로 보존
+    md = "```\ncost = $5 + $x\n```\n"
+    out = convert(md)
+    assert "$5 + $x" in out
+
+def test_pipe_table_converts_to_typst_table():
+    # md 파이프 표는 typst #table()로 변환되어야 한다.
+    # 미변환 시 | A | B | 가 리터럴 파이프 문자로 인쇄된다
+    # (system-design-notes 표 148줄 실측).
+    md = "| A | B |\n|---|---|\n| 1 | 2 |\n"
+    out = convert(md)
+    assert "#table(" in out
+    assert "[A]" in out and "[B]" in out
+    assert "[1]" in out and "[2]" in out
+    assert "columns: 2" in out
+
+def test_pipe_table_separator_row_dropped():
+    md = "| 항목 | 값 |\n|---|---|\n| QPS | 100 |\n"
+    out = convert(md)
+    assert "---" not in out.split("#table(")[1]
+    assert "[QPS]" in out
+
+def test_pipe_table_cell_bold_converted():
+    md = "| 이름 | 설명 |\n|---|---|\n| **캐시** | 빠른 저장 |\n"
+    out = convert(md)
+    assert "*캐시*" in out
+    assert "\\*" not in out
+
+def test_pipe_table_cell_specials_escaped():
+    md = "| 키 | 값 |\n|---|---|\n| a#1 | x_y |\n"
+    out = convert(md)
+    assert "a\\#1" in out
+    assert "x\\_y" in out
+
+def test_pipe_table_not_confused_by_body_pipe():
+    # 본문 한 줄 짜리 | 는 표로 오인하지 않는다(구분행 필요)
+    md = "a | b\n본문\n"
+    out = convert(md)
+    assert "#table(" not in out
+
+def test_table_and_fence_coexist():
+    md = "| A |\n|---|\n| 1 |\n\n```\nx\n```\n"
+    out = convert(md)
+    assert "#table(" in out and "```" in out
