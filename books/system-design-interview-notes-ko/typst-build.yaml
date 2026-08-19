@@ -3,6 +3,7 @@ title: "시스템 디자인 인터뷰 핵심 노트"
 subtitle: "Alex Xu 『System Design Interview』 Vol.1·2 학습 노트 한국어판"
 author: "원작 Alex Xu · 노트 liquidslr · 한국어판 KLIC"
 date: "2026-08"
+cover: "assets/cover.png"
 chapters:
   - manuscript/00-frontmatter/00-title.md
   - manuscript/00-frontmatter/01-preface.md
