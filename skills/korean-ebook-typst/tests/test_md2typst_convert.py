@@ -158,3 +158,12 @@ def test_table_and_fence_coexist():
     md = "| A |\n|---|\n| 1 |\n\n```\nx\n```\n"
     out = convert(md)
     assert "#table(" in out and "```" in out
+
+def test_pipe_table_lone_asterisk_cell_escaped():
+    # 표 셀의 홑 *(와일드카드)는 typst content 블록에서 강조 마커로
+    # 파열된다 — 미 escape 시 "unclosed delimiter" 컴파일 오류
+    # (system-design-notes ch04 규칙 표 실측).
+    md = "| filter_id | region | IP |\n|---|---|---|\n| 0012 | US | * |\n"
+    out = convert(md)
+    assert "[\\*]" in out
+    assert "[*]" not in out

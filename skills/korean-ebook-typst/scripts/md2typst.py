@@ -43,6 +43,10 @@ def convert(md: str) -> str:
         c = c.replace('_', r'\_')
         c = re.sub(r'\*\*(.+?)\*\*', '\x02\\1\x02', c)
         c = re.sub(r'(?<!\w)\*(?=\S)([^*]+?)(?<=\S)\*(?!\*)', '_\\1_', c)
+        # 강조 변환 후 남은 홑 *(와일드카드 등)은 escape — [*]는 typst에서
+        # 강조 마커 미닫음 컴파일 오류다(ch04 규칙 표 실측). \x02 마커
+        # 복원 전에 수행해 변환된 굵게를 다시 escape하지 않는다.
+        c = re.sub(r'(?<!\\)\*', r'\\*', c)
         return c.replace('\x02', '*')
     def _table_block(m):
         block = m.group(0)
