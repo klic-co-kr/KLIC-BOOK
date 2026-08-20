@@ -8,9 +8,10 @@ from pathlib import Path
 import yaml
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
-STYLES = ("practical", "essay", "business", "lecture")
+STYLES = ("practical", "essay", "business", "lecture", "b5")
 PAGE_MM = {"practical": (153, 225), "essay": (128, 188),
-           "business": (200, 280), "lecture": (210, 297)}
+           "business": (200, 280), "lecture": (210, 297),
+           "b5": (176, 250)}
 
 def _fail(msg: str) -> None:
     print(f"[build] 오류: {msg}", file=sys.stderr)
