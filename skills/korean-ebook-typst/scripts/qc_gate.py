@@ -191,7 +191,20 @@ def run(book_dir: Path) -> int:
     frame_w = frame[2] - frame[0]
     warns = check_chars_band(pdf, band, tokens["fonts"]["body"]["size_pt"],
                              frame_w) if band else []
+    # G4 한글 문체(fluent-korean 기계화) — WARN. 원고 md에서 검사.
+    style_warns = {}
+    yml = book_dir / "typst-build.yaml"
+    if yml.exists():
+        import yaml
+        try:
+            import korean_lint
+        except ImportError:  # scripts.* 패키지로 임포트되는 테스트 환경
+            from scripts import korean_lint
+        cfg = yaml.safe_load(yml.read_text(encoding="utf-8")) or {}
+        style_warns = korean_lint.lint_manuscript(cfg.get("chapters", []),
+                                                  book_dir)
     report = {"g1_overflow": overflow, "g2_fonts": fonts, "g3_band_warns": warns,
+              "g4_style_warns": style_warns,
               "pass": not overflow and not fonts}
     (book_dir / "gate-report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -208,7 +221,9 @@ def run(book_dir: Path) -> int:
     final = book_dir / "final"
     final.mkdir(exist_ok=True)
     shutil.copy2(pdf, final / pdf.name)
-    print(f"[qc] PASS → {final / pdf.name} (WARN {len(warns)}건)")
+    n_style = sum(len(v) for v in style_warns.values())
+    print(f"[qc] PASS → {final / pdf.name} "
+          f"(WARN {len(warns)}건, 문체 {n_style}건)")
     return 0
 
 
