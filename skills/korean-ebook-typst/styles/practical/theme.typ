@@ -42,8 +42,10 @@
   }
   show heading.where(level: 2): it => {
     v(1.1em)
-    text(size: pt(tokens.fonts.heading2.size_pt), weight: "bold",
-      fill: rgb(tokens.colors.accent))[#it.body]
+    // Pretendard 어센더가 em박스를 초과해 페이지 상단 v-붕괴 시 잉크가
+    // body_frame 위로 3.3pt 넘는다(G1 ±3pt 초과). 상단 패드로 상습 방지.
+    pad(top: 3.5pt)[#text(size: pt(tokens.fonts.heading2.size_pt), weight: "bold",
+      fill: rgb(tokens.colors.accent))[#it.body]]
     v(0.4em)
   }
   body
