@@ -1,0 +1,19 @@
+style: lecture
+title: "많이 줄수록, 여럿일수록 정말 더 잘할까"
+subtitle: "에이전트 논문 10편 읽기 — alphaXiv 2026년 8월"
+author: "KLIC"
+date: "2026-08"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/01-제1장-도구를-다-쥐여주면.md
+  - manuscript/02-제2장-새-대화창을-열면.md
+  - manuscript/03-제3장-읽은-파일과-고친-파일.md
+  - manuscript/04-제4장-일은-끝났는데.md
+  - manuscript/05-제5장-여덟-명이-붙으면.md
+  - manuscript/06-제6장-많이-찾아다-주면.md
+  - manuscript/07-제7장-왜-그렇게-정했더라.md
+  - manuscript/08-제8장-내가-넣은-한-줄은.md
+  - manuscript/09-제9장-잘-나온-결과-하나로.md
+  - manuscript/10-제10장-만들기-전에-약속.md
+  - manuscript/11-맺음말.md
+cover: assets/cover.png
