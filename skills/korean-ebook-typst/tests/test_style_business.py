@@ -49,17 +49,15 @@ def test_business_frame_matches_trim_margins():
         (t["trim"]["height_mm"] - t["margin"]["bottom_mm"]) * MM, abs=0.05)
 
 
-def test_business_body_font_ps_alias():
-    """body 임베드 PostScript명(NotoSansKR)이 G2 허용 집합에 들어가야 한다.
+def test_business_body_font_five_lineup():
+    """business 본문은 5폰트 라인업에서 Wanted Sans Std 선행(2026-08-20).
 
-    VF 임베드 basefont는 "NotoSansKR-..." — 정규화하면 스택 표기와 같지만,
-    임베드명 사례를 ps로 명시 등록해 폰트 환경 변화에도 계약이 깨지지 않게
-    한다(qc_gate allowed_fonts).
+    G2 허용 집합은 스택 정규화로 성립 — ps 별칭 의존 제거.
     """
     a = allowed_fonts(_tokens())[0]
-    assert "notosanskr" in a               # 스택 표기 정규화 = ps 별칭
+    assert "wantedsansstd" in a            # 스택 표기 정규화
     assert "pretendard" in a               # 후순위 폴백
-    assert _tokens()["fonts"]["body"].get("ps") == ["NotoSansKR"]
+    assert _tokens()["fonts"]["body"]["stack"][0] == "Wanted Sans Std"
 
 
 def test_business_label_top_uppercase():

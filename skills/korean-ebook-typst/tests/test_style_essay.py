@@ -38,17 +38,16 @@ def test_essay_frame_matches_trim_margins():
         (t["trim"]["height_mm"] - t["margin"]["bottom_mm"]) * MM, abs=0.05)
 
 
-def test_essay_body_font_ps_alias():
-    """body 임베드 PostScript명(NotoSerifCJKkr)이 G2 허용 집합에 들어가야 한다.
+def test_essay_body_font_five_lineup():
+    """essay 본문은 5폰트 라인업에서 SUIT 선행 — 세리프 의존 제거(2026-08-20).
 
-    ttc 임베드 basefont는 "NotoSerifCJKkr-Regular-..." — 정규화 시 스택 표기
-    "Noto Serif CJK KR"과 결과가 같지만, 임베드명 사례를 ps로 명시 등록해
-    폰트 환경 변화에도 계약이 깨지지 않게 한다(qc_gate allowed_fonts).
+    G2 허용 집합은 스택 정규화로 성립 — ps 별칭 없이도 임베드
+    "SUIT-Regular"가 정규화 매칭된다(norm_font가 '-' 이후 절단).
     """
     a = allowed_fonts(_tokens())[0]
-    assert "notoserifcjkkr" in a          # 스택 표기 정규화
-    assert "notoserifkr" in a             # 후순위 폴백
-    assert _tokens()["fonts"]["body"].get("ps") == ["NotoSerifCJKkr"]
+    assert "suit" in a                    # 스택 표기 정규화
+    assert "pretendard" in a              # 후순위 폴백
+    assert _tokens()["fonts"]["body"]["stack"][0] == "SUIT"
 
 
 @SKIP
