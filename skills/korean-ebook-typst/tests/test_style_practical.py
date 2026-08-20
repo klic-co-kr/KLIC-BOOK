@@ -124,11 +124,11 @@ def test_long_middledot_heading_stays_in_frame(tmp_path):
 def test_practical_body_stack_sans_first():
     # IT 실용서 본문은 산세리프 우선 — 5폰트 라인업(Pretendard·SUIT·
     # Wanted Sans Std·Freesentation·Montserrat) 중 Pretendard 선행.
-    # 정적 웨이트만 쓴다(typst VF Thin 버그 — memory 참조).
+    # 정적 웨이트만 쓴다(typst VF Thin 버그 — memory 참조). 주폰트 Freesentation(2026-08-20 사용자 지정).
     import json
     from pathlib import Path
     tokens = json.loads((Path(__file__).parent.parent / "styles/practical/tokens.json").read_text(encoding="utf-8"))
-    assert tokens["fonts"]["body"]["stack"][0] == "Pretendard"
+    assert tokens["fonts"]["body"]["stack"][0] == "Freesentation"
 
 def test_practical_toc_depth_is_two():
     # 467면 책의 인쇄 차례는 장급만으론 부족하다 — 절급(depth 2)까지.
