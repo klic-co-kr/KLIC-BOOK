@@ -162,9 +162,124 @@ COVER_AUTO = """// 자동 표지 v3 — KLIC 자체 문법: 비대칭 좌측 정
 
 
 
+
+COVER_V2 = """// 자동 표지 변형2 — 이중 프레임 문고형: 얇은 이중 괘선 안 중앙 정렬
+// 타이포. 코너 틱 + 상하 캡 라벨. 차분한 고전 문법.
+#set page(width: {w}mm, height: {h}mm, margin: 0pt)
+#set text(font: {font_stack}, lang: "ko")
+#let paper = rgb("{paper}")
+#let ink = rgb("{ink}")
+#let brand = rgb("{brand}")
+#let soft = rgb("{soft}")
+#let mute = rgb("{mute}")
+#place(top + left, rect(width: 100%, height: 100%, fill: paper))
+// 이중 괘선 — 외괘 10mm 오프셋, 내괘 14mm
+#place(top + left, dx: 10mm, dy: 10mm,
+  rect(width: {w}mm - 20mm, height: {h}mm - 20mm, stroke: 1.1pt + ink))
+#place(top + left, dx: 14mm, dy: 14mm,
+  rect(width: {w}mm - 28mm, height: {h}mm - 28mm, stroke: 0.4pt + soft))
+// 코너 틱 — 내괘 모서리에 브랜드 사각
+#place(top + left, dx: 12.4mm, dy: 12.4mm, rect(width: 3.2mm, height: 3.2mm, fill: brand))
+#place(top + right, dx: -12.4mm - 3.2mm, dy: 12.4mm, rect(width: 3.2mm, height: 3.2mm, fill: brand))
+#place(bottom + left, dx: 12.4mm, dy: -12.4mm - 3.2mm, rect(width: 3.2mm, height: 3.2mm, fill: brand))
+#place(bottom + right, dx: -12.4mm - 3.2mm, dy: -12.4mm - 3.2mm, rect(width: 3.2mm, height: 3.2mm, fill: brand))
+// 상단 시리즈 — 괘선 안 중앙
+#place(top + center, dy: 24mm)[
+  #text(size: 9pt, fill: mute, tracking: 3pt, weight: "semibold")[{series}]
+]
+// 주제목 — 중앙 스택, 마지막 단어 brand색
+#place(top + center, dy: {title_y}mm)[
+  #align(center, stack(dir: ttb, spacing: 7mm,
+    ..if "{head}" != "" {{ (
+      align(center, text(size: {head_pt}pt, weight: "bold", fill: ink,
+        tracking: -0.02em)[{head}]),) }} else {{ () }},
+    align(center, text(size: {emph_pt}pt, weight: "bold", fill: brand,
+      tracking: -0.02em)[{emph}])))
+]
+// 부제 — 이중 가는 괘선 사이
+#place(top + center, dy: {sub_y}mm)[
+  #align(center)[
+    #box(width: 34mm, height: 0.4pt, fill: soft)
+    #v(3.5mm, weak: true)
+    #box(width: {w}mm - 64mm)[
+      #align(center, text(size: 12pt, fill: soft)[{subtitle}])
+    ]
+    #v(3.5mm, weak: true)
+    #box(width: 34mm, height: 0.4pt, fill: soft)
+  ]
+]
+{notes}
+// 저자·발행 — 하단 중앙 수직 스택
+#place(bottom + center, dy: -22mm)[
+  #align(center, stack(dir: ttb, spacing: 2.2mm,
+    text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]],
+    rect(width: 9mm, height: 0.8pt, fill: brand),
+    text(size: 8.5pt, weight: "semibold", fill: mute, tracking: 2pt)[{publisher}]))
+]
+"""
+
+COVER_V3 = """// 자동 표지 변형3 — 수평 밴드형: 상단 브랜드 컬러 밴드에 타이틀,
+// 밴드 우측 원 클러스터. 하부 지면은 노트·락업. 강한 대비 문법.
+#set page(width: {w}mm, height: {h}mm, margin: 0pt)
+#set text(font: {font_stack}, lang: "ko")
+#let paper = rgb("{paper}")
+#let ink = rgb("{ink}")
+#let brand = rgb("{brand}")
+#let soft = rgb("{soft}")
+#let mute = rgb("{mute}")
+#place(top + left, rect(width: 100%, height: 100%, fill: paper))
+// 브랜드 밴드 — 상단에서 band_h 만큼
+#place(top + left, rect(width: 100%, height: {band_h}mm, fill: brand))
+// 밴드 내 원 클러스터(백색 스트로크, 마음 은유)
+#place(top + right, dx: -14mm, dy: {cluster_y}mm)[
+  #box(width: {cl}mm, height: {cl}mm)[
+    #place(dx: 0mm, dy: {cl_off}mm, circle(radius: {cl_r}mm, stroke: 1.6pt + white.transparentize(35%), fill: none))
+    #place(dx: {cl_off}mm, dy: 0mm, circle(radius: {cl_r}mm, stroke: 1.6pt + white.transparentize(35%), fill: none))
+  ]
+]
+// 시리즈 — 밴드 안 좌측 상단
+#place(top + left, dx: 24mm, dy: 14mm)[
+  #text(size: 9pt, fill: white.transparentize(25%), tracking: 3pt, weight: "semibold")[{series}]
+]
+// 주제목 — 밴드 안 좌측 스택
+#place(top + left, dx: 24mm, dy: {title_y}mm)[
+  #align(left, stack(dir: ttb, spacing: 5mm,
+    ..if "{head}" != "" {{ (
+      align(left, text(size: {head_pt}pt, weight: "bold", fill: white.transparentize(8%),
+        tracking: -0.03em)[{head}]),) }} else {{ () }},
+    align(left, text(size: {emph_pt}pt, weight: "bold", fill: white,
+      tracking: -0.03em)[{emph}])))
+]
+// 부제 — 밴드 바로 아래 지면에
+#place(top + left, dx: 24mm, dy: {band_h}mm + 12mm)[
+  #box(width: {w}mm - 56mm)[
+    #text(size: 12.5pt, fill: soft)[{subtitle}]
+  ]
+]
+{notes}
+// 저자 좌·발행 우
+#place(bottom + left, dx: 24mm, dy: -16mm)[
+  #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
+]
+#place(bottom + right, dx: -16mm, dy: -16mm)[
+  #align(right)[
+    #rect(width: 10mm, height: 0.8pt, fill: brand)
+    #v(2mm, weak: true)
+    #text(size: 8.5pt, weight: "semibold", fill: mute, tracking: 2pt)[{publisher}]
+  ]
+]
+"""
+
 def make_auto_cover(cfg: dict, build: Path) -> str:
-    """표지 v3 — KLIC 자체 문법: 좌측 액센트 에지 + 두 겹치는 원 모티프 +
-    비대칭 좌측 정렬 대형 타이포. pt 크기는 판폭 전각 자폭으로 피팅."""
+    """표지 자동 생성 — 3변형 문법에서 책마다 하나를 정해 재현 가능하게.
+
+    변형 선택: cover_variant 지정이 우선, 없으면 제목 해시로 결정적 분포
+    (같은 책 = 같은 표지, 책마다 달라짐).
+      V1 비대칭 좌측(엣지 바·두 원·바텀 앵커)
+      V2 이중 프레임 문고형(괘선·중앙 타이포·코너 틱)
+      V3 수평 밴드형(브랜드 밴드 타이틀·원 클러스터)
+    """
+    import hashlib
     import json as _json
     w, h = PAGE_MM[cfg["style"]]
     tokens = _json.loads(
@@ -181,54 +296,87 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
     head_c = (len(head_word.replace(" ", ""))
               + head_word.count(" ") * 0.55)
     emph_c = len(emph_word)
-    limit = w - 50  # 좌측 26mm + 우측 여백
+    limit = w - 50
     head_pt = min(72, limit / (0.353 * head_c)) if head_c else 72
     emph_pt = 1.5 * head_pt
     emph_max = limit / (0.353 * emph_c)
     if emph_pt > emph_max:
         k = emph_max / emph_pt
         head_pt, emph_pt = head_pt * k, emph_pt * k
+    block_h = (head_pt * 0.42 if head_word else 0) + 7 + emph_pt * 0.42
 
-    # 두 겹치는 원(마음×마음) — 우상단
-    motif_r = min(26, w * 0.14)
-    motif_off = motif_r * 0.62
-    motif_box = motif_off + 2 * motif_r
-    motif_y = h * 0.09
-    tint_d = motif_r + motif_off / 2 - motif_r * 0.45
-
-    # 하단에서부터: 저자 16mm ↑, 타이틀 블록 bottom 44mm, 부제는 그 위
-    title_dy = 44
-    block_h = (head_pt * 0.42 if head_word else 0) + 6 + emph_pt * 0.42
-    sub_dy = title_dy + block_h + 10
-    notes_dy = sub_dy + 16
+    variant = cfg.get("cover_variant")
+    if variant not in (1, 2, 3, "1", "2", "3"):
+        variant = int(hashlib.sha1(cfg["title"].encode()).hexdigest(), 16) % 3 + 1
+    variant = int(variant)
 
     series = cfg.get("cover_series") or ""
     sub = _esc((cfg["subtitle"] or "").replace("\n", "#linebreak()"))
-    if cfg["cover_notes"]:
-        note_lines = ",\n    ".join(
-            f'text(size: 10pt, fill: mute)[{_esc(str(x))}]'
-            for x in cfg["cover_notes"])
-        notes = (f'#place(bottom + left, dx: 26mm, dy: -{notes_dy:.0f}mm)[\n'
-                 f'  #stack(spacing: 3mm,\n    {note_lines})\n]')
-    else:
-        notes = ""
-
-    src = COVER_AUTO.format(
-        w=w, h=h, font_stack=font_stack,
-        paper="F7F4EE", ink=tokens["colors"]["ink"], brand=tokens["colors"]["accent"],
+    author = _esc(cfg["author"] or "")
+    base = dict(
+        w=w, h=h, font_stack=font_stack, paper="F7F4EE",
+        ink=tokens["colors"]["ink"], brand=tokens["colors"]["accent"],
         soft=tokens["colors"]["ink-soft"], mute=tokens["colors"]["ink-mute"],
-        pale=pale,
-        motif_y=f"{motif_y:.0f}", motif_r=f"{motif_r:.1f}",
-        motif_off=f"{motif_off:.1f}", motif=f"{motif_box:.1f}",
-        motiv_c=f"{tint_d:.1f}",
         series=_esc(series.upper()), head=_esc(head_word),
         head_pt=f"{head_pt:.1f}", emph=_esc(emph_word),
-        emph_pt=f"{emph_pt:.1f}",
-        title_block_h=title_dy, sub_dy=f"{sub_dy:.0f}",
-        subtitle=sub, notes=notes,
-        author_bold=_esc(cfg["author"] or ""),
-        publisher="KLIC BOOKS",
+        emph_pt=f"{emph_pt:.1f}", subtitle=sub,
+        author_bold=author, publisher="KLIC BOOKS",
     )
+
+    if variant == 1:
+        motif_r = min(26, w * 0.14)
+        motif_off = motif_r * 0.62
+        tint_d = motif_r + motif_off / 2 - motif_r * 0.45
+        title_dy = 44
+        sub_dy = title_dy + block_h + 10
+        notes_dy = sub_dy + 16
+        if cfg["cover_notes"]:
+            lines = ",\n    ".join(
+                f'text(size: 10pt, fill: mute)[{_esc(str(x))}]'
+                for x in cfg["cover_notes"])
+            notes = (f'#place(bottom + left, dx: 26mm, dy: -{notes_dy:.0f}mm)[\n'
+                     f'  #stack(spacing: 3mm,\n    {lines})\n]')
+        else:
+            notes = ""
+        base.update(
+            pale=pale, motif_y=f"{h * 0.09:.0f}", motif_r=f"{motif_r:.1f}",
+            motif_off=f"{motif_off:.1f}", motif=f"{motif_off + 2 * motif_r:.1f}",
+            motiv_c=f"{tint_d:.1f}", title_block_h=title_dy,
+            sub_dy=f"{sub_dy:.0f}", notes=notes)
+        template = COVER_AUTO
+    elif variant == 2:
+        title_y = h * 0.30
+        sub_y = title_y + block_h + 16
+        if cfg["cover_notes"]:
+            lines = ",\n    ".join(
+                f'text(size: 10pt, fill: mute)[{_esc(str(x))}]'
+                for x in cfg["cover_notes"])
+            notes = (f'#place(bottom + center, dy: -52mm)[\n'
+                     f'  #align(center, stack(spacing: 3mm, {lines}))\n]')
+        else:
+            notes = ""
+        base.update(title_y=f"{title_y:.0f}", sub_y=f"{sub_y:.0f}", notes=notes)
+        template = COVER_V2
+    else:
+        band_h = h * 0.34
+        cl_r = min(20, w * 0.10)
+        cl_off = cl_r * 0.6
+        cl = cl_off + 2 * cl_r
+        if cfg["cover_notes"]:
+            lines = ",\n    ".join(
+                f'text(size: 10pt, fill: mute)[{_esc(str(x))}]'
+                for x in cfg["cover_notes"])
+            notes = (f'#place(bottom + left, dx: 24mm, dy: -44mm)[\n'
+                     f'  #stack(spacing: 3mm,\n    {lines})\n]')
+        else:
+            notes = ""
+        base.update(
+            band_h=f"{band_h:.0f}", cluster_y=f"{band_h - cl - 12:.0f}",
+            cl=f"{cl:.1f}", cl_off=f"{cl_off:.1f}", cl_r=f"{cl_r:.1f}",
+            title_y=30, notes=notes)
+        template = COVER_V3
+
+    src = template.format(**base)
     typ = build / "cover-auto.typ"
     typ.write_text(src, encoding="utf-8")
     png = build / "cover-auto.png"
@@ -238,6 +386,7 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
         capture_output=True, text=True)
     if r.returncode != 0 or not png.exists():
         _fail(f"자동 표지 생성 실패: {r.stderr.strip()[:300]}")
+    print(f"[build] 표지 변형 V{variant} (제목 해시 결정적)")
     return png.name
 
 
