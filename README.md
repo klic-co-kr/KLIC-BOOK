@@ -10,6 +10,7 @@
 | [GitHub 협업 실무 가이드](books/github-guide/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/github-guide/GitHub_협업_실무_가이드.pdf) |
 | [실전 시스템 설계 2026](books/practical-system-design-2026-book/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/practical-system-design-2026-book/build/실전_시스템_설계_2026_practical-system-design-2026-ko.pdf) |
 | [시스템 디자인 인터뷰 핵심 노트](books/system-design-interview-notes-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/system-design-interview-notes-ko/시스템_디자인_인터뷰_핵심_노트_system-design-interview-notes-ko.pdf) |
+| [많이 줄수록, 여럿일수록 정말 더 잘할까 — 에이전트 논문 10편 읽기](books/agent-papers-2026-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/agent-papers-2026-ko/많이_줄수록_여럿일수록_정말_더_잘할까_agent-papers-2026-ko.pdf) |
 | [AI 에이전트 깊이 이해하기](books/ai-agent-book-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/ai-agent-book-ko/build/AI_에이전트_깊이_이해하기_ai-agent-book-ko.pdf) |
 | [NHN FactoryX 실전 설계](books/factoryx-ai-infrastructure/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/factoryx-ai-infrastructure/build/NHN_FactoryX_실전_설계_nhn-factoryx-ai-infrastructure-ko.pdf) |
 | [대규모 언어모델(LLM) 강좌 2025](books/llm-lecture-2025/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/llm-lecture-2025/LLM_강좌_2025_한국어번역판.pdf) |
