@@ -101,73 +101,125 @@ def rebase_images(typ_file: Path, src_md: Path, build: Path, idx: int) -> None:
         return f'#figure(image("../assets/{dst}"))'
     typ_file.write_text(IMAGE_RE.sub(rewrite, text), encoding="utf-8")
 
-COVER_AUTO = """// 자동 생성 표지 — 파라미터형 벡터(네이비 분산노드 모티프)
+COVER_AUTO = """// 자동 표지 v2 — 상업 단행본 문법: 파스텔 지면 + 리본 부제 +
+// 중앙 스택 주제목(마지막 단어 brand색 1.6배) + 발행 락업.
+// 참조: bookforge practical 표지 문법(78pt Black·리본·지음·발행처) 재해석.
 #set page(width: {w}mm, height: {h}mm, margin: 0pt)
-#set text(font: ("Noto Sans KR", "Noto Serif CJK KR"), lang: "ko")
-#let navy = rgb("16283F")
-#let accent = rgb("4A9EDA")
-#let accent-soft = rgb("2E5E8C")
-#place(top + left, rect(width: 100%, height: 100%, fill: navy))
-#place(bottom + right, dx: -26mm, dy: 40mm)[
-  #{{let nodes = ((0mm, 0mm, 6mm), (28mm, 10mm, 4mm), (13mm, 30mm, 7mm),
-                 (40mm, 38mm, 5mm), (3mm, 43mm, 4mm), (30mm, 58mm, 6mm),
-                 (55mm, 23mm, 4mm), (8mm, 65mm, 4.5mm), (48mm, 70mm, 5mm))
-    for (a, b) in ((0,1), (0,2), (1,2), (1,3), (2,4), (2,5), (3,5), (3,6),
-                   (5,7), (5,8), (1,6), (4,7), (8,3), (2,3)) {{
-      let (xa, ya, _) = nodes.at(a)
-      let (xb, yb, _) = nodes.at(b)
-      place(dx: xa + nodes.at(a).at(2), dy: ya + nodes.at(a).at(2),
-            line(end: (xb - xa, yb - ya),
-                  stroke: (paint: accent-soft, thickness: 0.6pt, cap: "round")))
-    }}
-    for (x, y, r) in nodes {{
-      place(dx: x, dy: y, circle(radius: r, fill: rgb(74%, 82%, 92%, 18%), stroke: accent + 0.8pt))
-    }}}}
+#set text(font: {font_stack}, lang: "ko")
+#let paper = rgb("{paper}")
+#let ink = rgb("{ink}")
+#let deep = rgb("{deep}")
+#let brand = rgb("{brand}")
+#let soft = rgb("{soft}")
+#let mute = rgb("{mute}")
+#place(top + left, rect(width: 100%, height: 100%, fill: paper))
+// 상단 시리즈 라벨 — 넓은 트래킹 caps
+#place(top + center, dy: 16mm)[
+  #text(size: 9pt, fill: mute, tracking: 3.2pt, weight: "semibold")[{series}]
 ]
-#place(top + left, dy: 34mm, dx: 24mm)[#box(width: 14mm, height: 1.2pt, fill: accent)]
-#place(top + left, dy: 39mm, dx: 24mm)[
-  #text(size: 11pt, fill: rgb("8FB4D4"), tracking: 2.6pt, weight: "medium")[{series}]
+// 리본 밴드(부제 짧은 라벨) — 좌우 화살 꼬리
+#place(top + left, dx: {w}mm / 2 - {band_w}mm / 2 - 6mm, dy: {band_y}mm + 1.6mm,
+  polygon(fill: deep, (0mm, 0mm), (8mm, 0mm), (8mm, {band_h}mm), (0mm, {band_h}mm), (2.6mm, {band_h}mm / 2)))
+#place(top + left, dx: {w}mm / 2 + {band_w}mm / 2 - 2mm, dy: {band_y}mm + 1.6mm,
+  polygon(fill: deep, (0mm, 0mm), (8mm, 0mm), (5.4mm, {band_h}mm / 2), (8mm, {band_h}mm), (0mm, {band_h}mm)))
+#place(top + center, dy: {band_y}mm)[
+  #box(width: {band_w}mm, height: {band_h}mm, fill: brand, radius: 0mm)[
+    align(center + horizon, text(size: {band_pt}pt, weight: "bold", fill: white,
+      tracking: 0.02em)[{ribbon}])
+  ]
 ]
-#place(top + left, dy: 66mm, dx: 24mm)[
-  #text(size: {title_pt}pt, fill: white, weight: "bold")[{title}]
+// 주제목 — head/emph 스택, 마지막 단어만 brand색 1.6배
+#place(top + center, dy: {title_y}mm)[
+  #stack(dir: ttb, spacing: 8mm,
+    ..if "{head}" != "" {{ (
+      align(center, text(size: {head_pt}pt, weight: "bold", fill: ink,
+        tracking: -0.03em)[{head}]),) }} else {{ () }},
+    align(center, text(size: {emph_pt}pt, weight: "bold", fill: brand,
+      tracking: -0.03em)[{emph}]))
 ]
-#place(top + left, dy: 128mm, dx: 24mm)[
-  #text(size: 15pt, fill: rgb("C9D8E6"))[{subtitle}]
+// 부제 — 주제목 아래 넉넉한 폭
+#place(top + center, dy: {sub_y}mm)[
+  #box(width: {w}mm - 52mm)[
+    align(center, text(size: 13pt, fill: soft, weight: "regular")[{subtitle}])
+  ]
 ]
-#place(top + left, dy: 172mm, dx: 24mm)[#box(width: 162mm, height: 0.5pt, fill: accent-soft)]
+// 안내 노트 — 하단 좌측 불릿
 {notes}
-#place(bottom + left, dy: -30mm, dx: 24mm)[
-  #text(size: 11pt, fill: rgb("9FB2C6"))[{author}]
+// 저자 '지음' 락업
+#place(top + center, dy: {author_y}mm)[
+  text(size: 11pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
 ]
-#place(bottom + left, dy: -21mm, dx: 24mm)[
-  #text(size: 10pt, fill: rgb("6E8299"), tracking: 1pt)[{footer}]
+// 발행처 락업 — 하단 중앙 rule + caps
+#place(bottom + center, dy: -12mm)[
+  align(center)[
+    rect(width: 12mm, height: 0.8pt, fill: brand)
+    v(2.4mm, weak: true)
+    text(size: 9pt, weight: "semibold", fill: deep, tracking: 2.2pt)[{publisher}]
+  ]
 ]
 """
 
+
 def make_auto_cover(cfg: dict, build: Path) -> str:
-    """파라미터형 벡터 표지를 typst로 굽고 build/cover-auto.png 반환."""
+    """표지 v2 — 타이포그래피 문법 굽고 build/cover-auto.png 반환.
+
+    리본 부제(짧은 시리즈 라벨) + 중앙 스택 주제목(마지막 단어 brand색
+    1.6배) + 부제 + 안내 노트 + '지음' + 발행 락업. pt 크기는 판폭에서
+    전각 자폭(pt×0.353mm)으로 피팅해 계산한다.
+    """
+    import json as _json
     w, h = PAGE_MM[cfg["style"]]
-    # 주제목 2행 분할 — '—'·',' 우선, 없으면 14자 근방에서 공백 분리
-    title = cfg["title"]
-    if len(title) > 14 and "\\linebreak()" not in title:
-        for sep in (" — ", ", ", " "):
-            cut = title.find(sep, 6)
-            if 0 < cut < len(title) - 4:
-                title = title[:cut] + "#linebreak()" + title[cut + len(sep):]
-                break
-    subtitle = cfg["subtitle"] or ""
-    sub = subtitle.replace("\n", "#linebreak()")
+    tokens = _json.loads(
+        (STYLE_DIR / cfg["style"] / "tokens.json").read_text(encoding="utf-8"))
+    stack = tokens["fonts"]["body"]["stack"]
+    font_stack = "(" + ", ".join(f'"{f}"' for f in stack) + ")"
+    colors = tokens["colors"]
+
+    words = cfg["title"].split(" ")
+    emph_word = words[-1]
+    head_word = " ".join(words[:-1])
+    head_c = (len(head_word.replace(" ", ""))
+              + head_word.count(" ") * 0.55)
+    emph_c = len(emph_word)
+    limit = w - 44  # 좌우 안전 여백 합
+    head_pt = min(78, limit / (0.353 * head_c)) if head_c else 78
+    emph_pt = 1.6 * head_pt
+    emph_max = limit / (0.353 * emph_c)
+    if emph_pt > emph_max:
+        k = emph_max / emph_pt
+        head_pt, emph_pt = head_pt * k, emph_pt * k
+
+    band_y = h * 0.16
+    band_h, band_w = 8, 96
+    title_y = band_y + band_h + 14
+    block_h = (head_pt * 0.42 if head_word else 0) + 8 + emph_pt * 0.42
+    sub_y = title_y + block_h + 8
+
+    series = cfg.get("cover_series") or ""
+    ribbon = _esc(series.split("\u00b7")[0].strip() or "EBOOK")
+    sub = _esc((cfg["subtitle"] or "").replace("\n", "#linebreak()"))
     if cfg["cover_notes"]:
-        body = "#linebreak()".join(_esc(str(x)) for x in cfg["cover_notes"])
-        notes = ('#place(top + left, dy: 182mm, dx: 24mm)[\n'
-                 f'  #text(size: 12pt, fill: rgb("AEBFD0"))[{body}]\n]')
+        note_lines = ",\n    ".join(
+            f'text(size: 10.5pt, fill: mute)[{_esc(str(x))}]'
+            for x in cfg["cover_notes"])
+        notes = (f'#place(top + left, dy: {h - 66:.0f}mm, dx: 26mm)[\n'
+                 f'  #stack(spacing: 3.2mm,\n    {note_lines})\n]')
     else:
         notes = ""
+
     src = COVER_AUTO.format(
-        w=w, h=h, series=_esc(cfg["cover_series"]), title=_esc(title),
-        title_pt=44 if w >= 200 else 34, subtitle=_esc(sub),
-        notes=notes, author=_esc(cfg["author"] or ""),
-        footer=_esc(" · ".join(x for x in (cfg["author"], cfg["date"]) if x)),
+        w=w, h=h, font_stack=font_stack,
+        paper="F7F4EE", ink=colors["ink"], deep="16324F",
+        brand=colors["accent"], soft=colors["ink-soft"],
+        mute=colors["ink-mute"],
+        series=_esc(series.upper()), ribbon=ribbon, band_pt=12.5,
+        band_w=band_w, band_h=band_h, band_y=band_y,
+        head=_esc(head_word), head_pt=f"{head_pt:.1f}",
+        emph=_esc(emph_word), emph_pt=f"{emph_pt:.1f}",
+        title_y=title_y, sub_y=sub_y,
+        subtitle=sub, notes=notes,
+        author_bold=_esc(cfg["author"] or ""),
+        author_y=h - 36, publisher="KLIC BOOKS",
     )
     typ = build / "cover-auto.typ"
     typ.write_text(src, encoding="utf-8")
@@ -179,6 +231,7 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
     if r.returncode != 0 or not png.exists():
         _fail(f"자동 표지 생성 실패: {r.stderr.strip()[:300]}")
     return png.name
+
 
 def assemble(cfg: dict, book_dir: Path) -> Path:
     """스타일 팩 + 변환된 챕터를 build/에 조립해 main.typ 생성."""

@@ -50,7 +50,8 @@
 
 // 표지(타이포그래픽 기본형 — theme.typ가 오버라이드)
 #let make-cover(title, subtitle, author, cover: none) = {
-  page(margin: 0pt)[
+  // 표지엔 러닝헤드·쪽번호가 없다 — 전역 footer를 이 면에서만 끈다.
+  page(margin: 0pt, header: none, footer: none)[
     #if cover != none [#cover] else [
       #v(mm(tokens.trim.height_mm * 0.30))
       #align(left)[
