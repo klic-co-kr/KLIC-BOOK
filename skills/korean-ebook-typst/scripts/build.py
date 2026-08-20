@@ -270,6 +270,76 @@ COVER_V3 = """// 자동 표지 변형3 — 수평 밴드형: 상단 브랜드 �
 ]
 """
 
+
+COVER_V4 = """// 자동 표지 변형4 — 엣지 포인트: 우상단 코너에서 멀어질수록 작아지는
+// 하프톤 도트 필드. 인쇄 망점 문법, 결정적 수식 생성(난수 없음).
+#set page(width: {w}mm, height: {h}mm, margin: 0pt)
+#set text(font: {font_stack}, lang: "ko")
+#let paper = rgb("{paper}")
+#let ink = rgb("{ink}")
+#let brand = rgb("{brand}")
+#let soft = rgb("{soft}")
+#let mute = rgb("{mute}")
+#place(top + left, rect(width: 100%, height: 100%, fill: paper))
+// 하프톤 도트 필드 — 우상단 코너 기준 거리 감쇠
+#place(top + left, dx: 0mm, dy: 0mm)[
+  #{{let step = {step}mm
+    let cols = int({w}mm / step) + 2
+    let rows = int({h}mm * {field} / step) + 2
+    for i in range(cols) {{
+      for j in range(rows) {{
+        // 우상단 코너에서의 거리(mm 단위 실수)로 반지름 감쇠
+        let fx = ({w}mm - i * step) / 1mm
+        let fy = (j * step) / 1mm
+        let d = calc.sqrt(fx * fx + fy * fy)
+        let t = 1 - d / {reach}
+        if t > 0.04 {{
+          let r = {maxr}mm * calc.pow(t, 1.5)
+          place(dx: i * step - r, dy: j * step - r,
+            circle(radius: r, fill: brand.transparentize(30%)))
+        }}
+      }}
+    }}}}
+]
+// 시리즈 — 좌측 상단
+#place(top + left, dx: 26mm, dy: 18mm)[
+  #text(size: 9pt, fill: mute, tracking: 3pt, weight: "semibold")[{series}]
+]
+// 주제목 — 좌측 수직 중앙 스택 + 도트 언더라인
+#place(top + left, dx: 26mm, dy: {title_y}mm)[
+  #align(left, stack(dir: ttb, spacing: 7mm,
+    ..if "{head}" != "" {{ (
+      align(left, text(size: {head_pt}pt, weight: "bold", fill: ink,
+        tracking: -0.03em)[{head}]),) }} else {{ () }},
+    align(left, text(size: {emph_pt}pt, weight: "bold", fill: brand,
+      tracking: -0.03em)[{emph}]),
+    // 도트 언더라인 — 크기 감쇠 점 12개
+    align(left, box(height: 3mm)[#{{for k in range(12) {{
+      place(dx: k * {dstep}mm, circle(radius: (0.95mm - k * 0.06mm),
+        fill: brand))
+    }}}}])
+  ))
+]
+// 부제 — 타이틀 아래
+#place(top + left, dx: 26mm, dy: {sub_y}mm)[
+  #box(width: {w}mm - 70mm)[
+    #text(size: 12.5pt, fill: soft)[{subtitle}]
+  ]
+]
+{notes}
+// 저자 좌·발행 우
+#place(bottom + left, dx: 26mm, dy: -16mm)[
+  #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
+]
+#place(bottom + right, dx: -18mm, dy: -16mm)[
+  #align(right)[
+    #rect(width: 10mm, height: 0.8pt, fill: brand)
+    #v(2mm, weak: true)
+    #text(size: 8.5pt, weight: "semibold", fill: mute, tracking: 2pt)[{publisher}]
+  ]
+]
+"""
+
 def make_auto_cover(cfg: dict, build: Path) -> str:
     """표지 자동 생성 — 3변형 문법에서 책마다 하나를 정해 재현 가능하게.
 
@@ -278,6 +348,7 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
       V1 비대칭 좌측(엣지 바·두 원·바텀 앵커)
       V2 이중 프레임 문고형(괘선·중앙 타이포·코너 틱)
       V3 수평 밴드형(브랜드 밴드 타이틀·원 클러스터)
+      V4 엣지 포인트(우상단 하프톤 도트 필드·도트 언더라인)
     """
     import hashlib
     import json as _json
@@ -306,8 +377,8 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
     block_h = (head_pt * 0.42 if head_word else 0) + 7 + emph_pt * 0.42
 
     variant = cfg.get("cover_variant")
-    if variant not in (1, 2, 3, "1", "2", "3"):
-        variant = int(hashlib.sha1(cfg["title"].encode()).hexdigest(), 16) % 3 + 1
+    if variant not in (1, 2, 3, 4, "1", "2", "3", "4"):
+        variant = int(hashlib.sha1(cfg["title"].encode()).hexdigest(), 16) % 4 + 1
     variant = int(variant)
 
     series = cfg.get("cover_series") or ""
@@ -357,7 +428,7 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
             notes = ""
         base.update(title_y=f"{title_y:.0f}", sub_y=f"{sub_y:.0f}", notes=notes)
         template = COVER_V2
-    else:
+    elif variant == 3:
         band_h = h * 0.34
         cl_r = min(20, w * 0.10)
         cl_off = cl_r * 0.6
@@ -375,6 +446,22 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
             cl=f"{cl:.1f}", cl_off=f"{cl_off:.1f}", cl_r=f"{cl_r:.1f}",
             title_y=30, notes=notes)
         template = COVER_V3
+    elif variant == 4:
+        title_y = h * 0.34
+        sub_y = title_y + block_h + 12
+        if cfg["cover_notes"]:
+            lines = ",\n    ".join(
+                f'text(size: 10pt, fill: mute)[{_esc(str(x))}]'
+                for x in cfg["cover_notes"])
+            notes = (f'#place(bottom + left, dx: 26mm, dy: -44mm)[\n'
+                     f'  #stack(spacing: 3mm,\n    {lines})\n]')
+        else:
+            notes = ""
+        base.update(
+            step=7, field=0.62, reach=f"{w * 0.92:.0f}", maxr=3.2,
+            dstep="4.6", title_y=f"{title_y:.0f}",
+            sub_y=f"{sub_y:.0f}", notes=notes)
+        template = COVER_V4
 
     src = template.format(**base)
     typ = build / "cover-auto.typ"
