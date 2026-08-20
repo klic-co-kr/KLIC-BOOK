@@ -45,7 +45,7 @@ def test_essay_body_font_ps_alias():
     "Noto Serif CJK KR"과 결과가 같지만, 임베드명 사례를 ps로 명시 등록해
     폰트 환경 변화에도 계약이 깨지지 않게 한다(qc_gate allowed_fonts).
     """
-    a = allowed_fonts(_tokens())
+    a = allowed_fonts(_tokens())[0]
     assert "notoserifcjkkr" in a          # 스택 표기 정규화
     assert "notoserifkr" in a             # 후순위 폴백
     assert _tokens()["fonts"]["body"].get("ps") == ["NotoSerifCJKkr"]

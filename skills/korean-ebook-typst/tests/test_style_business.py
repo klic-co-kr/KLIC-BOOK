@@ -56,7 +56,7 @@ def test_business_body_font_ps_alias():
     임베드명 사례를 ps로 명시 등록해 폰트 환경 변화에도 계약이 깨지지 않게
     한다(qc_gate allowed_fonts).
     """
-    a = allowed_fonts(_tokens())
+    a = allowed_fonts(_tokens())[0]
     assert "notosanskr" in a               # 스택 표기 정규화 = ps 별칭
     assert "pretendard" in a               # 후순위 폴백
     assert _tokens()["fonts"]["body"].get("ps") == ["NotoSansKR"]

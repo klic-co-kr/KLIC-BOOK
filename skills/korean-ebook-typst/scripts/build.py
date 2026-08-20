@@ -9,6 +9,8 @@ import yaml
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
 STYLES = ("practical", "essay", "business", "lecture")
+PAGE_MM = {"practical": (153, 225), "essay": (128, 188),
+           "business": (200, 280), "lecture": (210, 297)}
 
 def _fail(msg: str) -> None:
     print(f"[build] 오류: {msg}", file=sys.stderr)
@@ -21,22 +23,31 @@ def load_config(path: Path) -> dict:
     for key in ("style", "title", "chapters"):
         if key not in cfg:
             _fail(f"필수 필드 누락: {key}")
-    if cfg["style"] not in STYLES:
-        _fail(f"알 수 없는 스타일: {cfg['style']} (허용: {', '.join(STYLES)})")
+    base = path.parent
     if not isinstance(cfg["chapters"], list) or not cfg["chapters"]:
         _fail("chapters는 1개 이상의 파일 목록이어야 함")
-    base = path.parent
     for ch in cfg["chapters"]:
         if not (base / ch).exists():
             _fail(f"챕터 파일 없음: {base / ch}")
+    style = cfg["style"]
+    if style == "auto":
+        # 원고 콘텐츠 밀도(표·수식·이미지·문단 길이)에서 판형 자동 판단.
+        # 논문·도표형 → lecture(A4), 장문 산문 → essay(B6), 실용서 → practical.
+        import style_pick
+        style, why = style_pick.pick(base, list(cfg["chapters"]))
+        print(f"[build] style: auto → {style} — {why}")
+    elif style not in STYLES:
+        _fail(f"알 수 없는 스타일: {cfg['style']} (허용: {', '.join(STYLES)}, auto)")
     return {
-        "style": cfg["style"],
+        "style": style,
         "title": cfg["title"],
         "subtitle": cfg.get("subtitle", ""),
         "author": cfg.get("author", ""),
         "date": cfg.get("date", ""),
         "chapters": list(cfg["chapters"]),
         "cover": cfg.get("cover"),
+        "cover_series": cfg.get("cover_series", "KLIC BOOKS"),
+        "cover_notes": cfg.get("cover_notes"),
     }
 
 MD2TYPST = SKILL_DIR / "scripts" / "md2typst.py"
@@ -89,6 +100,85 @@ def rebase_images(typ_file: Path, src_md: Path, build: Path, idx: int) -> None:
         return f'#figure(image("../assets/{dst}"))'
     typ_file.write_text(IMAGE_RE.sub(rewrite, text), encoding="utf-8")
 
+COVER_AUTO = """// 자동 생성 표지 — 파라미터형 벡터(네이비 분산노드 모티프)
+#set page(width: {w}mm, height: {h}mm, margin: 0pt)
+#set text(font: ("Noto Sans KR", "Noto Serif CJK KR"), lang: "ko")
+#let navy = rgb("16283F")
+#let accent = rgb("4A9EDA")
+#let accent-soft = rgb("2E5E8C")
+#place(top + left, rect(width: 100%, height: 100%, fill: navy))
+#place(bottom + right, dx: -26mm, dy: 40mm)[
+  #{{let nodes = ((0mm, 0mm, 6mm), (28mm, 10mm, 4mm), (13mm, 30mm, 7mm),
+                 (40mm, 38mm, 5mm), (3mm, 43mm, 4mm), (30mm, 58mm, 6mm),
+                 (55mm, 23mm, 4mm), (8mm, 65mm, 4.5mm), (48mm, 70mm, 5mm))
+    for (a, b) in ((0,1), (0,2), (1,2), (1,3), (2,4), (2,5), (3,5), (3,6),
+                   (5,7), (5,8), (1,6), (4,7), (8,3), (2,3)) {{
+      let (xa, ya, _) = nodes.at(a)
+      let (xb, yb, _) = nodes.at(b)
+      place(dx: xa + nodes.at(a).at(2), dy: ya + nodes.at(a).at(2),
+            line(end: (xb - xa, yb - ya),
+                  stroke: (paint: accent-soft, thickness: 0.6pt, cap: "round")))
+    }}
+    for (x, y, r) in nodes {{
+      place(dx: x, dy: y, circle(radius: r, fill: rgb(74%, 82%, 92%, 18%), stroke: accent + 0.8pt))
+    }}}}
+]
+#place(top + left, dy: 34mm, dx: 24mm)[#box(width: 14mm, height: 1.2pt, fill: accent)]
+#place(top + left, dy: 39mm, dx: 24mm)[
+  #text(size: 11pt, fill: rgb("8FB4D4"), tracking: 2.6pt, weight: "medium")[{series}]
+]
+#place(top + left, dy: 66mm, dx: 24mm)[
+  #text(size: {title_pt}pt, fill: white, weight: "bold")[{title}]
+]
+#place(top + left, dy: 128mm, dx: 24mm)[
+  #text(size: 15pt, fill: rgb("C9D8E6"))[{subtitle}]
+]
+#place(top + left, dy: 172mm, dx: 24mm)[#box(width: 162mm, height: 0.5pt, fill: accent-soft)]
+{notes}
+#place(bottom + left, dy: -30mm, dx: 24mm)[
+  #text(size: 11pt, fill: rgb("9FB2C6"))[{author}]
+]
+#place(bottom + left, dy: -21mm, dx: 24mm)[
+  #text(size: 10pt, fill: rgb("6E8299"), tracking: 1pt)[{footer}]
+]
+"""
+
+def make_auto_cover(cfg: dict, build: Path) -> str:
+    """파라미터형 벡터 표지를 typst로 굽고 build/cover-auto.png 반환."""
+    w, h = PAGE_MM[cfg["style"]]
+    # 주제목 2행 분할 — '—'·',' 우선, 없으면 14자 근방에서 공백 분리
+    title = cfg["title"]
+    if len(title) > 14 and "\\linebreak()" not in title:
+        for sep in (" — ", ", ", " "):
+            cut = title.find(sep, 6)
+            if 0 < cut < len(title) - 4:
+                title = title[:cut] + "#linebreak()" + title[cut + len(sep):]
+                break
+    subtitle = cfg["subtitle"] or ""
+    sub = subtitle.replace("\n", "#linebreak()")
+    if cfg["cover_notes"]:
+        body = "#linebreak()".join(_esc(str(x)) for x in cfg["cover_notes"])
+        notes = ('#place(top + left, dy: 182mm, dx: 24mm)[\n'
+                 f'  #text(size: 12pt, fill: rgb("AEBFD0"))[{body}]\n]')
+    else:
+        notes = ""
+    src = COVER_AUTO.format(
+        w=w, h=h, series=_esc(cfg["cover_series"]), title=_esc(title),
+        title_pt=44 if w >= 200 else 34, subtitle=_esc(sub),
+        notes=notes, author=_esc(cfg["author"] or ""),
+        footer=_esc(" · ".join(x for x in (cfg["author"], cfg["date"]) if x)),
+    )
+    typ = build / "cover-auto.typ"
+    typ.write_text(src, encoding="utf-8")
+    png = build / "cover-auto.png"
+    r = subprocess.run(
+        [typst_binary(), "compile", str(typ), str(png),
+         "--root", str(build), "--ppi", "150"],
+        capture_output=True, text=True)
+    if r.returncode != 0 or not png.exists():
+        _fail(f"자동 표지 생성 실패: {r.stderr.strip()[:300]}")
+    return png.name
+
 def assemble(cfg: dict, book_dir: Path) -> Path:
     """스타일 팩 + 변환된 챕터를 build/에 조립해 main.typ 생성."""
     build = book_dir / "build"
@@ -103,14 +193,16 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     shutil.copy2(style / "theme.typ", build / "theme.typ")
     shutil.copy2(SKILL_DIR / "templates" / "base.typ", build / "base.typ")
 
-    # 표지: typst --root가 build/이므로 build/로 복사 후 파일명만 삽입
+    # 표지: 명시 경로 > auto/생략(파라미터형 벡터 자동 생성)
     cover_name = None
-    if cfg["cover"]:
+    if cfg["cover"] and cfg["cover"] != "auto":
         cover_src = book_dir / cfg["cover"]
         if not cover_src.exists():
             _fail(f"표지 파일 없음: {cover_src}")
         cover_name = Path(cfg["cover"]).name
         shutil.copy2(cover_src, build / cover_name)
+    else:
+        cover_name = make_auto_cover(cfg, build)
 
     converted = []
     for idx, ch in enumerate(cfg["chapters"]):

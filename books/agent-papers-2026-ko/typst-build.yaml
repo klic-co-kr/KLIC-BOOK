@@ -1,4 +1,4 @@
-style: lecture
+style: auto
 title: "많이 줄수록, 여럿일수록 정말 더 잘할까"
 subtitle: "에이전트 논문 10편 읽기 — alphaXiv 2026년 8월"
 author: "KLIC"
@@ -16,4 +16,11 @@ chapters:
   - manuscript/09-제9장-잘-나온-결과-하나로.md
   - manuscript/10-제10장-만들기-전에-약속.md
   - manuscript/11-맺음말.md
-cover: assets/cover.png
+cover: auto
+
+cover_series: "AGENT PAPERS · 2026.08"
+cover_notes:
+  - "· A. 무엇을, 얼마나 줄 것인가 — 하네스 · 상태 · 작업공간"
+  - "· B. 얼마나 쪼갤 것인가 — 경계의 거버넌스 · 조율 비용"
+  - "· C. 무엇을 기억할 것인가 — 기억의 형태와 정책"
+  - "· D. 어떻게 잴 것인가 — 프롬프트의 값 · 과정 지표 · 명세"

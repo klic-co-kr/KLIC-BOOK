@@ -28,7 +28,7 @@ def test_allowed_fonts_includes_ps_aliases():
                  "ps": ["KoPubWorldBatang"]},
         "heading1": {"stack": ["Noto Sans KR"]},
     }}
-    a = allowed_fonts(tokens)
+    a = allowed_fonts(tokens)[0]
     assert "kopubworldbatang" in a          # ps 별칭 경로
     assert "kopubworld바탕" in a            # 스택 표기도 유지
     assert "notoserifkr" in a
@@ -37,7 +37,7 @@ def test_allowed_fonts_includes_ps_aliases():
 
 def test_allowed_fonts_without_ps_unchanged():
     tokens = {"fonts": {"body": {"stack": ["Noto Sans KR"]}}}
-    assert allowed_fonts(tokens) == {"notosanskr"}
+    assert allowed_fonts(tokens)[0] == {"notosanskr"}
 
 
 @SKIP

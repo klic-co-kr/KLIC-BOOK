@@ -86,7 +86,34 @@ def norm_font(name: str) -> str:
     return "".join(ch for ch in name.lower() if ch.isalnum())
 
 
-def check_fonts(pdf: Path, allowed: set) -> list:
+def family_raw(basefont: str) -> str:
+    """basefont → 가족명 원문(서브셋·스타일 접미사만 제거).
+
+    NanumSquare_ac처럼 가족명 자체에 밑줄이 붙은 폰트는 임베드 PS명이
+    NanumSquare_acR로 끝나 norm 정규화(alnum만) 후 매칭이 어긋난다.
+    원문 비교로 변형 접미사를 판정하기 위해 쓴다.
+    """
+    if "+" in basefont:
+        basefont = basefont.split("+", 1)[1]
+    return basefont.split("-", 1)[0]
+
+
+VARIANT_SUFFIX = re.compile(r"^[A-Za-z_]{0,4}$")
+
+def _font_allowed(basefont: str, allowed_norm: set,
+                  allowed_raw: set) -> bool:
+    n = norm_font(basefont)
+    if n in allowed_norm or n in MATH_FONT_ALLOWLIST or not n:
+        return True
+    # 변형 접미사 매칭: 임베드 PS명(NanumSquare_acR)이 스택 가족명
+    # (NanumSquare_ac) + 짧은 스타일 접미사(R·AC 등 4자 이하)면 같은
+    # 가족으로 본다. NanumGothic↔NanumGothicCoding 같은 타 가족은
+    # 접미사가 4자를 넘어 기각된다.
+    fam = family_raw(basefont)
+    return any(fam == a or fam.startswith(a) and VARIANT_SUFFIX.match(fam[len(a):])
+               for a in allowed_raw if a)
+
+def check_fonts(pdf: Path, allowed_norm: set, allowed_raw: set) -> list:
     violations, seen = [], set()
     with fitz.open(pdf) as doc:
         for page in doc:
@@ -96,7 +123,7 @@ def check_fonts(pdf: Path, allowed: set) -> list:
                 if n in seen:
                     continue
                 seen.add(n)
-                if n in allowed or n in MATH_FONT_ALLOWLIST or not n:
+                if _font_allowed(basefont, allowed_norm, allowed_raw):
                     continue
                 violations.append(f"계약 외 폰트: {basefont}")
     return violations
@@ -125,16 +152,17 @@ def check_chars_band(pdf: Path, band: dict, body_size_pt: float,
     return warns
 
 
-def allowed_fonts(tokens: dict) -> set:
-    """tokens fonts → 정규화 허용 집합(stack + 선택 ps 별칭).
+def allowed_fonts(tokens: dict) -> tuple:
+    """tokens fonts → (정규화 허용집합, 원문 가족명 집합).
 
-    KoPubWorld바탕처럼 임베드 PostScript명(KoPubWorldBatang)이 스택
-    표기와 달라 정규화 결과가 어긋나는 폰트는 스택 항목의 "ps" 배열로
-    임베드명을 추가 등록한다.
+    정규화 집합은 기존대로 stack + 선택 ps 별칭. 원문 집합은 G2 변형
+    접미사 매칭(NanumSquare_ac ↔ NanumSquare_acR)에 쓰인다.
     """
-    allowed = {norm_font(f) for fs in tokens["fonts"].values() for f in fs["stack"]}
-    allowed |= {norm_font(p) for fs in tokens["fonts"].values() for p in fs.get("ps", [])}
-    return allowed
+    allowed_norm = {norm_font(f) for fs in tokens["fonts"].values() for f in fs["stack"]}
+    allowed_norm |= {norm_font(p) for fs in tokens["fonts"].values() for p in fs.get("ps", [])}
+    allowed_raw = {f for fs in tokens["fonts"].values() for f in fs["stack"]}
+    allowed_raw |= {p for fs in tokens["fonts"].values() for p in fs.get("ps", [])}
+    return allowed_norm, allowed_raw
 
 
 def run(book_dir: Path) -> int:
@@ -157,8 +185,8 @@ def run(book_dir: Path) -> int:
               f"(무시: {', '.join(p.name for p in pdfs[1:])})", file=sys.stderr)
     frame = load_frame(tokens_path)
     overflow = check_overflow(pdf, frame)
-    allowed = allowed_fonts(tokens)
-    fonts = check_fonts(pdf, allowed)
+    allowed_norm, allowed_raw = allowed_fonts(tokens)
+    fonts = check_fonts(pdf, allowed_norm, allowed_raw)
     band = tokens.get("chars_per_line")
     frame_w = frame[2] - frame[0]
     warns = check_chars_band(pdf, band, tokens["fonts"]["body"]["size_pt"],

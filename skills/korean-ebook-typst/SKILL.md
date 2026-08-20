@@ -22,6 +22,24 @@ python3 scripts/qc_gate.py <책dir>   # PASS 시에만 → <책dir>/final/
 
 (final/은 qc_gate.py만 생성한다. 빌드 산물 `build/`·`draft/`·`final/`·`gate-report.json`은 gitignore.)
 
+## 자동화 (2026-08)
+
+**`style: auto`** — 원고 콘텐츠에서 판형을 자동 판단(`scripts/style_pick.py`).
+챕터당 시각 요소(표 1.0 + 이미지 1.0 + 수식 0.5 + 코드펜스 0.3)가 1.5건 이상이면
+**lecture(A4)** — 논문·도표형 원고. 문단 평균 400자+·표 0.5건 미만이면
+**essay(B6)** 산문. 그 외 **practical(신국판)** 실용서. business는 정형
+리포트용이라 명시 지정만. 판단 사유는 빌드 로그에 출력된다.
+
+**`cover: auto`(또는 생략)** — 파라미터형 벡터 표지를 자동 생성한다.
+네이비 배경 + 분산노드 모티프 + 계층형 타이틀, 스타일 판형 크기에 맞춤.
+`cover_series`(상단 시리즈 라벨, 기본 "KLIC BOOKS")와
+`cover_notes`(하단 불릿 목록)로 원고별 안내문을 넣는다.
+명시 경로(`cover: assets/x.png`)를 주면 그 파일을 쓴다.
+
+**G2 변형 접미사 매칭** — 임베드 PS명이 스택 가족명 + 짧은 스타일 접미사
+(NanumSquare_ac → NanumSquare_acR 등 4자 이하)면 같은 가족으로 통과.
+매 책마다 tokens.json에 ps 별칭을 손으로 추가하던 일이 필요없어졌다.
+
 ## 원고 헤딩 규약 (중요)
 
 md2typst 매핑: `##`→H1(`=`), `###`→H2(`==`), `####`→H3(`===`). **`#` 단독도 H1(`=`)로 변환된다.**
@@ -35,14 +53,18 @@ md2typst 매핑: `##`→H1(`=`), `###`→H2(`==`), `####`→H3(`===`). **`#` 단
 ## typst-build.yaml
 
 ```yaml
-style: practical        # practical | essay | business | lecture
+style: practical        # practical | essay | business | lecture | auto(원고에서 자동판단)
 title: "책 제목"
 subtitle: "부제"
 author: "저자"
 date: "2026-08"
 chapters:
   - manuscript/ch01.md  # 목록 순서가 책 순서(파일명 정렬 아님)
-cover: assets/cover.png   # 선택. 없으면 타이포그래픽 표지
+cover: auto             # auto/생략 = 벡터 표지 자동생성, 경로 = 해당 파일 사용
+cover_series: "KLIC BOOKS"   # 선택 — 표지 상단 시리즈 라벨
+cover_notes:                 # 선택 — 표지 하단 불릿 목록
+  - "· 구성 요약 첫 줄"
+  - "· 구성 요약 둘째 줄"
 ```
 
 기존 book-config.yaml(WeasyPrint 계약)과 별개 파일 — 공존, 간섭 없음.
@@ -63,7 +85,7 @@ G3 밴드는 판형별 물리값(판면 폭 × 본문 pt의 전각 환산 기준
 | 게이트 | 검사 | 판정 |
 |---|---|---|
 | G1 | 본문 잉크 bbox가 body_frame_pt 판면 내 (±3pt 허용, 표지 제외, 푸터 쪽번호 면제) | FAIL |
-| G2 | 실사용(임베드) 폰트 ⊆ tokens fonts 계약(stack + ps 별칭, 수식 폰트 allowlist) | FAIL |
+| G2 | 실사용(임베드) 폰트 ⊆ tokens fonts 계약(stack + ps 별칭 + 변형 접미사 매칭, 수식 폰트 allowlist) | FAIL |
 | G3 | 본문 한 줄 자수가 스타일 밴드 내 (표지·목차 제외, 정렬 줄만) | WARN |
 
 PASS 조건은 G1·G2 무위반. `gate-report.json`(책 디렉터리에 생성)을 참조해

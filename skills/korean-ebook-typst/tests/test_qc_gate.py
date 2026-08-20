@@ -12,7 +12,7 @@ import shutil, subprocess, json
 from pathlib import Path
 import pytest
 import fitz
-from scripts.qc_gate import check_fonts, check_chars_band, norm_font, run
+from scripts.qc_gate import check_fonts, check_chars_band, norm_font, run, _font_allowed
 
 SKIP = pytest.mark.skipif(not shutil.which("typst"), reason="typst 미설치")
 
@@ -77,7 +77,7 @@ def test_fonts_in_contract(tmp_path):
     pdf = tmp_path / "t.pdf"
     subprocess.run(["typst", "compile", str(src), str(pdf)],
                    check=True, capture_output=True)
-    assert check_fonts(pdf, {"notosanscjkkr"}) == []
+    assert check_fonts(pdf, {"notosanscjkkr"}, {"Noto Sans CJK KR"}) == []
 
 @SKIP
 def test_fonts_out_of_contract(tmp_path):
@@ -88,7 +88,7 @@ def test_fonts_out_of_contract(tmp_path):
     pdf = tmp_path / "t.pdf"
     subprocess.run(["typst", "compile", str(src), str(pdf)],
                    check=True, capture_output=True)
-    bad = check_fonts(pdf, {"notosanscjkkr"})
+    bad = check_fonts(pdf, {"notosanscjkkr"}, {"Noto Sans CJK KR"})
     # 위반 메시지는 원본 basefont 표기("DejaVuSansMono")를 보존 — 소문자 비교
     assert any("dejavusansmono" in b.lower() for b in bad)
 
@@ -103,4 +103,12 @@ def test_math_fonts_allowlisted(tmp_path):
     pdf = tmp_path / "t.pdf"
     subprocess.run(["typst", "compile", str(src), str(pdf)],
                    check=True, capture_output=True)
-    assert check_fonts(pdf, {"notosanscjkkr"}) == []
+    assert check_fonts(pdf, {"notosanscjkkr"}, {"Noto Sans CJK KR"}) == []
+
+def test_font_variant_suffix_match():
+    """임베드 PS명 변형 접미사(NanumSquare_acR)는 같은 가족으로 통과."""
+    assert _font_allowed("HXBYGS+NanumSquare_acR-Regular",
+                         {"nanumsquareac"}, {"NanumSquare_ac"})
+    # 타 가족(NanumGothicCoding)은 접미사 4자 초과 — 기각
+    assert not _font_allowed("XX+NanumGothicCoding-Regular",
+                             {"nanumgothic"}, {"NanumGothic"})
