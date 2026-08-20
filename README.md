@@ -14,6 +14,7 @@
 | [AI 에이전트 깊이 이해하기](books/ai-agent-book-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/ai-agent-book-ko/build/AI_에이전트_깊이_이해하기_ai-agent-book-ko.pdf) |
 | [NHN FactoryX 실전 설계](books/factoryx-ai-infrastructure/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/factoryx-ai-infrastructure/build/NHN_FactoryX_실전_설계_nhn-factoryx-ai-infrastructure-ko.pdf) |
 | [대규모 언어모델(LLM) 강좌 2025](books/llm-lecture-2025/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/llm-lecture-2025/LLM_강좌_2025_한국어번역판.pdf) |
+| [제품 디자인 심리학](books/product-design-psychology/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/product-design-psychology/제품_디자인_심리학_product-design-psychology-ko.pdf) |
 
 ## 🎓 강의
 

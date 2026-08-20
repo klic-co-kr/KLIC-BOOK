@@ -1,0 +1,60 @@
+---
+style: auto
+title: "제품 디자인 심리학"
+subtitle: "당신이 디자인하는 마음과, 함께 디자인하는 당신의 마음을 이해한다"
+author: "Wouter de Bres"
+date: "2026-08"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/part-1.md
+  - manuscript/01-아무도-당신처럼-생각하지-않는다.md
+  - manuscript/02-당신은-자신의-디자인을-망친다.md
+  - manuscript/03-에고를-위한-디자인.md
+  - manuscript/04-당신의-마음은-당신에게-거짓말을-한다.md
+  - manuscript/05-취향은-재능이-아니다.md
+  - manuscript/06-창의성은-마법이-아니다.md
+  - manuscript/07-마감이-당신을-멍청하게-만든다.md
+  - manuscript/08-첫-스케치에-반하다.md
+  - manuscript/09-당신의-지식이-문제다.md
+  - manuscript/10-당신은-듣고-있지-않다.md
+  - manuscript/part-2.md
+  - manuscript/11-첫인상-테스트를-먼저-통과하라.md
+  - manuscript/12-당신의-디자인은-조작되어-있다.md
+  - manuscript/13-클릭할-수-있는-것을-숨기지-마라.md
+  - manuscript/14-직관적-디자인은-거짓이다.md
+  - manuscript/15-당신의-ui는-사용자를-지치게-한다.md
+  - manuscript/16-패턴을-깨지-마라.md
+  - manuscript/17-아무도-당신의-ui를-기억하지-않는다.md
+  - manuscript/18-마지막-순간을-먼저-디자인하라.md
+  - manuscript/19-가짜-진행도는-진짜-동기다.md
+  - manuscript/20-레이아웃은-당신보다-먼저-말한다.md
+  - manuscript/part-3.md
+  - manuscript/21-사용자는-작업-단위로-생각하지-않는다.md
+  - manuscript/22-사용자는-나중이-아니라-지금을-원한다.md
+  - manuscript/23-사용자는-당신에게-거짓말을-한다.md
+  - manuscript/24-사용자는-먼저-반응하고-나서-합리화한다.md
+  - manuscript/25-사용자는-새-디자인을-미워한다.md
+  - manuscript/26-당신의-디자인은-번역되지-않는다.md
+  - manuscript/27-낡은-습관이-더-나은-제품을-이긴다.md
+  - manuscript/28-선택지가-많을수록-사용자는-떠난다.md
+  - manuscript/29-사용자는-당신을-무시한다.md
+  - manuscript/30-당신의-디자인이-사용자를-떠나게-만들었다.md
+  - manuscript/part-4.md
+  - manuscript/31-당신은-상사가-좋아하는-것을-출시한다.md
+  - manuscript/32-좋은-디자인은-회의실에서-죽는다.md
+  - manuscript/33-리디자인은-당신을-구하지-못한다.md
+  - manuscript/34-지표는-사용자가-아니다.md
+  - manuscript/35-로드맵이-사용자를-집어삼켰다.md
+  - manuscript/36-인정하느니-차라리-출시한다.md
+  - manuscript/37-같은-실수를-다시-디자인한다.md
+  - manuscript/38-잘못된-문제를-풀었다.md
+  - manuscript/39-알리바이로-쓰이는-리서치.md
+  - manuscript/40-이제-당신은-너무-많이-안다.md
+cover: auto
+
+cover_series: "웹북 번역 · PRODUCT DESIGN PSYCHOLOGY"
+cover_notes:
+  - "· 제1부 디자이너의 마음 — 1장~10장"
+  - "· 제2부 디자인을 다루는 마음 — 11장~20장"
+  - "· 제3부 사용자의 마음 — 21장~30장"
+  - "· 제4부 조직의 마음 — 31장~40장"
