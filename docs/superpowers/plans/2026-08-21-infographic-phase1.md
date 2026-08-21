@@ -1,6 +1,8 @@
-# 인포그래픽 레이어 Phase 1 (인프라 + flow) Implementation Plan
+# 인포그래픽 레이어 Phase 1 (인프라 + flow) Implementation Plan — 개정 2판
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+> **개정 2판 (2026-08-22):** 초판 적대 검토 3관점(코드 실행 실증·스펙 충실성·실행가능성) 22건 반영. 주요 수정 — helper.typ 실측 결함 3건 교정(`pt()` 미정의·`place(center+horizon)` 앵커 오류·open-V 퇴화식), 배치 결정론에서 세로 모드 제거(판형 상한 테이블 + 2행 랩으로 전 판형 수학적 합법 — n=8 세로 571pt>한계 441pt 불가 실증), I1 9항목 완전 구현(커넥터 산술·판형 상한·펜스 위장 감지·미검증 비치명 경로), I1Error 생성자 순서·`sys.path` 명시·`_esc @<>` 확장·골든 확정 절차 신설·테스트 7건 정정.
 
 **Goal:** korean-ebook-typst에 ```infographic 펜스 → Python 레이아웃 → typst 벡터 도식 → 책 PDF 삽입까지의 엔드투엔드 파이프라인을 flow archetype 1종으로 관통시킨다.
 
@@ -19,8 +21,10 @@
 - 도식 텍스트 크기는 본문 크기 ±0.3pt 밖이어야 한다(G3 불변식, 스펙 §5.2-9).
 - 모든 I1 에러 메시지는 `챕터md #펜스순번 필드경로` 위치 + 측정값 + 저작자 레버 제안을 담는다(스펙 §5.2).
 - 빌드 산물 `build/`·`draft/`는 gitignore에 이미 포함 — 커밋 금지.
-- 테스트는 `skills/korean-ebook-typst/tests/` 아래, 기존 pytest 관례 따름.
-- 저작 데이터는 JSON: 스펙 초판은 YAML이었으나 표준 라이브러리에 YAML 파서가 없어 PyYAML 의존이 강제된다. 의존 금지 원칙이 우선하므로 **펜스 언어는 `infographic`, 내용은 JSON**으로 확정한다(스펙 §3의 "YAML" 표기는 JSON으로 읽는다).
+- 테스트는 `skills/korean-ebook-typst/tests/` 아래. import는 기존 관례를 따른다: `tests/conftest.py`가 스킬 루트를 sys.path에 추가하므로 `from scripts.infographic.x import y` 형식이 그대로 동작한다(기존 `from scripts.build import …`와 동일 패턴, PEP420 네임스페이스).
+- 저작 데이터는 JSON: 표준 라이브러리에 YAML 파서가 없어 PyYAML 의존이 강제된다. 의존 금지 원칙이 우선하므로 **펜스 언어는 `infographic`, 내용은 JSON**으로 확정한다(스펙 개정 3판이 §2·§3의 YAML 표기를 JSON으로 확정한다).
+- typst 바이너리 탐지는 어디서든 `build.py:typst_binary()` 재사용으로 단일화한다(PATH → `~/.local/bin/typst` 폴백 — 임의 폴백 경로 중복 금지).
+- 슬로우 테스트(subprocess 빌드·컴파일 포함)는 `subprocess.run(..., timeout=120)`을 명시한다.
 
 ---
 
@@ -216,6 +220,12 @@ def test_invalid_json_rejected():
     assert "JSON" in e.value.detail or "json" in e.value.detail
 
 
+def test_empty_fence_rejected_with_line():
+    with pytest.raises(ParseError, match="빈 펜스") as e:
+        parse_fence(2, 41, "   \n")
+    assert e.value.line == 41
+
+
 def test_unknown_layout_rejected():
     with pytest.raises(ParseError, match="(?i)layout"):
         parse_fence(1, 1, FLOW_BODY.replace('"flow"', '"railroad"'))
@@ -279,10 +289,12 @@ STEP_MIN, STEP_MAX = 2, 8
 
 
 class ParseError(Exception):
-    def __init__(self, fence_index: int, detail: str):
-        super().__init__(f"#{fence_index}: {detail}")
+    def __init__(self, fence_index: int, detail: str, line: int = 0):
+        # 라인은 펜스 시작 라인 — 메시지에 포함해 저작자가 펜스를 바로 찾게 한다(§3.4).
+        super().__init__(f"#{fence_index}(ch 라인 {line}): {detail}")
         self.fence_index = fence_index
         self.detail = detail
+        self.line = line
 
 
 @dataclass(frozen=True)
@@ -303,22 +315,24 @@ def normalize(text: str) -> str:
 
 
 def parse_fence(index: int, line: int, body: str) -> Fence:
+    if not body.strip():
+        raise ParseError(index, "빈 펜스 — layout·title·steps를 넣어라", line)
     try:
         d = json.loads(body)
         if not isinstance(d, dict):
             raise ValueError("펜스 내용이 JSON 객체가 아님")
     except ValueError as exc:
-        raise ParseError(index, f"JSON 파싱 실패: {exc}") from exc
+        raise ParseError(index, f"JSON 파싱 실패: {exc}", line) from exc
 
     raw_layout = str(d.get("layout", "")).strip()
     alias = raw_layout in ALIASES
     layout = ALIASES.get(raw_layout, raw_layout)
     if layout not in VALID_LAYOUTS:
-        raise ParseError(index, f"unknown layout {raw_layout!r} (가능: flow)")
+        raise ParseError(index, f"unknown layout {raw_layout!r} (가능: flow)", line)
 
     title = str(d.get("title", "")).strip()
     if not title:
-        raise ParseError(index, "title 필수 — 결론형 제목을 넣어라")
+        raise ParseError(index, "title 필수 — 결론형 제목을 넣어라", line)
 
     def opt(key: str) -> str | None:
         v = d.get(key)
@@ -327,14 +341,14 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
     data: dict = dict(steps=[])
     steps = d.get("steps", [])
     if not isinstance(steps, list) or not (STEP_MIN <= len(steps) <= STEP_MAX):
-        raise ParseError(index, f"steps 개수 {len(steps) if isinstance(steps, list) else 0} — 하한 {STEP_MIN}, 상한 {STEP_MAX}")
+        raise ParseError(index, f"steps 개수 {len(steps) if isinstance(steps, list) else 0} — 하한 {STEP_MIN}, 상한 {STEP_MAX}", line)
     for i, s in enumerate(steps):
         if not isinstance(s, dict):
-            raise ParseError(index, f"steps[{i}] 객체 아님")
+            raise ParseError(index, f"steps[{i}] 객체 아님", line)
         t = str(s.get("title", "")).strip()
         x = str(s.get("text", "")).strip()
         if not t or not x:
-            raise ParseError(index, f"steps[{i}].title/.text 비어 있음 — 근거 문구를 넣어라")
+            raise ParseError(index, f"steps[{i}].title/.text 비어 있음 — 근거 문구를 넣어라", line)
         data["steps"].append({"title": t, "text": x})
     if alias:
         data["_alias"] = raw_layout
@@ -507,7 +521,7 @@ def _restore_ig_markers(md: str, stash_str) -> str:
         print(f'{md.name} → {md.stem}.typ')
 ```
 
-`import json`을 상부 import에 추가한다. 위 `raw = ... if False else ...` 가드는 삭제하고 `raw = md.read_text(...)` 한 줄로 쓴다(설명용 의사코드 아님 — 실제 한 줄).
+`import json`을 상부 import에 추가한다. 위 루프가 기존 저장 루프를 그대로 대체한다(변경분: `raw` 변수·fences 추출·사이드 파일 기록).
 
 - [ ] **Step 4: 테스트 통과 확인**
 
@@ -549,8 +563,8 @@ from scripts.infographic.budget import width_units, max_units, line_count
 def test_ko_counts_full_latin_discounted():
     assert width_units("접수") == 2.0
     assert abs(width_units("AB") - 1.1) < 1e-9
-    assert abs(width_units("eGovFrame") - 8 * 0.55) < 1e-9
-    assert abs(width_units("접수 AB")) - abs(2.0 + 3 * 0.55) < 1e-9
+    assert abs(width_units("eGovFrame") - 9 * 0.55) < 1e-9   # 9자 — 초판 8자 오기 정정
+    assert abs(width_units("접수 AB") - (2.0 + 3 * 0.55)) < 1e-9
 
 
 def test_max_units_formula():
@@ -561,7 +575,8 @@ def test_max_units_formula():
 def test_line_count_rounds_up_min_one():
     assert line_count("접수등록", 120.0, 9.0) == 1          # 4.0 ≤ 10.4
     assert line_count("접수" * 12, 120.0, 9.0) == 3        # 24.0/10.4 = 2.31 → 3
-    assert line_count("한", 20.0, 9.0) == 1                # 최소 1
+    assert line_count("한", 15.0, 9.0) == 1                # cap=(15-16)*0.9/9 ≤ 0 → 클램프 1
+                                                           # (20pt면 cap=0.4>0이라 3이 된다 — 초판 오기 정정)
 ```
 
 - [ ] **Step 2: 테스트 실패 확인**
@@ -572,7 +587,9 @@ Expected: FAIL — ModuleNotFoundError
 - [ ] **Step 3: 최소 구현**
 
 ```python
-"""budget.py — 텍스트 폭 예산(스펙 §4.3). 폰트 메트릭 없는 근사: KO=1.0, 라틴=0.55, 10% 마진."""
+"""budget.py — 텍스트 폭 예산(스펙 §4.3). 폰트 메트릭 없는 근사: KO=1.0, 라틴=0.55, 10% 마진.
+팩별 보정 계수: 1순위 폰트가 팩마다 다르므로(§4.1) 단일 전역표를 쓰지 않는다.
+초기값은 전 팩 1.0 — 골든 교정 절차(Task 11, 스펙 §7)로 팩별 실측값을 갱신한다."""
 from __future__ import annotations
 
 import math
@@ -583,13 +600,18 @@ LATIN_UNIT = 0.55
 MARGIN = 0.9
 DEFAULT_PAD = 8.0
 
+# 팩별 KO 보정 계수 — 골든 교정(각 팩 1순위 폰트로 fixture 카드 오버플로 한계 실측)으로 갱신.
+PACK_KO_FACTOR = {"practical": 1.0, "essay": 1.0, "business": 1.0,
+                  "lecture": 1.0, "b5": 1.0}
 
-def width_units(text: str) -> float:
+
+def width_units(text: str, pack: str = "practical") -> float:
+    f = PACK_KO_FACTOR.get(pack, 1.0)
     units = 0.0
     for ch in text:
         name = unicodedata.name(ch, "")
         ko = "HANGUL" in name or "CJK" in name or "FULLWIDTH" in name
-        units += KO_UNIT if ko else LATIN_UNIT
+        units += (KO_UNIT * f) if ko else LATIN_UNIT
     return units
 
 
@@ -597,11 +619,12 @@ def max_units(box_w: float, size_pt: float, pad: float = DEFAULT_PAD) -> float:
     return (box_w - 2 * pad) * MARGIN / size_pt
 
 
-def line_count(text: str, box_w: float, size_pt: float, pad: float = DEFAULT_PAD) -> int:
+def line_count(text: str, box_w: float, size_pt: float, pad: float = DEFAULT_PAD,
+               pack: str = "practical") -> int:
     cap = max_units(box_w, size_pt, pad)
     if cap <= 0:
         return 1
-    return max(1, math.ceil(width_units(text) / cap))
+    return max(1, math.ceil(width_units(text, pack) / cap))
 ```
 
 - [ ] **Step 4: 테스트 통과 확인**
@@ -628,24 +651,26 @@ git commit -m "feat: 인포그래픽 텍스트 예산 — KO/라틴 계수·10% 
 - Test: `skills/korean-ebook-typst/tests/test_infographic_layout_flow.py`
 
 **Interfaces:**
-- Consumes: `parse.Fence`, `budget.line_count/width_units`, tokens 구조(`body_frame_pt`, `fonts.*.size_pt`)
+- Consumes: `parse.Fence`, `budget.line_count/width_units`, tokens 구조(`body_frame_pt`, `fonts.*.size_pt`, `style`)
 - Produces (model.py — 이후 모든 archetype이 공유):
   - `model.RectOp(x, y, w, h, rx: float, fill_role: str, stroke_role: str, stroke_w: float)` frozen
-  - `model.TextOp(x, y, size, text, role: str, weight: str = "regular", align: str = "center", max_w: float = 0.0)` frozen — `x,y`는 텍스트 블록 **중심점**, `max_w`는 예산 검증용 상자 폭(0=검사 없음)
-  - `model.ArrowOp(x1, y1, x2, y2, style: str)` frozen — style "solid"|"dashed". 헤드는 emit이 x2,y2에 open-V로 그린다(비율은 헤드 폭 상수로 고정 — 아래 connector 산술).
-  - `model.FigModel(width: float, height: float, ops: tuple, source: Fence)` frozen — ops는 RectOp/TextOp/ArrowOp 혼합 튜플
+  - `model.TextOp(x, y, size, text, role: str, weight: str = "regular", max_w: float = 0.0, field: str = "")` frozen — `x,y`는 텍스트 블록 **중심점**(절대좌표), `max_w`는 예산 검증용 상자 폭(0=검사 없음), `field`는 I1 위치 계약용 필드 경로(예: `steps[1].title` — lint loc가 이 값을 쓴다)
+  - `model.ArrowOp(x1, y1, x2, y2, style: str)` frozen — style "solid"|"dashed". 헤드는 emit이 x2,y2에 open-V로 그린다.
+  - `model.FigModel(width: float, height: float, ops: tuple, source_index: int)` frozen — ops는 RectOp/TextOp/ArrowOp 혼합 튜플. (초판의 `source: Fence` 필드 표기는 오류이다 — 구현·테스트 전부 `source_index: int`.)
   - `model.ARROW_STROKE_W = 1.2`, `model.ARROW_HEAD_W = 4.0` (비율 4.0/1.2 = 3.33 — 스펙 §5.2-4 허용 범위 2.5~3.5 안)
 - Produces (archetypes/flow.py):
-  - `flow.layout(fence: Fence, tokens: dict) -> FigModel` — 스펙 §6.3 flow 배치. 예외: `flow.FlowLayoutError(Exception)` — `.detail:str` (높이 85% 초과 등)
+  - `flow.layout(fence: Fence, tokens: dict) -> FigModel` — 스펙 §6.3 flow 배치. 예외: `flow.FlowLayoutError(Exception)` — `.detail:str` (판형 상한·높이 85% 초과 등 — render가 LintFinding으로 변환해 I1 리포트에 합류)
+  - `flow.PACK_LIMITS = {"essay": 4, "practical": 6, "b5": 6, "business": 8, "lecture": 8}` — 스펙 §6.2 flow 행. **layout이 이 표를 초과하면 즉시 FlowLayoutError**(스펙 "이 표를 초과하면 I1 에러"의 구현 지점).
 - Produces (layout.py):
   - `layout.dispatch(fence, tokens) -> FigModel` — `fence.layout`으로 archetype 함수 라우팅. Phase 1: flow만.
-- 배치 상수(전 팩 공통): 패널 패딩 `P=14`, 카드 간격 `G=28`, 카드 내부 패딩 8, 최소 카드폭 `MIN_CARD_W=90`, 카드 수직 패딩 10, 제목→카드 간 18, 세로 배치 시 카드 간 16.
-- 배치 결정론(스펙 §6.2 — 선택 재량 없음):
-  1. `n = len(steps)`; `W = body_frame 폭(x1−x0)`
+- 배치 상수(전 팩 공통): 패널 패딩 `P=14`, 카드 간격 `G=28`(가로·랩 공용), 카드 내부 패딩 8, 최소 카드폭 `MIN_CARD_W=80`, 카드 수직 패딩 10, 제목→카드 간 18. (초판의 세로 전용 간격 GV=16·세로 모드는 **삭제** — 근거: n=8 세로 배치 높이 571pt > 한계 441pt로 수학적 불가 실증, GV=16 복도에선 샤프트 가시 8pt < 12pt로 스펙 §6.1 위반.)
+- 배치 결정론(스펙 §6.2 개정 — 선택 재량 없음, 세로 없음):
+  1. `n = len(steps)`; `pack = tokens["style"]`; `n > PACK_LIMITS[pack]`면 **FlowLayoutError**(`steps {n}개 > 판형 상한 {limit}({pack}) — 요소 수 감소 또는 펜스 분할`)
   2. 가로 1행: `cardW = (W − 2P − (n−1)·G)/n`; `cardW ≥ MIN_CARD_W`면 **가로**
   3. 아니면 2행 랩: `cols = ceil(n/2)`; `cardW = (W − 2P − (cols−1)·G)/cols`; `cardW ≥ MIN_CARD_W`면 **랩**
-  4. 아니면 **세로**(카드 폭 `W − 2P`)
-- 세로 산술: 도식 제목 블록(kicker/label 크기 + title/heading2 크기 + thesis/본문−1 크기, 각 줄 `size×1.3` + 블록 여백) → 카드(내부: title `본문+1` ×줄수, gap 4, text `본문−1` ×줄수, 상하 패딩 10) → note(본문−1, 1줄) → 캡션 라인. `height > (body_frame 높이)×0.85`면 FlowLayoutError.
+  4. 아니면 **FlowLayoutError**(공간 부족 — 문구 축약/분할 레버)
+  - 수학 검증(MIN_CARD_W=80, 판형 상한 내 모든 n이 ②또는③에 합법): essay n=4 → 랩 2열 96.7pt ✓ · practical n=6 → 랩 3열 83.5pt ✓ · b5 n=6 → 랩 3열 100.5pt ✓ · business n=8 → 랩 4열 85.4pt ✓ · lecture n=8 → 랩 4열 88.2pt ✓. n=3 practical은 가로 83.5pt ✓.
+- 세로 산술: 도식 제목 블록(kicker/label 크기 + title/heading2 크기 + thesis/본문−1 크기, 각 줄 `size×1.3` + 블록 여백) → 카드(내부: title `본문+1` ×줄수, gap 4, text `본문−1` ×줄수, 상하 패딩 10) → note(본문−1, 1줄). `height > (body_frame 높이)×0.85`면 FlowLayoutError.
 - 잉크 bbox(스펙 §5.2-3): `flow.layout`이 모든 RectOp/ArrowOp에 대해 `x−stroke_w/2 ≥ 0`, `x+w+stroke_w/2 ≤ W`, `y−stroke_w/2 ≥ 0`, `y+h+stroke_w/2 ≤ height`를 산출 시점에 보장 — 위반이면 FlowLayoutError(레이아웃 버그 방어).
 - 텍스트 크기(스펙 §4.3, tokens에서 도출): `title = fonts.heading2.size_pt`, `card_title = body+1`, `card_text = body−1`, `kicker/caption = fonts.label.size_pt`. G3 불변식: `card_title`·`card_text`·`title`·`kicker` 모두 `abs(size − body) > 0.3`이어야 함(essay는 heading2가 10pt=body라 **title은 예외 — essay 한정 title 크기를 body+1.5로 대체**하고 나머지는 동일).
 
@@ -659,13 +684,13 @@ from pathlib import Path
 import pytest
 
 from scripts.infographic.archetypes import flow as flow_arch
-from scripts.infographic.model import ArrowOp, FigModel, RectOp, TextOp
+from scripts.infographic.model import FigModel, RectOp, TextOp
 from scripts.infographic.parse import parse_fence
 
 TOKENS = json.loads((Path(__file__).resolve().parents[1] / "styles" / "practical" / "tokens.json").read_text(encoding="utf-8"))
 W = TOKENS["body_frame_pt"]["x1"] - TOKENS["body_frame_pt"]["x0"]   # 334.49
 H = TOKENS["body_frame_pt"]["y1"] - TOKENS["body_frame_pt"]["y0"]
-P, G, MIN_CARD = 14.0, 28.0, 90.0
+P, G, MIN_CARD = 14.0, 28.0, 80.0
 
 
 def _fence(n_steps: int, title: str = "결론 제목", text: str = "근거 문장"):
@@ -696,18 +721,34 @@ def test_four_steps_wraps_to_2x2():
     assert len(ys) == 2                               # 2행
 
 
-def test_eight_steps_falls_back_vertical():
-    # 8단계: 1행 41.6pt ✗ → 4열 83.5pt ✗(<90) → 세로
-    fig = flow_arch.layout(_fence(8), TOKENS)
+def test_eight_steps_pack_limit_error():
+    # practical 판형 상한 6 — n=8은 지오메트리 전에 판형 상한 위반 에러
+    with pytest.raises(flow_arch.FlowLayoutError, match="판형 상한"):
+        flow_arch.layout(_fence(8), TOKENS)
+
+
+def test_eight_steps_business_wraps_four_cols():
+    # business(453.55pt)는 상한 8 — 4열 랩: (453.55-28-84)/4 = 85.4pt ≥ 80
+    BTOKENS = json.loads((Path(__file__).resolve().parents[1] / "styles" / "business"
+                          / "tokens.json").read_text(encoding="utf-8"))
+    fig = flow_arch.layout(_fence(8), BTOKENS)
     cards = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"]
     assert len(cards) == 8
-    assert abs(cards[0].w - (W - 2 * P)) < 0.01       # 카드가 전폭
-    arrows = [o for o in fig.ops if isinstance(o, ArrowOp)]
-    assert arrows and all(a.y1 != a.y2 for a in arrows)   # 화살표가 세로
+    expect = (BTOKENS["body_frame_pt"]["x1"] - BTOKENS["body_frame_pt"]["x0"] - 2 * P - 3 * G) / 4
+    assert abs(cards[0].w - expect) < 0.01
+    assert len({round(r.y, 2) for r in cards}) == 2   # 2행
+
+
+def test_six_steps_wrap_three_cols():
+    # practical n=6: 가로 27.7pt ✗ → 랩 3열 (334.49-28-56)/3 = 83.5pt ≥ 80
+    fig = flow_arch.layout(_fence(6), TOKENS)
+    cards = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"]
+    assert len(cards) == 6
+    assert abs(cards[0].w - (W - 2 * P - 2 * G) / 3) < 0.01
 
 
 def test_ink_containment_guaranteed():
-    for n in (2, 3, 4, 6, 8):
+    for n in (2, 3, 4, 5, 6):
         fig = flow_arch.layout(_fence(n), TOKENS)
         for o in fig.ops:
             if isinstance(o, RectOp):
@@ -727,9 +768,10 @@ def test_g3_invariant_sizes_off_body():
 
 
 def test_height_limit_85pct():
+    # n=6(상한 내) + 장문 — 카드 줄수 폭증으로 높이 한계 초과 (n=8은 판형 상한 에러가 먼저)
     long_text = "아주 긴 근거 문장이다 " * 8
     with pytest.raises(flow_arch.FlowLayoutError, match="85"):
-        flow_arch.layout(_fence(8, text=long_text), TOKENS)
+        flow_arch.layout(_fence(6, text=long_text), TOKENS)
 
 
 def test_figmodel_is_frozen_deterministic():
@@ -768,13 +810,13 @@ class RectOp:
 
 @dataclass(frozen=True)
 class TextOp:
-    x: float; y: float          # 텍스트 블록 중심점
+    x: float; y: float          # 텍스트 블록 중심점(절대좌표)
     size: float
     text: str
     role: str = "ink"
     weight: str = "regular"
-    align: str = "center"
     max_w: float = 0.0          # 예산 검사용 상자 폭(0=검사 생략)
+    field: str = ""             # I1 위치 계약용 필드 경로(예: steps[1].title)
 
 
 @dataclass(frozen=True)
@@ -803,13 +845,15 @@ from .. import budget
 from ..model import ArrowOp, FigModel, RectOp, TextOp
 
 P = 14.0          # 패널 패딩
-G = 28.0          # 카드 간격(가로·랩)
-GV = 16.0         # 카드 간격(세로)
-MIN_CARD_W = 90.0
+G = 28.0          # 카드 간격(가로·랩 공용)
+MIN_CARD_W = 80.0
 CARD_PAD_IN = 8.0
 CARD_PAD_V = 10.0
 LEADING = 1.3
 HEIGHT_LIMIT = 0.85
+
+# 스펙 §6.2 flow 행 — 판형 조건부 상한. layout이 초과하면 즉시 에러(I1 리포트 합류).
+PACK_LIMITS = {"essay": 4, "practical": 6, "b5": 6, "business": 8, "lecture": 8}
 
 
 class FlowLayoutError(Exception):
@@ -843,7 +887,14 @@ def layout(fence, tokens: dict) -> FigModel:
     steps = fence.data["steps"]
     n = len(steps)
 
-    # 배치 결정론(§6.2)
+    # 배치 결정론(§6.2 개정) — 판형 상한 → 가로 → 2행 랩 → 에러. 세로 모드 없음.
+    pack = tokens.get("style", "practical")
+    limit = PACK_LIMITS.get(pack)
+    if limit is None:
+        raise FlowLayoutError(f"알 수 없는 스타일 팩 {pack!r} — tokens.style 확인")
+    if n > limit:
+        raise FlowLayoutError(
+            f"steps {n}개 > 판형 상한 {limit}({pack}) — 요소 수 감소 또는 펜스 분할")
     mode = None
     cardW = 0.0
     cols = n
@@ -856,11 +907,13 @@ def layout(fence, tokens: dict) -> FigModel:
         if cardW_w >= MIN_CARD_W:
             mode, cardW = "wrap", cardW_w
         else:
-            mode, cardW = "v", W - 2 * P
+            raise FlowLayoutError(
+                f"steps {n}개를 {pack} 판형에 배치 불가(랩 후 카드폭 {cardW_w:.1f}pt < "
+                f"{MIN_CARD_W:.0f}pt) — 글자 축약, 요소 수 감소 또는 펜스 분할")
 
     def card_h(step: dict) -> float:
-        t_lines = budget.line_count(step["title"], cardW, card_title_size, CARD_PAD_IN)
-        x_lines = budget.line_count(step["text"], cardW, card_text_size, CARD_PAD_IN)
+        t_lines = budget.line_count(step["title"], cardW, card_title_size, CARD_PAD_IN, pack)
+        x_lines = budget.line_count(step["text"], cardW, card_text_size, CARD_PAD_IN, pack)
         return 2 * CARD_PAD_V + t_lines * card_title_size * LEADING + 4.0 + x_lines * card_text_size * LEADING
 
     # 헤더 블록
@@ -868,10 +921,10 @@ def layout(fence, tokens: dict) -> FigModel:
     texts: list[TextOp] = []
     if fence.kicker:
         header_h += kicker_size * LEADING
-    t_lines = budget.line_count(fence.title, W - 2 * P, title_size, 0.0)
+    t_lines = budget.line_count(fence.title, W - 2 * P, title_size, 0.0, pack)
     header_h += t_lines * title_size * LEADING
     if fence.thesis:
-        header_h += budget.line_count(fence.thesis, W - 2 * P, card_text_size, 0.0) * card_text_size * LEADING
+        header_h += budget.line_count(fence.thesis, W - 2 * P, card_text_size, 0.0, pack) * card_text_size * LEADING
     header_h += 18.0                                # 제목→카드 간
 
     ops: list = []
@@ -879,15 +932,17 @@ def layout(fence, tokens: dict) -> FigModel:
     cy = 0.0
     if fence.kicker:
         texts.append(TextOp(x=W / 2, y=cy + kicker_size * LEADING / 2, size=kicker_size,
-                            text=fence.kicker, role="ink-mute", align="center"))
+                            text=fence.kicker, role="ink-mute", field="kicker"))
         cy += kicker_size * LEADING
     texts.append(TextOp(x=W / 2, y=cy + t_lines * title_size * LEADING / 2, size=title_size,
-                        text=fence.title, role="ink", weight="bold", max_w=W - 2 * P))
+                        text=fence.title, role="ink", weight="bold", max_w=W - 2 * P,
+                        field="title"))
     cy += t_lines * title_size * LEADING
     if fence.thesis:
-        th_lines = budget.line_count(fence.thesis, W - 2 * P, card_text_size, 0.0)
+        th_lines = budget.line_count(fence.thesis, W - 2 * P, card_text_size, 0.0, pack)
         texts.append(TextOp(x=W / 2, y=cy + th_lines * card_text_size * LEADING / 2,
-                            size=card_text_size, text=fence.thesis, role="ink-soft", max_w=W - 2 * P))
+                            size=card_text_size, text=fence.thesis, role="ink-soft",
+                            max_w=W - 2 * P, field="thesis"))
         cy += th_lines * card_text_size * LEADING
     y = cy + 18.0
 
@@ -898,41 +953,31 @@ def layout(fence, tokens: dict) -> FigModel:
         for i, s in enumerate(steps):
             cx = P + i * (cardW + G)
             cards.append(RectOp(x=cx, y=y, w=cardW, h=ch))
-            _card_texts(texts, s, cx, y, cardW, ch, card_title_size, card_text_size)
+            _card_texts(texts, s, cx, y, cardW, ch, card_title_size, card_text_size, i, pack)
             if i:
                 prev_x = P + (i - 1) * (cardW + G)
                 arrows.append(_harrow(prev_x + cardW, y + ch / 2, cx))
         y += ch
     elif mode == "wrap":
         rows = [steps[i:i + cols] for i in range(0, n, cols)]
+        row_h = [max(card_h(s) for s in row) for row in rows]
         for r, row in enumerate(rows):
-            ch = max(card_h(s) for s in row)
+            ry = y + sum(row_h[:r]) + G * r
             for j, s in enumerate(row):
                 cx = P + j * (cardW + G)
-                ry = y + r * (ch + GV)
-                cards.append(RectOp(x=cx, y=ry, w=cardW, h=ch))
-                _card_texts(texts, s, cx, ry, cardW, ch, card_title_size, card_text_size)
+                cards.append(RectOp(x=cx, y=ry, w=cardW, h=row_h[r]))
+                _card_texts(texts, s, cx, ry, cardW, row_h[r], card_title_size,
+                            card_text_size, r * cols + j, pack)
                 if j:
                     prev_x = P + (j - 1) * (cardW + G)
-                    arrows.append(_harrow(prev_x + cardW, ry + ch / 2, cx))
-            y_row_end = y + (r + 1) * ch + r * GV
-        y = y + sum(max(card_h(s) for s in row) for row in rows) + GV * (len(rows) - 1)
-    else:  # vertical
-        for i, s in enumerate(steps):
-            ch = card_h(s)
-            cards.append(RectOp(x=P, y=y, w=cardW, h=ch))
-            _card_texts(texts, s, P, y, cardW, ch, card_title_size, card_text_size)
-            if i:
-                prev_y = y - GV
-                arrows.append(ArrowOp(x1=W / 2, y1=prev_y, x2=W / 2, y2=y - 8.0))
-            y += ch + GV
-        y -= GV
+                    arrows.append(_harrow(prev_x + cardW, ry + row_h[r] / 2, cx))
+        y = y + sum(row_h) + G * (len(rows) - 1)
 
     y += 12.0
     from ..parse import DEFAULT_NOTE
     note = fence.note or DEFAULT_NOTE
     texts.append(TextOp(x=W / 2, y=y + card_text_size * LEADING / 2, size=card_text_size,
-                        text=note, role="ink-mute", max_w=W - 2 * P))
+                        text=note, role="ink-mute", max_w=W - 2 * P, field="note"))
     y += card_text_size * LEADING
 
     if y > H_frame * HEIGHT_LIMIT:
@@ -947,16 +992,17 @@ def layout(fence, tokens: dict) -> FigModel:
 
 
 def _card_texts(out: list, s: dict, cx: float, cy: float, cw: float, ch: float,
-                t_size: float, x_size: float) -> None:
-    t_lines = budget.line_count(s["title"], cw, t_size)
-    x_lines = budget.line_count(s["text"], cw, x_size)
+                t_size: float, x_size: float, idx: int, pack: str) -> None:
+    t_lines = budget.line_count(s["title"], cw, t_size, pack=pack)
+    x_lines = budget.line_count(s["text"], cw, x_size, pack=pack)
     block = t_lines * t_size * LEADING + 4.0 + x_lines * x_size * LEADING
     top = cy + (ch - block) / 2
     out.append(TextOp(x=cx + cw / 2, y=top + t_lines * t_size * LEADING / 2, size=t_size,
-                      text=s["title"], role="ink", weight="bold", max_w=cw))
+                      text=s["title"], role="ink", weight="bold", max_w=cw,
+                      field=f"steps[{idx}].title"))
     mid = top + t_lines * t_size * LEADING + 4.0
     out.append(TextOp(x=cx + cw / 2, y=mid + x_lines * x_size * LEADING / 2, size=x_size,
-                      text=s["text"], role="ink-soft", max_w=cw))
+                      text=s["text"], role="ink-soft", max_w=cw, field=f"steps[{idx}].text"))
 
 
 def _harrow(right_edge: float, ymid: float, next_left: float) -> ArrowOp:
@@ -987,7 +1033,7 @@ def dispatch(fence: Fence, tokens: dict):
 - [ ] **Step 4: 테스트 통과 확인**
 
 Run: `cd /mnt/d/DEV/acc0mplish/KLIC-BOOK/skills/korean-ebook-typst && python3 -m pytest tests/test_infographic_layout_flow.py -v`
-Expected: 7 passed
+Expected: 9 passed
 
 - [ ] **Step 5: 커밋**
 
@@ -1024,6 +1070,8 @@ git commit -m "feat: flow archetype 배치 — 결정론(가로→랩→세로)�
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.infographic.archetypes import flow as flow_arch
 from scripts.infographic.emit import render_typ
 from scripts.infographic.parse import parse_fence
@@ -1041,12 +1089,20 @@ FENCE = parse_fence(1, 1, json.dumps({
 }, ensure_ascii=False))
 
 
-def test_emit_has_wrapper_and_no_hex():
+def test_emit_calls_helpers_no_hex():
     out = render_typ(flow_arch.layout(FENCE, TOKENS), TOKENS)
-    assert '#import "helper.typ"' in out or "#import \"../infographic/helper.typ\"" not in out
-    assert "breakable: false" in out                  # §5.1 래퍼
+    assert '#import "../helper.typ"' in out          # fig는 build/infographic/에 있다(§2)
+    assert "#ig-figure(" in out and "#ig-text(" in out
     assert "#EEF3F8" not in out and "#1F4E79" not in out   # hex 금지(§4.2) — 역할명만
-    assert "ig-color" in out
+
+
+def test_helper_has_wrapper_and_leading_contract():
+    # 래퍼·leading 계약은 방출물이 아니라 helper.typ에 산다 — 파일 자체를 검사한다
+    # (초판은 방출물에서 이 문자열을 찾아 절대 통과 불가였다 — 실증 정정).
+    helper = (SKILL / "templates" / "infographic" / "helper.typ").read_text(encoding="utf-8")
+    assert "breakable: false" in helper              # §5.1 래퍼
+    assert "1.3em" in helper                         # §4.3 leading
+    assert "#let pt(n) = n * 1pt" in helper          # pt 셈 — typst 0.15.1에 내장 없음(실증)
 
 
 def test_emit_deterministic_bytes():
@@ -1055,15 +1111,15 @@ def test_emit_deterministic_bytes():
     assert a == b
 
 
-def test_leading_1_3em_emitted():
-    out = render_typ(flow_arch.layout(FENCE, TOKENS), TOKENS)
-    assert "1.3em" in out
-    assert "1.7" not in out
-
-
 def test_golden_snapshot():
     out = render_typ(flow_arch.layout(FENCE, TOKENS), TOKENS)
-    if not GOLDEN.exists():                          # 최초 1회 확정(리뷰어가 eyeball)
+    if not GOLDEN.exists():
+        # 골든은 테스트가 스스로 굳히지 않는다(자기충족 안티패턴 — 적대 검토 지적).
+        # 확정 절차: IG_REGEN_GOLDEN=1으로 생성 → 눈검 → 함께 커밋. 그 전엔 실패.
+        import os
+        if os.environ.get("IG_REGEN_GOLDEN") != "1":
+            pytest.fail("골든 없음 — `IG_REGEN_GOLDEN=1 python3 -m pytest …` 실행 후 "
+                        "생성 파일을 눈검하고 커밋하라")
         GOLDEN.parent.mkdir(parents=True, exist_ok=True)
         GOLDEN.write_text(out, encoding="utf-8")
     assert out == GOLDEN.read_text(encoding="utf-8")
@@ -1081,7 +1137,10 @@ Expected: FAIL — ModuleNotFoundError emit
 ```typst
 // templates/infographic/helper.typ — 인포그래픽 공통 프리미티브(스펙 §4.2·§5.1).
 // 색은 역할명만 받는다. hex는 tokens.json이 SSoT.
+// 검증 이력(적대 검토 실측): pt() 셤·place 앵커 절대좌표 환산·open-V 절대 대각선 —
+// typst 0.15.1 실컴파일 + PyMuPDF 좌표 실측으로 교정된 형태다. 임의 수정 금지.
 #let tokens = json("tokens.json")
+#let pt(n) = n * 1pt
 
 #let ig-color(role) = {
   if tokens.colors.at(role, default: none) != none { rgb(tokens.colors.at(role)) }
@@ -1093,43 +1152,51 @@ Expected: FAIL — ModuleNotFoundError emit
   stroke: none, inset: 0pt,
 )[#box(width: 100%, height: 100%)[#body]]
 
+// rect — place(top+left)는 박스 좌상단을 (x,y)에 놓는다(실측 정확).
 #let ig-rect(x, y, w, h, rx: 8pt, fill-role: "surface-tint",
              stroke-role: "rule", stroke-w: 0.5pt) = place(
-  dx: pt(x), dy: pt(y),
+  top + left, dx: pt(x), dy: pt(y),
   rect(width: pt(w), height: pt(h), radius: rx,
        fill: ig-color(fill-role),
        stroke: if stroke-w == 0pt { none } else {
          (paint: ig-color(stroke-role), thickness: stroke-w) }),
 )
 
-#let ig-text(x, y, size, role, weight: "regular", body) = place(
-  dx: pt(x), dy: pt(y), center + horizon,
+// text — x,y는 텍스트 블록 중심의 절대좌표, fw·fh는 도식 전체 폭·높이.
+// place(center+horizon)는 "컨테이너 중심 + (dx,dy)"에 블록 중심을 놓는다(실측:
+// raw dx 전달 시 전 텍스트가 (+W/2, +H/2) 치우침). 절대좌표 (x,y)에 놓으려면
+// dx = x − fw/2, dy = y − fh/2 를 전달해야 한다 — emit이 항상 이 환산을 수행한다.
+#let ig-text(x, y, fw, fh, size, role, weight: "regular", body) = place(
+  center + horizon, dx: pt(x - fw / 2), dy: pt(y - fh / 2),
   box(inset: 0pt)[#set par(leading: 1.3em)
     #text(size: pt(size), fill: ig-color(role),
           weight: if weight == "bold" { "bold" } else { "regular" })[#body]],
 )
 
+// arrow — 샤프트(상대 종점) + open-V 헤드(tip에서 뒤꿈치±수직 날개, 절대 대각선).
+// 초판의 벡터식은 대수적으로 퇴화해 수평 화살표가 0-길이 선이 됐다(실측) —
+// 아래 "tip에서 날개 끝점으로" 상대 벡터 형태가 실측 교정본이다.
 #let ig-arrow(x1, y1, x2, y2, style: "solid") = {
   let stroke = (paint: ig-color("ink-soft"), thickness: 1.2pt,
                 dash: if style == "dashed" { "dashed" } else { none })
-  place(dx: pt(x1), dy: pt(y1), line(end: (pt(x2 - x1), pt(y2 - y1)), stroke: stroke))
-  // open-V 헤드 — 진행 방향 단위벡터로 4pt 날개 2개(§6.1, 비율 3.33).
+  place(top + left, dx: pt(x1), dy: pt(y1),
+        line(end: (pt(x2 - x1), pt(y2 - y1)), stroke: stroke))
   let dx = x2 - x1
   let dy = y2 - y1
   let len = calc.sqrt(dx * dx + dy * dy)
   let ux = dx / len
   let uy = dy / len
-  let hw = 4.0   // ARROW_HEAD_W/1.2 ≈ 3.33
-  let bx = x2 - ux * hw
+  let hw = 4.0                                  // ARROW_HEAD_W — 비율 4.0/1.2 = 3.33
+  let bx = x2 - ux * hw                         // 뒤꿈치(shaft 방향 hw 뒤)
   let by = y2 - uy * hw
-  place(dx: pt(bx - uy * hw / 2), dy: pt(by + ux * hw / 2),
-        line(end: (pt(ux * hw + uy * hw / 2 - ux * hw + ux * hw - ux * hw), pt(uy * hw)), stroke: stroke))
-  place(dx: pt(bx + uy * hw / 2), dy: pt(by - ux * hw / 2),
-        line(end: (pt(ux * hw), pt(uy * hw)), stroke: stroke))
+  let px = -uy                                  // 단위 수직벡터
+  let py = ux
+  place(top + left, dx: pt(x2), dy: pt(y2),     // 날개 1: tip → heel + perp·hw/2
+        line(end: (pt(bx + px * hw / 2 - x2), pt(by + py * hw / 2 - y2)), stroke: stroke))
+  place(top + left, dx: pt(x2), dy: pt(y2),     // 날개 2: tip → heel − perp·hw/2
+        line(end: (pt(bx - px * hw / 2 - x2), pt(by - py * hw / 2 - y2)), stroke: stroke))
 }
 ```
-
-(주의: 위 open-V 두 번째·세번째 place의 end 계산은 코드 리뷰에서 좌표 검증 필수 — 날개가 정확히 tip(x2,y2)에서 양쪽 hw/2 벌어진 뒤꿈치(bx,by)로 향해야 한다. 구현 시 벡터 계산을 단순화해 `line(start: (…), end: (…))` 절대좌표 2개로 직접 쓰는 것을 권장 — `place` 없이 `line(start: (pt(bx - uy*hw/2), pt(by + ux*hw/2)), end: (pt(x2), pt(y2)))` 형태. Task 7 컴파일 스모크가 이를 검증한다.)
 
 `emit.py`:
 
@@ -1145,8 +1212,11 @@ def _n(v: float) -> str:
 
 
 def _esc(s: str) -> str:
+    # md2typst step 6 기준과 동일하게 @·<·>까지 — "SLA @team"이 label로 해석돼
+    # 빌드가 깨지는 것을 막는다(적대 검토 실증).
     for a, b in (("\\", "\\\\"), ("#", "\\#"), ("[", "\\["), ("]", "\\]"),
-                 ("$", "\\$"), ("*", "\\*"), ("_", "\\_")):
+                 ("$", "\\$"), ("*", "\\*"), ("_", "\\_"),
+                 ("@", "\\@"), ("<", "\\<"), (">", "\\>")):
         s = s.replace(a, b)
     return s
 
@@ -1168,8 +1238,9 @@ def render_typ(fig: FigModel, tokens: dict) -> str:
                          f"style: \"{op.style}\")")
         elif isinstance(op, TextOp):
             w = f", weight: \"{op.weight}\"" if op.weight != "regular" else ""
-            lines.append(f"  #ig-text({_n(op.x)}, {_n(op.y)}, {_n(op.size)}, "
-                         f"\"{op.role}\"{w})[{_esc(op.text)}]")
+            # ig-text는 컨테이너 중심 앵커라 절대좌표 환산에 fw·fh가 필요하다(helper 참조).
+            lines.append(f"  #ig-text({_n(op.x)}, {_n(op.y)}, {_n(fig.width)}, "
+                         f"{_n(fig.height)}, {_n(op.size)}, \"{op.role}\"{w})[{_esc(op.text)}]")
     lines.append("]")
     return "\n".join(lines) + "\n"
 ```
@@ -1177,7 +1248,9 @@ def render_typ(fig: FigModel, tokens: dict) -> str:
 - [ ] **Step 4: 테스트 통과 확인**
 
 Run: `cd /mnt/d/DEV/acc0mplish/KLIC-BOOK/skills/korean-ebook-typst && python3 -m pytest tests/test_infographic_emit.py -v`
-Expected: 4 passed. 골든 파일 최초 생성 시 내용을 눈으로 확인한다(랩 2단계 카드 2장, note 포함).
+Expected: 골든 없음 실패(3 passed, 1 failed — `골든 없음`). 이어 골든 확정 절차:
+`IG_REGEN_GOLDEN=1 python3 -m pytest tests/test_infographic_emit.py -v` → 4 passed.
+생성된 골든 파일을 반드시 눈으로 확인한다(2단계 카드·제목·note 포함, `#import "../helper.typ"`·`#ig-text` 호출 형태) — 컴파일 검증은 Task 7이, 렌더 눈검은 Task 9 Step 5가 담당하므로 이 단계는 코드 형태 확인으로 족하다. 확인 후 Step 5에서 함께 커밋한다.
 
 - [ ] **Step 5: 커밋**
 
@@ -1200,26 +1273,27 @@ git commit -m "feat: emit + helper.typ — FigModel→typst 방출·래퍼·골�
 - [ ] **Step 1: 실패 테스트 작성**
 
 ```python
-"""test_infographic_compile.py — emit 산출물 컴파일 스모크(스펙 §7 통합 전 단계)."""
+"""test_infographic_compile.py — emit 산출물 컴파일 스모크(스펙 §7 통합 전 단계).
+
+배치 주의(적대 검토 실증): fig.typ의 import는 "../helper.typ"이므로 fig를
+하위 디렉터리에 두고 helper를 루트에 둬야 한다 — build/와 동일 구조.
+같은 디렉터리에 두면 `path "../helper.typ" would escape the project root`.
+"""
 import json
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 
+from scripts.build import typst_binary
+from scripts.infographic.archetypes import flow as flow_arch
+from scripts.infographic.emit import render_typ
+from scripts.infographic.parse import parse_fence
+
 SKILL = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(SKILL / "scripts"))
-
-from scripts.infographic.archetypes import flow as flow_arch   # noqa: E402
-from scripts.infographic.emit import render_typ                # noqa: E402
-from scripts.infographic.parse import parse_fence              # noqa: E402
-from scripts.build import typst_binary                         # noqa: E402
-
-TYPST = shutil.which("typst") or (Path.home() / ".cargo" / "bin" / "typst")
-pytestmark = pytest.mark.skipif(
-    not (TYPST and Path(TYPST).exists()), reason="typst 바이너리 없음")
+TYPST = typst_binary()          # PATH → ~/.local/bin/typst 폴백 단일화(Global Constraints)
+pytestmark = pytest.mark.skipif(not TYPST, reason="typst 바이너리 없음")
 
 
 def test_flow_fig_compiles(tmp_path):
@@ -1229,17 +1303,17 @@ def test_flow_fig_compiles(tmp_path):
         "steps": [{"title": "A", "text": "가"}, {"title": "B", "text": "나"}],
     }, ensure_ascii=False))
     out = render_typ(flow_arch.layout(fence, tokens), tokens)
+    # build/와 동일 배치: 루트에 tokens·helper, 하위 infographic/에 fig
     (tmp_path / "tokens.json").write_text(json.dumps(tokens, ensure_ascii=False), encoding="utf-8")
     shutil.copy2(SKILL / "templates" / "infographic" / "helper.typ", tmp_path / "helper.typ")
-    (tmp_path / "fig.typ").write_text(out, encoding="utf-8")
-    r = subprocess.run([str(TYPST), "compile", str(tmp_path / "fig.typ"),
-                        str(tmp_path / "fig.pdf"), "--root", str(tmp_path)],
-                       capture_output=True, text=True)
+    igdir = tmp_path / "infographic"; igdir.mkdir()
+    (igdir / "fig.typ").write_text(out, encoding="utf-8")
+    r = subprocess.run([TYPST, "compile", str(igdir / "fig.typ"),
+                        str(igdir / "fig.pdf"), "--root", str(tmp_path)],
+                       capture_output=True, text=True, timeout=120)
     assert r.returncode == 0, r.stderr
-    assert (tmp_path / "fig.pdf").stat().st_size > 1000
+    assert (igdir / "fig.pdf").stat().st_size > 1000
 ```
-
-(상단 `from scripts.build import typst_binary`은 import 실패 시 테스트 수집 오류가 나니, 실제로는 try/except로 감싸 skip 처리하거나 `typst_binary` import를 제거하고 `TYPST` 탐색만 쓴다 — 구현 시 후자를 권장, 코드 단순.)
 
 - [ ] **Step 2: 테스트 실패/에러 확인**
 
@@ -1248,7 +1322,7 @@ Expected: FAIL 또는 오류 — 모듈 경로/컴파일 에러 중 하나
 
 - [ ] **Step 3: 최소 구현**
 
-테스트 파일 자체가 구현이다(위 코드에서 `from scripts.build import typst_binary` 줄 삭제, `TYPST` 탐색으로 대체). helper.typ의 open-V 좌표 계산이 컴파일 에러를 내면 이 단계에서 helper.typ을 수정해 통과시킨다(렌더 품질은 Task 11 비주얼 스모크에서).
+테스트 파일 자체가 구현이다(Task 6의 emit·helper가 이미 존재한다 — 이 Task는 검증만 추가). 컴파일이 실패하면 helper.typ(Task 6)의 오탈자를 잡는다. 단 open-V 날개의 **렌더 형태**(날개 2개가 tip에서 V자로 벌어지는지)는 컴파일 게이트가 못 잡는다 — Task 9 Step 5 눈검에서 확인한다.
 
 - [ ] **Step 4: 테스트 통과 확인**
 
@@ -1271,13 +1345,21 @@ git commit -m "test: 인포그래픽 방출물 typst 컴파일 스모크"
 - Test: `skills/korean-ebook-typst/tests/test_infographic_lint.py`
 
 **Interfaces:**
-- Consumes: `parse.Fence`, `budget.width_units/max_units`, `roles.REQUIRED_INFO_ROLES`, FigModel(선택 — G3 불변식은 TextOp 크기로 검사)
+- Consumes: `parse.Fence`, `budget.line_count/width_units`, `roles.REQUIRED_INFO_ROLES`, `model.FigModel/ArrowOp/TextOp`(G3·커넥터·예산은 FigModel ops에서 검사)
 - Produces:
-  - `lint.LintFinding(kind: str, loc: str, measured: str, levers: tuple[str, ...])` frozen
-  - `lint.check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict, chapter_md: str, chapter_name: str) -> list[LintFinding]` — **전수 검사 후 전건 반환**(빌드는 이를 모아 중단, 스펙 §5.2). `figs`는 `{fence.index: FigModel}`.
-  - 검사 종류(kind): `"schema"`(parse 실패 대응은 상위에서 ParseError로 이미 처리 — lint는 이후 단계), `"budget"`, `"number-evidence"`, `"tokens"`, `"g3-invariant"`
-  - loc 형식: `"{chapter_name} #{index} {field_path}"` — 예: `ch05.md #2 steps[1].title`
-  - levers는 스펙 §5.2 계약 문구 재사용: `("글자 축약", "요소 수 감소", "layout 변형", "펜스 분할")` 중 적합한 것
+  - `lint.LintFinding(kind: str, loc: str, measured: str, levers: tuple[str, ...], fatal: bool = True)` frozen — `fatal=False`는 빌드를 막지 않고 검수 시트로 이관(미검증 플래그, 스펙 §3.3·§5.2)
+  - `lint.check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict, chapter_md: str, chapter_name: str) -> list[LintFinding]` — **전수 검사 후 전건 반환**(빌드는 치명 것만 모아 중단, 스펙 §5.2). `figs`는 `{fence.index: FigModel}`.
+  - 검사 종류(kind) — 스펙 §5.2 9항목 중 Phase 1 해당 전부:
+    - `"tokens"`(#7 토큰 존재) — fatal
+    - `"number-evidence"`(#5 숫자-evidence·교차검증) — fatal
+    - `"number-unverified"`(#5 미검증 — evidence 불해석·타 챕터 인용) — **비치명**: 빌드는 계속, 검수 시트 상단 경고로 이관(스펙 §3.3 "건너뛰고 미검증 플래그"의 구현 — 초판이 이것을 치명 에러로 만들어 타 챕터 인용(스펙 허용)을 영구 빌드 실패로 만들었던 결함 정정)
+    - `"budget"`(#2 텍스트 예산) — fatal. 초판의 `cap×10` 문턱(사실상 무검사 — 실증) 폐지. 검사: `budget.line_count(text, op.max_w, op.size) > 3` → "예상 N줄 > 3줄(밀도 상한)" 측정값 보고
+    - `"g3-invariant"`(#9 크기 불변식) — fatal
+    - `"connector"`(#4 커넥터 산술) — fatal. ArrowOp 전수: ①`len ≥ 12`(샤프트 가시) ②tip이 목표 rect 내부에 착지하지 않는지(끝점이 어떤 RectOp 내부도 침범 않아야) ③`ARROW_HEAD_W/ARROW_STROKE_W` 비율이 2.5~3.5(상수 1회 검증 — 4.0/1.2=3.33)
+    - `"fence-impostor"`(#8 펜스 위장 감지) — fatal. chapter_md의 모든 ```펜스 중 언어가 `infographic`이 아닌데 내용이 JSON이고 `layout` 키를 가지면 보고(예: ```infographics 오타 → 무음 코드블록 인쇄 방지)
+    - `"layout"`(#1·§6.2) — fatal. `flow.FlowLayoutError`를 render가 이 kind로 변환(판형 상한·공간 부족·높이 85% 초과). `parse.ParseError`도 render가 `"schema"` kind로 변환해 전수 집계(초판은 첫 위반 traceback 크래시였다)
+  - loc 형식: `"{chapter_name} #{index} {field_path}"` — 필드 경로는 `TextOp.field`(Task 5)에서 온다. 예: `ch05.md #2 steps[1].title`. 초판처럼 텍스트 스니펫을 loc로 쓰지 않는다.
+  - levers는 스펙 §5.2 계약 문구: `("글자 축약", "요소 수 감소", "layout 변형", "펜스 분할")` 중 적합한 것. 폭·간격 확장 제안 금지 준수.
 - 숫자 렉시콘(스펙 §3.3): `re.compile(r"[0-9][0-9.,%]*")`. 면제: 매치 직후/직전이 "장"/"절"인 `제N` 형태(`제\d+장`), 원형숫자 `①-⑳`.
 - evidence 교차검증: `evidence == "§N"`이면 chapter_md에서 N번째 `^## ` 헤딩 이후 다음 `^## ` 전 텍스트 범위를 추출해, 펜스 내 각 숫자 토큰이 해당 범위에 부분 문자열로 존재하는지 검사. evidence 없음/해석 불가/범위 밖 → finding `"number-evidence"` (미검증 플래그로 loc에 표기 — 검수 시트가 소비).
 
@@ -1346,23 +1428,47 @@ def test_ordinal_exempt():
     assert not [f for f in found if f.kind == "number-evidence"]
 
 
-def test_unresolvable_evidence_flagged():
+def test_unresolvable_evidence_nonfatal():
     fs = _fences([{"layout": "flow", "title": "3단계", "evidence": "§9", "steps": [
         {"title": "접수", "text": "등록"}, {"title": "폐쇄", "text": "확정"}]}])
     found = check(fs, _figs(fs), TOKENS, CH, "ch01.md")
-    ev = [f for f in found if f.kind == "number-evidence"]
+    ev = [f for f in found if f.kind == "number-unverified"]
     assert ev and "미검증" in ev[0].measured
+    assert ev[0].fatal is False                    # 빌드 안 막음 — 검수 시트 이관(§3.3)
 
 
-def test_budget_violation_measured_with_levers():
-    long_title = "이것은 아주 긴 단계 제목이라 카드 예산을 초과하는 텍스트이다"
+def test_budget_density_violation_reported_with_field_loc():
+    long_title = "아주 긴 단계 제목이라 밀도 상한을 초과하는 텍스트가 이곳에 있다 " * 3
     fs = _fences([{"layout": "flow", "title": "t", "steps": [
         {"title": long_title, "text": "가"}, {"title": "B", "text": "나"}]}])
-    figs = _figs(fs)                      # layout은 통과(줄바꿈 처리) — lint는 TextOp 단위 검사
-    found = check(fs, figs, TOKENS, CH, "ch01.md")
-    # 카드 제목 예산 초과 여부는 max_w 대비 width_units로 판정
+    found = check(fs, _figs(fs), TOKENS, CH, "ch01.md")
     b = [f for f in found if f.kind == "budget"]
-    assert all(f.levers for f in found)   # 모든 finding에 레버 제안
+    assert b, "밀도 초과(예상 4줄+)가 보고돼야 한다 — 초판 ×10 문턱은 무검사였다(실증)"
+    assert b[0].loc == "ch01.md #1 steps[0].title"   # 필드 경로 loc(§5.2 계약)
+    assert "줄" in b[0].measured and b[0].levers     # 측정값 + 레버
+
+
+def test_fence_impostor_detected():
+    md = CH + "\n```infographics\n{\"layout\": \"flow\", \"title\": \"x\"}\n```\n"
+    fs = _fences([{"layout": "flow", "title": "t", "steps": [
+        {"title": "A", "text": "가"}, {"title": "B", "text": "나"}]}])
+    found = check(fs, _figs(fs), TOKENS, md, "ch01.md")
+    imp = [f for f in found if f.kind == "fence-impostor"]
+    assert imp and imp[0].fatal and "infographics" in imp[0].measured
+
+
+def test_connector_shaft_visibility_checked():
+    from scripts.infographic.model import ArrowOp, FigModel
+    fs = _fences([{"layout": "flow", "title": "t", "steps": [
+        {"title": "A", "text": "가"}, {"title": "B", "text": "나"}]}])
+    figs = _figs(fs)
+    f0 = figs[1]
+    # 공격: 8pt 샤프트(<12)로 교체 — §6.1 위반 감지
+    short = tuple(ArrowOp(x1=o.x1, y1=o.y1, x2=o.x1 + 8.0, y2=o.y1, style=o.style)
+                  if isinstance(o, ArrowOp) else o for o in f0.ops)
+    figs[1] = FigModel(width=f0.width, height=f0.height, ops=short, source_index=1)
+    found = check(fs, figs, TOKENS, CH, "ch01.md")
+    assert any(f.kind == "connector" and "12" in f.measured for f in found)
 
 
 def test_missing_token_roles():
@@ -1382,7 +1488,7 @@ def test_g3_invariant_checked_from_fig_ops():
     f0 = figs[1]
     tampered = tuple(
         TextOp(x=o.x, y=o.y, size=TOKENS["fonts"]["body"]["size_pt"], text=o.text,
-               role=o.role, weight=o.weight, align=o.align, max_w=o.max_w)
+               role=o.role, weight=o.weight, max_w=o.max_w, field=o.field)
         if isinstance(o, TextOp) else o for o in f0.ops)
     figs[1] = type(f0)(width=f0.width, height=f0.height, ops=tampered, source_index=f0.source_index)
     found = check(fs, figs, TOKENS, CH, "ch01.md")
@@ -1397,33 +1503,38 @@ Expected: FAIL — ModuleNotFoundError lint
 - [ ] **Step 3: 최소 구현**
 
 ```python
-"""lint.py — I1 게이트(스펙 §5.2). 전수 검사 후 전건 반환: 빌드가 모아서 중단한다."""
+"""lint.py — I1 게이트(스펙 §5.2). 전수 검사 후 전건 반환: 빌드가 치명(fatal) 것만 모아 중단.
+fatal=False(미검증류)은 빌드를 막지 않고 검수 시트로 이관한다(스펙 §3.3)."""
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass
 
 from . import budget, roles
-from .model import FigModel, TextOp
+from .model import (ARROW_HEAD_W, ARROW_STROKE_W, ArrowOp, FigModel,
+                    RectOp, TextOp)
 from .parse import Fence
 
 NUM_RE = re.compile(r"[0-9][0-9.,%]*")
 ORDINAL_RE = re.compile(r"제\d+[장절]")
 CIRCLED = set("①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳")
+ANY_FENCE_RE = re.compile(r"^```(\w[\w-]*)[ \t]*\n(.*?)^```[ \t]*$", re.S | re.M)
 
 LEV_SHORTEN = "글자 축약"
 LEV_FEWER = "요소 수 감소"
 LEV_LAYOUT = "layout 변형(예: cards, 2행 랩)"
 LEV_SPLIT = "펜스 분할"
-LEVERS_ALL = (LEV_SHORTEN, LEV_FEWER, LEV_LAYOUT, LEV_SPLIT)
+MAX_LINES = 3              # 박스당 밀도 상한(스펙 §5.2-2 — "28자>22자"급 실측 보고)
 
 
 @dataclass(frozen=True)
 class LintFinding:
-    kind: str          # budget | number-evidence | tokens | g3-invariant
+    kind: str
     loc: str
     measured: str
     levers: tuple
+    fatal: bool = True
 
 
 def _numbers_in(text: str) -> list[str]:
@@ -1452,13 +1563,37 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
             out.append(LintFinding("tokens", f"{chapter_name} tokens.infographic.{role}",
                                    "값 없음", ("스타일 팩에 5역할 정의",)))
 
+    # 2. 펜스 위장 감지(§5.2-8) — 미등록 펜스 언어에 layout 키가 있으면 오타 의심
+    for m in ANY_FENCE_RE.finditer(chapter_md):
+        lang, body = m.group(1), m.group(2)
+        if lang == "infographic":
+            continue
+        try:
+            d = json.loads(body)
+        except ValueError:
+            continue
+        if isinstance(d, dict) and "layout" in d:
+            out.append(LintFinding(
+                "fence-impostor", f"{chapter_name} 펜스언어:{lang}",
+                f"```{lang} 내용이 layout 키 포함 JSON — infographic 오타 의심"
+                "(그대로 두면 YAML이 코드블록으로 인쇄됨)",
+                ("펜스 언어를 infographic으로 수정",)))
+
+    # 3. 커넥터 상수(§5.2-4) — 헤드/샤프트 비 2.5~3.5 (1회 검증)
+    ratio = ARROW_HEAD_W / ARROW_STROKE_W
+    if not 2.5 <= ratio <= 3.5:
+        out.append(LintFinding(
+            "connector", f"{chapter_name} model.ARROW_HEAD_W",
+            f"헤드/샤프트 비 {ratio:.2f} — 허용 2.5~3.5",
+            ("ARROW_HEAD_W/ARROW_STROKE_W 상수 수정",)))
+
     body_size = tokens["fonts"]["body"]["size_pt"]
     section_cache: dict[str, str | None] = {}
 
     for f in fences:
         prefix = f"{chapter_name} #{f.index}"
 
-        # 2. 숫자-evidence 교차검증(§3.3)
+        # 4. 숫자-evidence 교차검증(§3.3) — 미검증은 비치명
         fields: list[tuple[str, str]] = [("title", f.title)]
         if f.kicker:
             fields.append(("kicker", f.kicker))
@@ -1483,9 +1618,11 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
                     ("원문 절 앵커 evidence 추가(예: \"§1\")",)))
             elif sec is None:
                 out.append(LintFinding(
-                    "number-evidence", f"{prefix} {path}",
-                    f"숫자 {nums} — 미검증(evidence {f.evidence!r} 해석 불가·범위 밖, 검수 시트에서 사람 대조)",
-                    ("evidence를 §N 형식으로 바꾸거나 사람 대조",)))
+                    "number-unverified", f"{prefix} {path}",
+                    f"숫자 {nums} — 미검증(evidence {f.evidence!r} 해석 불가·범위 밖) "
+                    "→ 검수 시트 사람 대조 필수",
+                    ("evidence를 §N 형식으로 바꾸거나 검수 시트에서 사람 대조",),
+                    fatal=False))
             else:
                 for num in nums:
                     if num not in sec:
@@ -1494,35 +1631,50 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
                             f"숫자 {num!r} 원문(evidence {f.evidence})에 없음",
                             (LEV_SHORTEN, "원문에 있는 숫자로 교체")))
 
-        # 3. 텍스트 예산(§5.2-2) + 4. G3 불변식(§5.2-9) — FigModel TextOp 단위
+        # 5. FigModel ops — 예산(§5.2-2)·G3(§5.2-9)·커넥터(§5.2-4)
         fig = figs.get(f.index)
         if fig is None:
             continue
+        cards = [o for o in fig.ops if isinstance(o, RectOp)
+                 and o.fill_role == "surface-tint"]
         for op in fig.ops:
-            if not isinstance(op, TextOp):
-                continue
-            if op.max_w > 0:
-                cap = budget.max_units(op.max_w, op.size)
-                used = budget.width_units(op.text)
-                if used > cap * 10:      # 극단 초과(단일 줄 예산 10배) — 줄바꿈 후에도 카드 부담
+            if isinstance(op, TextOp):
+                if op.max_w > 0 and op.field:
+                    lines = budget.line_count(op.text, op.max_w, op.size)
+                    if lines > MAX_LINES:
+                        out.append(LintFinding(
+                            "budget", f"{prefix} {op.field}",
+                            f"예상 {lines}줄 > 밀도 상한 {MAX_LINES}줄 "
+                            f"({budget.width_units(op.text):.0f}단위, 상자 {op.max_w:.0f}pt)",
+                            (LEV_SHORTEN, LEV_FEWER, LEV_SPLIT)))
+                if abs(op.size - body_size) <= 0.3:
                     out.append(LintFinding(
-                        "budget", f"{prefix} text({op.text[:8]}…)",
-                        f"{used:.0f}단위 > 단줄 예산 {cap:.0f}단위×10",
-                        (LEV_SHORTEN, LEV_FEWER, LEV_SPLIT)))
-            if abs(op.size - body_size) <= 0.3:
-                out.append(LintFinding(
-                    "g3-invariant", f"{prefix} text({op.text[:8]}…)",
-                    f"크기 {op.size}pt — 본문 {body_size}pt±0.3 밖이어야 함",
-                    ("크기 사다리 재검토(layout 버그)",)))
+                        "g3-invariant", f"{prefix} {op.field or 'text'}",
+                        f"크기 {op.size}pt — 본문 {body_size}pt±0.3 밖이어야 함",
+                        ("크기 사다리 재검토(layout 버그)",)))
+            elif isinstance(op, ArrowOp):
+                import math as _math
+                length = _math.hypot(op.x2 - op.x1, op.y2 - op.y1)
+                if length < 12.0:
+                    out.append(LintFinding(
+                        "connector", f"{prefix} arrow({op.x1:.0f},{op.y1:.0f}→{op.x2:.0f},{op.y2:.0f})",
+                        f"샤프트 가시 {length:.1f}pt < 12pt(§6.1)",
+                        (LEV_LAYOUT, LEV_SPLIT)))
+                for ex, ey in ((op.x1, op.y1), (op.x2, op.y2)):
+                    for c in cards:
+                        if c.x < ex < c.x + c.w and c.y < ey < c.y + c.h:
+                            out.append(LintFinding(
+                                "connector", f"{prefix} arrow→({ex:.0f},{ey:.0f})",
+                                f"끝점이 카드({c.x:.0f},{c.y:.0f},{c.w:.0f}×{c.h:.0f}) "
+                                "내부에 묻힘 — tip-gap 8~12pt 유지(§6.1)",
+                                (LEV_LAYOUT,)))
     return out
 ```
-
-(budget 검사의 `×10` 문턱은 "단일 줄 예산의 10배" = 줄바꿈해도 카드를 지배하는 텍스트만 에러로 보고, 나머지는 검수 눈검에 맡긴다는 근사 정책이다 — 스펙 §4.3의 "사전 차단 + 잔여 위험은 검수" 이중 방어 구현. 근거를 이 주석 그대로 코드에 남긴다.)
 
 - [ ] **Step 4: 테스트 통과 확인**
 
 Run: `cd /mnt/d/DEV/acc0mplish/KLIC-BOOK/skills/korean-ebook-typst && python3 -m pytest tests/test_infographic_lint.py -v`
-Expected: 7 passed
+Expected: 9 passed
 
 - [ ] **Step 5: 커밋**
 
@@ -1536,7 +1688,8 @@ git commit -m "feat: I1 린트 — 전수 보고·위치 계약·숫자-evidence
 ### Task 9: build.py 통합 — render 호출·include 치환·검수 시트·리셋
 
 **Files:**
-- Modify: `skills/korean-ebook-typst/scripts/build.py` (assemble 내부, 480~556행 영역)
+- Modify: `skills/korean-ebook-typst/scripts/build.py` (assemble 내부, 480~556행 영역 + 상단 sys.path 1줄)
+- Modify: `skills/korean-ebook-typst/scripts/qc_gate.py` (검수 시트 WARN — 아래 Step 3b)
 - Create: `skills/korean-ebook-typst/scripts/infographic/render.py`
 - Test: `skills/korean-ebook-typst/tests/test_infographic_build_integration.py`
 
@@ -1552,6 +1705,7 @@ git commit -m "feat: I1 린트 — 전수 보고·위치 계약·숫자-evidence
     4. 각 namespaced .typ의 `⟦IG:N⟧` 마커를 `#include "../infographic/{idx:03d}-fig{N:02d}.typ"`로 치환 (rebase_images 호출 후, converted.append 전). 치환 누락 마커(펜스 JSON 파싱은 됐는데 emit 파일 없음)가 남으면 `_fail`
   - helper.typ 복사: `shutil.copy2(SKILL_DIR / "templates" / "infographic" / "helper.typ", build / "helper.typ")` (492행 base.typ 복사 뒤) — 컴파일 root가 build/이므로 fig .typ의 `#import "helper.typ"`가 해석된다(fig는 build/infographic/에, helper는 build/에 — typst import는 **root 기준 절대처럼 동작하는 상대경로**가 아니므로 fig .typ에서 `#import "../helper.typ"`… 가 아니라: typst 0.15.1의 import는 *파일 기준* 상대경로다. 따라서 emit(Task 6)의 import 문은 `#import "../helper.typ"` 여야 한다 — **Task 6 구현 시 이 1행을 반드시 `#import "../helper.typ": …`로 쓴다**(build/infographic/fig.typ → build/helper.typ). preview(Task 10)는 같은 디렉터리 구조를 만들어 재사용.)
 - emit 파일명 규칙: `{챕터idx:03d}-fig{펜스index:02d}.typ` — ch 순번은 cfg["chapters"]의 enumerate 순서.
+- **qc_gate WARN(스펙 §5.4 집행 장치)**: `qc_gate.check_review_sheets(build: Path) -> list[str]` — `build/infographic/*.review.md` 중 `- [ ] 원문 대조 완료` 체크박스가 비어 있는(미완료) 시트의 파일명 목록 반환. qc_gate run이 이를 WARN으로 리포트에 남긴다(에러 아님 — 검수는 사람 판단, final/ 생성은 기존 규칙 그대로).
 
 - [ ] **Step 1: 실패 테스트 작성**
 
@@ -1585,7 +1739,7 @@ def _make_book(tmp_path: Path) -> Path:
 뒤 본문.
 """, encoding="utf-8")
     (book / "typst-build.yaml").write_text(
-        'style: practical\n' 'title: "테스트 책"\n' 'subtitle: "부"\n'
+        'style: practical\n' 'title: "테스트책"\n' 'subtitle: "부"\n'
         'author: "KLIC"\n' 'date: "2026-08"\n'
         "chapters:\n  - manuscript/ch01.md\n", encoding="utf-8")
     return book
@@ -1595,7 +1749,7 @@ def test_assemble_emits_fig_include_and_review_sheet(tmp_path):
     book = _make_book(tmp_path)
     build = book / "build"
     r = subprocess.run([sys.executable, str(SKILL / "scripts" / "build.py"), str(book)],
-                       capture_output=True, text=True)
+                       capture_output=True, text=True, timeout=120)
     assert r.returncode == 0, r.stderr
     fig = build / "infographic" / "000-fig01.typ"
     assert fig.exists(), "emit 파일 없음"
@@ -1606,7 +1760,8 @@ def test_assemble_emits_fig_include_and_review_sheet(tmp_path):
     review = build / "infographic" / "000-fig01.review.md"
     body = review.read_text(encoding="utf-8")
     assert "확인란" in body and "steps[0].title" in body
-    pdf = book / "draft" / "테스트-책.pdf"
+    assert "교차검증" in body and "I1 통과" in body        # 5열 계약(§5.4)
+    pdf = book / "draft" / "테스트책.pdf"                  # sanitize_filename은 공백 유지(실증)
     assert pdf.exists() and pdf.stat().st_size > 10_000, "최종 PDF 없음"
 
 
@@ -1617,20 +1772,31 @@ def test_i1_blocks_build_with_full_report(tmp_path):
         '"title": "5단계로 수렴한다"',
         '"title": "777단계로 수렴한다"'), encoding="utf-8")   # 원문에 없는 숫자
     r = subprocess.run([sys.executable, str(SKILL / "scripts" / "build.py"), str(book)],
-                       capture_output=True, text=True)
+                       capture_output=True, text=True, timeout=120)
     assert r.returncode != 0
     assert "number-evidence" in (r.stdout + r.stderr)
     assert "ch01.md #1" in (r.stdout + r.stderr)          # 위치 계약
 
 
+def test_qc_gate_warns_on_unreviewed_sheets(tmp_path):
+    from scripts.qc_gate import check_review_sheets
+    igdir = tmp_path / "build" / "infographic"; igdir.mkdir(parents=True)
+    (igdir / "000-fig01.review.md").write_text(
+        "| 요소 |\n- [ ] 원문 대조 완료", encoding="utf-8")          # 미완료
+    (igdir / "000-fig02.review.md").write_text(
+        "| 요소 |\n- [x] 원문 대조 완료", encoding="utf-8")          # 완료
+    pending = check_review_sheets(tmp_path / "build")
+    assert pending == ["000-fig01.review.md"]
+
+
 def test_rebuild_resets_infographic_dir(tmp_path):
     book = _make_book(tmp_path)
     subprocess.run([sys.executable, str(SKILL / "scripts" / "build.py"), str(book)],
-                   capture_output=True, text=True)
+                   capture_output=True, text=True, timeout=120)
     stale = book / "build" / "infographic" / "zzz-stale.typ"
     stale.write_text("garbage", encoding="utf-8")
     subprocess.run([sys.executable, str(SKILL / "scripts" / "build.py"), str(book)],
-                   capture_output=True, text=True)
+                   capture_output=True, text=True, timeout=120)
     assert not stale.exists()
 ```
 
@@ -1644,20 +1810,23 @@ Expected: FAIL — emit 파일 없음 / include 없음
 `scripts/infographic/render.py`:
 
 ```python
-"""render.py — 책 단위 펜스 렌더 오케스트레이션(스펙 §2 [2]). I1 위반은 전건 모아 중단."""
+"""render.py — 책 단위 펜스 렌더 오케스트레이션(스펙 §2 [2]).
+I1 치명 위반은 전건 모아 중단. ParseError·FlowLayoutError도 finding으로 변환해
+전수 집계한다(초판은 첫 위반 traceback 크래시였다 — 적대 검토 정정)."""
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
 from . import emit, layout, lint
+from .archetypes.flow import FlowLayoutError
 from .parse import DEFAULT_NOTE, ParseError, parse_fence
 
 
 class I1Error(Exception):
     def __init__(self, findings):
+        self.findings = findings      # super()보다 먼저 — report()가 self.findings를 참조한다
         super().__init__(self.report())
-        self.findings = findings
 
     def report(self) -> str:
         lines = ["[I1] 인포그래픽 린트 위반 — 전건:"]
@@ -1670,8 +1839,9 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
     fences_dir = build / "fences"
     out_dir = build / "infographic"
     out_dir.mkdir(parents=True, exist_ok=True)
-    result: dict[int, dict[int, str]] = {}
+    tokens = json.loads((build / "tokens.json").read_text(encoding="utf-8"))
     all_findings: list[lint.LintFinding] = []
+    parsed_by_chapter: dict[int, tuple] = {}
 
     for idx, ch in enumerate(cfg["chapters"]):
         stem = Path(ch).stem
@@ -1682,53 +1852,67 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
         chapter_name = Path(ch).name
         fences = []
         for raw in json.loads(side.read_text(encoding="utf-8")):
-            fences.append(parse_fence(raw["index"], raw["line"], raw["body"]))
-        # 스타일 tokens — assemble이 이미 build/tokens.json으로 복사했다
-        tokens = json.loads((build / "tokens.json").read_text(encoding="utf-8"))
+            try:
+                fences.append(parse_fence(raw["index"], raw["line"], raw["body"]))
+            except ParseError as e:
+                all_findings.append(lint.LintFinding(
+                    "schema", f"{chapter_name} #{e.fence_index}", e.detail,
+                    ("펜스 JSON 스키마 수정",)))
         figs = {}
+        for f in fences:
+            try:
+                figs[f.index] = layout.dispatch(f, tokens)
+            except FlowLayoutError as e:
+                all_findings.append(lint.LintFinding(
+                    "layout", f"{chapter_name} #{f.index}", e.detail,
+                    ("글자 축약", "요소 수 감소", "펜스 분할")))
+        all_findings.extend(lint.check(fences, figs, tokens, chapter_md, chapter_name))
+        parsed_by_chapter[idx] = (fences, figs, chapter_name)
+
+    fatal = [f for f in all_findings if f.fatal]
+    if fatal:
+        raise I1Error(fatal)
+
+    result: dict[int, dict[int, str]] = {}
+    for idx, (fences, figs, chapter_name) in parsed_by_chapter.items():
         emits: dict[int, str] = {}
         for f in fences:
-            figs[f.index] = layout.dispatch(f, tokens)
-        all_findings.extend(lint.check(fences, figs, tokens, chapter_md, chapter_name))
-        result[idx] = emits      # emit은 lint 통과 후에만(아래)
-
-    if all_findings:
-        raise I1Error(all_findings)
-
-    for idx, ch in enumerate(cfg["chapters"]):
-        stem = Path(ch).stem
-        side = fences_dir / f"{stem}.fences.json"
-        if not side.exists():
-            continue
-        tokens = json.loads((build / "tokens.json").read_text(encoding="utf-8"))
-        chapter_md = (book_dir / ch).read_text(encoding="utf-8")
-        for raw in json.loads(side.read_text(encoding="utf-8")):
-            f = parse_fence(raw["index"], raw["line"], raw["body"])
-            fig = layout.dispatch(f, tokens)
+            fig = figs[f.index]
             name = f"{idx:03d}-fig{f.index:02d}.typ"
             (out_dir / name).write_text(emit.render_typ(fig, tokens), encoding="utf-8")
+            unverified = [x for x in all_findings
+                          if x.kind == "number-unverified"
+                          and x.loc.startswith(f"{chapter_name} #{f.index} ")]
             (out_dir / name.replace(".typ", ".review.md")).write_text(
-                _review_sheet(f), encoding="utf-8")
-            result.setdefault(idx, {})[f.index] = name
+                _review_sheet(f, unverified), encoding="utf-8")
+            emits[f.index] = name
+        result[idx] = emits
     return result
 
 
-def _review_sheet(f) -> str:
+def _review_sheet(f, unverified: list) -> str:
+    # 5열 계약(스펙 §5.4) — 요소|문구|evidence|교차검증|확인란 + 미검증 상단 경고.
     rows = [("title", f.title), ("kicker", f.kicker or "—"), ("thesis", f.thesis or "—")]
     for i, s in enumerate(f.data["steps"]):
         rows.append((f"steps[{i}].title", s["title"]))
         rows.append((f"steps[{i}].text", s["text"]))
-    lines = [
-        f"# 검수 시트 — 펜스 #{f.index}",
-        "",
+    lines = [f"# 검수 시트 — 펜스 #{f.index}", ""]
+    if unverified:
+        lines.append("**⚠ 미검증 숫자 — 사람 대조 필수:**")
+        lines += [f"- {u.loc}: {u.measured}" for u in unverified]
+        lines.append("")
+    lines += [
         f"> 고지: {f.note or DEFAULT_NOTE}",
         f"> evidence: {f.evidence or '—'}",
         "",
-        "| 요소 | 문구 | 확인란 |",
-        "|---|---|---|",
+        "| 요소 | 문구 | evidence | 교차검증 | 확인란 |",
+        "|---|---|---|---|---|",
     ]
-    lines += [f"| {p} | {t} |  |" for p, t in rows]
-    lines += ["", "- [ ] 원문 대조 완료 (교차검증 결과는 I1 리포트 참조)"]
+    ev = f.evidence or "—"
+    for p, t in rows:
+        flag = "미검증" if any(f" {p}" in u.loc for u in unverified) else "I1 통과"
+        lines.append(f"| {p} | {t} | {ev} | {flag} |  |")
+    lines += ["", "- [ ] 원문 대조 완료"]
     return "\n".join(lines) + "\n"
 ```
 
@@ -1761,11 +1945,10 @@ def _review_sheet(f) -> str:
 
 ```python
     # 인포그래픽: 펜스 → emit + include 치환(스펙 §2 [2])
-    from importlib import import_module
-    ig = import_module("infographic.render")
+    from infographic import render as ig_render
     try:
-        figs = ig.render_book_fences(book_dir, build, cfg)
-    except ig.I1Error as exc:
+        figs = ig_render.render_book_fences(book_dir, build, cfg)
+    except ig_render.I1Error as exc:
         _fail(str(exc))
     for idx, name in enumerate(converted):
         p = build / "typ" / name
@@ -1781,7 +1964,39 @@ def _review_sheet(f) -> str:
         p.write_text(text, encoding="utf-8")
 ```
 
-(`import_module("infographic.render")`가 실패하면 sys.path 문제다 — build.py 상단에 `sys.path.insert(0, str(SKILL_DIR / "scripts"))`가 필요한지 확인한다. build.py는 현재 `MD2TYPST` 등을 어떻게 잡는지 14행 이후를 보고 동일 패턴으로 맞춘다: `SKILL_DIR = Path(__file__).resolve().parent.parent`이 이미 있다면 `sys.path.insert(0, str(SKILL_DIR / "scripts"))` 한 줄만 상단에 추가.)
+**build.py 상단 수정(필수 — 조건부 아님)**: `from infographic import render`가 동작하려면 `scripts/`가 sys.path에 있어야 한다. 기존 테스트들이 `from scripts.build import assemble`로 **직접 import**하는 컨텍스트에서는 scripts/ 디렉터리가 sys.path에 없다 — 이 줄이 없으면 기존 스모크 스위트 전체가 ModuleNotFoundError로 깨진다(적대 검토 지적). build.py의 import 블록 뒤에 명시한다(SKILL_DIR은 build.py 상단에 실존한다):
+
+```python
+sys.path.insert(0, str(SKILL_DIR / "scripts"))
+```
+
+- [ ] **Step 3b: qc_gate 검수 시트 WARN (스펙 §5.4 집행 장치)**
+
+`qc_gate.py`에 함수 추가 후 run()의 리포트 생성 지점(warning 성 로그를 남기는 기존 위치 — G3 관련 출력 부분)에서 호출한다:
+
+```python
+def check_review_sheets(build: Path) -> list[str]:
+    """미완료 검수 시트 파일명 반환(스펙 §5.4 — 확인란 미완료 시 WARN, 에러 아님)."""
+    igdir = build / "infographic"
+    if not igdir.exists():
+        return []
+    incomplete = []
+    for sheet in sorted(igdir.glob("*.review.md")):
+        if "- [ ] 원문 대조 완료" in sheet.read_text(encoding="utf-8"):
+            incomplete.append(sheet.name)
+    return incomplete
+```
+
+run() 내 리포트 출력부에(기존 로그 형식에 맞춰):
+
+```python
+    unreviewed = check_review_sheets(build)
+    if unreviewed:
+        print(f"[WARN] 미확인 인포그래픽 검수 시트 {len(unreviewed)}건: "
+              + ", ".join(unreviewed))
+```
+
+(qc_gate의 기존 pass/warn 구조를 먼저 읽고, WARN이 final/ 생성을 막지 않는 기존 채널로 출력한다 — 새 에러 경로를 만들지 않는다.)
 
 - [ ] **Step 4: 테스트 통과 확인**
 
@@ -1828,7 +2043,8 @@ import pytest
 
 SKILL = Path(__file__).resolve().parents[1]
 CLI = SKILL / "scripts" / "infographic" / "cli.py"
-TYPST = shutil.which("typst")
+from scripts.build import typst_binary                # noqa: E402
+TYPST = typst_binary()
 
 MD = """## 장
 
@@ -1891,7 +2107,8 @@ SKILL_DIR = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(SKILL_DIR / "scripts"))
 
 from md2typst import extract_fences                     # noqa: E402
-from infographic import emit, layout, lint, roles       # noqa: E402
+from build import typst_binary                          # noqa: E402 — 탐지 단일화(Global Constraints)
+from infographic import emit, layout, lint              # noqa: E402
 from infographic.parse import ParseError, parse_fence   # noqa: E402
 
 
@@ -1954,9 +2171,9 @@ def cmd_preview(md_path: Path, fig_no: int, style: str, out: Path) -> int:
                 + f', size: {tokens["fonts"]["body"]["size_pt"]}pt, lang: "ko")\n'
                 + main)
         (igdir / "fig.typ").write_text(page, encoding="utf-8")
-        r = subprocess.run([shutil.which("typst") or "typst", "compile",
+        r = subprocess.run([typst_binary(), "compile",
                             str(igdir / "fig.typ"), str(out), "--root", str(tdp)],
-                           capture_output=True, text=True)
+                           capture_output=True, text=True, timeout=120)
         if r.returncode != 0:
             print(r.stderr, file=sys.stderr)
             return 3
@@ -2031,9 +2248,16 @@ git commit -m "feat: infographic CLI — lint/preview 단독 실행"
 - 선택: thesis, kicker, note, evidence("§N" — 같은 챕터 N번째 ## 절).
 - 근거 경계: 모든 문구는 원문에 대응. 숫자는 evidence 필요(자동 교차검증).
 
-## 예산 치트시트 (practical, 카드 폭 90pt 미만이면 자동 랩/세로)
+## 예산 치트시트 (practical 기준 초기값 — 골든 교정 전)
 - 카드 제목(11pt): 줄당 KO ~10자 · 카드 본문(9pt): ~13자 · 도식 제목(13.5pt): ~22자
-- 실측 갱신: 골든 교정 절차(spec §7) 후 이 표를 바꾼다.
+- 상한 근거: `(카드폭−16)×0.9 ÷ 크기pt` (스펙 §4.3 계수). 팩별 보정 계수는
+  `scripts/infographic/budget.py: PACK_KO_FACTOR`(초기값 1.0).
+
+## 골든 교정 절차 (스펙 §7 — Phase 1 수립, archetype 추가 시마다 반복)
+1. fixture 펜스(치트시트 상한 근처 문구)를 `cli.py preview`로 팩별 렌더.
+2. PDF에서 카드 텍스트 오버플로 한계를 눈검으로 실측(잘리는 시작 지점).
+3. 실측/예상 비율을 `PACK_KO_FACTOR[팩]`에 반영하고 치트시트 표 갱신.
+4. 골든 스냅샷 재확정: `IG_REGEN_GOLDEN=1 pytest` → 눈검 → 커밋.
 
 ## 도식 하나 만들기 (빌드 없이)
 python3 scripts/infographic/cli.py lint <ch.md>          # I1만
@@ -2079,8 +2303,10 @@ git commit -m "docs: 인포그래픽 저작 가이드 최소판 + SKILL.md 요�
 
 본 플랜 착지 후 작성: Phase 2(cards+matrix)·Phase 3(before_after+ladder+roadmap)·Phase 4(topology+approval+layers)·Phase 5(composite+가이드 완성+`infographic_pages` 리포트 필드). 각 플랜은 본 플랜의 Task 5 패턴(archetype 모듈+지오메트리 테스트+런타임 라우팅 등록)을 따른다.
 
-## Self-Review 결과
+## Self-Review 결과 (개정 2판)
 
-- 스펙 커버리지: §2(Task 3·9), §3(Task 2), §4(Task 1·4·5), §5(Task 8·9·10), §6(Task 5), §7(각 Task TDD+Task 7 컴파일+Task 11 회귀), §8-Phase1(Task 1~11 전부) ✓. §5.4의 `infographic_pages` 필드·§6.2 상한표 전종은 Phase 2~5 플랜으로 명시 이관 ✓.
-- 플레이스홀더: helper.typ open-V 벡터 계산에 구현 주의 표기(코드 블록 내 실 계산 포함 + Task 7 컴파일 게이트) — "적절히" 류의 빈 문구 없음 확인.
-- 타입 일贯性: `Fence(index,line,layout,title,thesis,kicker,note,evidence,data)` — Task 2 정의, Task 5·8·9·10 소비 동일. `FigModel(width,height,ops,source_index)` — Task 5 정의, Task 6·8 소비 동일. `render_book_fences(book_dir,build,cfg)` — Task 9 정의·소비 일치. emit import 경로는 Task 6 본문과 Task 9 Interfaces 메모가 상충하지 않도록 **`#import "../helper.typ"` 단일 표기로 확정**(Task 6 코드의 import 문을 이 값으로 작성할 것 — Task 9가 그 근거를 서술했다).
+- **적대 검토 22건 반영 확인**: A그룹(테스트↔구현 불일치 7건) — helper.typ 재작성(pt 셈·top+left rect·center+horizon 절대좌표 환산·open-V 절대 대각선), 배치 결정론 재합의(세로 제거·판형 상한+2행 랩·수학 검증 표기), Task 4 산수 2건 정정, Task 6 방출물/helper 단언 분리, Task 3 1차 마커 기대 정정. B그룹 — Task 7 배치 build/ 동일 구조, I1Error 할당 순서, `테스트책` 파일명, `sys.path.insert` 명시 코드 블록, `_esc @<>` 확장. C그룹 — I1 9항목: 커넥터 산술·판형 상한(§6.2)·펜스 위장·미검증 비치명·검수 시트 5열·qc_gate WARN·팩별 예산표 구조+교정 절차·ParseError/FlowLayoutError 전수 집계. D그룹 — 골든 IG_REGEN_GOLDEN 확정 절차, TextOp.field loc, typst_binary 단일화, timeout, FigModel 인터페이스 표기 통일.
+- **스펙 커버리지**: §2(Task 3·9), §3(Task 2), §4(Task 1·4·5 — 팩별 계수·leading·크기 불변식), §5 I1 9항목(Task 8·9 — #6 복합은 Phase 5 이관), §6.2 상한표 flow 행(layout PACK_LIMITS), §6.3(Task 5), §7(각 Task TDD·Task 7 컴파일·Task 11 교정 절차), §8-Phase1(Task 1~11). `infographic_pages` 리포트 필드·상한표 잔여 종은 Phase 2~5 플랜 이관(스펙 §8 배분과 일치).
+- **플레이스홀더 스캔**: "적절히/나중에/유사히" 류 없음. 골든 재확정·교정 절차가 절차문으로 정의됨.
+- **타입 일관성**: `Fence` 필드 — Task 2 정의 = Task 5·8·9·10 소비. `FigModel(width,height,ops,source_index)`. `TextOp(…, max_w, field)` — Task 5 정의 = Task 8 소비. `render_book_fences(book_dir,build,cfg)` — Task 9. `_card_texts(…, idx, pack)`. emit import `#import "../helper.typ"` 전 Task 단일. `budget.line_count(…, pack=)`·`width_units(text, pack)` — Task 4 정의 = Task 5 소비. `check_review_sheets(build)` — Task 9 Interfaces = 구현 = 테스트.
+- **잔여 위험(의도적 수용)**: helper.typ·flow.py의 방출 좌표는 계획 단계 산수이며 Task 7 컴파일·Task 9 눈검이 1차 검증한다. 골든 교정 전 예산표는 근사(스펙 §4.3 명시).
