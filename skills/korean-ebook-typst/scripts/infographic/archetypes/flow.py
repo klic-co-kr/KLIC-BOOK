@@ -1,4 +1,4 @@
-"""flow — 순차 단계 배치(스펙 §6.2·§6.3). 결정론: 가로→랩→세로 우선순위 고정."""
+"""flow — 순차 단계 배치(스펙 §6.2·§6.3). 결정론: 가로→랩 우선순위 고정."""
 from __future__ import annotations
 
 import math
@@ -78,16 +78,10 @@ def layout(fence, tokens: dict) -> FigModel:
         x_lines = budget.line_count(step["text"], cardW, card_text_size, CARD_PAD_IN, pack)
         return 2 * CARD_PAD_V + t_lines * card_title_size * LEADING + 4.0 + x_lines * card_text_size * LEADING
 
-    # 헤더 블록
-    header_h = 0.0
+    # 헤더 블록 — 세로 위치는 아래 cy 누산이 실측한다(예측 합산 header_h는
+    # 읽히는 곳이 없어 제거 — 최종 리뷰 정리).
     texts: list[TextOp] = []
-    if fence.kicker:
-        header_h += kicker_size * LEADING
     t_lines = budget.line_count(fence.title, W - 2 * P, title_size, 0.0, pack)
-    header_h += t_lines * title_size * LEADING
-    if fence.thesis:
-        header_h += budget.line_count(fence.thesis, W - 2 * P, card_text_size, 0.0, pack) * card_text_size * LEADING
-    header_h += 18.0                                # 제목→카드 간
 
     ops: list = []
     y = 0.0

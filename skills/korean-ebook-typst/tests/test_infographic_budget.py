@@ -1,6 +1,4 @@
 """test_infographic_budget.py — 스펙 §4.3 근사 예산."""
-import math
-
 from scripts.infographic.budget import width_units, max_units, line_count
 
 

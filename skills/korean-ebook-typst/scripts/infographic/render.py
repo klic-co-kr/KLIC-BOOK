@@ -78,7 +78,7 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
         for f in fences:
             fig = figs[f.index]
             name = f"{idx:03d}-fig{f.index:02d}.typ"
-            (out_dir / name).write_text(emit.render_typ(fig, tokens), encoding="utf-8")
+            (out_dir / name).write_text(emit.render_typ(fig), encoding="utf-8")
             unverified = [x for x in all_findings
                           if x.kind == "number-unverified"
                           and x.loc.startswith(f"{chapter_name} #{f.index} ")]

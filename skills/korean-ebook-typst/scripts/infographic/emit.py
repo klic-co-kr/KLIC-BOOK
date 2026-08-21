@@ -18,7 +18,7 @@ def _esc(s: str) -> str:
     return s
 
 
-def render_typ(fig: FigModel, tokens: dict) -> str:
+def render_typ(fig: FigModel) -> str:
     lines = [
         "// 자동 생성 — scripts/infographic/emit.py. 수정 금지(원본은 펜스에 있다).",
         '#import "../helper.typ": ig-rect, ig-text, ig-arrow, ig-figure',

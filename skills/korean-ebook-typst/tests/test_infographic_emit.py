@@ -22,7 +22,7 @@ FENCE = parse_fence(1, 1, json.dumps({
 
 
 def test_emit_calls_helpers_no_hex():
-    out = render_typ(flow_arch.layout(FENCE, TOKENS), TOKENS)
+    out = render_typ(flow_arch.layout(FENCE, TOKENS))
     assert '#import "../helper.typ"' in out          # fig는 build/infographic/에 있다(§2)
     assert "#ig-figure(" in out and "#ig-text(" in out
     assert "#EEF3F8" not in out and "#1F4E79" not in out   # hex 금지(§4.2) — 역할명만
@@ -38,13 +38,13 @@ def test_helper_has_wrapper_and_leading_contract():
 
 
 def test_emit_deterministic_bytes():
-    a = render_typ(flow_arch.layout(FENCE, TOKENS), TOKENS)
-    b = render_typ(flow_arch.layout(FENCE, TOKENS), TOKENS)
+    a = render_typ(flow_arch.layout(FENCE, TOKENS))
+    b = render_typ(flow_arch.layout(FENCE, TOKENS))
     assert a == b
 
 
 def test_golden_snapshot():
-    out = render_typ(flow_arch.layout(FENCE, TOKENS), TOKENS)
+    out = render_typ(flow_arch.layout(FENCE, TOKENS))
     if not GOLDEN.exists():
         # 골든은 테스트가 스스로 굳히지 않는다(자기충족 안티패턴 — 적대 검토 지적).
         # 확정 절차: IG_REGEN_GOLDEN=1으로 생성 → 눈검 → 함께 커밋. 그 전엔 실패.

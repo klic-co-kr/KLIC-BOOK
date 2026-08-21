@@ -32,7 +32,7 @@ def test_flow_fig_compiles(tmp_path):
         "layout": "flow", "title": "컴파일 스모크",
         "steps": [{"title": "A", "text": "가"}, {"title": "B", "text": "나"}],
     }, ensure_ascii=False))
-    out = render_typ(flow_arch.layout(fence, tokens), tokens)
+    out = render_typ(flow_arch.layout(fence, tokens))
     # build/와 동일 배치: 루트에 tokens·helper, 하위 infographic/에 fig
     (tmp_path / "tokens.json").write_text(json.dumps(tokens, ensure_ascii=False), encoding="utf-8")
     shutil.copy2(SKILL / "templates" / "infographic" / "helper.typ", tmp_path / "helper.typ")

@@ -71,7 +71,7 @@ def cmd_preview(md_path: Path, fig_no: int, style: str, out: Path) -> int:
         shutil.copy2(SKILL_DIR / "templates" / "infographic" / "helper.typ", tdp / "helper.typ")
         f = next(x for x in fences if x.index == fig_no)
         (igdir / "fig.typ").write_text(
-            emit.render_typ(figs[fig_no], tokens), encoding="utf-8")
+            emit.render_typ(figs[fig_no]), encoding="utf-8")
         # 1페이지: 판형 크기 페이지에 도식 하나를 상단 배치
         main = (igdir / "fig.typ").read_text(encoding="utf-8")
         # 폰트 스택은 typst 배열 리터럴 (a, b)로 — json 배열 [a, b]는

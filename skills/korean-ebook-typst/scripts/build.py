@@ -541,14 +541,13 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     for idx, name in enumerate(converted):
         p = build / "typ" / name
         text = p.read_text(encoding="utf-8")
-        import re as _re
         def _sub(m):
             n = int(m.group(1))
             fname = figs.get(idx, {}).get(n)
             if not fname:
                 _fail(f"{name}: 펜스 #{n} emit 결과 없음(마커 ⟦IG:{n}⟧)")
             return f'#include "../infographic/{fname}"'
-        text = _re.sub(r"⟦IG:(\d+)⟧", _sub, text)
+        text = re.sub(r"⟦IG:(\d+)⟧", _sub, text)
         p.write_text(text, encoding="utf-8")
 
     # 콘텐츠 정합 불변식: 산출 파일 수 == 챕터 수, include 대상 중복 0.

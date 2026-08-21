@@ -3,6 +3,7 @@ fatal=False(미검증류)은 빌드를 막지 않고 검수 시트로 이관한�
 from __future__ import annotations
 
 import json
+import math
 import re
 from dataclasses import dataclass
 
@@ -155,8 +156,7 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
                         f"크기 {op.size}pt — 본문 {body_size}pt±0.3 밖이어야 함",
                         ("크기 사다리 재검토(layout 버그)",)))
             elif isinstance(op, ArrowOp):
-                import math as _math
-                length = _math.hypot(op.x2 - op.x1, op.y2 - op.y1)
+                length = math.hypot(op.x2 - op.x1, op.y2 - op.y1)
                 if length < 12.0:
                     out.append(LintFinding(
                         "connector", f"{prefix} arrow({op.x1:.0f},{op.y1:.0f}→{op.x2:.0f},{op.y2:.0f})",
