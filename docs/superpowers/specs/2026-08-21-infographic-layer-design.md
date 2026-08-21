@@ -153,7 +153,8 @@ skills/korean-ebook-typst/
 **숫자 규칙(기계, I1)**:
 
 1. 검사 대상: `title`·`kicker`·각 요소의 `title`/`text`/`value`·표
-   `headers`·`rows`. `note`·`thesis`는 제외(편집자 문구).
+   `headers`·`rows`·정성 매트릭스 축 라벨(`x_axis`/`y_axis`의 low·high)
+   ·swimlane `actor`(개정 4판). `note`·`thesis`는 제외(편집자 문구).
 2. 숫자 토큰 렉시콘: `[0-9][0-9.,%]*` (아라비아숫자 시작 — "3", "50%",
    "1.5", "v0.11"의 "0.11"). 한글 수사(삼, 셋), 원형 숫자(①),
    "제N장/제N절"의 서수는 **면제 렉시콘**으로 제외.
@@ -356,6 +357,7 @@ python3 scripts/infographic/cli.py preview <ch.md> --fig 2 [--style practical]
 | layout | essay(249pt) | practical(334pt) | b5(386pt) | business(454pt) | lecture(465pt) |
 |---|---|---|---|---|---|
 | flow steps(가로) | 4 | 6 | 6 | 8 | 8 |
+| flow swimlane 레인 셀 수(개정 4판) | 2 | 3 | 4 | 4 | 4 |
 | cards 열수 | 2 | 3 | 3 | 3 | 3~4 |
 | matrix 최대열 | 3 | 4 | 4 | 5 | 5 |
 | before_after 항목/측 | 3 | 4 | 4 | 5 | 5 |
@@ -455,3 +457,10 @@ authoring.md 해당 섹션 존재 + 검수 시트 생성 확인.
   제거**(§6.2 — 세로 571pt>한계 441pt 불가·샤프트 가시 보증 불가 실증),
   최소 카드폭 문지방 80pt 명시, essay 도식 제목 예외 본문+1.5pt 기록
   (§4.3), `figure(placement:none)` 폐기·block 단일 래퍼(§5.1).
+- 개정 4판: 2026-08-22 — Phase 2 플랜 적대 검토 반영. §6.2에 **flow swimlane
+  레인 셀 수 행 추가**(essay 2 / practical 3 / b5·business·lecture 4) —
+  셀 간격 GS=24에서 샤프트 가시 ≥12pt(§6.1)와 MIN_CELL_W=45가 동시에
+  성립하는 최대 셀 수로 유도(Phase 2 플랜 수학 검증). §6.2 cards 열수의
+  lecture "3~4"는 구현이 3으로 고정(§2 결정론 원칙 — authoring.md에 근거
+  기록). §3.3 숫자 검사 대상에 정성 매트릭스 축 라벨(x_axis/y_axis
+  low·high) 포함 명시.

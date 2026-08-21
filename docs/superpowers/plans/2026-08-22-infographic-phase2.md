@@ -15,22 +15,31 @@
 ## Global Constraints (Phase 1과 동일 + 추가)
 
 - 외부 의존 금지, 펜스 JSON, 결정론(같은 입력=같은 방출 바이트), hex 금지(역할명), leading 1.3em, G3 불변식(본문±0.3pt 밖 — essay 예외 +1.5), I1 메시지 계약(loc/측정값/저작자 레버), typst_binary() 재use, timeout=120.
-- 모든 archetype은 `archetypes/flow.py`의 구조를 따른다: `layout(fence, tokens) -> FigModel`, `XLayoutError(Exception)` with `.detail`, 잉크 bbox 보장, 높이 85% 한계, TextOp.field 계약.
-- 판형 상한은 layout이 즉시 에러(스펙 §6.2) — Phase 1 PACK_LIMITS 패턴.
-- 카드 채움 role "surface-tint"(lint 매립 검사 의존), 화살표 ink-soft 1.2pt open-V.
+- **공통 예외 베이스(Task 1 도입)**: `archetypes/base.py`의 `LayoutError(Exception)`(.detail). 모든 archetype 에러가 이것을 상속 — `render.py`·`cli.py`는 베이스만 catch(신규 archetype 에러가 I1 전수 집계·CLI 리포트를 우회해 traceback으로 크래시하는 것을 원천 차단 — 적대 검토 G1).
+- **lint·검수 시트는 `f.data.get("steps", [])` 접근**(신규 layout에서 KeyError 금지) — 검수 시트는 archetype별 요소 전부를 행으로 갖는다(§5.4).
+- 모든 archetype은 `archetypes/flow.py`의 구조를 따른다: `layout(fence, tokens) -> FigModel`, `XLayoutError(LayoutError)`, 잉크 bbox 보장, 높이 85% 한계, TextOp.field 계약.
+- 판형 상한은 layout이 즉시 에러(스펙 §6.2) — Phase 1 PACK_LIMITS 패턴. **상한 검사는 parse 하한·상한과 별개 경로**(parse 2~6 선검증과 판형 상한 n>cols·2 등 layout 에러가 모두 살아있는 테스트 경로 유지 — 도달 불가 테스트 금지, 적대 검토 G1).
+- 카드 채움 role "surface-tint"(lint 매립 검사 의존), 화살표 ink-soft 1.2pt open-V. **커넥터 복도 상수는 샤프트 가시 ≥12pt와 양립해야 한다** — `_harrow` 오프셋(+4/−8)에서 샤프트=간격−12이므로 셀 간격 GS ≥ 24(§6.1).
 - 텍스트 크기: 카드 제목=본문+1, 카드 본문=본문−1, 제목=H2(essay +1.5), 라벨=label 크기.
-- **프리플라이트 교훈(최종 리뷰)**: 신규 데이터 키가 챕터 단위 유일한가 — archetype 데이터는 펜스 내부라 무관. 기존 계약 재확인: dispatch 키=parse의 정규화 layout 문자열.
+- **archetype별 골든 스냅샷 필수**(스펙 §7·§8 종료 조건) — cards·matrix 각 1개, IG_REGEN_GOLDEN 절차.
+- **병합 게이트**: Task 4(문서 갱신) 완료 전 main 병합 금지 — 라우팅 표가 코드와 모순되는 중간 상태 방지.
+- 프리플라이트 교훈(최종 리뷰): "키가 챕터 단위 유일한가" — 본 Phase 신규 키 없음(펜스 내부). dispatch 키=parse 정규화 layout 문자열 재확인.
 
 ---
 
-### Task 1: cards archetype
+### Task 1: cards archetype + 공통 예외 베이스 + 소비자 확장
 
 **Files:**
+- Create: `skills/korean-ebook-typst/scripts/infographic/archetypes/base.py` (공통 `LayoutError`)
 - Create: `skills/korean-ebook-typst/scripts/infographic/archetypes/cards.py`
-- Modify: `skills/korean-ebook-typst/scripts/infographic/parse.py` (cards 검증 분기)
+- Modify: `skills/korean-ebook-typst/scripts/infographic/parse.py` (cards 검증 분기 + unknown-layout 메시지 동적 갱신)
 - Modify: `skills/korean-ebook-typst/scripts/infographic/layout.py` (dispatch 등록)
-- Modify: `skills/korean-ebook-typst/scripts/infographic/lint.py` (숫자 검사 필드에 cards 반영)
+- Modify: `skills/korean-ebook-typst/scripts/infographic/lint.py` (`f.data.get("steps", [])` 전환 + cards 필드)
+- Modify: `skills/korean-ebook-typst/scripts/infographic/render.py` (except LayoutError 전환 + `_review_sheet` archetype별 요소 행 확장)
+- Modify: `skills/korean-ebook-typst/scripts/infographic/cli.py` (except LayoutError 전환)
+- Modify: `skills/korean-ebook-typst/scripts/infographic/archetypes/flow.py` (FlowLayoutError → LayoutError 상속 1줄)
 - Test: `skills/korean-ebook-typst/tests/test_infographic_layout_cards.py`
+- Test fixture: `skills/korean-ebook-typst/tests/fixtures/infographic/golden-cards-practical.typ` (IG_REGEN_GOLDEN 절차)
 
 **Interfaces:**
 - Consumes: Phase 1 전부. `budget.line_count(text, box, size, pad, pack)`, `model.*`, `parse.Fence`.
@@ -94,9 +103,27 @@ def test_five_cards_wrap_two_rows():
     assert len({round(r.y, 2) for r in cards}) == 2          # 3+2 랩
 
 
-def test_seven_cards_pack_limit_error():
+def test_five_cards_essay_pack_limit_error():
+    # essay 상한 2열×2행=4 — n=5는 layout 판형 상한 경로(parse 2~6 내부)
+    ET = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
     with pytest.raises(cards_arch.CardsLayoutError, match="상한"):
-        cards_arch.layout(_fence(7), TOKENS)
+        cards_arch.layout(_fence(5), ET)
+
+
+def test_cards_lint_and_review_sheet_reach_elements():
+    # lint가 cards 요소에 도달하는가(KeyError 아님) — 적대 검토 G1 방어
+    from scripts.infographic.lint import check
+    from scripts.infographic.render import _review_sheet
+    body = json.dumps({"layout": "cards", "title": "t", "cards": [
+        {"title": "3단계 확정", "text": "가"},
+        {"title": "b", "text": "나"},
+        {"title": "c", "text": "다"}]}, ensure_ascii=False)
+    fence = parse_fence(1, 1, body)
+    figs = {1: cards_arch.layout(fence, TOKENS)}
+    found = check([fence], figs, TOKENS, "원문 없음", "ch01.md")
+    assert any(f.loc == "ch01.md #1 cards[0].title" for f in found)
+    sheet = _review_sheet(fence, [])
+    assert "cards[0].title" in sheet
 
 
 def test_value_renders_large_focus_text():
@@ -313,9 +340,13 @@ def dispatch(fence, tokens):
     raise ValueError(f"지원하지 않는 layout: {fence.layout!r}")
 ```
 
-`lint.py` `fields` 수집 확장(fences 루프 안):
+`lint.py` `fields` 수집 확장(fences 루프 안) + **steps 접근 전환**:
 
 ```python
+# 기존: for i, s in enumerate(f.data["steps"]):  → 아래로 교체(KeyError 방어)
+        for i, s in enumerate(f.data.get("steps", [])):
+            ...
+# cards 필드 추가:
         for i, c in enumerate(f.data.get("cards", [])):
             fields.append((f"cards[{i}].title", c["title"]))
             fields.append((f"cards[{i}].text", c["text"]))
@@ -323,16 +354,84 @@ def dispatch(fence, tokens):
                 fields.append((f"cards[{i}].value", c["value"]))
 ```
 
+`archetypes/base.py` 신규:
+
+```python
+"""base.py — archetype 공통 예외(스펙 §5.2 전수 집계·§5.5 CLI 리포트가 베이스로 catch)."""
+
+
+class LayoutError(Exception):
+    def __init__(self, detail: str):
+        super().__init__(detail)
+        self.detail = detail
+```
+
+소비자 전환 (render.py·cli.py·flow.py):
+
+```python
+# archetypes/flow.py — FlowLayoutError를 베이스 상속으로(본문 로직 불변):
+from .base import LayoutError
+class FlowLayoutError(LayoutError):
+    pass    # __init__은 베이스가 detail 처리 — 기존 .detail 계약 유지
+
+# cards.py:
+from .base import LayoutError
+class CardsLayoutError(LayoutError):
+    pass
+
+# render.py: from .archetypes.flow import FlowLayoutError →
+from .archetypes.base import LayoutError
+# except FlowLayoutError as e:  →  except LayoutError as e:  (I1 "layout" finding 변환은 동일)
+
+# cli.py: from scripts...flow import FlowLayoutError → base.LayoutError, except 절 교체
+```
+
+`render.py _review_sheet` — `f.data["steps"]` 순회를 archetype별 전 요소로 교체:
+
+```python
+def _sheet_rows(f) -> list[tuple[str, str]]:
+    rows = [("title", f.title), ("kicker", f.kicker or "—"), ("thesis", f.thesis or "—")]
+    for i, s in enumerate(f.data.get("steps", [])):
+        rows.append((f"steps[{i}].title", s["title"]))
+        rows.append((f"steps[{i}].text", s["text"]))
+    for i, c in enumerate(f.data.get("cards", [])):
+        rows.append((f"cards[{i}].title", c["title"]))
+        rows.append((f"cards[{i}].text", c["text"]))
+        if "value" in c:
+            rows.append((f"cards[{i}].value", c["value"]))
+    # matrix·lanes 행은 Task 2·3에서 같은 패턴으로 추가
+    return rows
+```
+
+골든 테스트(test_infographic_layout_cards.py 말미):
+
+```python
+def test_cards_golden_snapshot():
+    import os
+    from scripts.infographic.emit import render_typ
+    GOLDEN = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "infographic" / "golden-cards-practical.typ"
+    fig = cards_arch.layout(_fence(3, value=True), TOKENS)
+    out = render_typ(fig)
+    if not GOLDEN.exists():
+        if os.environ.get("IG_REGEN_GOLDEN") != "1":
+            pytest.fail("골든 없음 — IG_REGEN_GOLDEN=1 실행 후 눈검·커밋")
+        GOLDEN.parent.mkdir(parents=True, exist_ok=True)
+        GOLDEN.write_text(out, encoding="utf-8")
+    assert out == GOLDEN.read_text(encoding="utf-8")
+```
+
+(골든 확정 후 Step 4 눈검: 3카드 1행·value 강조·note 포함.)
+
 - [ ] **Step 4: 통과 확인**
 
 Run: `cd /mnt/d/DEV/acc0mplish/KLIC-BOOK/skills/korean-ebook-typst && python3 -m pytest tests/test_infographic_layout_cards.py tests/ -q`
-Expected: 신규 7 + 전체 162 passed
+Expected: 신규 9(골든 최초는 실패 → `IG_REGEN_GOLDEN=1` 재실행 9 passed) + 전체 164
 
 - [ ] **Step 5: 커밋**
 
 ```bash
-git add skills/korean-ebook-typst/scripts/infographic/ skills/korean-ebook-typst/tests/test_infographic_layout_cards.py
-git commit -m "feat: cards archetype — 판형 열수 그리드·value 강조·별칭 principles/dashboard"
+git add skills/korean-ebook-typst/scripts/infographic/ skills/korean-ebook-typst/tests/test_infographic_layout_cards.py skills/korean-ebook-typst/tests/fixtures/infographic/golden-cards-practical.typ
+git commit -m "feat: cards archetype + 공통 LayoutError 베이스 — 판형 열수 그리드·value 강조·소비자 확장"
 ```
 
 ---
@@ -341,8 +440,9 @@ git commit -m "feat: cards archetype — 판형 열수 그리드·value 강조·
 
 **Files:**
 - Create: `skills/korean-ebook-typst/scripts/infographic/archetypes/matrix.py`
-- Modify: `parse.py` (matrix 두 형태 검증), `layout.py` (dispatch), `lint.py` (필드 수집)
+- Modify: `parse.py` (matrix 두 형태 검증 + VALID_LAYOUTS에 "matrix" 추가 + ALIASES에 `"quadrant": "matrix"`), `layout.py` (dispatch), `lint.py` (필드 수집 — 축 라벨 포함), `render.py` `_sheet_rows` (headers/rows/cells 행)
 - Test: `skills/korean-ebook-typst/tests/test_infographic_layout_matrix.py`
+- Test fixture: `tests/fixtures/infographic/golden-matrix-practical.typ`
 
 **Interfaces:**
 - `matrix.layout(fence, tokens) -> FigModel`; `matrix.MatrixLayoutError`(.detail)
@@ -424,8 +524,32 @@ def test_qualitative_four_cells_with_axis_labels():
     assert len(cells) == 4
     labels = [t.text for t in fig.ops if isinstance(t, TextOp) and t.field.startswith("axis.")]
     assert "소규모" in labels and "장기" in labels
-    expect = (W - 2 * P - 28.0) / 2
+    AXIS_W = 40.0                                          # 구현 상수 — y축 라벨 열
+    expect = (W - 2 * P - AXIS_W - 28.0) / 2               # 119.2pt(적대 검토 20pt 오차 정정)
     assert abs(cells[0].w - expect) < 0.01
+
+
+def test_quadrant_alias_routes_to_qualitative():
+    body = json.dumps({
+        "layout": "quadrant", "title": "t",
+        "x_axis": {"low": "a", "high": "b"}, "y_axis": {"low": "c", "high": "d"},
+        "cells": [{"title": "1", "text": "x"}, {"title": "2", "text": "x"},
+                  {"title": "3", "text": "x"}, {"title": "4", "text": "x"}]}, ensure_ascii=False)
+    f = parse_fence(1, 1, body)
+    assert f.layout == "matrix" and "x_axis" in f.data    # 정성 형태로 라우팅
+
+
+def test_matrix_golden_snapshot():
+    import os
+    from scripts.infographic.emit import render_typ
+    GOLDEN = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "infographic" / "golden-matrix-practical.typ"
+    out = render_typ(matrix_arch.layout(_grid_fence(), TOKENS))
+    if not GOLDEN.exists():
+        if os.environ.get("IG_REGEN_GOLDEN") != "1":
+            pytest.fail("골든 없음 — IG_REGEN_GOLDEN=1 실행 후 눈검·커밋")
+        GOLDEN.parent.mkdir(parents=True, exist_ok=True)
+        GOLDEN.write_text(out, encoding="utf-8")
+    assert out == GOLDEN.read_text(encoding="utf-8")
 
 
 def test_qualitative_requires_four_cells():
@@ -460,6 +584,7 @@ Expected: FAIL — ModuleNotFoundError
 """matrix — 비교 격자 + 정성 2×2(스펙 §6.2·§6.3). 셀 간격 0(격자), 정성 셀 간 G."""
 from __future__ import annotations
 
+from .base import LayoutError
 from .. import budget
 from ..model import FigModel, RectOp, TextOp
 from ..parse import DEFAULT_NOTE, Fence
@@ -467,6 +592,7 @@ from ..parse import DEFAULT_NOTE, Fence
 P = 14.0
 G = 28.0
 MIN_COL_W = 40.0                 # 격자 셀 최소폭 — 이 이하면 텍스트 불가
+MIN_QUAL_W = 60.0                # 정성 셀 최소폭(카드 문지방 완화 — essay 격자 3열 73.8pt와 정합)
 CELL_PAD = 6.0
 LEADING = 1.3
 HEIGHT_LIMIT = 0.85
@@ -475,10 +601,8 @@ GRID_MAX_ROWS = 6
 PACK_MAX_COLS = {"essay": 3, "practical": 4, "b5": 4, "business": 5, "lecture": 5}
 
 
-class MatrixLayoutError(Exception):
-    def __init__(self, detail: str):
-        super().__init__(detail)
-        self.detail = detail
+class MatrixLayoutError(LayoutError):
+    pass
 
 
 def layout(fence: Fence, tokens: dict) -> FigModel:
@@ -517,17 +641,19 @@ def _footer(fence, texts, y, cx_size, W):
     return y + cx_size * LEADING
 
 
-def _finish(ops, texts, W, y, H_frame):
+def _finish(ops, texts, W, y, H_frame, source_index: int):
+    """ops+texts를 합산해 잉크 검사 후 FigModel 반환 — texts를 버리면 안 된다(적대 검토 G1)."""
+    all_ops = [*ops, *texts]
     if y > H_frame * HEIGHT_LIMIT:
         raise MatrixLayoutError(
             f"도식 높이 {y:.0f}pt > 프레임 {H_frame * HEIGHT_LIMIT:.0f}pt(85%) — "
             f"행 감소, 문구 축약 또는 펜스 분할")
-    for o in ops:
+    for o in all_ops:
         if isinstance(o, RectOp):
             if (o.x - o.stroke_w / 2 < -0.001 or o.x + o.w + o.stroke_w / 2 > W + 0.001
                     or o.y - o.stroke_w / 2 < -0.001 or o.y + o.h + o.stroke_w / 2 > y + 0.001):
                 raise MatrixLayoutError(f"잉크 bbox 프레임 이탈: rect({o.x:.1f},{o.y:.1f})")
-    return FigModel(width=W, height=y, ops=tuple(ops), source_index=0)
+    return FigModel(width=W, height=y, ops=tuple(all_ops), source_index=source_index)
 
 
 def _grid(fence: Fence, tokens: dict) -> FigModel:
@@ -575,13 +701,12 @@ def _grid(fence: Fence, tokens: dict) -> FigModel:
         y += rh
     y += 12.0
     y = _footer(fence, texts, y, cx_size, W)
-    fig = _finish(ops, texts, W, y, H_frame)
-    return FigModel(width=fig.width, height=fig.height, ops=fig.ops, source_index=fence.index)
+    return _finish(ops, texts, W, y, H_frame, fence.index)
 
 
 def _qualitative(fence: Fence, tokens: dict) -> FigModel:
     frame = tokens["body_frame_pt"]
-    W, H_frame = frame["x1"] - frame["x0"], frame["y0"] and (frame["y1"] - frame["y0"])
+    W, H_frame = frame["x1"] - frame["x0"], frame["y1"] - frame["y0"]
     pack = tokens.get("style", "practical")
     kicker_size, title_size, ct_size, cx_size, body = _sizes(tokens)
     xa, ya, cells = fence.data["x_axis"], fence.data["y_axis"], fence.data["cells"]
@@ -592,14 +717,15 @@ def _qualitative(fence: Fence, tokens: dict) -> FigModel:
     # x축 라벨 행(하단 축 위) + y축 라벨(좌측 열) — 축 라벨 폭 40pt
     AXIS_W = 40.0
     cellW = (W - 2 * P - AXIS_W - G) / 2
-    if cellW < 80.0:
-        raise MatrixLayoutError(
-            f"셀폭 {cellW:.1f}pt < 80pt — 문구 축약 또는 정성 축 라벨 축소")
 
     # y축 라벨(low 위, high 아래) — 각 셀 행 중심
     def cell_h(cell: dict) -> float:
         return 2 * 10.0 + budget.line_count(cell["title"], cellW, ct_size, 8.0, pack) * ct_size * LEADING \
             + 4.0 + budget.line_count(cell["text"], cellW, cx_size, 8.0, pack) * cx_size * LEADING
+
+    if cellW < MIN_QUAL_W:
+        raise MatrixLayoutError(
+            f"정성 셀폭 {cellW:.1f}pt < {MIN_QUAL_W:.0f}pt — 문구 축약 또는 축 라벨 축소")
 
     h0 = max(cell_h(cells[0]), cell_h(cells[1]))
     h1 = max(cell_h(cells[2]), cell_h(cells[3]))
@@ -632,8 +758,7 @@ def _qualitative(fence: Fence, tokens: dict) -> FigModel:
     y = y + h0 + h1 + G
     y += 12.0
     y = _footer(fence, texts, y, cx_size, W)
-    fig = _finish(ops, texts, W, y, H_frame)
-    return FigModel(width=fig.width, height=fig.height, ops=fig.ops, source_index=fence.index)
+    return _finish(ops, texts, W, y, H_frame, fence.index)
 ```
 
 `parse.py` matrix 검증 분기(layout == "matrix"):
@@ -645,8 +770,8 @@ def _qualitative(fence: Fence, tokens: dict) -> FigModel:
             rows = d.get("rows", [])
             if not isinstance(headers, list) or not (2 <= len(headers) <= 5):
                 raise ParseError(index, f"headers 개수 — 하한 2, 상한 5", line)
-            if not isinstance(rows, list) or not (1 <= len(rows) <= 6):
-                raise ParseError(index, "rows 개수 — 하한 1, 상한 6", line)
+            if not isinstance(rows, list) or not (2 <= len(rows) <= 6):
+                raise ParseError(index, "rows 개수 — 하한 2(스펙 §3.2), 상한 6", line)
             for r, row in enumerate(rows):
                 if not isinstance(row, list) or len(row) != len(headers):
                     raise ParseError(index, f"rows[{r}] 열 수 불일치(headers {len(headers)}열)", line)
@@ -673,6 +798,8 @@ def _qualitative(fence: Fence, tokens: dict) -> FigModel:
 
 `layout.py` dispatch에 matrix 등록. `lint.py` fields에 matrix 반영:
 
+`lint.py` fields에 matrix 전 요소(축 라벨 포함 — 적대 검토 G2):
+
 ```python
         for c, h in enumerate(f.data.get("headers", [])):
             fields.append((f"headers[{c}]", h))
@@ -682,18 +809,41 @@ def _qualitative(fence: Fence, tokens: dict) -> FigModel:
         for i, cell in enumerate(f.data.get("cells", [])):
             fields.append((f"cells[{i}].title", cell["title"]))
             fields.append((f"cells[{i}].text", cell["text"]))
+        if "x_axis" in f.data:
+            fields.append(("axis.x0", f.data["x_axis"]["low"]))
+            fields.append(("axis.x1", f.data["x_axis"]["high"]))
+        if "y_axis" in f.data:
+            fields.append(("axis.y0", f.data["y_axis"]["low"]))
+            fields.append(("axis.y1", f.data["y_axis"]["high"]))
+```
+
+`render.py _sheet_rows`에 matrix 행 추가(Task 1의 `# matrix·lanes 행은 Task 2·3에서` 주석 자리에):
+
+```python
+    for c, h in enumerate(f.data.get("headers", [])):
+        rows.append((f"headers[{c}]", h))
+    for r, row in enumerate(f.data.get("rows", [])):
+        for c, cell in enumerate(row):
+            rows.append((f"cell[{r}][{c}]", cell))
+    for i, cell in enumerate(f.data.get("cells", [])):
+        rows.append((f"cells[{i}].title", cell["title"]))
+        rows.append((f"cells[{i}].text", cell["text"]))
+    for ax in ("x_axis", "y_axis"):
+        if ax in f.data:
+            rows.append((f"axis.{ax[0]}0", f.data[ax]["low"]))
+            rows.append((f"axis.{ax[0]}1", f.data[ax]["high"]))
 ```
 
 - [ ] **Step 4: 통과 확인**
 
 Run: `cd /mnt/d/DEV/acc0mplish/KLIC-BOOK/skills/korean-ebook-typst && python3 -m pytest tests/test_infographic_layout_matrix.py tests/ -q`
-Expected: 신규 7 + 전체 169
+Expected: 신규 9(골든 IG_REGEN_GOLDEN 절차) + 전체 173
 
 - [ ] **Step 5: 커밋**
 
 ```bash
-git add skills/korean-ebook-typst/scripts/infographic/ skills/korean-ebook-typst/tests/test_infographic_layout_matrix.py
-git commit -m "feat: matrix archetype — 비교 격자·정성 2×2·판형 열수 상한"
+git add skills/korean-ebook-typst/scripts/infographic/ skills/korean-ebook-typst/tests/test_infographic_layout_matrix.py skills/korean-ebook-typst/tests/fixtures/infographic/golden-matrix-practical.typ
+git commit -m "feat: matrix archetype — 비교 격자·정성 2×2·quadrant 별칭·판형 열수 상한"
 ```
 
 ---
@@ -701,12 +851,14 @@ git commit -m "feat: matrix archetype — 비교 격자·정성 2×2·판형 열
 ### Task 3: flow swimlane 변형 + kicker/thesis 지오메트리 테스트 보강
 
 **Files:**
-- Modify: `archetypes/flow.py` (lanes 배치), `parse.py` (lanes 검증), `lint.py` (lanes 필드)
+- Modify: `archetypes/flow.py` (lanes 배치 + `layout()`을 `_steps`/`_lanes`로 분리), `parse.py` (lanes 검증), `lint.py` (lanes 필드), `render.py` `_sheet_rows` (lanes 행)
 - Test: `skills/korean-ebook-typst/tests/test_infographic_layout_flow_lanes.py`
 
 **Interfaces:**
 - lanes 데이터(스펙 §3.2): `lanes[]` 2~4({actor 필수, steps[] 2~4 {title, text}}). `steps`와 배타 — 둘 다 있으면 ParseError.
-- 지오메트리: actor 열 폭 `ACTOR_W=60`, 셀 간 `GS=16`, 셀 수 m = max(len(lane.steps)) 상한 4. `cellW = (W − 2P − ACTOR_W − (m−1)·GS)/m`; practical m=4: (334.49−28−60−48)/4 = 49.6pt. `MIN_CELL_W=45` 미만이면 에러(essay m=4: (249.45−28−60−48)/4=28.4 → 에러 — essay 상한 m=3: (249.45−28−60−32)/3=43.8 <45 → essay m=2: 68.7 ✓. 판형별 셀 상한 표로 정규화: `PACK_LANE_CELLS = {"essay": 2, "practical": 4, "b5": 3, "business": 4, "lecture": 4}` — b5 m=3: (385.51−28−60−32)/3=88.5 ✓, m=4: 65.4 ✓ → b5 4로. essay 2, practical 4, b5 4, business 4, lecture 4. essay m=2만 — lane 셀 2 제한.)
+- 지오메트리(개정 — 적대 검토 G1: GS=16은 샤프트 가시 ≥12pt와 양립 불가. `_harrow` 오프셋(+4/−8)에서 샤프트 = GS−12이므로 **GS=24** 고정 — practical m=4 셀폭 43.6pt<45와의 동시 충족이 수학적으로 불가한 원래 설계는 폐기): actor 열 폭 `ACTOR_W=60`, 셀 간 `GS=24`, `cellW = (W − 2P − ACTOR_W − (m−1)·GS)/m`, `MIN_CELL_W=45`.
+  - 판형별 셀 상한(수학 검증): essay m=2: (249.45−28−60−24)/2=68.7 ✓, m=3: 43.1 ✗ → **2**. practical m=3: (334.49−28−60−48)/3=66.2 ✓, m=4: 43.6 ✗ → **3**. b5 m=4: (385.51−28−60−72)/4=56.4 ✓ → **4**. business m=4: 73.4 ✓ → **4**. lecture m=4: 76.2 ✓ → **4**.
+  - `PACK_LANE_CELLS = {"essay": 2, "practical": 3, "b5": 4, "business": 4, "lecture": 4}` — 스펙 §6.2 표 swimlane 행(개정 4판).
 - 레인 행: actor 라벨(굵게, ACTOR_W 열) + 가로 셀 배열. 레인 간 `G`(28). 셀 간 세로 화살표 없음 — 가로 진행만(순서 셀 → 다음 셀 가로 open-V).
 - kicker/thesis 테스트 보강(Phase 1 T5 deferred): kicker 있는 flow + thesis 있는 flow의 TextOp field/좌표 단언 추가(이 Task가 flow.py를 다시 만지므로).
 
@@ -725,7 +877,7 @@ from scripts.infographic.parse import ParseError, parse_fence
 
 TOKENS = json.loads((Path(__file__).resolve().parents[1] / "styles" / "practical" / "tokens.json").read_text(encoding="utf-8"))
 W = TOKENS["body_frame_pt"]["x1"] - TOKENS["body_frame_pt"]["x0"]
-P, GS, ACTOR_W = 14.0, 16.0, 60.0
+P, GS, ACTOR_W = 14.0, 24.0, 60.0
 
 
 def _lane_fence(nlanes=2, nsteps=3):
@@ -740,7 +892,7 @@ def test_two_lanes_three_steps_geometry():
     fig = flow_arch.layout(_lane_fence(2, 3), TOKENS)
     cells = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"]
     assert len(cells) == 6                                   # 2레인 × 3셀
-    expect = (W - 2 * P - ACTOR_W - 2 * GS) / 3
+    expect = (W - 2 * P - ACTOR_W - 2 * GS) / 3              # 66.2pt
     assert abs(cells[0].w - expect) < 0.01
     assert cells[0].x == P + ACTOR_W
     assert len({round(c.y, 2) for c in cells}) == 2          # 레인 2행
@@ -752,9 +904,20 @@ def test_lane_actors_bold_labels():
     assert actors and actors[0].weight == "bold"
 
 
-def test_five_cells_practical_rejected():
+def test_lane_arrows_meet_shaft_minimum():
+    # §6.1 샤프트 ≥12pt — GS=24에서 12pt(적대 검토 G1 회귀 방어)
+    from scripts.infographic.lint import check
+    figs = {1: flow_arch.layout(_lane_fence(2, 3), TOKENS)}
+    fence = _lane_fence(2, 3)
+    found = check([fence], figs, TOKENS, "원문", "ch01.md")
+    assert not [f for f in found if f.kind == "connector"]
+
+
+def test_three_cells_essay_rejected():
+    # essay 상한 2(parse 2~4 내부) — layout 판형 상한 경로(도달 가능 경로로 정정)
+    ET = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
     with pytest.raises(flow_arch.FlowLayoutError, match="셀"):
-        flow_arch.layout(_lane_fence(1, 5), TOKENS)
+        flow_arch.layout(_lane_fence(1, 3), ET)
 
 
 def test_both_steps_and_lanes_rejected():
@@ -817,9 +980,9 @@ Expected: FAIL — lanes 미지원(ParseError)
 `flow.py` lanes 배치 — `layout()` 초반, steps/lanes 분기:
 
 ```python
-PACK_LANE_CELLS = {"essay": 2, "practical": 4, "b5": 4, "business": 4, "lecture": 4}
+PACK_LANE_CELLS = {"essay": 2, "practical": 3, "b5": 4, "business": 4, "lecture": 4}
 ACTOR_W = 60.0
-GS = 16.0
+GS = 24.0        # 샤프트 가시 = GS−12 ≥ 12(§6.1) — 16 금지(적대 검토 G1)
 MIN_CELL_W = 45.0
 
 def _lanes(fence, tokens, W, H_frame, pack, sizes):
@@ -856,7 +1019,7 @@ def _lanes(fence, tokens, W, H_frame, pack, sizes):
     ...
 ```
 
-(구현 시 `layout()`의 steps 분기를 `_steps()`로, lanes를 `_lanes()`로 분리 — 공통 헤더/노트/높이검사는 기존 코드 재사용. `arrows` 리스트와 `_harrow`는 기존 것 그대로. 위 의사 루프의 `sum_row_heights_before`는 실제 누적 변수로 작성 — 구현자가 루프로 직접 계산한다. **cellW 산식 주의**: `_harrow(prev_right, …, cx)` 인자는 기존 시그니처(우단, ymid, 다음 좌단)에 맞춘다.)
+(구현 시 `layout()`의 steps 분기를 `_steps()`로, lanes를 `_lanes()`로 분리 — 공통 헤더/노트/높이검사는 기존 코드 재사용. **lanes 분기는 `fence.data["steps"]` 접근보다 앞에** 둔다 — lanes 펜스에서 steps가 비어 있으면 cardW 산출이 ZeroDivision된다. 화살표는 기존 `_harrow(이전셀우단, y중심, 다음셀좌단)` 그대로 — 이전셀우단 = `이전셀.x + cellW` = `cx − GS`. 의사 루프의 `sum_row_heights_before`는 루프 내 누적 변수로 직접 계산한다.)
 
 `lint.py` fields에 lanes:
 
@@ -870,14 +1033,26 @@ def _lanes(fence, tokens, W, H_frame, pack, sizes):
 
 - [ ] **Step 4: 통과 확인**
 
+`render.py _sheet_rows`에 lanes 행 추가:
+
+```python
+    for i, ln in enumerate(f.data.get("lanes", [])):
+        rows.append((f"lanes[{i}].actor", ln["actor"]))
+        for j, s in enumerate(ln["steps"]):
+            rows.append((f"lanes[{i}].steps[{j}].title", s["title"]))
+            rows.append((f"lanes[{i}].steps[{j}].text", s["text"]))
+```
+
+- [ ] **Step 4: 통과 확인**
+
 Run: `cd /mnt/d/DEV/acc0mplish/KLIC-BOOK/skills/korean-ebook-typst && python3 -m pytest tests/test_infographic_layout_flow_lanes.py tests/ -q`
-Expected: 신규 5 + 전체 174 (기존 flow 테스트 무회귀)
+Expected: 신규 6 + 전체 179 (기존 flow 테스트 무회귀)
 
 - [ ] **Step 5: 커밋**
 
 ```bash
 git add skills/korean-ebook-typst/scripts/infographic/ skills/korean-ebook-typst/tests/test_infographic_layout_flow_lanes.py
-git commit -m "feat: flow swimlane 변형 — 레인 배치·판형 셀 상한 + kicker/thesis 지오메트리 테스트"
+git commit -m "feat: flow swimlane 변형 — 레인 배치(GS=24 샤프트 계약)·판형 셀 상한 + kicker/thesis 지오메트리 테스트"
 ```
 
 ---
@@ -889,14 +1064,15 @@ git commit -m "feat: flow swimlane 변형 — 레인 배치·판형 셀 상한 +
 - Modify: `scripts/infographic/budget.py` (PACK_KO_FACTOR 실측값)
 - Test: 기존 스위트 회귀 (골든 바이트 불변 확인 — practical 계수가 1.0에서 바뀌면 flow 골든 재확정 필요)
 
-**절차 (골든 교정 1주기 — 스펙 §7·§8-2):**
-1. 각 팩(practical/essay/business/lecture/b5) 1순위 폰트로 cards fixture(치트시트 상한 근처 문구)를 `cli.py preview --style <pack>`로 렌더.
-2. PDF에서 카드 텍스트 오버플로 한계 눈검 실측 — 5pt 간격으로 문구를 늘려가며 잘림 시작점 찾기.
-3. 실측/예상 비율로 `PACK_KO_FACTOR[팩]` 갱신 (예: 실측이 예상보다 10% 일찍 잘리면 1.1).
-4. 전 스위트 — practical 계수 변화 시 flow/cards 골든 `IG_REGEN_GOLDEN=1` 재확정·눈검·커밋.
-5. authoring.md: 라우팅 표 3행(cards·matrix·flow-lanes) "Phase 2 사용 가능" 전환, 각 archetype 펜스 예시·치트시트(카드폭·셀폭 수치) 추가.
+**절차 (골든 교정 1주기 — 스펙 §7·§8-2, 판정 계약 포함):**
+1. 각 팩 1순위 폰트로 cards fixture(치트시트 상한 근처 문구)를 `cli.py preview --style <pack>`로 렌더.
+2. 오버플로 한계 실측 — **측정 단위: KO 환산 pt**(문구를 KO 글자 수로 조절, budget.max_units 예상 대비 실제 잘림 시작 글자 수).
+3. **판정 계약(결정론)**: `비율 = 예상수용KO자수 / 실측수용KO자수`. `|비율 − 1.0| < 0.05`면 데드밴드 — `PACK_KO_FACTOR` 1.0 유지. 벗어나면 비율을 소수 2자리로 반올림해 계수로.
+4. **기록 계약**: (a) budget.py `PACK_KO_FACTOR` 각 팩 인라인 주석에 실측치·날짜, (b) authoring.md 치트시트 각주에 근거, (c) 커밋 메시지에 5팩 수치 전부.
+5. 전 스위트 — 계수 변화 팩이 practical이면 flow/cards/matrix 골든 `IG_REGEN_GOLDEN=1` 재확정·눈검·커밋(다른 팩은 골든 없음).
+6. authoring.md: 라우팅 표 3행(cards·matrix·flow-lanes) "사용 가능" 전환, 각 archetype 펜스 예시·치트시트(카드폭 139.2/83.5·셀폭 76.6·swimlane 셀 66.2) 추가. **lecture cards 열수 3 고정 결정 근거**(스펙 "3~4" 범위 내 고정 — §2 결정론 원칙)도 명시.
 
-**완료 판정**: 5팩 전부 preview 렌더 성공 + 계수 갱신(또는 1.0 유지 근거 기록) + authoring.md 갱신 + 스위트 그린 + 골든 상태 정리.
+**완료 판정**: 5팩 전부 preview 렌더 성공 + 계수 갱신 또는 데드밴드 유지 기록(기록 계약 3곳) + authoring.md 갱신 + 스위트 그린 + 골든 상태 정리. **병합 게이트: 이 Task 완료 전 main 병합 금지.**
 
 - [ ] **Step 1: 교정 실시** (위 절차 1-3)
 - [ ] **Step 2: 골든 정리** (절차 4 — 필요시 재확정)
@@ -911,9 +1087,9 @@ git commit -m "docs: Phase 2 가이드 갱신 + 골든 교정 1주기 — 팩별
 
 ---
 
-## Self-Review 결과
+## Self-Review 결과 (적대 검토 2관점 반영 후)
 
-- 스펙 커버리지: §6.2 cards 열수·matrix 열수(Task 1·2 PACK 상수) / §6.3 cards·matrix·flow(swimlane) 배치 / §3.2 데이터 계약(value·x_axis·y_axis·cells·lanes) / §3.4 별칭 principles·dashboard·quadrant→matrix(정성 형태 — parse에서 matrix로 정규화, **quadrant 별칭은 정성 형태로 라우팅: `"quadrant": "matrix"` 추가**, 헤더 없으면 정성이므로 자동) / §8-2 골든 교정 1주기(Task 4).
-- 플레이스홀더: Task 3 `_lanes` 함수에 구현 지시 의사 루프 포함(sum_row_heights_before 등) — Task 3는 완전 코드가 아닌 **구조 지정+기존 코드 재사용 지시** 형태. 근거: flow.py 기존 구조(헤더·노트·높이 검사·_harrow) 재사용 분리 작업이라 신규 산술은 cellW·셀 높이·레인 누적뿐. 실행자는 기존 layout()을 리팩터하며 산식을 그대로 적용한다.
-- 타입 일관성: CardsLayoutError/MatrixLayoutError(.detail) = FlowLayoutError 패턴. FigModel.source_index 유지(matrix `_finish`가 0으로 생성 후 재포장 — Task 2 코드는 source_index=fence.index로 직접 반환하도록 이미 작성됨).
-- Phase 1 플랜 대비 차이: 골든 파일 Task 1·2에 없음(Phase 1 골든은 flow 전용 — cards/matrix 골든은 Task 4 교정 주기에서 판단).
+- **반영된 적대 검토(2026-08-22, 코드 실행 실증 + 계약 검토)**: G1 8건 — ① render/cli가 신규 에러 타입 미캐치 → 공통 `base.LayoutError` 베이스(Task 1) ② lint `f.data["steps"]` KeyError → `.get` 전환 ③ `_review_sheet` steps 순회 → `_sheet_rows` archetype별 전 요소 ④ GS=16 샤프트 4pt 위반 → GS=24·PACK_LANE_CELLS {2,3,4,4,4} 재유도(스펙 §6.2 swimlane 행 추가) ⑤ 정성 cellW 테스트·구현 20pt 불일치 → AXIS_W 반영 ⑥ matrix `_finish` TextOp 누락 → ops+texts 합산 ⑦ test_seven_cards 도달 불가 → essay n=5 경로 ⑧ test_five_cells 도달 불가 → essay 3셀 경로 + 샤프트 최소 회귀 테스트. G2 — quadrant 별칠·VALID_LAYOUTS 명시, rows 하한 2, cards/matrix 골든 추가, essay 정성 floor 60(MIN_QUAL_W), 축 라벨 lint 필드, cli 캐치. G3 — 교정 데드밴드·기록 계약, 병합 게이트, H_frame 감산 정리, unknown-layout 동적 메시지, lecture 3 고정 근거 기록, lanes ZeroDivision 사유 명시, 인터페이스 "첫 열 stroke_rule" 문구 정합화.
+- 스펙 커버리지: §6.2 상한 표(PACK_COLS·PACK_MAX_COLS·PACK_LANE_CELLS — swimlane 행은 개정 4판 추가) / §6.3 cards·matrix·flow(swimlane) / §3.2 데이터(value·x_axis·y_axis·cells·lanes) / §3.4 별칭 principles·dashboard·quadrant / §7 archetype 골든 / §8-2 골든 교정 1주기.
+- 플레이스홀더: Task 3은 기존 flow.py 재사용 분리 작업 — 신규 산술(cellW·셀높이·레인 누적)은 완전 산식 제공, 레이아웃 뼈대는 구조 지정.
+- 타입 일관성: LayoutError 베이스 상속 체계(Task 1 확정) — render/cli는 베이스만 catch. FigModel.source_index 직접 반환(matrix `_finish` 재포장 제거).
