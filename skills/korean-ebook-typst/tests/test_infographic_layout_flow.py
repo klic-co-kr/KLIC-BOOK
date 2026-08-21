@@ -90,7 +90,9 @@ def test_g3_invariant_sizes_off_body():
 
 def test_height_limit_85pct():
     # n=6(상한 내) + 장문 — 카드 줄수 폭증으로 높이 한계 초과 (n=8은 판형 상한 에러가 먼저)
-    long_text = "아주 긴 근거 문장이다 " * 8
+    # ×8은 교정 전 계수 1.0 기준이었다 — 1주기 실측 계수 0.61(2026-08-22)에서는
+    # ×8이 85% 안에 들어와 ×16으로 올린다(줄수 2배 폭증 경로는 동일).
+    long_text = "아주 긴 근거 문장이다 " * 16
     with pytest.raises(flow_arch.FlowLayoutError, match="85"):
         flow_arch.layout(_fence(6, text=long_text), TOKENS)
 
