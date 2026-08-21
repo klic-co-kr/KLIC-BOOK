@@ -8,6 +8,10 @@ from pathlib import Path
 import yaml
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
+# scripts/를 import 경로에 추가 — from infographic import render가 동작하는 조건.
+# 기존 테스트가 scripts.build를 직접 import하는 컨텍스트에선 scripts/가
+# sys.path에 없어 이 줄이 없으면 ModuleNotFoundError로 스위트 전체가 깨진다.
+sys.path.insert(0, str(SKILL_DIR / "scripts"))
 STYLES = ("practical", "essay", "business", "lecture", "b5")
 PAGE_MM = {"practical": (153, 225), "essay": (128, 188),
            "business": (200, 280), "lecture": (210, 297),
@@ -485,11 +489,16 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     (build / "typ").mkdir(parents=True, exist_ok=True)
     # stale 에셋도 동일하게 리셋(2회차 검토 Important)
     shutil.rmtree(build / "assets", ignore_errors=True)
+    shutil.rmtree(build / "infographic", ignore_errors=True)
+    (build / "infographic").mkdir(parents=True, exist_ok=True)
+    shutil.rmtree(build / "fences", ignore_errors=True)
+    (build / "fences").mkdir(parents=True, exist_ok=True)
 
     style = STYLE_DIR / cfg["style"]
     shutil.copy2(style / "tokens.json", build / "tokens.json")
     shutil.copy2(style / "theme.typ", build / "theme.typ")
     shutil.copy2(SKILL_DIR / "templates" / "base.typ", build / "base.typ")
+    shutil.copy2(SKILL_DIR / "templates" / "infographic" / "helper.typ", build / "helper.typ")
 
     # 표지: 명시 경로 > auto/생략(파라미터형 벡터 자동 생성)
     cover_name = None
@@ -506,7 +515,8 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     for idx, ch in enumerate(cfg["chapters"]):
         src = book_dir / ch
         r = subprocess.run(
-            [sys.executable, str(MD2TYPST), str(src), "--out", str(build / "typ")],
+            [sys.executable, str(MD2TYPST), str(src), "--out", str(build / "typ"),
+             "--fences-out", str(build / "fences")],
             capture_output=True, text=True,
         )
         if r.returncode != 0:
@@ -521,6 +531,24 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
         raw.rename(namespaced)
         rebase_images(namespaced, src, build, idx)
         converted.append(namespaced.name)
+
+    # 인포그래픽: 펜스 → emit + include 치환(스펙 §2 [2])
+    from infographic import render as ig_render
+    try:
+        figs = ig_render.render_book_fences(book_dir, build, cfg)
+    except ig_render.I1Error as exc:
+        _fail(str(exc))
+    for idx, name in enumerate(converted):
+        p = build / "typ" / name
+        text = p.read_text(encoding="utf-8")
+        def _sub(m):
+            n = int(m.group(1))
+            fname = figs.get(idx, {}).get(n)
+            if not fname:
+                _fail(f"{name}: 펜스 #{n} emit 결과 없음(마커 ⟦IG:{n}⟧)")
+            return f'#include "../infographic/{fname}"'
+        text = re.sub(r"⟦IG:(\d+)⟧", _sub, text)
+        p.write_text(text, encoding="utf-8")
 
     # 콘텐츠 정합 불변식: 산출 파일 수 == 챕터 수, include 대상 중복 0.
     typs = list((build / "typ").glob("*.typ"))
