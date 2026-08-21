@@ -100,9 +100,14 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
         fields: list[tuple[str, str]] = [("title", f.title)]
         if f.kicker:
             fields.append(("kicker", f.kicker))
-        for i, s in enumerate(f.data["steps"]):
+        for i, s in enumerate(f.data.get("steps", [])):
             fields.append((f"steps[{i}].title", s["title"]))
             fields.append((f"steps[{i}].text", s["text"]))
+        for i, c in enumerate(f.data.get("cards", [])):
+            fields.append((f"cards[{i}].title", c["title"]))
+            fields.append((f"cards[{i}].text", c["text"]))
+            if "value" in c:
+                fields.append((f"cards[{i}].value", c["value"]))
         sec = None
         if f.evidence:
             if f.evidence not in section_cache:

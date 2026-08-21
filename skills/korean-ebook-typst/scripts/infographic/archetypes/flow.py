@@ -5,6 +5,7 @@ import math
 
 from .. import budget
 from ..model import ArrowOp, FigModel, RectOp, TextOp
+from .base import LayoutError
 
 P = 14.0          # 패널 패딩
 G = 28.0          # 카드 간격(가로·랩 공용)
@@ -18,10 +19,8 @@ HEIGHT_LIMIT = 0.85
 PACK_LIMITS = {"essay": 4, "practical": 6, "b5": 6, "business": 8, "lecture": 8}
 
 
-class FlowLayoutError(Exception):
-    def __init__(self, detail: str):
-        super().__init__(detail)
-        self.detail = detail
+class FlowLayoutError(LayoutError):
+    pass    # __init__은 베이스가 detail 처리 — 기존 .detail 계약 유지
 
 
 def _ink_ok(ops, width: float, height: float) -> None:

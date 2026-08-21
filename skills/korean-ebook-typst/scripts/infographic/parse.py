@@ -8,9 +8,10 @@ DEFAULT_NOTE = ("편집 요약: 본문의 장·절 구조와 핵심 문장을 �
                 "원문을 대체하지 않습니다.")
 
 # 스펙 §3.4 — 구시스템 별칭 → 규범 키워드
-ALIASES = {"process": "flow"}
-VALID_LAYOUTS = {"flow"}          # Phase 1. 이후 Task에서 확장
+ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards"}
+VALID_LAYOUTS = {"flow", "cards"}          # Phase 1·2. 이후 Task에서 확장
 STEP_MIN, STEP_MAX = 2, 8
+CARD_MIN, CARD_MAX = 2, 6
 
 
 class ParseError(Exception):
@@ -53,7 +54,8 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
     alias = raw_layout in ALIASES
     layout = ALIASES.get(raw_layout, raw_layout)
     if layout not in VALID_LAYOUTS:
-        raise ParseError(index, f"unknown layout {raw_layout!r} (가능: flow)", line)
+        raise ParseError(index,
+                         f"unknown layout {raw_layout!r} (가능: {', '.join(sorted(VALID_LAYOUTS))})", line)
 
     title = str(d.get("title", "")).strip()
     if not title:
@@ -64,17 +66,30 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
         return str(v).strip() if isinstance(v, str) and v.strip() else None
 
     data: dict = dict(steps=[])
-    steps = d.get("steps", [])
-    if not isinstance(steps, list) or not (STEP_MIN <= len(steps) <= STEP_MAX):
-        raise ParseError(index, f"steps 개수 {len(steps) if isinstance(steps, list) else 0} — 하한 {STEP_MIN}, 상한 {STEP_MAX}", line)
-    for i, s in enumerate(steps):
-        if not isinstance(s, dict):
-            raise ParseError(index, f"steps[{i}] 객체 아님", line)
-        t = str(s.get("title", "")).strip()
-        x = str(s.get("text", "")).strip()
-        if not t or not x:
-            raise ParseError(index, f"steps[{i}].title/.text 비어 있음 — 근거 문구를 넣어라", line)
-        data["steps"].append({"title": t, "text": x})
+    if layout == "flow":
+        steps = d.get("steps", [])
+        if not isinstance(steps, list) or not (STEP_MIN <= len(steps) <= STEP_MAX):
+            raise ParseError(index, f"steps 개수 {len(steps) if isinstance(steps, list) else 0} — 하한 {STEP_MIN}, 상한 {STEP_MAX}", line)
+        for i, s in enumerate(steps):
+            if not isinstance(s, dict):
+                raise ParseError(index, f"steps[{i}] 객체 아님", line)
+            t = str(s.get("title", "")).strip()
+            x = str(s.get("text", "")).strip()
+            if not t or not x:
+                raise ParseError(index, f"steps[{i}].title/.text 비어 있음 — 근거 문구를 넣어라", line)
+            data["steps"].append({"title": t, "text": x})
+    if layout == "cards":
+        cards_l = d.get("cards", [])
+        if not isinstance(cards_l, list) or not (CARD_MIN <= len(cards_l) <= CARD_MAX):
+            raise ParseError(index, f"cards 개수 {len(cards_l) if isinstance(cards_l, list) else 0} — 하한 {CARD_MIN}, 상한 {CARD_MAX}", line)
+        for i, c in enumerate(cards_l):
+            if not isinstance(c, dict):
+                raise ParseError(index, f"cards[{i}] 객체 아님", line)
+            if not str(c.get("title", "")).strip() or not str(c.get("text", "")).strip():
+                raise ParseError(index, f"cards[{i}].title/.text 비어 있음", line)
+        data["cards"] = [{"title": str(c["title"]).strip(), "text": str(c["text"]).strip(),
+                          **({"value": str(c["value"]).strip()} if str(c.get("value", "")).strip() else {})}
+                         for c in cards_l]
     if alias:
         data["_alias"] = raw_layout
 

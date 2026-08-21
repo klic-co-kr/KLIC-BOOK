@@ -1,13 +1,13 @@
 """render.py — 책 단위 펜스 렌더 오케스트레이션(스펙 §2 [2]).
-I1 치명 위반은 전건 모아 중단. ParseError·FlowLayoutError도 finding으로 변환해
-전수 집계한다(초판은 첫 위반 traceback 크래시였다 — 적대 검토 정정)."""
+I1 치명 위반은 전건 모아 중단. ParseError·LayoutError(archetype 공통 베이스)도
+finding으로 변환해 전수 집계한다(초판은 첫 위반 traceback 크래시였다 — 적대 검토 정정)."""
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
 from . import emit, layout, lint
-from .archetypes.flow import FlowLayoutError
+from .archetypes.base import LayoutError
 from .parse import DEFAULT_NOTE, ParseError, parse_fence
 
 try:
@@ -61,7 +61,7 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
         for f in fences:
             try:
                 figs[f.index] = layout.dispatch(f, tokens)
-            except FlowLayoutError as e:
+            except LayoutError as e:
                 all_findings.append(lint.LintFinding(
                     "layout", f"{chapter_name} #{f.index}", e.detail,
                     ("글자 축약", "요소 수 감소", "펜스 분할")))
@@ -89,12 +89,23 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
     return result
 
 
-def _review_sheet(f, unverified: list) -> str:
-    # 5열 계약(스펙 §5.4) — 요소|문구|evidence|교차검증|확인란 + 미검증 상단 경고.
+def _sheet_rows(f) -> list[tuple[str, str]]:
     rows = [("title", f.title), ("kicker", f.kicker or "—"), ("thesis", f.thesis or "—")]
-    for i, s in enumerate(f.data["steps"]):
+    for i, s in enumerate(f.data.get("steps", [])):
         rows.append((f"steps[{i}].title", s["title"]))
         rows.append((f"steps[{i}].text", s["text"]))
+    for i, c in enumerate(f.data.get("cards", [])):
+        rows.append((f"cards[{i}].title", c["title"]))
+        rows.append((f"cards[{i}].text", c["text"]))
+        if "value" in c:
+            rows.append((f"cards[{i}].value", c["value"]))
+    # matrix·lanes 행은 Task 2·3에서 같은 패턴으로 추가
+    return rows
+
+
+def _review_sheet(f, unverified: list) -> str:
+    # 5열 계약(스펙 §5.4) — 요소|문구|evidence|교차검증|확인란 + 미검증 상단 경고.
+    rows = _sheet_rows(f)
     lines = [f"# 검수 시트 — 펜스 #{f.index}", ""]
     if unverified:
         lines.append("**⚠ 미검증 숫자 — 사람 대조 필수:**")
