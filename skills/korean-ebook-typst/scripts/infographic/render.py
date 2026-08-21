@@ -29,7 +29,6 @@ class I1Error(Exception):
 
 
 def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict[int, str]]:
-    fences_dir = build / "fences"
     out_dir = build / "infographic"
     out_dir.mkdir(parents=True, exist_ok=True)
     tokens = json.loads((build / "tokens.json").read_text(encoding="utf-8"))
@@ -37,18 +36,21 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
     parsed_by_chapter: dict[int, tuple] = {}
 
     for idx, ch in enumerate(cfg["chapters"]):
-        stem = Path(ch).stem
-        side = fences_dir / f"{stem}.fences.json"
-        if not side.exists():
-            continue
+        # 펜스 소스는 원고 md 단일 진실 — build/fences/<stem>.fences.json 사이드카를
+        # 다시 읽으면 동명 스템 챕터(part1/ch01.md vs part2/ch01.md)가 마지막
+        # 작성자로 서로를 덮어써 한쪽 도식이 조용히 뒤바뀐다(최종 리뷰 Critical 1).
+        # 사이드카는 md2typst가 계속 쓰되 저작 디버그 용도로만 쓰인다.
         # §3.3 교차검증은 본문 산문 기준 — 펜스 자기 JSON이 자기 숫자의
         # 근거로 승격되면 검증이 무치화된다(자기참조, 컨트롤러 판정).
         # 펜스를 ⟦IG:N⟧ 마커로 치환한 본을 넘긴다(마커는 lint.check 내부 strip).
-        chapter_md = md2typst.extract_fences(
-            (book_dir / ch).read_text(encoding="utf-8"))[0]
-        chapter_name = Path(ch).name
+        chapter_md, fences_raw = md2typst.extract_fences(
+            (book_dir / ch).read_text(encoding="utf-8"))
+        if not fences_raw:
+            continue
+        # 챕터 위치 라벨도 인덱스 prefix로 — 동명 파일(ch01.md 2개)의 loc 모호성 제거.
+        chapter_name = f"{idx:03d}-{Path(ch).name}"
         fences = []
-        for raw in json.loads(side.read_text(encoding="utf-8")):
+        for raw in fences_raw:
             try:
                 fences.append(parse_fence(raw["index"], raw["line"], raw["body"]))
             except ParseError as e:

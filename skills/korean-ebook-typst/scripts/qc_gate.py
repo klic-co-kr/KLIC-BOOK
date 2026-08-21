@@ -215,8 +215,11 @@ def run(book_dir: Path) -> int:
         cfg = yaml.safe_load(yml.read_text(encoding="utf-8")) or {}
         style_warns = korean_lint.lint_manuscript(cfg.get("chapters", []),
                                                   book_dir)
+    # §5.4 미완료 검수 시트 WARN도 리포트 채널로 — stdout 인쇄만으로는
+    # gate-report.json을 읽는 downstream이 이 사실을 못 본다(최종 리뷰 Minor).
+    unreviewed = check_review_sheets(build)
     report = {"g1_overflow": overflow, "g2_fonts": fonts, "g3_band_warns": warns,
-              "g4_style_warns": style_warns,
+              "g4_style_warns": style_warns, "ig_review_warns": unreviewed,
               "pass": not overflow and not fonts}
     (book_dir / "gate-report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -234,12 +237,11 @@ def run(book_dir: Path) -> int:
     final.mkdir(exist_ok=True)
     shutil.copy2(pdf, final / pdf.name)
     n_style = sum(len(v) for v in style_warns.values())
-    unreviewed = check_review_sheets(build)
     if unreviewed:
         print(f"[WARN] 미확인 인포그래픽 검수 시트 {len(unreviewed)}건: "
               + ", ".join(unreviewed))
     print(f"[qc] PASS → {final / pdf.name} "
-          f"(WARN {len(warns)}건, 문체 {n_style}건)")
+          f"(WARN {len(warns)}건, 문체 {n_style}건, 검수시트 {len(unreviewed)}건)")
     return 0
 
 

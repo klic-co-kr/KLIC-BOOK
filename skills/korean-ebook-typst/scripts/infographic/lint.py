@@ -87,6 +87,9 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
             ("ARROW_HEAD_W/ARROW_STROKE_W 상수 수정",)))
 
     body_size = tokens["fonts"]["body"]["size_pt"]
+    # 예산 측정도 flow 배치와 같은 팩 계수로 — PACK_KO_FACTOR 교정(§7)이
+    # 게이트에도 활성화된다(최종 리뷰 Important: 누락 시 잠재 위반).
+    pack = tokens.get("style", "practical")
     section_cache: dict[str, str | None] = {}
 
     for f in fences:
@@ -139,7 +142,7 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
         for op in fig.ops:
             if isinstance(op, TextOp):
                 if op.max_w > 0 and op.field:
-                    lines = budget.line_count(op.text, op.max_w, op.size)
+                    lines = budget.line_count(op.text, op.max_w, op.size, pack=pack)
                     if lines > MAX_LINES:
                         out.append(LintFinding(
                             "budget", f"{prefix} {op.field}",

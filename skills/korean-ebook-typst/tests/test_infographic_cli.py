@@ -43,6 +43,21 @@ def test_lint_violation_exit_one_with_report(tmp_path):
     assert "number-evidence" in r.stderr and "ch01.md #1" in r.stderr
 
 
+def test_lint_layout_error_one_line_no_traceback(tmp_path):
+    # practical 상한 6단계 초과(7단계) — traceback 크래시 대신 [layout] 한 줄
+    # 지적으로 끝나야 한다(최종 리뷰 Important).
+    steps = ",\n  ".join(f'{{"title": "{t}", "text": "내용"}}'
+                         for t in "가나다라마바사")
+    md = ("## 장\n\n흐름이 길다.\n\n```infographic\n"
+          '{"layout": "flow", "title": "일곱단계 절차", "steps": [\n  '
+          + steps + "]}\n```\n")
+    ch = tmp_path / "ch07.md"; ch.write_text(md, encoding="utf-8")
+    r = subprocess.run([sys.executable, str(CLI), "lint", str(ch)], capture_output=True, text=True)
+    assert r.returncode == 1
+    assert "[layout]" in r.stderr
+    assert "Traceback" not in r.stderr
+
+
 @pytest.mark.skipif(not TYPST, reason="typst 없음")
 def test_preview_compiles_single_fig(tmp_path):
     ch = tmp_path / "ch01.md"; ch.write_text(MD, encoding="utf-8")

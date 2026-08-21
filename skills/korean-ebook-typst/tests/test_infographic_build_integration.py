@@ -63,7 +63,49 @@ def test_i1_blocks_build_with_full_report(tmp_path):
                        capture_output=True, text=True, timeout=120)
     assert r.returncode != 0
     assert "number-evidence" in (r.stdout + r.stderr)
-    assert "ch01.md #1" in (r.stdout + r.stderr)          # 위치 계약
+    assert "000-ch01.md #1" in (r.stdout + r.stderr)      # 위치 계약 — 인덱스 prefix로 동명 스템 모호성 제거
+
+
+SAME_STEM_MD = """## {part} 장
+
+{mark} 흐름을 정리한다.
+
+```infographic
+{{"layout": "flow", "title": "{mark} 절차", "steps": [
+  {{"title": "{mark} 접수", "text": "{mark} 등록"}},
+  {{"title": "{mark} 확정", "text": "{mark} 마감"}}
+]}}
+```
+
+뒤 본문.
+"""
+
+
+def test_same_stem_chapters_keep_own_fences(tmp_path):
+    # 동일 stem 챕터(part1/ch01.md vs part2/ch01.md) — fences 사이드카가
+    # <stem>.json 키로 충돌, 마지막 챕터가 앞 챕터의 도식을 조용히 덮어썼다
+    # (최종 리뷰 Critical 1). 원고 md 직독으로 각 챕터가 자기 도식을 낸다.
+    book = tmp_path / "book"
+    for part, mark in (("part1", "앞부분"), ("part2", "뒷부분")):
+        d = book / "manuscript" / part
+        d.mkdir(parents=True)
+        (d / "ch01.md").write_text(
+            SAME_STEM_MD.format(part=part, mark=mark), encoding="utf-8")
+    (book / "typst-build.yaml").write_text(
+        'style: practical\n' 'title: "동일스템책"\n' 'subtitle: "부"\n'
+        'author: "KLIC"\n' 'date: "2026-08"\n'
+        "chapters:\n  - manuscript/part1/ch01.md\n"
+        "  - manuscript/part2/ch01.md\n", encoding="utf-8")
+    r = subprocess.run([sys.executable, str(SKILL / "scripts" / "build.py"), str(book)],
+                       capture_output=True, text=True, timeout=120)
+    assert r.returncode == 0, r.stderr
+    fig_a = book / "build" / "infographic" / "000-fig01.typ"
+    fig_b = book / "build" / "infographic" / "001-fig01.typ"
+    assert "앞부분" in fig_a.read_text(encoding="utf-8")
+    assert "뒷부분" in fig_b.read_text(encoding="utf-8")
+    assert "앞부분" not in fig_b.read_text(encoding="utf-8")   # 뒤바뀜 방어
+    pdf = book / "draft" / "동일스템책.pdf"
+    assert pdf.exists() and pdf.stat().st_size > 10_000       # 두 도식 모두 인쇄됨
 
 
 def test_qc_gate_warns_on_unreviewed_sheets(tmp_path):

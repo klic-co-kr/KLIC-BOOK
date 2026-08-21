@@ -15,6 +15,7 @@ sys.path.insert(0, str(SKILL_DIR / "scripts"))
 from md2typst import extract_fences                     # noqa: E402
 from build import typst_binary                          # noqa: E402 — 탐지 단일화(Global Constraints)
 from infographic import emit, layout, lint              # noqa: E402
+from infographic.archetypes.flow import FlowLayoutError  # noqa: E402
 from infographic.parse import ParseError, parse_fence   # noqa: E402
 
 
@@ -108,6 +109,11 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_preview(Path(a.md), a.fig, a.style, Path(a.out))
     except ParseError as e:
         print(f"[parse] 펜스 {e.fence_index}: {e.detail}", file=sys.stderr)
+        return 1
+    except FlowLayoutError as e:
+        # 판형 상한 초과(예: practical 7단계)도 I1과 같은 한 줄 지적으로 —
+        # traceback 크래시는 저작 도구로서 실격(최종 리뷰 Important).
+        print(f"[layout] {a.md}: {e.detail}", file=sys.stderr)
         return 1
 
 
