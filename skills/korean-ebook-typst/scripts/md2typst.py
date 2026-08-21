@@ -7,8 +7,34 @@
 - $...$ 인라인 수식 → #mitex[`...`]
 - 그 외 본문 그대로
 """
-import re, sys
+import json, re, sys
 from pathlib import Path
+
+# 0.4 infographic 펜스 추출 — step 0.5(코드펜스 통째 stash)보다 먼저.
+# 펜스 원문은 build.py가 render하고, 본문에는 마커 ⟦IG:N⟧만 남는다.
+# 마커는 stash_str()에 넣어 이중 보호한다(스펙 §2 [1]).
+IG_RE = re.compile(r'^```infographic[ \t]*\n(.*?)^```[ \t]*$', re.S | re.M)
+
+
+def extract_fences(md: str) -> tuple[str, list[dict]]:
+    fences = []
+    def _take(m):
+        fences.append({
+            "index": len(fences) + 1,
+            "line": md[:m.start()].count("\n") + 1,
+            "body": m.group(1),
+        })
+        return f"⟦IG:{len(fences)}⟧"                    # 백틱 없음 — IG_RE 재매치 불가
+    md = IG_RE.sub(_take, md)
+    return md, fences
+
+
+def _restore_ig_markers(md: str, stash_str) -> str:
+    # 가시 마커 ⟦IG:n⟧ → stash 보호. 변환 중간 단계 보호가 목적이고
+    # step 7 복원으로 최종 .typ에는 ⟦IG:n⟧가 그대로 남는다(build.py 치환 대상).
+    return re.sub(r'⟦IG:(\d+)⟧',
+                  lambda m: stash_str(m.group(0)), md)
+
 
 def convert(md: str) -> str:
     protected = []
@@ -17,6 +43,9 @@ def convert(md: str) -> str:
         return f"\x00{len(protected) - 1}\x00"
     def stash(m):
         return stash_str(m.group(0))
+    # -1. infographic 펜스 — 다른 어떤 변환보다 먼저(스펙 §2 [1]).
+    md, _fences = extract_fences(md)
+    md = _restore_ig_markers(md, stash_str)
     # 0. 선두 YAML frontmatter 제거 — 표준 markdown 관행. 미제거 시
     # id/order/status 메타데이터가 본문 산문으로 인쇄된다(실전시스템설계 실측).
     # 파일 시작의 --- 쌍만 취급(파일 중간 ---는 수평선 등 다른 용법).
@@ -115,13 +144,23 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("input")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--fences-out", default=None,
+                    help="펜스 페이로드를 <stem>.fences.json으로 저장")
     a = ap.parse_args()
     src = Path(a.input)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     targets = [src] if src.is_file() else sorted(src.glob('*.md'))
+    fences_dir = Path(a.fences_out) if a.fences_out else None
+    if fences_dir:
+        fences_dir.mkdir(parents=True, exist_ok=True)
     for md in targets:
-        t = convert(md.read_text(encoding='utf-8'))
+        raw = md.read_text(encoding='utf-8')
+        _, fences = extract_fences(raw)
+        if fences_dir:
+            (fences_dir / (md.stem + '.fences.json')).write_text(
+                json.dumps(fences, ensure_ascii=False, indent=1), encoding='utf-8')
+        t = convert(raw)
         (out / (md.stem + '.typ')).write_text(
             '#import "@preview/mitex:0.2.7": mitex\n\n' + t, encoding='utf-8')
         print(f'{md.name} → {md.stem}.typ')
