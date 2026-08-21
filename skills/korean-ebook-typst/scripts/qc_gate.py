@@ -165,6 +165,18 @@ def allowed_fonts(tokens: dict) -> tuple:
     return allowed_norm, allowed_raw
 
 
+def check_review_sheets(build: Path) -> list[str]:
+    """미완료 검수 시트 파일명 반환(스펙 §5.4 — 확인란 미완료 시 WARN, 에러 아님)."""
+    igdir = build / "infographic"
+    if not igdir.exists():
+        return []
+    incomplete = []
+    for sheet in sorted(igdir.glob("*.review.md")):
+        if "- [ ] 원문 대조 완료" in sheet.read_text(encoding="utf-8"):
+            incomplete.append(sheet.name)
+    return incomplete
+
+
 def run(book_dir: Path) -> int:
     build = book_dir / "build"
     draft = book_dir / "draft"
@@ -222,6 +234,10 @@ def run(book_dir: Path) -> int:
     final.mkdir(exist_ok=True)
     shutil.copy2(pdf, final / pdf.name)
     n_style = sum(len(v) for v in style_warns.values())
+    unreviewed = check_review_sheets(build)
+    if unreviewed:
+        print(f"[WARN] 미확인 인포그래픽 검수 시트 {len(unreviewed)}건: "
+              + ", ".join(unreviewed))
     print(f"[qc] PASS → {final / pdf.name} "
           f"(WARN {len(warns)}건, 문체 {n_style}건)")
     return 0

@@ -49,6 +49,10 @@ def _section_text(md: str, n: int) -> str | None:
 
 def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
           chapter_md: str, chapter_name: str) -> list[LintFinding]:
+    # 펜스 마커의 순번 숫자(⟦IG:2⟧)가 원문에 없는 숫자를 우연 통과시킬 수
+    # 있다 — 단일 지점 방어(strip). 호출자(render·cli)가 치환본을 넘겨도
+    # 마커는 여기서 끊긴다(컨트롤러 판정).
+    chapter_md = re.sub(r"⟦IG:\d+⟧", "", chapter_md)
     out: list[LintFinding] = []
 
     # 1. 토큰 존재(§5.2-7)
