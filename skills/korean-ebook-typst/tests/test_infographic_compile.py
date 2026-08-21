@@ -17,7 +17,12 @@ from scripts.infographic.emit import render_typ
 from scripts.infographic.parse import parse_fence
 
 SKILL = Path(__file__).resolve().parents[1]
-TYPST = typst_binary()          # PATH → ~/.local/bin/typst 폴백 단일화(Global Constraints)
+# typst 부재 시 typst_binary()는 falsy가 아니라 SystemExit(1)(build.py _fail)을
+# 던진다 — 잡아서 빈 문자열로 돌려야 skipif가 도달한다(세션 전체 INTERNALERROR 방지).
+try:
+    TYPST = typst_binary()      # PATH → ~/.local/bin/typst 폴백 단일화(Global Constraints)
+except SystemExit:
+    TYPST = ""
 pytestmark = pytest.mark.skipif(not TYPST, reason="typst 바이너리 없음")
 
 
