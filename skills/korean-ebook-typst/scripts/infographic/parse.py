@@ -8,8 +8,8 @@ DEFAULT_NOTE = ("편집 요약: 본문의 장·절 구조와 핵심 문장을 �
                 "원문을 대체하지 않습니다.")
 
 # 스펙 §3.4 — 구시스템 별칭 → 규범 키워드
-ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards"}
-VALID_LAYOUTS = {"flow", "cards"}          # Phase 1·2. 이후 Task에서 확장
+ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards", "quadrant": "matrix"}
+VALID_LAYOUTS = {"flow", "cards", "matrix"}          # Phase 1·2. 이후 Task에서 확장
 STEP_MIN, STEP_MAX = 2, 8
 CARD_MIN, CARD_MAX = 2, 6
 
@@ -90,6 +90,36 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
         data["cards"] = [{"title": str(c["title"]).strip(), "text": str(c["text"]).strip(),
                           **({"value": str(c["value"]).strip()} if str(c.get("value", "")).strip() else {})}
                          for c in cards_l]
+    if layout == "matrix":
+        if "headers" in d:
+            headers = d["headers"]
+            rows = d.get("rows", [])
+            if not isinstance(headers, list) or not (2 <= len(headers) <= 5):
+                raise ParseError(index, f"headers 개수 — 하한 2, 상한 5", line)
+            if not isinstance(rows, list) or not (2 <= len(rows) <= 6):
+                raise ParseError(index, "rows 개수 — 하한 2(스펙 §3.2), 상한 6", line)
+            for r, row in enumerate(rows):
+                if not isinstance(row, list) or len(row) != len(headers):
+                    raise ParseError(index, f"rows[{r}] 열 수 불일치(headers {len(headers)}열)", line)
+                for c, cell in enumerate(row):
+                    if not str(cell).strip():
+                        raise ParseError(index, f"rows[{r}][{c}] 비어 있음", line)
+            data["headers"] = [str(h).strip() for h in headers]
+            data["rows"] = [[str(c).strip() for c in row] for row in rows]
+        else:
+            for k in ("x_axis", "y_axis"):
+                ax = d.get(k)
+                if not isinstance(ax, dict) or not str(ax.get("low", "")).strip() or not str(ax.get("high", "")).strip():
+                    raise ParseError(index, f"{k}.low/.high 필수", line)
+            cells = d.get("cells", [])
+            if not isinstance(cells, list) or len(cells) != 4:
+                raise ParseError(index, "cells 정확히 4개(2×2)", line)
+            for i, c in enumerate(cells):
+                if not isinstance(c, dict) or not str(c.get("title", "")).strip() or not str(c.get("text", "")).strip():
+                    raise ParseError(index, f"cells[{i}].title/.text 비어 있음", line)
+            data["x_axis"] = {"low": str(d["x_axis"]["low"]).strip(), "high": str(d["x_axis"]["high"]).strip()}
+            data["y_axis"] = {"low": str(d["y_axis"]["low"]).strip(), "high": str(d["y_axis"]["high"]).strip()}
+            data["cells"] = [{"title": str(c["title"]).strip(), "text": str(c["text"]).strip()} for c in cells]
     if alias:
         data["_alias"] = raw_layout
 

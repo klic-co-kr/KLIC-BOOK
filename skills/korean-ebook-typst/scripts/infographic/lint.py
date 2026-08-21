@@ -108,6 +108,20 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
             fields.append((f"cards[{i}].text", c["text"]))
             if "value" in c:
                 fields.append((f"cards[{i}].value", c["value"]))
+        for c, h in enumerate(f.data.get("headers", [])):
+            fields.append((f"headers[{c}]", h))
+        for r, row in enumerate(f.data.get("rows", [])):
+            for c, cell in enumerate(row):
+                fields.append((f"cell[{r}][{c}]", cell))
+        for i, cell in enumerate(f.data.get("cells", [])):
+            fields.append((f"cells[{i}].title", cell["title"]))
+            fields.append((f"cells[{i}].text", cell["text"]))
+        if "x_axis" in f.data:
+            fields.append(("axis.x0", f.data["x_axis"]["low"]))
+            fields.append(("axis.x1", f.data["x_axis"]["high"]))
+        if "y_axis" in f.data:
+            fields.append(("axis.y0", f.data["y_axis"]["low"]))
+            fields.append(("axis.y1", f.data["y_axis"]["high"]))
         sec = None
         if f.evidence:
             if f.evidence not in section_cache:

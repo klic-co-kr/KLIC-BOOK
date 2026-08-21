@@ -99,7 +99,19 @@ def _sheet_rows(f) -> list[tuple[str, str]]:
         rows.append((f"cards[{i}].text", c["text"]))
         if "value" in c:
             rows.append((f"cards[{i}].value", c["value"]))
-    # matrix·lanes 행은 Task 2·3에서 같은 패턴으로 추가
+    for c, h in enumerate(f.data.get("headers", [])):
+        rows.append((f"headers[{c}]", h))
+    for r, row in enumerate(f.data.get("rows", [])):
+        for c, cell in enumerate(row):
+            rows.append((f"cell[{r}][{c}]", cell))
+    for i, cell in enumerate(f.data.get("cells", [])):
+        rows.append((f"cells[{i}].title", cell["title"]))
+        rows.append((f"cells[{i}].text", cell["text"]))
+    for ax in ("x_axis", "y_axis"):
+        if ax in f.data:
+            rows.append((f"axis.{ax[0]}0", f.data[ax]["low"]))
+            rows.append((f"axis.{ax[0]}1", f.data[ax]["high"]))
+    # lanes 행은 Task 3에서 같은 패턴으로 추가
     return rows
 
 
