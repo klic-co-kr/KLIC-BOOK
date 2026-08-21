@@ -103,6 +103,11 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
         for i, s in enumerate(f.data.get("steps", [])):
             fields.append((f"steps[{i}].title", s["title"]))
             fields.append((f"steps[{i}].text", s["text"]))
+        for i, ln in enumerate(f.data.get("lanes", [])):
+            fields.append((f"lanes[{i}].actor", ln["actor"]))
+            for j, s in enumerate(ln["steps"]):
+                fields.append((f"lanes[{i}].steps[{j}].title", s["title"]))
+                fields.append((f"lanes[{i}].steps[{j}].text", s["text"]))
         for i, c in enumerate(f.data.get("cards", [])):
             fields.append((f"cards[{i}].title", c["title"]))
             fields.append((f"cards[{i}].text", c["text"]))

@@ -12,6 +12,7 @@ ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards", "quad
 VALID_LAYOUTS = {"flow", "cards", "matrix"}          # Phase 1·2. 이후 Task에서 확장
 STEP_MIN, STEP_MAX = 2, 8
 CARD_MIN, CARD_MAX = 2, 6
+LANE_MIN, LANE_MAX = 2, 4      # lanes 레인 수·레인당 steps 공용(스펙 §3.2)
 
 
 class ParseError(Exception):
@@ -67,17 +68,38 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
 
     data: dict = dict(steps=[])
     if layout == "flow":
-        steps = d.get("steps", [])
-        if not isinstance(steps, list) or not (STEP_MIN <= len(steps) <= STEP_MAX):
-            raise ParseError(index, f"steps 개수 {len(steps) if isinstance(steps, list) else 0} — 하한 {STEP_MIN}, 상한 {STEP_MAX}", line)
-        for i, s in enumerate(steps):
-            if not isinstance(s, dict):
-                raise ParseError(index, f"steps[{i}] 객체 아님", line)
-            t = str(s.get("title", "")).strip()
-            x = str(s.get("text", "")).strip()
-            if not t or not x:
-                raise ParseError(index, f"steps[{i}].title/.text 비어 있음 — 근거 문구를 넣어라", line)
-            data["steps"].append({"title": t, "text": x})
+        has_steps, has_lanes = "steps" in d, "lanes" in d
+        if has_steps and has_lanes:
+            raise ParseError(index, "steps와 lanes는 배타 — 하나만 넣어라", line)
+        if has_lanes:
+            lanes = d["lanes"]
+            if not isinstance(lanes, list) or not (LANE_MIN <= len(lanes) <= LANE_MAX):
+                raise ParseError(index, f"lanes 개수 {len(lanes) if isinstance(lanes, list) else 0} — 하한 {LANE_MIN}, 상한 {LANE_MAX}", line)
+            for i, ln in enumerate(lanes):
+                if not isinstance(ln, dict) or not str(ln.get("actor", "")).strip():
+                    raise ParseError(index, f"lanes[{i}].actor 필수 — 레인 주체를 넣어라", line)
+                sts = ln.get("steps", [])
+                if not isinstance(sts, list) or not (LANE_MIN <= len(sts) <= LANE_MAX):
+                    raise ParseError(index, f"lanes[{i}].steps 개수 {len(sts) if isinstance(sts, list) else 0} — 하한 {LANE_MIN}, 상한 {LANE_MAX}", line)
+                for j, s in enumerate(sts):
+                    if not isinstance(s, dict) or not str(s.get("title", "")).strip() or not str(s.get("text", "")).strip():
+                        raise ParseError(index, f"lanes[{i}].steps[{j}].title/.text 비어 있음", line)
+            data["lanes"] = [{"actor": str(ln["actor"]).strip(),
+                              "steps": [{"title": str(s["title"]).strip(),
+                                         "text": str(s["text"]).strip()} for s in ln["steps"]]}
+                             for ln in lanes]
+        else:
+            steps = d.get("steps", [])
+            if not isinstance(steps, list) or not (STEP_MIN <= len(steps) <= STEP_MAX):
+                raise ParseError(index, f"steps 개수 {len(steps) if isinstance(steps, list) else 0} — 하한 {STEP_MIN}, 상한 {STEP_MAX}", line)
+            for i, s in enumerate(steps):
+                if not isinstance(s, dict):
+                    raise ParseError(index, f"steps[{i}] 객체 아님", line)
+                t = str(s.get("title", "")).strip()
+                x = str(s.get("text", "")).strip()
+                if not t or not x:
+                    raise ParseError(index, f"steps[{i}].title/.text 비어 있음 — 근거 문구를 넣어라", line)
+                data["steps"].append({"title": t, "text": x})
     if layout == "cards":
         cards_l = d.get("cards", [])
         if not isinstance(cards_l, list) or not (CARD_MIN <= len(cards_l) <= CARD_MAX):

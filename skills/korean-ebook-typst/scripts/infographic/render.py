@@ -94,6 +94,11 @@ def _sheet_rows(f) -> list[tuple[str, str]]:
     for i, s in enumerate(f.data.get("steps", [])):
         rows.append((f"steps[{i}].title", s["title"]))
         rows.append((f"steps[{i}].text", s["text"]))
+    for i, ln in enumerate(f.data.get("lanes", [])):
+        rows.append((f"lanes[{i}].actor", ln["actor"]))
+        for j, s in enumerate(ln["steps"]):
+            rows.append((f"lanes[{i}].steps[{j}].title", s["title"]))
+            rows.append((f"lanes[{i}].steps[{j}].text", s["text"]))
     for i, c in enumerate(f.data.get("cards", [])):
         rows.append((f"cards[{i}].title", c["title"]))
         rows.append((f"cards[{i}].text", c["text"]))
@@ -111,7 +116,6 @@ def _sheet_rows(f) -> list[tuple[str, str]]:
         if ax in f.data:
             rows.append((f"axis.{ax[0]}0", f.data[ax]["low"]))
             rows.append((f"axis.{ax[0]}1", f.data[ax]["high"]))
-    # lanes 행은 Task 3에서 같은 패턴으로 추가
     return rows
 
 
