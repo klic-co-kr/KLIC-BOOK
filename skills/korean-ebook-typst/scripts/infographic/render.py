@@ -112,6 +112,9 @@ def _sheet_rows(f) -> list[tuple[str, str]]:
     for k in ("before_label", "after_label"):
         if f.data.get(k):
             rows.append((k, f.data[k]))
+    for i, s in enumerate(f.data.get("stages", [])):
+        rows.append((f"stages[{i}].title", s["title"]))
+        rows.append((f"stages[{i}].text", s["text"]))
     for c, h in enumerate(f.data.get("headers", [])):
         rows.append((f"headers[{c}]", h))
     for r, row in enumerate(f.data.get("rows", [])):

@@ -129,6 +129,9 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
         for k in ("before_label", "after_label"):
             if f.data.get(k):
                 fields.append((k, f.data[k]))
+        for i, s in enumerate(f.data.get("stages", [])):
+            fields.append((f"stages[{i}].title", s["title"]))
+            fields.append((f"stages[{i}].text", s["text"]))
         if "x_axis" in f.data:
             fields.append(("axis.x0", f.data["x_axis"]["low"]))
             fields.append(("axis.x1", f.data["x_axis"]["high"]))
