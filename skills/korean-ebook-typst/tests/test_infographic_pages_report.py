@@ -57,6 +57,23 @@ def test_manifest_and_metadata_prefix(tmp_path):
                                     'page: here().page()))')
 
 
+def test_alias_warning_printed(tmp_path, capsys):
+    import scripts.build as b
+    book = _book(tmp_path)
+    (book / "ch01.md").write_text(
+        BOOK.replace('"layout": "flow"', '"layout": "process"'), encoding="utf-8")
+    # cover_notes 포함 — make_auto_cover가 cfg["cover_notes"]를 직접 첨자접근(위 호출 계약)
+    cfg = {"title": "검증책", "subtitle": "부제", "author": "저자", "style": "practical",
+           "cover": "auto", "chapters": ["ch01.md"], "cover_notes": None}
+    b.assemble(cfg, book)   # 기존 통합 테스트 호출 계약 — process 별칭이 flow로 정규화돼 빌드 성공
+    out = capsys.readouterr().out
+    assert "별칭 process→flow — 정식 키워드 권장" in out
+    assert "000-ch01.md #1" in out
+    # 채널 이원(G1-L10): 콘솔 + 검수 시트 상단 — 로그를 놓쳐도 gate 산출물에 남는다
+    sheet = (book / "build" / "infographic" / "000-fig01.review.md").read_text(encoding="utf-8")
+    assert "별칭 process→flow — 정식 키워드 권장" in sheet
+
+
 def test_query_reports_page_and_gate_field(tmp_path):
     import scripts.build as b
     from scripts import qc_gate

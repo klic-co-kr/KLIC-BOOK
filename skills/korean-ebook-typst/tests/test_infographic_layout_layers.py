@@ -123,3 +123,24 @@ def test_layers_golden_snapshot():
         GOLDEN.write_text(code, encoding="utf-8")
         pytest.fail("골든 재생성 — 눈검 후 커밋")
 
+
+def test_layers_rings_golden_snapshot():
+    import os
+    from scripts.infographic.emit import render_typ
+    GOLDEN = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "infographic" / "golden-layers-rings-practical.typ"
+    payload = {"layout": "layers", "title": "계층은 표현에서 자료로 내려간다",
+               "rings": [{"label": "표현"}, {"label": "문서"},
+                         {"label": "자료"}, {"label": "부호"}]}
+    # rings 변형 — 동심원 4겹, 순서 = 바깥→안(표현이 가장 바깥). 골든은 stack 골든과
+    # 동일 절차(IG_REGEN_GOLDEN 재생성 → 눈검 → 커밋).
+    f = parse_fence(1, 1, json.dumps(payload, ensure_ascii=False))
+    code = render_typ(layers_arch.layout(f, TOKENS))
+    if os.environ.get("IG_REGEN_GOLDEN") != "1":
+        if not GOLDEN.exists():
+            pytest.fail("골든 없음 — `IG_REGEN_GOLDEN=1 python3 -m pytest …` 실행 후 눈검·커밋")
+        assert code == GOLDEN.read_text(encoding="utf-8")
+    else:
+        GOLDEN.parent.mkdir(parents=True, exist_ok=True)
+        GOLDEN.write_text(code, encoding="utf-8")
+        pytest.fail("골든 재생성 — 눈검 후 커밋")
+

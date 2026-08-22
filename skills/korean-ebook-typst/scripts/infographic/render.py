@@ -52,7 +52,14 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
         fences = []
         for raw in fences_raw:
             try:
-                fences.append(parse_fence(raw["index"], raw["line"], raw["body"]))
+                f = parse_fence(raw["index"], raw["line"], raw["body"])
+                fences.append(f)
+                # 구별칭 경고(채널 1) — 정규화돼 빌드는 계속되는 정상 경로라 finding이
+                # 아닌 non-fatal print. stdout만으론 gate 산출물을 읽는 downstream이
+                # 못 본다 → 검수 시트에 병기(채널 2, _review_sheet).
+                if "_alias" in f.data:
+                    print(f"[경고] 별칭 {f.data['_alias']}→{f.layout} — 정식 키워드 권장 "
+                          f"({chapter_name} #{f.index})")
             except ParseError as e:
                 all_findings.append(lint.LintFinding(
                     "schema", f"{chapter_name} #{e.fence_index}", e.detail,
@@ -175,6 +182,10 @@ def _review_sheet(f, unverified: list) -> str:
     if unverified:
         lines.append("**⚠ 미검증 숫자 — 사람 대조 필수:**")
         lines += [f"- {u.loc}: {u.measured}" for u in unverified]
+        lines.append("")
+    # 구별칭 경고(채널 2) — 고지 블록 위. 콘솔 로그를 놓쳐도 gate 산출물에 남는다.
+    if "_alias" in f.data:
+        lines.append(f"**⚠ 별칭 {f.data['_alias']}→{f.layout} — 정식 키워드 권장**")
         lines.append("")
     lines += [
         f"> 고지: {f.note or DEFAULT_NOTE}",
