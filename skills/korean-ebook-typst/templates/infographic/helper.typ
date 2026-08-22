@@ -16,13 +16,22 @@
 )[#box(width: 100%, height: 100%)[#body]]
 
 // rect — place(top+left)는 박스 좌상단을 (x,y)에 놓는다(실측 정확).
+// rot≠0이면 rect 중심 기준 회전(게이트 다이아몬드 등) — 회전 잉크는 중심 대칭으로 삐져나온다.
 #let ig-rect(x, y, w, h, rx: 8pt, fill-role: "surface-tint",
-             stroke-role: "rule", stroke-w: 0.5pt) = place(
+             stroke-role: "rule", stroke-w: 0.5pt, rot: 0deg) = place(
   top + left, dx: pt(x), dy: pt(y),
-  rect(width: pt(w), height: pt(h), radius: rx,
+  rotate(rot, rect(width: pt(w), height: pt(h), radius: rx,
        fill: ig-color(fill-role),
        stroke: if stroke-w == 0pt { none } else {
-         (paint: ig-color(stroke-role), thickness: stroke-w) }),
+         (paint: ig-color(stroke-role), thickness: stroke-w) })),
+)
+
+// circle — (x,y)는 중심. rings 동심원 변형(스펙 §6.3).
+#let ig-circle(x, y, r, fill-role: "surface-tint",
+               stroke-role: "rule", stroke-w: 0.5pt) = place(
+  top + left, dx: pt(x - r), dy: pt(y - r),
+  circle(radius: pt(r), fill: ig-color(fill-role),
+         stroke: (paint: ig-color(stroke-role), thickness: stroke-w)),
 )
 
 // text — x,y는 텍스트 블록 중심의 절대좌표, fw·fh는 도식 전체 폭·높이.

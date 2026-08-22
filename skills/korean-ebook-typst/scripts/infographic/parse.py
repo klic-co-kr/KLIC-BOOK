@@ -11,7 +11,7 @@ DEFAULT_NOTE = ("편집 요약: 본문의 장·절 구조와 핵심 문장을 �
 ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards",
            "quadrant": "matrix", "bridge": "before_after", "network": "topology"}
 VALID_LAYOUTS = {"flow", "cards", "matrix", "before_after", "ladder", "roadmap",
-                 "topology"}   # Phase 1·2·3·4
+                 "topology", "approval", "layers"}   # Phase 1·2·3·4
 STEP_MIN, STEP_MAX = 2, 8
 CARD_MIN, CARD_MAX = 2, 6
 LANE_MIN, LANE_MAX = 2, 4      # lanes 레인 수·레인당 steps 공용(스펙 §3.2)
@@ -20,6 +20,9 @@ STAGE_MIN, STAGE_MAX = 3, 5              # 스펙 §3.2 ladder — 절대 상한
 PHASE_MIN, PHASE_MAX = 2, 5              # 스펙 §3.2 roadmap 위상
 PHASE_ITEMS_MIN, PHASE_ITEMS_MAX = 1, 4  # 플랜 결정 — 높이 예산 보호
 NODE_MIN, NODE_MAX = 3, 8                # 스펙 §3.2 topology 절대 상한(판형 상한은 archetype)
+PATH_MIN, PATH_MAX = 3, 8                # 스펙 §3.2 approval 경로 스텝
+GATE_MAX = 4                             # 스펙 §3.2 approval 게이트 상한
+LAYER_MIN, LAYER_MAX = 2, 6              # 스펙 §3.2 layers 계층 수(stack·rings 공용)
 
 
 class ParseError(Exception):
@@ -232,6 +235,41 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
         data["nodes"] = [{"id": str(nd["id"]).strip(), "label": str(nd["label"]).strip()}
                          for nd in nodes]
         data["edges"] = norm_edges
+    if layout == "approval":
+        path = d.get("path", [])
+        if not isinstance(path, list) or not (PATH_MIN <= len(path) <= PATH_MAX):
+            n = len(path) if isinstance(path, list) else 0
+            raise ParseError(index, f"path 개수 {n} — 하한 {PATH_MIN}, 상한 {PATH_MAX}", line)
+        gates = 0
+        norm = []
+        for i, st in enumerate(path):
+            if not isinstance(st, dict) or not str(st.get("title", "")).strip():
+                raise ParseError(index, f"path[{i}].title 필수", line)
+            if "gate" in st and not isinstance(st["gate"], bool):
+                raise ParseError(index, f"path[{i}].gate는 불리언", line)
+            row = {"title": str(st["title"]).strip()}
+            if str(st.get("text", "")).strip():
+                row["text"] = str(st["text"]).strip()
+            if st.get("gate"):
+                row["gate"] = True
+                gates += 1
+            norm.append(row)
+        if gates > GATE_MAX:
+            raise ParseError(index, f"게이트 {gates}개 > 상한 {GATE_MAX}개 — 게이트 통합", line)
+        data["path"] = norm
+    if layout == "layers":
+        stack, rings = d.get("stack"), d.get("rings")
+        if (stack is None) == (rings is None):
+            raise ParseError(index, "stack·rings 중 정확히 하나 필요", line)
+        rows = stack if stack is not None else rings
+        if not isinstance(rows, list) or not (LAYER_MIN <= len(rows) <= LAYER_MAX):
+            n = len(rows) if isinstance(rows, list) else 0
+            raise ParseError(index, f"계층 수 {n} — 하한 {LAYER_MIN}, 상한 {LAYER_MAX}", line)
+        for i, row in enumerate(rows):
+            if not isinstance(row, dict) or not str(row.get("label", "")).strip():
+                raise ParseError(index, f"계층 label 필수 — rows[{i}]", line)
+        key = "stack" if stack is not None else "rings"
+        data[key] = [{"label": str(r["label"]).strip()} for r in rows]
     if alias:
         data["_alias"] = raw_layout
 
