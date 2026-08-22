@@ -89,8 +89,21 @@ def convert(md: str) -> str:
         if not rows:
             return block
         ncols = max(len(r) for r in rows)
-        cells = ', '.join(f'[{_table_cell(c)}]' for r in rows for c in r)
-        return stash_str(f'#table(columns: {ncols}, {cells})')
+
+        def _row(r: list[str]) -> str:
+            # 짧은 행은 빈 셀 패딩 — 열 수와 셀 수가 어긋나면 typst가
+            # 남는 셀을 다음 행으로 흘린다.
+            r = r + [''] * (ncols - len(r))
+            return ', '.join(f'[{_table_cell(c)}]' for c in r)
+        # 첫 행은 table.header로, 열은 1fr 균등, block(width: 100%)로 전폭.
+        # 내용 폭 자동(columns: n)이면 표마다 폭이 제각각(들쭉날쭉)해지고
+        # 블록이 중앙에 놓인다(agent-papers 본문 표 실측). typst 0.15는
+        # table에 width 인자가 없어 block으로 감싼다. 헤더 채움·줄무늬·굵게는
+        # base.typ의 set/show 규칙이 담당.
+        body_cells = ', '.join(_row(r) for r in rows[1:])
+        return stash_str(
+            f'#block(width: 100%)[#table(columns: ({", ".join(["1fr"] * ncols)}), '
+            f'table.header({_row(rows[0])}), {body_cells})]')
     md = re.sub(r'(?:^[ \t]*\|.*\|[ \t]*$\n?)+', _table_block, md, flags=re.M)
     # 3. 블록 수식 $$...$$ → #mitex
     md = re.sub(r'\$\$(.+?)\$\$', lambda m: f'#mitex[`{m.group(1).strip()}`]',

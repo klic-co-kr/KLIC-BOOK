@@ -33,6 +33,16 @@
   show raw: set text(font: tokens.fonts.at("mono", default: tokens.fonts.body).stack
     + tokens.fonts.body.stack)
 
+  // 표(md 파이프 표 → md2typst #table). 미설정 시 typst 기본은 내용 폭으로
+  // 줄어들어 표마다 폭이 제각각(들쭉날쭉)하고 블록이 면 중앙에 놓여 본문
+  // 프레임과 어긋난다(agent-papers 본문 표 실측). 전폭(width: 100%)과
+  // 1fr 균등 열·table.header(첫 행)는 md2typst가, 채움·줄무늬·굵게는
+  // 여기서 담당(width는 set 규칙 대상이 아니라 호출처에서만 지정 가능).
+  set table(inset: (x: 7pt, y: 5pt), stroke: 0.5pt + rgb(tokens.colors.rule),
+    fill: (x, y) => if y == 0 { rgb(tokens.colors.rule) }
+      else if calc.even(y) { rgb(tokens.colors.rule).lighten(76%) } else { none })
+  show table.cell.where(y: 0): set text(weight: "bold")
+
   // 공통 헤딩 — theme.typ의 show 규칙이 뒤에서 오버라이드 가능
   show heading.where(level: 1): it => {
     pagebreak(weak: true)

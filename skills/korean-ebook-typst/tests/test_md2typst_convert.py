@@ -128,7 +128,35 @@ def test_pipe_table_converts_to_typst_table():
     assert "#table(" in out
     assert "[A]" in out and "[B]" in out
     assert "[1]" in out and "[2]" in out
-    assert "columns: 2" in out
+    assert "columns: (1fr, 1fr)" in out
+
+def test_pipe_table_full_width_block():
+    # block(width: 100%) — typst 0.15 table엔 width 인자가 없어 block으로
+    # 전폭을 건다. 미감싸면 내용 폭으로 줄어들어 표마다 폭이 제각각.
+    md = "| A | B |\n|---|---|\n| 1 | 2 |\n"
+    out = convert(md)
+    assert "#block(width: 100%)[#table(" in out
+
+def test_pipe_table_header_row_wrapped():
+    # 첫 행은 table.header로 — base.typ가 헤더 채움·굵게를 거기에 건다.
+    # 미분리 시 헤더 스타일을 적용할 수 없다.
+    md = "| 항목 | 값 |\n|---|---|\n| QPS | 100 |\n"
+    out = convert(md)
+    assert "table.header([항목], [값])" in out
+    assert "[QPS], [100]" in out
+
+def test_pipe_table_columns_equal_fr():
+    # 열은 1fr 균등 — 표마다 내용 폭으로 들쭉날쭉해지는 것을 막는다.
+    md = "| a | b | c |\n|---|---|---|\n| 1 | 2 | 3 |\n"
+    out = convert(md)
+    assert "columns: (1fr, 1fr, 1fr)" in out
+
+def test_pipe_table_short_row_padded():
+    # 셀 수가 모자란 행은 빈 셀로 패딩 — 열 수와 셀 수가 어긋나면
+    # typst가 셀을 다음 행으로 흘린다.
+    md = "| a | b | c |\n|---|---|---|\n| 1 |\n"
+    out = convert(md)
+    assert "[1], [], []" in out
 
 def test_pipe_table_separator_row_dropped():
     md = "| 항목 | 값 |\n|---|---|\n| QPS | 100 |\n"
