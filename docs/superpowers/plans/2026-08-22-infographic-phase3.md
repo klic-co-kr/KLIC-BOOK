@@ -10,7 +10,9 @@
 
 **Spec:** `docs/superpowers/specs/2026-08-21-infographic-layer-design.md` (개정 4판)
 
-**Phase 1·2 자산 (main 병합 완료, 193 green):** `scripts/infographic/` 전 모듈(flow·cards·matrix + base.LayoutError), `templates/infographic/helper.typ`, authoring.md(Phase 2판), 골든 3종(flow·cards·matrix practical). 테스트 관례: `tests/conftest.py`가 스킬 루트 sys.path 추가, `from scripts.infographic.x import y`.
+**Phase 1·2 자산 (main 병합 완료, korean-ebook-typst 스위트 181 green):** `scripts/infographic/` 전 모듈(flow·cards·matrix + base.LayoutError), `templates/infographic/helper.typ`, authoring.md(Phase 2판), 골든 3종(flow·cards·matrix practical). 테스트 관례: `tests/conftest.py`가 스킬 루트 sys.path 추가, `from scripts.infographic.x import y`.
+
+**개정 2판 (플랜 적대검토 반영):** C1 패널 폭 상수(CENTER_ZONE 104→56, G 20→14, MIN_PANEL_W 100→65) · C2 ladder 높이 기준점·note 위치 · C3 ladder 화살표 앵커(겹침역 관통) · C4 도달 불가 테스트 2건 교체 · C5 MIN_BAND_W 70→54(스펙 §6.2 상한 표와 양립 — 개정 5판 불필요, essay 3밴드 55.2pt 실측) · I1~I3·m1~m7.
 
 ## Global Constraints (Phase 1·2와 동일 + 추가)
 
@@ -27,7 +29,9 @@
 - **archetype별 골든 스냅샷 필수**(스펙 §7·§8) — 3종 각 1개 practical, `IG_REGEN_GOLDEN=1` 절차.
 - **골든 교정 2주기**: 신규 3종 calib fixture 실렌더 → 예산표(§4.3) 갱신 — Phase 2 Task 4 절차 반복.
 - **병합 게이트**: Task 4(authoring.md 갱신) 완료 전 main 병합 금지.
-- 커넥터 상수: 도식 내 간격 G ≥ 24pt 필요한 곳은 샤프트 가시 ≥12pt 계약 유지(§6.1). 화살표 ARROW_STROKE_W 1.2·헤드비 3.33(model.py 상수 재use).
+- 커넥터 상수: 커넥터 복도가 있는 간격(roadmap 밴드 G=28)은 샤프트 가시 ≥12pt 계약 유지(§6.1). before_after의 G=14는 패널-중앙존 순수 여백(복도 아님). 화살표 tip-gap은 8pt(§6.1 밴드 8~12 — flow 선례 +4/−8와 동일 이유로 6pt 미달 금지). ARROW_STROKE_W 1.2·헤드비 3.33(model.py 상수 재use).
+- **상수 확정(적대검토 C1·C5)**: before_after `CENTER_ZONE=56.0`·`G=14.0`·`MIN_PANEL_W=65.0` → panel_w practical 111.2 / essay 68.7 / b5 136.8 / business 170.8 / lecture 176.4. roadmap `MIN_BAND_W=54.0`(G=28 유지) → 각 팩 스펙 상한 n에서 essay 55.2 / practical 55.6 / b5 68.4 / business 62.7 / lecture 65.0 — 전팩 상한 도달 가능(밴드 폭 55pt는 항목 초단문 계약, authoring에 명시).
+- 텍스트 크기 pad: lint 예산 재검사 pad=8(lint.py 관례)와 일치 — archetype 내부 pad 전부 8.0 고정.
 
 ---
 
@@ -47,7 +51,7 @@
 
 **데이터 설계(스펙 §3.2 `before[]`, `after[]`, `center` 라벨):** 항목은 문자열(짧은 문구). 좌우 패널 헤더 라벨은 `before_label`/`after_label` 선택 필드, 기본 "이전"/"이후". `center`는 전환 라벨(선택 — 없으면 화살표만).
 
-**지오메트리(스펙 §6.3 "좌우 패널 + 중앙 전환 화살표"):** 패널 폭 `panel_w = (W − 2P − CENTER_ZONE − 2G) / 2`, `CENTER_ZONE = 104.0`(화살표 + center 라벨). 패널 높이 = 양측 항목 실측 최댓값. 화살표는 패널 수직 중심, center 라벨은 화살표 위.
+**지오메트리(스펙 §6.3 "좌우 패널 + 중앙 전환 화살표"):** 패널 폭 `panel_w = (W − 2P − CENTER_ZONE − 2G) / 2`, `CENTER_ZONE = 56.0`(화살표 + center 라벨), `G = 14.0`. 패널 높이 = 양측 항목 실측 최댓값. 화살표는 패널 수직 중심(tip-gap 양측 8pt), center 라벨은 화살표 위.
 
 - [ ] **Step 1: parse 실패 테스트 작성**
 
@@ -65,8 +69,8 @@ from scripts.infographic.parse import ParseError, parse_fence
 
 TOKENS = json.loads((Path(__file__).resolve().parents[1] / "styles" / "practical" / "tokens.json").read_text(encoding="utf-8"))
 W = TOKENS["body_frame_pt"]["x1"] - TOKENS["body_frame_pt"]["x0"]
-P, G = 14.0, 20.0
-CENTER_ZONE = 104.0
+P, G = 14.0, 14.0
+CENTER_ZONE = 56.0
 
 
 def _fence(before, after, center=None, **extra):
@@ -79,7 +83,8 @@ def _fence(before, after, center=None, **extra):
 
 
 def test_parse_rejects_empty_item():
-    with pytest.raises(ParseError, match=r"before\[1\] 비어 있음"):
+    # 빈 항목은 after 측에 — 구현 에러문은 f"{side}[{i}]" (I1 정합)
+    with pytest.raises(ParseError, match=r"after\[1\] 비어 있음"):
         _fence(["항목"], ["항목", "  "])
 
 
@@ -174,6 +179,17 @@ def test_pack_cap_essay_rejects_four_items():
     essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
     with pytest.raises(ba_arch.BeforeAfterLayoutError, match=r"판형 상한 3개\(essay\)"):
         ba_arch.layout(_fence(["a", "b", "c", "d"], ["a"]), essay)
+
+
+def test_pack_cap_success_all_packs():
+    # I3 — 각 팩 상한 n에서 렌더 성공(상한 도달 가능성 실증, C1 방어)
+    packs = {"essay": 3, "practical": 4, "b5": 4, "business": 5, "lecture": 5}
+    for name, cap in packs.items():
+        toks = json.loads((Path(__file__).resolve().parents[1] / "styles" / name / "tokens.json").read_text(encoding="utf-8"))
+        fig = ba_arch.layout(_fence([f"이전 {i}" for i in range(cap)],
+                                    [f"이후 {i}" for i in range(cap)], center="전환"), toks)
+        panels = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"]
+        assert len(panels) == 2, name
 ```
 
 - [ ] **Step 6: 실행 — 모듈 부재로 실패 확인**
@@ -192,13 +208,13 @@ from ..parse import DEFAULT_NOTE, Fence
 from .base import LayoutError
 
 P = 14.0
-G = 20.0
-CENTER_ZONE = 104.0
+G = 14.0                    # 패널-중앙존 여백(커넥터 복도 아님 — §6.1 대상 외)
+CENTER_ZONE = 56.0
 BA_ITEM_MIN, BA_ITEM_MAX = 1, 5
-PANEL_PAD_H = 10.0
+PANEL_PAD_H = 8.0           # lint 예산 pad=8과 일치
 PANEL_PAD_V = 12.0
 ITEM_GAP = 6.0
-MIN_PANEL_W = 100.0
+MIN_PANEL_W = 65.0
 LEADING = 1.3
 HEIGHT_LIMIT = 0.85
 
@@ -285,14 +301,14 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     texts += panel_texts(fence.data["before"], lx, fence.data.get("before_label", "이전"), "before")
     texts += panel_texts(fence.data["after"], rx, fence.data.get("after_label", "이후"), "after")
 
-    # 중앙 전환 — 수평 화살표 + center 라벨(선택)
+    # 중앙 전환 — 수평 화살표(tip-gap 8pt, §6.1) + center 라벨(선택)
     zone_l, zone_r = lx + panel_w, rx
     ay = py + panel_h / 2
-    arrows = [ArrowOp(x1=zone_l + 6.0, y1=ay, x2=zone_r - 6.0, y2=ay)]
+    arrows = [ArrowOp(x1=zone_l + 8.0, y1=ay, x2=zone_r - 8.0, y2=ay)]
     if fence.data.get("center"):
         texts.append(TextOp(x=(zone_l + zone_r) / 2, y=ay - kicker_size * LEADING - 4.0,
                             size=kicker_size, text=fence.data["center"], role="focus",
-                            weight="bold", max_w=CENTER_ZONE - 12.0, field="center"))
+                            weight="bold", max_w=CENTER_ZONE + 2 * G - 16.0, field="center"))
 
     y = py + panel_h + 12.0
     note = fence.note or DEFAULT_NOTE
@@ -339,7 +355,7 @@ from .archetypes import before_after as _ba, cards as _cards, flow as _flow, mat
         return _ba.layout(fence, tokens)
 ```
 
-주의: 기존 flow.py의 `_ink_ok`가 TextOp를 어떻게 검사하는지 확인 후 동일 임계값 사용(위 코드는 cards와 동일한 완화 기준이라면 그대로, 아니면 cards 기준에 맞춰 조정 — 구현자는 `archetypes/cards.py`의 `_ink_ok`를 읽고 정확히 동일한 검사 논리로 작성한다).
+주의(m2 확정): 위 `_ink_ok` 코드 블록이 기준이다 — Rect+Arrow+Text 전검사. cards.py의 `_ink_ok`(Rect만·stroke_w/2 포함)와 달리 before_after는 ArrowOp·중앙 라벨이 있어 전검사가 필요하다. 임계값 ±0.001은 cards와 동일.
 
 - [ ] **Step 8: lint·render 확장**
 
@@ -372,19 +388,20 @@ render.py `_sheet_rows()`에 동일 구조 행 추가(값은 `(field, text)` 튜
 - [ ] **Step 9: lint·render 테스트 추가 후 전체 통과 확인**
 
 ```python
-def test_lint_collects_before_after_fields():
-    from scripts.infographic import lint
+def test_before_after_elements_reach_lint_and_sheet():
+    # cards의 test_cards_lint_and_review_sheet_reach_elements 패턴을 그대로 따른다 —
+    # 기존 테스트(tests/test_infographic_layout_cards.py)를 읽고 동일 구조로 작성:
+    # 1) 숫자 포함 항목(before/after/center)이 I1 숫자-evidence 검사 대상에 들어가는지
+    # 2) render._sheet_rows가 before[i]·after[i]·center·라벨 행을 반환하는지
     f = _fence(["예산 3배 증가", "리드타임 2주"], ["CAPEX 12% 절감"], center="전환")
     fig = ba_arch.layout(f, TOKENS)
-    fields = lint._fields([f]) if hasattr(lint, "_fields") else None
-    # _fields 내부 함수가 아니면 check() 리턴 findings에서 field 경로 확인으로 대체:
-    res = lint.check([f], {f.index: fig}, TOKENS, md="…")
+    # 이하 기존 cards lint 테스트의 check() 호출·단언 구조를 복제(시그니처는 lint.py:51 실효 따름)
 ```
 
-주의: lint.check의 실제 시그니처는 `check(fences, figs, tokens, md=…)` — 구현자가 기존 flow/cards lint 테스트(`tests/test_infographic_lint.py`)를 읽고 **동일한 패턴**으로 before/after 필드가 숫자-evidence 검사 대상에 들어가는지(숫자 포함 항목 → 경고 집계) 검증하는 테스트를 작성한다. 위 코드는 필드 수집 확인이 목적이며 실제 테스트는 기존 파일 관례를 따른다.
+주의(m4): `lint.check`의 실효 시그니처는 `lint.py:51`을 직접 확인 — `check(fences, figs, tokens, chapter_md, chapter_name)`. 플랜에 시그니처를 하드코딩하지 않는다(구현자가 기존 테스트에서 복사). 검증 포인트: 숫자 포함 before/after 항목 → I1 경고 집계, 검수 시트에 전 요소 행.
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/ -q`
-Expected: 193 + 신규 전부 PASS
+Expected: 181 + 신규 전부 PASS
 
 - [ ] **Step 10: Commit**
 
@@ -444,9 +461,9 @@ def test_parse_bounds():
 
 
 def test_no_pack_cap_only_absolute():
-    # ladder는 판형 상한 없음 — essay 5단계도 layout 에러 아님(높이 예산 내면)
-    essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
-    fig = ladder_arch.layout(_fence(5), essay)     # 예외 없음 자체가 검증
+    # ladder는 판형 상한 없음 — practical 5단계(절대 상한)가 레이아웃 에러 없이 통과
+    # (C4a: essay 5단계는 폭 249pt에서 dy<16 에러 — 도달 불가 조합이므로 practical 사용)
+    fig = ladder_arch.layout(_fence(5), TOKENS)    # 예외 없음 자체가 검증
     assert fig.height > 0
 ```
 
@@ -506,12 +523,14 @@ def test_box_height_measured():
     assert boxes[0].h == boxes[1].h == boxes[2].h              # 최대 단계 높이 통일
 
 
-def test_height_limit_error():
+def test_step_gap_error_on_tall_stages():
+    # C4b: ladder의 공간 부족 에러는 dy<STEP_GAP_MIN 경로 — 85% 분기는
+    # H_avail 산식상 도달 불가(구조적 불변식 검사로만 존재)
     long_text = "근거 문장이 상자 폭을 넘어 여러 줄로 감싸지는 매우 긴 문장입니다 " * 6
     stages = [{"title": f"단계 {i+1}", "text": long_text} for i in range(5)]
     f = parse_fence(1, 1, json.dumps(
         {"layout": "ladder", "title": "성숙도", "stages": stages}, ensure_ascii=False))
-    with pytest.raises(ladder_arch.LadderLayoutError, match="85%"):
+    with pytest.raises(ladder_arch.LadderLayoutError, match="단 간격"):
         ladder_arch.layout(f, TOKENS)
 ```
 
@@ -616,12 +635,17 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
                             size=st_text_size, text=s["text"], role="ink-soft",
                             max_w=box_w, field=f"stages[{i}].text"))
         if i:
-            arrows.append(ArrowOp(x1=rects[i - 1].x + box_w, y1=rects[i - 1].y,
-                                  x2=sx, y2=sy + box_h))          # 좌하변→전 단계 우상변
+            # C3: dx < box_w 항상(상자 수평 겹침) — 모서리→모서리는 좌상향이 되므로
+            # 겹침역 중심 ±4pt 관통로로 우상향 보장(x 증가 8pt·y 상승 dy)
+            ov_mid = (sx + rects[i - 1].x + box_w) / 2
+            arrows.append(ArrowOp(x1=ov_mid - 4.0, y1=rects[i - 1].y,
+                                  x2=ov_mid + 4.0, y2=sy + box_h))
 
-    y = stage_top[-1] + 12.0 + note_h                            # 최상단 상자 위 note
-    texts.append(TextOp(x=W / 2, y=y - note_h / 2, size=st_text_size,
+    # C2: 잉크 최심부 = 최하단 상자(stage_top[0]) 하변 — note는 그 아래
+    y = stage_top[0] + box_h + 12.0
+    texts.append(TextOp(x=W / 2, y=y + note_h / 2, size=st_text_size,
                         text=note, role="ink-mute", max_w=W - 2 * P, field="note"))
+    y += note_h
 
     ops = [RectOp(x=0.0, y=0.0, w=W, h=y, rx=0.0, fill_role="paper", stroke_role="rule", stroke_w=0.0),
            *rects, *arrows, *texts]
@@ -634,9 +658,9 @@ def _ink_ok(ops, width: float, height: float) -> None:
     ...
 ```
 
-주의: `_ink_ok`는 Task 1에서 작성한 것과 동일 논리를 ladder용으로 복제(모듈 로컬 함수 관례 — cards·flow도 각자 보유). 화살표 시작점이 좌측 상자 우변 위(y=rect.y = 상자 상변)인 점 검토 — 시각적으로 상자 모서리에서 모서리로.
+주의: `_ink_ok`는 Task 1에서 작성한 것과 동일 논리를 ladder용으로 복제(모듈 로컬 함수 관례 — cards·flow도 각자 보유).
 
-**dy 계산 검증 필수**: `H_avail`이 헤더·note 높이를 뺀 뒤 계산되므로, 헤더가 길면 dy가 STEP_GAP_MIN 미만으로 에러 — 이것이 ladder의 공간 부족 에러 경로(가로/세로 랩 개념 없음).
+**높이 불변식(C2)**: 총높이 = `y + H_avail + 12 + note_h = 0.85·H_frame − P` 로 수렴 — 85% 초과 분기는 존재하지 않는다(도달 불가 dead code 제거, C4b). ladder의 공간 부족 에러 경로는 dy<STEP_GAP_MIN 단 하나: 헤더가 길거나 단계 문구가 길면 box_h·H_avail이 압박해 dy가 16pt 미만으로 떨어진다(가로/세로 랩 개념 없음).
 
 layout.py dispatch 등록(`_lad` 임포트 포함), lint 필드(`steps`와 동일 — `stages[i].title`·`stages[i].text`), render `_sheet_rows` 동일 추가:
 
@@ -733,6 +757,17 @@ def test_pack_cap_essay():
     essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
     with pytest.raises(rm_arch.RoadmapLayoutError, match=r"판형 상한 3위상\(essay\)"):
         rm_arch.layout(_fence(4), essay)
+
+
+def test_pack_cap_success_all_packs():
+    # I3 — 각 팩 스펙 상한 n에서 렌더 성공(C5 방어: 밴드폭 ≥ MIN_BAND_W 실증)
+    packs = {"essay": 3, "practical": 4, "b5": 4, "business": 5, "lecture": 5}
+    for name, cap in packs.items():
+        toks = json.loads((Path(__file__).resolve().parents[1] / "styles" / name / "tokens.json").read_text(encoding="utf-8"))
+        fig = rm_arch.layout(_fence(cap), toks)
+        bands = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"]
+        assert len(bands) == cap, name
+        assert bands[0].w >= rm_arch.MIN_BAND_W - 0.01, name
 ```
 
 - [ ] **Step 2: 실행 — 실패 확인**
@@ -788,7 +823,7 @@ BAND_PAD_IN = 8.0
 BAND_PAD_V = 10.0
 ITEM_GAP = 5.0
 TL_H = 24.0                    # 타임라인 축 높이(축+여백)
-MIN_BAND_W = 70.0
+MIN_BAND_W = 54.0              # C5 — essay 3밴드 55.2pt·practical 4밴드 55.6pt 실측, 전팩 상한 도달
 LEADING = 1.3
 HEIGHT_LIMIT = 0.85
 
@@ -915,18 +950,23 @@ Expected: 전부 PASS
 
 ```python
 def test_before_after_golden_snapshot():
+    # cards 골든 패턴(test_infographic_layout_cards.py:124-135) 복제 — I2:
+    # emit 심볼은 render_typ(fig)뿐(emit.py:21), os는 파일 상단 임포트
+    import os
     GOLDEN = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "infographic" / "golden-before-after-practical.typ"
     fig = ba_arch.layout(_fence(["리드타임 2주", "수작업 5단계"], ["리드타임 3일", "자동화 1단계"], center="AI 도입"), TOKENS)
-    from scripts.infographic.emit import emit
-    code = emit(fig, TOKENS)
+    from scripts.infographic.emit import render_typ
+    code = render_typ(fig)
     if os.environ.get("IG_REGEN_GOLDEN") != "1":
+        if not GOLDEN.exists():
+            pytest.fail("골든 없음 — `IG_REGEN_GOLDEN=1 python3 -m pytest …` 실행 후 눈검·커밋")
         assert code == GOLDEN.read_text(encoding="utf-8")
     else:
         GOLDEN.write_text(code, encoding="utf-8")
         pytest.fail("골든 재생성 — 눈검 후 커밋")
 ```
 
-(ladder·roadmap 동일 구조 — emit 임포트·호출은 기존 골든 테스트의 정확한 emit 진입점을 따른다. `_fence`는 각 테스트 파일의 것 사용.)
+ladder·roadmap 동일 구조(`_lad`·`_rm` arch 모듈과 각 `_fence` 사용, 골든 경로만 교체).
 
 Run: `IG_REGEN_GOLDEN=1 python3 -m pytest skills/korean-ebook-typst/tests/test_infographic_layout_before_after.py skills/korean-ebook-typst/tests/test_infographic_layout_ladder.py skills/korean-ebook-typst/tests/test_infographic_layout_roadmap.py -q` → 3골든 생성 → typst 컴파일 눈검(`cli.py preview` 또는 수동) → 재실행으로 PASS.
 
@@ -934,10 +974,11 @@ Run: `IG_REGEN_GOLDEN=1 python3 -m pytest skills/korean-ebook-typst/tests/test_i
 
 Phase 2 Task 4 절차 반복(작성자는 `.superpowers/sdd/…/task-4-report.md`와 authoring.md "골든 교정 절차" 섹션을 먼저 읽는다):
 
-1. `calib-before-after.md`·`calib-ladder.md`·`calib-roadmap.md` — 항목/단계/위상 수를 상한까지 늘린 극단 fixture (판형 5종 각각 or practical 대표 + essay 최악)
-2. CLI preview로 실렌더 → 오버플로·높이 85% 에러 발생 지점 실측
-3. `budget.py` 계수(KO_UNIT·LATIN_UNIT·MARGIN) 드리프트 확인 — Phase 2 실측치 대비 변화 없으면 갱신 생략(기록 계약: 커밋 body에 실측 수치)
-4. 예산표(authoring.md 치트시트) 수치 갱신은 Task 4에서 반영
+1. `calib-before-after.md`·`calib-ladder.md`·`calib-roadmap.md` — 항목/단계/위상 수를 상한까지 늘린 극단 fixture. **판형 5팩 전수**(m5 — Phase 2와 동일, 대표/최악 추리기 없음)
+2. CLI preview로 실렌더 → 오버플로·공간 부족 에러(단 간격·높이) 발생 지점 실측. 판정 계약: 비율/데드밴드 ±0.05(Phase 2 기준)
+3. `budget.py` 계수 드리프트 확인 — 갱신 대상은 `PACK_KO_FACTOR`(팩별 계수; KO_UNIT·LATIN_UNIT·MARGIN은 Phase 1 고정값). Phase 2 실측치 대비 변화 없으면 갱신 생략(기록 계약: 커밋 body에 실측 수치)
+4. 계수 갱신 시 **골든 3종 바이트 재확증**(m7 — `IG_REGEN_GOLDEN` 없이 재실행, 바이트 동일 확인. 드리프트 시 재생성·눈검·커밋)
+5. 예산표(authoring.md 치트시트) 수치 갱신은 Task 4에서 반영
 
 - [ ] **Step 8: Commit**
 
@@ -962,9 +1003,9 @@ git commit -m "feat: roadmap archetype + 골든 3종·교정 2주기 — 타임�
 
 `### flow`·`### cards`·`### matrix` 섹션 뒤에 각각 추가 — 구조는 cards 섹션 복제(스키마 표·예시 펜스·저작 규칙·I1 주의):
 
-- `### before_after — 전환 대비`: 데이터 키(before[]·after[]·center·before_label/after_label), 항목 수 상한(하한 1·절대 5·판형 표), "항목은 짧은 문구 — 근거 문장은 thesis에" 규칙
+- `### before_after — 전환 대비`: 데이터 키(before[]·after[]·center·before_label/after_label), 항목 수 상한(하한 1·절대 5·판형 표), "항목은 짧은 문구 — 근거 문장은 thesis에" 규칙, "center 라벨은 초단문(중앙존 68pt)" 규칙
 - `### ladder — 성숙도 계단`: stages 3~5(판형 상한 없음), "단계 문구 길면 85% 에러" 규칙
-- `### roadmap — 시간 전개`: phases 2~5(판형 표)·items 1~4, "위상 수는 판형 상한 우선" 규칙
+- `### roadmap — 시간 전개`: phases 2~5(판형 표)·items 1~4, "위상 수는 판형 상한 우선" 규칙, **"항목은 초단문(밴드 폭 최소 55pt — essay 3위상·practical 4위상에서 4~5자/줄 수준)" 계약**(C5 — MIN_BAND_W 54의 저작측 근거)
 
 각 섹션 예시 펜스는 Task 1~3 테스트의 `_fence` 데이터를 그대로 사용(코드·문서 정합).
 
@@ -982,7 +1023,7 @@ git commit -m "feat: roadmap archetype + 골든 3종·교정 2주기 — 타임�
 - [ ] 골든 스냅샷: 3종 존재 + 스냅샷 테스트 PASS
 - [ ] 통합: `test_infographic_build_integration.py`에 3종 펜스 fixture 포함(빌드→PDF→infographic_pages 일치) — 기존 통합 테스트 패턴 확인 후 3종 추가
 - [ ] authoring.md 해당 섹션 존재
-- [ ] 검수 시트 생성 확인(roadmap 등 render._sheet_rows 행이 실제 시트에 나오는지 CLI lint 출력으로 1회 확인)
+- [ ] 검수 시트 생성 확인(m6 — cli lint는 검수 시트를 만들지 않는다. 빌드 통합 테스트의 `render_book_fences`·`_review_sheet` 경로 또는 실 빌드 1회로 신규 3종 행이 시트에 나오는지 확인)
 - [ ] 전체: `python3 -m pytest skills/korean-ebook-typst/tests/ -q` green
 
 - [ ] **Step 5: Commit**
@@ -994,8 +1035,9 @@ git commit -m "docs: 인포그래픽 가이드 Phase 3판 — before_after·ladd
 
 ---
 
-## Self-Review 결과
+## Self-Review 결과 (개정 2판 — 적대검토 후)
 
-1. **스펙 커버리지**: §3.2 데이터 3종(Task 1·2·3) ✓ · §6.2 상한 표 before_after·roadmap 행(Task 1·3), ladder 판형 부재 명시(Task 2) ✓ · §6.3 지오메트리 3종 ✓ · §7 골든·교정 2주기(Task 3) ✓ · §8 종료 조건(Task 4) ✓ · §3.4 별칭 bridge(Task 1) ✓
-2. **플레이스홀더 스캔**: `_ink_ok(...)`의 `...` 2곳(Task 2·3) — 의도적 중복 생략이 아니라 "Task 1과 동일 논리" 지시. 브리프가 이 부분의 완전 코드를 요구하면 Task 1의 `_ink_ok`를 문자열 그대로 붙여 전달한다(구현자는 클래스명만 교체).
+1. **스펙 커버리지**: §3.2 데이터 3종(Task 1·2·3) ✓ · §6.2 상한 표 before_after·roadmap 행(Task 1·3, **상한 도달 성공 테스트 포함 — I3**), ladder 판형 부재 명시(Task 2) ✓ · §6.3 지오메트리 3종(C3 겹침역 관통로 반영) ✓ · §7 골든·교정 2주기 5팩 전수(Task 3) ✓ · §8 종료 조건(Task 4) ✓ · §3.4 별칭 bridge(Task 1) ✓
+2. **플레이스홀더 스캔**: `_ink_ok(...)`의 `...` 2곳(Task 2·3) — "Task 1과 동일 논리" 지시. 브리프가 완전 코드를 요구하면 Task 1의 `_ink_ok`를 문자열 그대로 전달(구현자는 클래스명만 교체).
 3. **타입 일치**: `layout(fence, tokens) -> FigModel` 3종 동일 ✓ · 파라미터 `PACK_ITEMS`/`PACK_PHASES`(ladder 무) ✓ · field 경로 `before[i]`/`stages[i].title`/`phases[i].items[j]` 전 모듈 일치 ✓
+4. **적대검토 반영(개정 2판)**: C1 패널 상수(전팩 panel_w ≥ 65 실측) · C2 ladder 높이·note(총높이 = 0.85H−P 불변식) · C3 화살표 우상향 산식(x +8pt·y −dy) · C4 도달 가능 테스트만(practical 5단계·"단 간격" match) · C5 MIN_BAND_W 54(전팩 상한 밴드폭 ≥ 54 실측, 스펙 개정 불필요) · I1 after\[1\] match · I2 render_typ·os·골든 부재 fail 분기 · I3 상한 성공 테스트 2종 · m1~m7(181 기준·pad 8·tip-gap 8·lint 패턴 지시·5팩 전수·검수 시트 빌드 경로·골든 바이트 재확증)
