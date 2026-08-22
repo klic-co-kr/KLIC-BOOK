@@ -4,7 +4,7 @@
 
 **Goal:** 인포그래픽 레이어(Phase 1–5 인프라)의 첫 실전 소비자로 agent-papers-2026-ko 책에 교차검증 통과 펜스 11개를 저작하고, 08-20 폰트 라인업 전환이 유발한 G1 판면 오버플로 회귀를 수복해 qc_gate PASS를 낸다.
 
-**Architecture:** Task 1은 base.typ에 3단 헤딩 강한 간격 규칙을 추가해 페이지 상단 헤딩 글리프 어센더 오버슈트(−3.17pt)를 프레임 안으로 밀어넣는다(메커니즘 실증 완료 — 아래 배경). Task 2–3은 챕터 원고 md에 ` ```infographic ` 펜스 11개를 삽입한다(들어가며 + 제1–10장, layout 5종). Task 4는 전체 빌드·교차검증 경고 0·qc PASS·final 재생성·infographic_pages 리포트·PNG 검증으로 마감한다.
+**Architecture:** Task 1은 5개 팩 theme.typ의 2단 헤딩 규칙(`v(0.8em)` weak)에 강한 간격을 부여해 페이지 상단 헤딩 글리프 어센더 오버슈트(−3.17pt)를 프레임 안으로 밀어넣는다(메커니즘 실증 완료 — 아래 배경). Task 2–3은 챕터 원고 md에 ` ```infographic ` 펜스 11개를 삽입한다(들어가며 + 제1–10장, layout 4종 — before_after는 실재 전환에만). Task 4는 전체 빌드·교차검증 경고 0·qc PASS·final 재생성·infographic_pages 리포트·PNG 검증으로 마감한다.
 
 **Tech Stack:** typst 0.15.1(정적 Pretendard만 — VF 금지), pymupdf, pytest, 기존 빌드 파이프라인(`scripts/build.py`·`scripts/qc_gate.py`·`scripts/infographic/`).
 
@@ -12,10 +12,11 @@
 
 ## Global Constraints
 
-- 스펙 §1: 도식은 원고의 **편집적 재배열** — 원문(표 포함) 대체 금지. 표는 그대로 두고 펜스는 인접 위치에 삽입.
+- 스펙 §1: 도식은 원고의 **편집적 재배열** — 원문(표 포함) 대체 금지. 표는 그대로 두고 펜스는 인접 위치에 삽입. 도식 언어로 새로 창작하는 문구는 경계 규약("근거 문구는 원문에서") 위반.
 - 스펙 §2: 펜스 형식 ` ```infographic ` + JSON. build 파이프라인이 emit·include 치환.
-- 스펙 §5(교차검증): 펜스 라벨·텍스트의 모든 숫자 토큰(`NUM_RE = [0-9][0-9.,%]*`)은 evidence 절 `"§N"`이 가리키는 `## ` 슬라이스 원문에 존재해야. 이 책 챕터는 `## `가 장 제목 하나뿐 → 모든 evidence `"§1"` = 챕터 전체(md 표 셀 포함 — 원시 md 슬라이스). thesis·note는 편집자 문구로 검증 제외.
-- 강의 팩 요소 상한: flow ≤8, cards ≤6, ladder ≤5단, before_after ≤5(한쪽 기준), topology ≤8노드·층위 ≤4, matrix 2×2 고정.
+- 스펙 §5(교차검증): 펜스 title·kicker·항목·축 라벨의 모든 숫자 토큰(`NUM_RE = [0-9][0-9.,%]*`)은 evidence 절 `"§N"`이 가리키는 `## ` 슬라이스 원문에 존재해야. 이 책 챕터는 `## `가 장 제목 하나뿐(12개 md 전수 확인) → 모든 evidence `"§1"` = 챕터 전체(md 표 셀 포함 — 원시 md 슬라이스). thesis·note는 편집자 문구로 검증 제외.
+- 레이아웃 라우팅: before_after는 **실재하는 전환**(시간·인과)에만 — 비교·거울 짝은 cards. matrix 2×2는 두 축이 비자명할 때. ladder는 누적 수준·단조 상승.
+- 강의 팩 요소 상한: flow ≤8, cards ≤6, ladder ≤5단, before_after ≤5(한쪽 기준), topology ≤8노드·최장경로 층위 ≤4, matrix 2×2 고정. 기하·예산 게이트(커넥터 샤프트 ≥12pt, 축 라벨 ≤3줄)도 치명 I1 — 빌드 중단.
 - 폰트: 정적 Pretendard만. VF 설치 금지(typst 0.15.1 Thin 버그).
 - 커밋 규약: `<type>: <한글 설명>`, 빈 본문, attribution 없음.
 - 스위트: `python3 -m pytest skills/korean-ebook-typst/tests/ -q` — 병합 전 260+ 전 pass.
@@ -23,45 +24,55 @@
 
 ## 배경 — G1 회귀 메커니즘 (2026-08-22 실증 완료)
 
-- 증상: draft 빌드 후 qc_gate G1 판면 오버플로 다수 — 예 `p9 bbox=(65.2,76.2,…) frame=(65.2,79.37,…) text='한계와 남는 의문'` — 전부 3단 헤딩, 전부 y0 76.2 vs 프레임 상단 79.37 = **−3.17pt**.
-- 원인: 08-20 저녁 폰트 라인업 전환(`495d49d`·`5cd422d` Noto CJK → Pretendard/SUIT/Wanted Sans/Freesentation). Pretendard-Bold 11pt 어센더 잉크가 라인박스 상단을 초과해 넘침. 3단 헤딩은 팩 테마에 show 규칙이 없어(1·2단만 있음) typst 기본 약한(weak) above 간격이 페이지 상단에서 0으로 붕괴 → 글리프가 프레임 상단에 걸림. G1 측정 코드(qc_gate)는 변경 없음.
-- 실증: 최소 재현(base+lecture, `#pagebreak()` 직후 `=== 헤딩`)에서 y0=76.92 vs 프레임 79.37 재현. `#show heading.where(level: 3): it => { v(0.9em, weak: false); it }` 추가 시 페이지 상단 y0=85.92(**+6.55pt 여유**), 중간 페이지 헤딩 above 간격 9.54pt → 18.54pt(1.85em — 한국어 책 절 제목 간격으로 정상권).
-- 모든 팩이 동일 폰트군(순서만 다름, 첫 가용 Pretendard 우선)이므로 규칙은 공용 `templates/base.typ`에 둔다(단일 진실, 타 팩 잠재 회귀 동시 예방).
+- 증상: draft 빌드 후 qc_gate G1 판면 오버플로 — 예 `p9 bbox=(65.2,76.2,…) frame=(65.2,79.37,…) text='한계와 남는 의문'`. 전부 **md `### ` 절 제목 = typst 2단 헤딩**(md2typst.py `### `→`==`), 13.0pt Pretendard-Bold accent(theme L2 규칙 렌더), 전부 y0 76.2 vs 프레임 상단 79.37 = **−3.17pt**.
+- 원인 사슬: 08-20 저녁 폰트 라인업 전환(`495d49d`·`5cd422d` Noto CJK → Pretendard/SUIT/Wanted Sans/Freesentation). Pretendard-Bold 13pt 어센더 잉크가 라인박스 상단을 3.17pt 초과. 5개 팩 theme.typ의 2단 규칙은 `v(0.8em)` **weak** — 페이지 상단에서 0으로 붕괴해 글리프가 프레임 상단에 걸림. G1 측정 코드(qc_gate)는 변경 없음. base.typ의 L2 규칙은 theme가 오버라이드(죽은 경로)라 theme가 수정 대상.
+- 실증: 최소 재현(lecture theme, `#pagebreak()` 직후 `== 절제목`)에서 y0=76.92 vs 프레임 79.37 재현. theme L2 규칙의 `v(0.8em)`을 `v(0.8em, weak: false)`로 바꾸면 페이지 상단 y0=95.39(**+16.0pt 여유**), 중간 페이지 간격 불볂(weak는 중간에서 유지되던 값과 동일).
+- 3단(md `#### ` → `===`)은 이 책 ch08 3개뿐이고 G1 목록에 없음 — 이번에 고치지 않는다. 타 책(practical-system-design `#### ` 314개·sdi-notes 407개·ai-agent 15개)의 3단 잠재 회귀는 해당 책 재빌드 시점 과제로 이관(재빌드 자체가 폰트 전환 후 미실행 상태).
 
 ---
 
-### Task 1: G1 베이스라인 회복 — base.typ 3단 헤딩 강한 간격
+### Task 1: G1 베이스라인 회복 — 5팩 theme 2단 헤딩 강한 간격
 
 **Files:**
-- Modify: `skills/korean-ebook-typst/templates/base.typ`
+- Modify: `skills/korean-ebook-typst/styles/lecture/theme.typ:17`
+- Modify: `skills/korean-ebook-typst/styles/b5/theme.typ`
+- Modify: `skills/korean-ebook-typst/styles/business/theme.typ`
+- Modify: `skills/korean-ebook-typst/styles/essay/theme.typ`
+- Modify: `skills/korean-ebook-typst/styles/practical/theme.typ`
 - Test: `skills/korean-ebook-typst/tests/test_g1_heading_page_top.py` (Create)
 
 **Interfaces:**
-- Consumes: 기존 `tests/` 컴파일 스모크 패턴(typst 바이너리 `scripts.build.typst_binary`, tmp 디렉터리에 base.typ/theme.typ/tokens.json 복사 후 컴파일).
-- Produces: `base.typ` 3단 헤딩 규칙 — Task 4의 qc PASS 전제. 다른 태스크는 의존 없음.
+- Consumes: 기존 컴파일 테스트 관례(`test_build_compile.py` — conftest가 스킬 루트를 sys.path에 추가, `pytestmark = skipif(shutil.which("typst") is None)`).
+- Produces: 5팩 전부의 L2 강한 간격 — Task 4 qc PASS의 전제.
 
 - [ ] **Step 1: 실패 테스트 작성**
 
 ```python
-"""G1 판면 오버플로 회귀 — 페이지 상단 3단 헤딩 글리프가 프레임 상단 안에 있는지."""
+"""G1 판면 오버플로 회귀 — 페이지 상단 2단 헤딩 글리프가 프레임 상단 안에 있는지.
+
+md '### ' 절 제목 → typst 2단. theme L2 규칙의 v(0.8em) weak가 페이지 상단에서
+붕괴해 Pretendard-Bold 어센더 잉크가 프레임을 3.2pt 넘는다(2026-08-22 회귀).
+"""
+import json
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
 
-import fitz
 import pytest
 
-from scripts.build import typst_binary  # noqa: F401  (스키플 마커 — 기존 테스트와 동일 경로)
+from scripts.build import typst_binary
+
+pytestmark = pytest.mark.skipif(shutil.which("typst") is None, reason="typst 미설치")
 
 SKILL = Path(__file__).resolve().parents[1]
 
 
-def _compile(tmp: Path) -> Path:
+def _compile(tmp: Path, style: str) -> tuple[float, float]:
     for name, src in (
         ("base.typ", SKILL / "templates" / "base.typ"),
-        ("theme.typ", SKILL / "styles" / "lecture" / "theme.typ"),
-        ("tokens.json", SKILL / "styles" / "lecture" / "tokens.json"),
+        ("theme.typ", SKILL / "styles" / style / "theme.typ"),
+        ("tokens.json", SKILL / "styles" / style / "tokens.json"),
     ):
         shutil.copy2(src, tmp / name)
     doc = "\n".join([
@@ -71,7 +82,7 @@ def _compile(tmp: Path) -> Path:
         "#show: theme",
         "",
         "#pagebreak()",
-        "=== 한계와 남는 의문",
+        "== 한계와 남는 의문",
         "본문 한 줄.",
         "",
     ])
@@ -82,66 +93,72 @@ def _compile(tmp: Path) -> Path:
         capture_output=True, text=True,
     )
     assert r.returncode == 0, r.stderr
-    return out
+    page = fitz.open(out)[1]
+    tokens = json.loads((SKILL / "styles" / style / "tokens.json").read_text())
+    frame_top = tokens["margin"]["top_mm"] / 25.4 * 72
+    spans = [
+        s
+        for b in page.get_text("dict")["blocks"]
+        for l in b.get("lines", [])
+        for s in l["spans"]
+    ]
+    head = next(s for s in spans if "한계" in s["text"])
+    return head["bbox"][1], frame_top
 
 
-def test_level3_heading_at_page_top_stays_in_frame():
+@pytest.mark.parametrize("style", ["b5", "business", "essay", "lecture", "practical"])
+def test_level2_heading_at_page_top_stays_in_frame(style):
+    import fitz  # 로컬 임포트 — 미설치 환경 skip은 conftest/기존 관례에 맡김
+
     with tempfile.TemporaryDirectory() as d:
-        pdf = _compile(Path(d))
-        page = fitz.open(pdf)[1]  # pagebreak 직후 페이지
-        # 강의 팩 여백: top 28mm = 79.37pt (a4 595.28 x 841.89)
-        import json
-        tokens = json.loads((SKILL / "styles" / "lecture" / "tokens.json").read_text())
-        top_mm = tokens["margin"]["top_mm"]
-        frame_top = top_mm / 25.4 * 72
-        spans = [
-            s
-            for b in page.get_text("dict")["blocks"]
-            for l in b.get("lines", [])
-            for s in l["spans"]
-        ]
-        head = next(s for s in spans if "한계" in s["text"])
-        assert head["bbox"][1] >= frame_top, (
-            f"3단 헤딩 글리프 y0={head['bbox'][1]:.2f} < 프레임 상단 {frame_top:.2f}"
+        y0, frame_top = _compile(Path(d), style)
+        assert y0 >= frame_top, (
+            f"{style}: 2단 헤딩 글리프 y0={y0:.2f} < 프레임 상단 {frame_top:.2f}"
         )
 ```
 
-주의: tokens.json의 margin 구조가 `{"margin": {"top_mm": 28}}`가 아니면 실제 구조를 읽어 맞춘다(`scripts/build.py`가 읽는 방식과 동일하게). `from scripts.build import typst_binary` 경로는 기존 컴파일 테스트의 임포트 방식을 그대로 따른다(다르면 그 방식으로).
+주의: `import fitz`를 파일 상단으로 올려도 무방(기존 qc 테스트가 이미 pymupdf 의존). tokens.json margin 구조 `{"margin": {"top_mm": N}}` 실측 확인됨.
 
 - [ ] **Step 2: 테스트 실패 확인**
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/test_g1_heading_page_top.py -q`
-Expected: FAIL — `3단 헤딩 글리프 y0=76.92 < 프레임 상단 79.37`
+Expected: 5개 전부 FAIL — `2단 헤딩 글리프 y0=76.xx < 프레임 상단 79.37` (팩별 여백 차이로 frame_top은 상이할 수 있음 — 위반 자체로 판정)
 
-- [ ] **Step 3: base.typ에 규칙 추가**
+- [ ] **Step 3: 5개 theme.typ L2 규칙 수정**
 
-`templates/base.typ`의 2단 헤딩 show 규칙 뒤에 추가(주석 포함, 주변 주석 밀도에 맞춤):
+각 팩 theme.typ의 2단 헤딩 show 규칙에서 첫 줄 `v(0.8em)`을 강한 간격으로:
 
 ```typst
-// 3단 헤딩: 기본 above 간격은 weak라 페이지 상단에서 붕괴하는데,
-// Pretendard 계열 어센더 잉크가 라인박스를 3.2pt 넘어 G1 프레임 오버플로.
-// 강한 간격으로 프레임 상단 안에 여유를 확보한다(중간 페이지 above ≈ 1.85em).
-#show heading.where(level: 3): it => { v(0.9em, weak: false); it }
+  show heading.where(level: 2): it => {
+    v(0.8em, weak: false)
+    ...
+```
+
+5개 팩 전부 동일 변경(lecture 기준 `styles/lecture/theme.typ:17`). 주석 한 줄 추가(각 파일 규칙 위):
+
+```typst
+    // weak 간격은 페이지 상단에서 붕괴 — Pretendard 계열 어센더 잉크가
+    // 프레임 상단을 3.2pt 넘어 G1 오버플로가 된다. 강한 간격으로 보호.
 ```
 
 - [ ] **Step 4: 테스트 통과 확인**
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/test_g1_heading_page_top.py -q`
-Expected: PASS
+Expected: 5 passed (lecture 기준 y0=95.39 ≥ 79.37)
 
 - [ ] **Step 5: 전체 스위트 + 실책 G1 확인**
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/ -q`
-Expected: 기존 전부 pass + 신규 1 pass (골든 바이트 불변 — 골든 문서는 헤딩 없음).
+Expected: 기존 전부 pass + 신규 5 pass. 골든은 emit .typ 텍스트 스냅샷(컴파일 산물 아님)이라 불변.
 
 Run: `python3 skills/korean-ebook-typst/scripts/build.py books/agent-papers-2026-ko && python3 skills/korean-ebook-typst/scripts/qc_gate.py books/agent-papers-2026-ko; python3 -c "import json;d=json.load(open('books/agent-papers-2026-ko/gate-report.json'));print('g1:',d.get('g1_overflow'))"`
-Expected: build 성공, qc g1_overflow `[]` (G4 스타일 경고·기타 게이트는 Task 4에서 최종 확인).
+Expected: build 성공, qc g1_overflow `[]` (G4 문체 경고·검수시트 WARN은 비차단 — `pass: not overflow and not fonts`).
 
 - [ ] **Step 6: 커밋**
 
 ```bash
-git add skills/korean-ebook-typst/templates/base.typ skills/korean-ebook-typst/tests/test_g1_heading_page_top.py
-git commit -m "fix: 3단 헤딩 페이지 상단 G1 오버플로 — 강한 간격 규칙"
+git add skills/korean-ebook-typst/styles/*/theme.typ skills/korean-ebook-typst/tests/test_g1_heading_page_top.py
+git commit -m "fix: 2단 헤딩 페이지 상단 G1 오버플로 — 5팩 theme 강한 간격"
 ```
 
 ---
@@ -157,14 +174,13 @@ git commit -m "fix: 3단 헤딩 페이지 상단 G1 오버플로 — 강한 간�
 - Modify: `books/agent-papers-2026-ko/manuscript/05-제5장-여덟-명이-붙으면.md`
 
 **Interfaces:**
-- Consumes: 스펙 §2 펜스 계약, §5 교차검증(evidence `"§1"`), 강의 팩 상한.
-- Produces: 6개 펜스 삽입된 md — Task 4 빌드의 입력. 모든 숫자 토큰은 아래 예시에 **정확히** 담긴 대로 사용(원문 존재 2026-08-22 전수 검증 완료).
+- Consumes: 스펙 §2 펜스 계약, §5 교차검증(evidence `"§1"`), 강의 팩 상한·기하·예산 게이트.
+- Produces: 6개 펜스 삽입된 md — Task 4 빌드의 입력. 모든 숫자 토큰은 아래 예시에 **정확히** 담긴 대로 사용(원문 존재 2026-08-22 전수 검증 + lint 파이프라인 기계 검증 완료).
 
 **공통 규칙(각 펜스에 적용):**
-- 펜스는 지정된 `### ` 절의 **끝**(다음 `### ` 헤딩 직전)에 빈 줄 1개를 두고 삽입. 표는 절대 지우지 않는다.
-- 모든 펜스에 `"evidence": "§1"` (책 챕터는 `## ` 슬라이스가 장 전체).
-- `note`는 편집자 문구(교차검증 제외)로 "편집 요약: …" 형식.
-- 아래 JSON을 그대로 복사(라벨의 모든 숫자는 원문 표 셀·본문에 존재 확인됨).
+- 삽입 위치는 각 스텝의 지시가 우선한다(기본값 "절 끝·다음 `### ` 직전"은 스텝이位置를 지정하지 않을 때만). 표는 절대 지우지 않는다. 펜스 블록 앞뒤 빈 줄 1개.
+- 모든 펜스에 `"evidence": "§1"`. `note`는 "편집 요약: …" 형식(편집자 문구, 검증 제외).
+- 아래 JSON을 그대로 복사(문구·숫자는 원문 대조 + geometry/budget lint 통과 버전).
 
 - [ ] **Step 1: 들어가며 — cards (묶음 A–D)**
 
@@ -176,7 +192,7 @@ git commit -m "fix: 3단 헤딩 페이지 상단 G1 오버플로 — 강한 간�
   "layout": "cards",
   "title": "네 묶음 — 설계 두 개, 운영 두 개",
   "kicker": "BOOK MAP",
-  "thesis": "왼쪽(A·B)은 만들기 전에 정하는 설계 결정, 오른쪽(C·D)은 만든 뒤에 관리하는 운영 결정이다.",
+  "thesis": "A·B는 만들기 전에 정하는 설계 결정, C·D는 만든 뒤에 관리하는 운영 결정이다.",
   "cards": [
     {"title": "A · 무엇을 얼마나 줄 것인가", "text": "1·2·3장 — 넉넉하게 주는 것은 공짜가 아니다"},
     {"title": "B · 얼마나 쪼갤 것인가", "text": "4·5장 — 쪼개는 것은 이득이 아니라 거래다"},
@@ -188,6 +204,8 @@ git commit -m "fix: 3단 헤딩 페이지 상단 G1 오버플로 — 강한 간�
 }
 ```
 ````
+
+카드 제목이 3열 예산(~11.7자/줄) 경계라 2줄 랩 가능 — 허용됨(높이 자동 조정).
 
 - [ ] **Step 2: 제1장 — ladder (K1–K5)**
 
@@ -215,15 +233,15 @@ git commit -m "fix: 3단 헤딩 페이지 상단 G1 오버플로 — 강한 간�
 
 - [ ] **Step 3: 제2장 — cards (전략 A–E)**
 
-`02-*.md`의 `### 무엇이 밝혀졌나` 절, 결과 표와 "차이는 3단계에서 벌어집니다" 문단 **사이**에 삽입:
+`02-*.md`의 `### 무엇이 밝혀졌나` 절, 결과 표(전체 30회 열이 있는 표) **직후**, "(D·E는 1차 배치…" 괄호 문단 앞에 삽입:
 
 ````markdown
 ```infographic
 {
   "layout": "cards",
-  "title": "다섯 인수인계 전략, 통과는 하나뿐",
+  "title": "다섯 인수인계 전략, 3단계를 넘기는 하나뿔",
   "kicker": "HANDOFF A–E",
-  "thesis": "차이는 단일 단계가 아니라 3단계에서 벌어진다.",
+  "thesis": "단일 단계에서는 다섯이 비슷하고, 차이는 3단계에서 벌어진다.",
   "cards": [
     {"title": "A · 원자료 재독", "text": "이번 단계 자료만 다시 읽는다 — 0/15"},
     {"title": "B · 전체 히스토리 재생", "text": "이전 것 전부를 원문 순서로 — 2/15"},
@@ -237,26 +255,24 @@ git commit -m "fix: 3단 헤딩 페이지 상단 G1 오버플로 — 강한 간�
 ```
 ````
 
-- [ ] **Step 4: 제3장 — topology (권위 상태 W_t)**
+- [ ] **Step 4: 제3장 — topology (네 가지 얼굴·권위 상태)**
 
-`03-*.md`의 `### 어떻게 답했나` 절, "형식화는 단정합니다" 문단(`파생 뷰입니다` 로 끝남) **직후**에 삽입:
+`03-*.md`의 `### 어떻게 답했나` 절, "형식화는 단정합니다" 문단(세 뷰 소개, "…비동기 재파싱이 끝나야 최신으로 돌아옵니다"로 끝남) **직후**에 삽입:
 
 ````markdown
 ```infographic
 {
   "layout": "topology",
-  "title": "네 얼굴과 하나의 권위 상태",
+  "title": "네 가지 얼굴, 권위는 하나",
   "kicker": "AUTHORITY",
-  "thesis": "근거가 되는 권위 상태는 W_t 하나이고, C_t와 Δ_t는 별도 문서가 아니라 파생 뷰다.",
+  "thesis": "실행과 제출의 근거가 되는 권위 상태는 W_t 하나이고, C_t와 Δ_t는 별도 문서가 아니라 파생 뷰다.",
   "nodes": [
-    {"id": "j", "label": "쓰기 연산 · 기준 지문"},
-    {"id": "w", "label": "원본 W_t · 권위"},
-    {"id": "c", "label": "파싱 기록 C_t"},
+    {"id": "w", "label": "네이티브 파일 W_t · 권위"},
+    {"id": "c", "label": "파싱된 뷰 C_t"},
     {"id": "d", "label": "변경 내역 Δ_t"},
     {"id": "s", "label": "제출 산출물"}
   ],
   "edges": [
-    {"from": "j", "to": "w"},
     {"from": "w", "to": "c"},
     {"from": "w", "to": "d"},
     {"from": "d", "to": "s"}
@@ -267,63 +283,47 @@ git commit -m "fix: 3단 헤딩 페이지 상단 G1 오버플로 — 강한 간�
 ```
 ````
 
-- [ ] **Step 5: 제4장 — before_after (과소 vs 과잉 에스컬레이션)**
+4노드·최장경로 3층위 — 5노드(j 쓰기 연산 포함) 버전은 커넥터 샤프트 11.96pt < 12pt로 치명 I1이므로 **이 형태를 유지**한다.
 
-`04-*.md`의 `### 무엇이 밝혀졌나` 절, kyc 사례 표(`kyc-0004` 행이 있는 표) **직후**에 삽입:
+- [ ] **Step 5: 제4장 — cards 2장 (과소·과잉 거울)**
+
+`04-*.md`의 `### 무엇이 밝혀졌나` 절, kyc 사례 표(`kyc-0004` 행 포함) **직후**에 삽입. 원문의 과소·과잉은 동시적 거울 짝(전환이 아님)이라 before_after 대신 cards:
 
 ````markdown
 ```infographic
 {
-  "layout": "before_after",
-  "title": "경계가 늘수록 사실은 0%에서 85%로 샌다",
+  "layout": "cards",
+  "title": "같은 감쇠가 과소와 과잉을 둘 다 만든다",
   "kicker": "ATTENUATION",
-  "thesis": "같은 감쇠가 과소와 과잉을 둘 다 만든다 — 방향은 사라진 정보의 성격이 정한다.",
-  "before_label": "과소 에스컬레이션",
-  "after_label": "과잉 에스컬레이션",
-  "before": [
-    "위험 신호가 흘려짐 (kyc-0004)",
-    "뒷단이 위험을 모른 채 처리",
-    "스크리닝 생략 — 8/10 (80%)"
+  "thesis": "감쇠는 안전한 방향으로만 기울지 않는다 — 방향은 사라진 정보의 성격이 정하고, 그건 미리 알 수 없다.",
+  "cards": [
+    {"title": "과소 에스컬레이션", "text": "위험 신호가 흘려짐 (kyc-0004) — 스크리닝 생략, 8/10 (80%)"},
+    {"title": "과잉 에스컬레이션", "text": "면책 신호가 흘려짐 (kyc-0005) — 불일치 미전달, 14/16 (88%)"}
   ],
-  "after": [
-    "면책 신호가 흘려짐 (kyc-0005)",
-    "정상 건을 위험 경로로",
-    "불일치 미전달 — 14/16 (88%)"
-  ],
-  "center": "핸드오프 요약",
   "note": "편집 요약: 무엇이 밝혀졌나의 대칭성 발견을 재배열한 도식이다.",
   "evidence": "§1"
 }
 ```
 ````
 
-주의: `8/10 (80%)`·`14/16 (88%)` 문구는 kyc 표의 실제 셀 값이다 — 삽입 전 표에서 정확한 셀 값을 다시 확인하고 표와 일치시킬 것. 표 셀과 다르면 표 셀 값으로 바꿔 쓴다.
+`8/10 (80%)`·`14/16 (88%)`은 kyc 표 셀 값 — 삽입 전 표에서 재확인, 다르면 표 값으로.
 
-- [ ] **Step 6: 제5장 — before_after (같은 처방, 정반대 결과)**
+- [ ] **Step 6: 제5장 — cards 2장 (같은 처방, 정반대 결과)**
 
-`05-*.md`의 `### 무엇이 밝혀졌나` 절, ③ 파일 정책 표 **직후**("메시지가 많은 분산 작업 8인에서…" 문단 앞)에 삽입:
+`05-*.md`의 `### 무엇이 밝혀졌나` 절, ③ 파일 정책 표 **직후**("메시지가 많은 분산 작업 8인에서…" 문단 앞)에 삽입. 분산/연쇄는 비교지 전환이 아니라 cards:
 
 ````markdown
 ```infographic
 {
-  "layout": "before_after",
+  "layout": "cards",
   "title": "같은 처방, 정반대 결과",
   "kicker": "POLICY MIRROR",
   "thesis": "파일 의무화는 작업 구조에 따라 약이 되기도 독이 되기도 한다.",
-  "before_label": "분산 작업",
-  "after_label": "연쇄 작업",
-  "before": [
-    "메시지 10,500→1,700통",
-    "출력 토큰 약 42% 감소",
-    "지수 1.92 → 1.12~1.32"
+  "cards": [
+    {"title": "분산 작업 — 약", "text": "메시지 10,500→1,700통 · 출력 토큰 약 42% 감소 · 지수 1.92 → 1.12~1.32", "value": "−42%"},
+    {"title": "연쇄 작업 — 독", "text": "출력 토큰 10~17% 증가 · 4인 +17%, 8인 +10% · 16인 배증 57.8만 vs 33.3만", "value": "+10~17%"}
   ],
-  "after": [
-    "출력 토큰 10~17% 증가",
-    "4인 +17%, 8인 +10%",
-    "16인 배증 57.8만 vs 33.3만"
-  ],
-  "center": "작업 구조가 다르다",
-  "note": "편집 요약: ③ 정책 비교를 재배열한 도식이다.",
+  "note": "편집 요약: ③ 파일 정책 비교를 재배열한 도식이다.",
   "evidence": "§1"
 }
 ```
@@ -331,8 +331,8 @@ git commit -m "fix: 3단 헤딩 페이지 상단 G1 오버플로 — 강한 간�
 
 - [ ] **Step 7: 교차검증·렌더 확인**
 
-Run: `python3 skills/korean-ebook-typst/scripts/build.py books/agent-papers-2026-ko 2>&1 | grep -i "경고\|warn\|I1\|실패" ; echo rc=$?`
-Expected: 펜스 관련 경고 0건, 빌드 성공(emit 6건).
+Run: `python3 skills/korean-ebook-typst/scripts/build.py books/agent-papers-2026-ko > /tmp/p6b.log 2>&1; echo "build_rc=$?"; grep -iE "경고|warn|I1|실패" /tmp/p6b.log; echo "grep_rc=$? (경고 0건이면 grep_rc=1이 정상)"`
+Expected: `build_rc=0`, grep 출력 없음(누적 6 펜스 emit, 치명 I1 0건).
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/ -q`
 Expected: 전 pass.
@@ -341,7 +341,7 @@ Expected: 전 pass.
 
 ```bash
 git add books/agent-papers-2026-ko/manuscript/
-git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — cards·ladder·topology·before_after"
+git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — cards·ladder·topology"
 ```
 
 ---
@@ -356,12 +356,12 @@ git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — car
 - Modify: `books/agent-papers-2026-ko/manuscript/10-제10장-만들기-전에-약속.md`
 
 **Interfaces:**
-- Consumes: 스펙 §2·§5, 강의 팩 상한(matrix 2×2 고정 포함).
-- Produces: 5개 펜스 — Task 4 빌드 입력. 공통 규칙은 Task 2와 동일(evidence `"§1"`, note 편집자 문구, 표 보존).
+- Consumes: 스펙 §2·§5, 강의 팩 상한, 기하·예산 게이트.
+- Produces: 5개 펜스 — Task 4 빌드 입력. 공통 규칙은 Task 2와 동일.
 
 - [ ] **Step 1: 제6장 — matrix 2×2 (검색 폭 k의 갈림길)**
 
-`06-*.md`의 `### 무엇이 밝혀졌나` 절, ② 문단("절반만 맞다") **끝**(주의 계측 문단 전)에 삽입. 축의미: 실체는 과제 라벨이 아니라 "경쟁하느냐 보완하느냐":
+`06-*.md`의 `### 무엇이 밝혀졌나` 절, "…갈림길의 실체는 '조회 대 실행'이라는 과제 라벨이 아니라, **가져온 것이 지금 결정의 재료와 경쟁하는가, 보완하는가**입니다." 문단 **직후**(③ 항목 앞)에 삽입 — 축 개념·BigCodeBench 숫자가 이 문단과 요약 표에 처음 나오므로 근거보다 앞서지 않게:
 
 ````markdown
 ```infographic
@@ -369,11 +369,11 @@ git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — car
   "layout": "matrix",
   "title": "검색 폭 k의 갈림길",
   "kicker": "RETRIEVAL k",
-  "thesis": "가져온 것이 지금 결정의 재료와 경쟁하는가, 보완하는가 — 실체는 과제 라벨이 아니라 이 갈림길이다.",
+  "thesis": "실체는 과제 라벨이 아니라 — 가져온 것이 지금 결정의 재료와 경쟁하는가, 보완하는가.",
   "x_axis": {"low": "검색이 답과 경쟁", "high": "검색이 답을 보완"},
-  "y_axis": {"low": "답이 검색된 발언 안", "high": "답이 과제 맥락에"},
+  "y_axis": {"low": "발언 안의 답", "high": "답이 과제 맥락에"},
   "cells": [
-    {"title": "빈 사분면", "text": "발언 안의 답은 경쟁과 만나지 않는다"},
+    {"title": "빈 사분면", "text": "이 사분면에 든 벤치마크는 없음"},
     {"title": "LoCoMo — 단조 상승", "text": "k를 늘릴수록 오른다 (k=1→20)"},
     {"title": "ALFWorld — 하락·방황", "text": "부호가 뒤집힌다 (k=1→5)"},
     {"title": "BigCodeBench — 보완", "text": "M2 19.6%가 M5 16.2%를 앞지른다"}
@@ -384,11 +384,11 @@ git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — car
 ```
 ````
 
-셀 순서는 `[y low·x low, y low·x high, y high·x low, y high·x high]` — 스키마와 일치하는지 렌더 PNG로 Step 6에서 확인.
+셀 순서 `[y low·x low, y low·x high, y high·x low, y high·x high]`(authoring.md与 일치). y0 라벨은 예산(≤3줄) 때문에 "발언 안의 답"로 축약된 버전 — 변경 금지.
 
 - [ ] **Step 2: 제7장 — matrix 2×2 (질문 유형 × 저장 구조)**
 
-`07-*.md`의 `### 무엇이 밝혀졌나` 절, 구조 추론 3과제 결과 표 **직후**에 삽입:
+`07-*.md`의 `### 무엇이 밝혀졌나` 절, "구조적 추론이 필요한 세 과제의 결과는 아래와 같다" 문장 아래 결과 표 **직후**에 삽입:
 
 ````markdown
 ```infographic
@@ -398,18 +398,20 @@ git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — car
   "kicker": "GRAPH vs VECTOR",
   "thesis": "우위의 원천은 내용이 아니라 구조다 — 같은 내용도 구조를 걷어내면 무너진다.",
   "x_axis": {"low": "구조화 그래프 (B2)", "high": "구조 없는 저장 (mem0·평문)"},
-  "y_axis": {"low": "구조를 요구하는 질문", "high": "관련성 질문"},
+  "y_axis": {"low": "구조 질문", "high": "관련성 질문"},
   "cells": [
     {"title": "완전성·부정·대체", "text": "1.00 · 0.98 · 0.98"},
     {"title": "집합을 못 모은다", "text": "mem0 0.18 · 0.06 · 0.27"},
     {"title": "커버리지", "text": "0.82 (약 35k 토큰)"},
     {"title": "비긴다", "text": "0.67~0.90 (약 40k 토큰)"}
   ],
-  "note": "편집 요약: 무엇이 밝혀졌나의 조건별 결과를 재배열한 도식이다.",
+  "note": "편집 요약: 결과 표와 관련성 검색 비교를 2×2로 재배열한 도식이다.",
   "evidence": "§1"
 }
 ```
 ````
+
+y0 라벨 "구조 질문"은 예산(≤3줄) 축약 버전 — 변경 금지.
 
 - [ ] **Step 3: 제8장 — ladder (비트 사다리)**
 
@@ -419,7 +421,7 @@ git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — car
 ```infographic
 {
   "layout": "ladder",
-  "title": "좋은 프롬프트 한 줄은 비트로 값을 치른다",
+  "title": "좋은 프롬프트 한 줄은 비트로 값을 매긴다",
   "kicker": "BITS",
   "thesis": "규칙은 하나 — b비트는 2의 b승배.",
   "stages": [
@@ -457,9 +459,9 @@ git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — car
 ```
 ````
 
-- [ ] **Step 5: 제10장 — before_after (직접 생성 vs 명세 주도)**
+- [ ] **Step 5: 제10장 — before_after (직접 생성 → 명세 주도)**
 
-`10-*.md`의 `### 어떻게 답했나` 절 끝(`### 무엇이 밝혀졌나` 직전)에 삽입:
+`10-*.md`의 `### 어떻게 답했나` 절 끝(`### 무엇이 밝혀졌나` 직전)에 삽입. 실재 전환(흐름 교체)이라 before_after 적합:
 
 ````markdown
 ```infographic
@@ -481,7 +483,7 @@ git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — car
     "detect@5 63.2% (+9.8%p)"
   ],
   "center": "계약 문서",
-  "note": "편집 요약: 두 작업 흐름과 검출률 차이를 재배열한 도식이다.",
+  "note": "편집 요약: 두 흐름의 전환 구조와 검출률 차이를 재배열한 도식이다.",
   "evidence": "§1"
 }
 ```
@@ -489,8 +491,8 @@ git commit -m "feat: 들어가며·제1-5장 인포그래픽 펜스 6종 — car
 
 - [ ] **Step 6: 교차검증·렌더 확인**
 
-Run: `python3 skills/korean-ebook-typst/scripts/build.py books/agent-papers-2026-ko 2>&1 | grep -i "경고\|warn\|I1\|실패" ; echo rc=$?`
-Expected: 경고 0건(누적 11 펜스 전부 emit).
+Run: `python3 skills/korean-ebook-typst/scripts/build.py books/agent-papers-2026-ko > /tmp/p6c.log 2>&1; echo "build_rc=$?"; grep -iE "경고|warn|I1|실패" /tmp/p6c.log; echo "grep_rc=$? (경고 0건이면 grep_rc=1이 정상)"`
+Expected: `build_rc=0`, grep 출력 없음(누적 11 펜스 emit).
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/ -q`
 Expected: 전 pass.
@@ -510,12 +512,12 @@ git commit -m "feat: 제6-10장 인포그래픽 펜스 5종 — matrix 2×2·lad
 - Test: `skills/korean-ebook-typst/tests/test_agent_papers_fences.py` (Create — 펜스 수·레이아웃 불변식)
 
 **Interfaces:**
-- Consumes: Task 1의 base.typ 규칙, Task 2–3의 11 펜스, 기존 `render_book_fences`·`_infographic_pages`.
-- Produces: qc PASS 최종 게이트, `final/` PDF, gate-report의 `infographic_pages`(11항목).
+- Consumes: Task 1의 theme 수정, Task 2–3의 11 펜스, 기존 `render_book_fences`·`_infographic_pages`.
+- Produces: qc PASS 최종 게이트, `final/` PDF, gate-report의 `infographic_pages`.
 
 - [ ] **Step 1: 펜스 불변식 테스트 작성**
 
-책 md에서 펜스를 파싱해 수·레이아웃 구성을 고정(원고 무결성 회귀):
+책 md에서 펜스를 파싱해 수·레이아웃 구성을 고정(원고 무결성 회귀). tests/ 위치상 repo 루트는 `parents[3]`:
 
 ```python
 """agent-papers-2026-ko 펜스 불변식 — 수·레이아웃 구성 고정."""
@@ -523,7 +525,8 @@ import json
 import re
 from pathlib import Path
 
-BOOK = Path(__file__).resolve().parents[2] / "books" / "agent-papers-2026-ko" / "manuscript"
+REPO = Path(__file__).resolve().parents[3]
+BOOK = REPO / "books" / "agent-papers-2026-ko" / "manuscript"
 FENCE = re.compile(r"```infographic\n(.*?)\n```", re.S)
 
 EXPECTED = {
@@ -531,8 +534,8 @@ EXPECTED = {
     "01-제1장-도구를-다-쥐여주면.md": ["ladder"],
     "02-제2장-새-대화창을-열면.md": ["cards"],
     "03-제3장-읽은-파일과-고친-파일.md": ["topology"],
-    "04-제4장-일은-끝났는데.md": ["before_after"],
-    "05-제5장-여덟-명이-붙으면.md": ["before_after"],
+    "04-제4장-일은-끝났는데.md": ["cards"],
+    "05-제5장-여덟-명이-붙으면.md": ["cards"],
     "06-제6장-많이-찾아다-주면.md": ["matrix"],
     "07-제7장-왜-그렇게-정했더라.md": ["matrix"],
     "08-제8장-내가-넣은-한-줄은.md": ["ladder"],
@@ -541,15 +544,14 @@ EXPECTED = {
 }
 
 
-def _fences(name: str) -> list[dict]:
-    text = (BOOK / name).read_text(encoding="utf-8")
+def _fences(text: str) -> list[dict]:
     return [json.loads(m) for m in FENCE.findall(text)]
 
 
 def test_fence_count_and_layouts():
     total = 0
     for name, layouts in EXPECTED.items():
-        fences = _fences(name)
+        fences = _fences((BOOK / name).read_text(encoding="utf-8"))
         assert len(fences) == len(layouts), f"{name}: 펜스 {len(fences)}개 != {len(layouts)}개"
         got = [f["layout"] for f in fences]
         assert got == layouts, f"{name}: {got} != {layouts}"
@@ -557,6 +559,13 @@ def test_fence_count_and_layouts():
             assert f["evidence"] == "§1", f"{name}: evidence {f['evidence']!r}"
         total += len(fences)
     assert total == 11
+
+
+def test_no_stray_fences_outside_expected_files():
+    for p in sorted(BOOK.glob("*.md")):
+        if p.name in EXPECTED:
+            continue
+        assert not FENCE.search(p.read_text(encoding="utf-8")), f"{p.name}: 예상 밖 펜스"
 ```
 
 파일명이 미세하게 다르면 실제 manuscript/ 파일명에 맞춘다(불변식 값은 유지).
@@ -564,7 +573,7 @@ def test_fence_count_and_layouts():
 - [ ] **Step 2: 테스트 실행**
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/test_agent_papers_fences.py -q`
-Expected: PASS (Task 2–3 완료 후이므로 즉시 green — RED 단계는 Task 2 선행 시점에 이미 통과 불가였음을 커밋 순서로 보증).
+Expected: 2 passed (RED 단계는 Task 2 완료 시점에 이미 불가 — 커밋 순서로 보증).
 
 - [ ] **Step 3: 전체 빌드 + qc_gate PASS**
 
@@ -577,37 +586,32 @@ Expected: `[qc] PASS` — final/ 재생성. FAIL 시 gate-report.json의 게이�
 
 - [ ] **Step 4: infographic_pages 리포트 확인**
 
-Run: `python3 -c "import json;d=json.load(open('books/agent-papers-2026-ko/gate-report.json'));p=d.get('infographic_pages',[]);print(len(p));print(p)"`
-Expected: 11항목, 각 `{name, page}`.
+Run: `python3 -c "import json;d=json.load(open('books/agent-papers-2026-ko/gate-report.json'));ip=d.get('infographic_pages',{});print(ip.get('count'), ip.get('match'));print(ip.get('figs'))"`
+Expected: `11 True` — figs 11항목(각 name·chapter·index·page). `infographic_pages`는 리스트가 아닌 dict `{count, expected, match, figs}`(qc_gate.py:186-219·264-266).
 
 - [ ] **Step 5: PNG 검증 — 2종 육안 확인**
 
-검수 PNG(책 디렉터리 하위, build 파이프라인이 170DPI로 생성) 중 matrix 1종(ch6·셀 순서 확인)과 topology 1종(ch3·간선·층위 확인)을 Read로 열어 확인. 라벨 겹침·셀 사분면 오배치·간선 누락 없어야. 문제 발견 시 펜스 JSON 수정(문구는 원문 숫자 토큰 범위 내에서만) 후 재빌드.
+검수 PNG(qc_gate가 170DPI로 생성) 중 matrix 1종(ch6 — 셀 사분면 배치 확인)과 topology 1종(ch3 — 간선·층위 확인)을 Read로 열어 확인. 라벨 겹침·사분면 오배치·간선 누락 없어야. 문제 시 펜스 JSON 수정(원문 숫자 토큰 범위 내에서만) 후 재빌드.
 
 - [ ] **Step 6: 전체 스위트 + 커밋**
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/ -q`
-Expected: 전 pass (260 + Task 1·4 신규).
+Expected: 전 pass (260 + Task 1 5건 + Task 4 2건).
 
 ```bash
-git add skills/korean-ebook-typst/tests/test_agent_papers_fences.py books/agent-papers-2026-ko/
+git add skills/korean-ebook-typst/tests/test_agent_papers_fences.py
 git commit -m "test: agent-papers 펜스 불변식 — 11종 레이아웃·evidence 고정"
 ```
 
-- [ ] **Step 7: gate-report·생성물 커밋**
+- [ ] **Step 7: 게이트 리포트 커밋**
 
-```bash
-git add books/agent-papers-2026-ko/gate-report.json books/agent-papers-2026-ko/final/ 2>/dev/null || git add books/agent-papers-2026-ko/gate-report.json
-git commit -m "chore: agent-papers qc PASS 게이트 리포트"
-```
-
-`final/`이 git 대상이 아니면(기존 관례 확인) gate-report만 커밋.
+`final/`·`gate-report.json`은 git 비추적(실측) — 빌드 산출물은 커밋하지 않는다. 대신 최종 게이트 요약을 플랜 체크박스 완료로 기록한다.
 
 ---
 
-## 셀프 리뷰 기록
+## 셀프 리뷰 기록 (적대 검토 G1·G2·G3 반영판)
 
-- 스펙 커버리: §2 펜스 계약(Task 2–3) ✓, §5 교차검증(전 펜스 evidence·숫자 토큰 원문 검증 완료) ✓, 요소 상한(강의 팩: cards 4/5/3 ≤6, ladder 5/5 ≤5, before_after 3+3 ≤5, topology 5노드·4층 ≤8·≤4, matrix 2×2) ✓, 원문 대체 금지(표 보존·펜스는 인접 삽입) ✓. G1 회복은 스펙 §10 판면 게이트 유지가 목적.
-- 숫자 토큰 검증(2026-08-22, 원문 grep 전수): F00 `1장`…`10장` ✓ / F01 `K1`–`K5`(숫자 1–5) ✓ / F02 `0/15`·`2/15`·`14/15` ✓ / F04 `kyc-0004`·`kyc-0005`·`8/10`·`80%`·`14/16`·`88%`·`0%`·`85%` ✓ / F05 `10,500`·`1,700`·`42%`·`1.92`·`1.12`·`1.32`·`10~17%`·`+17%`·`+10%`·`57.8만`·`33.3만`·`4인`·`8인` ✓ / F06 `k=1→20`·`k=1→5`·`19.6%`·`16.2%` ✓ / F07 `1.00`·`0.98`·`0.18`·`0.06`·`0.27`·`0.82`·`0.67~0.90`·`35k`·`40k`·`B2`·`mem0` ✓ / F08 `1비트`·`2배`·`3비트`·`8배`·`5비트`·`32배`·`10비트`·`1,024`·`20비트`·`100만` ✓ / F09 `0.473`·`0.612`·`0.880`·`0.967`·`0.772`·`0.928` ✓ / F10 `53%대`(표 `53.4%`)·`63.2%`·`+9.8%p`·`detect@5` ✓. F03은 숫자 토큰 0개(면제).
-- 타입 일관성: 펜스 필드명은 authoring.md 스키마(cards/ladder/topology/before_after/matrix)와 일치. matrix `cells` 4개 순서 `[y low·x low, y low·x high, y high·x low, y high·x high]` — Task 3 Step 1·Task 4 Step 5에서 PNG로 재확인.
-- 위험: ch4 사례 문구(`8/10 (80%)` 등)는 표 셀 실측값 — 삽입 시 재확인 지시 포함. G4 스타일 경고(번역투·엠대시)는 비차단이나 Task 4에서 게이트 판정 다시 확인.
+- **검토 반영**: G1 — F03 5노드 커넥터 샤프트 11.96pt 치명 → 4노드(lint PASS) / F06·F07 축 라벨 예산(4줄>3줄) 치명 → 축약(lint PASS) / Task 4 경로 parents[3]·infographic_pages dict·우발 펜스 단언 / ch2 삽입 위치 단일화 / 검증 명령 rc 해석 명시. G2 — F04·F05 before_after 허위 전환 → cards 2장 / F00 thesis 좌우 표현 제거(3열 그리드와 모순) / F02 title 과장 한정 / F08 title 방향 반전 수정("매긴다") / F06 삽입 위치 근거 이후로 이동·빈 사분면 중성화 / F03 로케이터 문구 수정 / F07 note 재배열 범위 명시. G3 — Task 1 전면 수정: 오버플로는 3단이 아니라 **2단**(md `### `→`==`, theme L2 weak v) — 5팩 theme 수정, base.typ 불변 / 3단 잠재 회귀(타 책 `#### ` 736개)는 이관 노트로 기록 / rc·grep 함정 수정.
+- 스펙 커버리: §2 ✓ §5(숫자 토큰 11/11 기계 검증 통과 — lint 실행 확인) ✓ 상한(cards 4/5/2/2/3 ≤6, ladder 5/5, before_after 3+3, matrix 2×2, topology 4노드·3층위) ✓ 원문 대체 금지 ✓.
+- 배치 다양성: cards×5(00·02·04·05·09)·ladder×2·topology×1·matrix×2·before_after×1 — F04·F05의 before_after→cards 전환으로 대비형 남용 해소(G2 HIGH-1). 06·07 연속 matrix는 축 내용 상이로 수용(G2 판정).
+- 잔여 수용 판단(재검토 불필요): F00 카드 제목 2줄 랩 허용 / F01 ladder 상승 어포던스는 thesis가 상쇄 / F08 환산표→ladder는 단조 지수 상승 시각화로 방어 / F10 인접 표와의 항목 일부 중복은 "전환 구조+결과 연결" 재배열 가산으로 정당화.
