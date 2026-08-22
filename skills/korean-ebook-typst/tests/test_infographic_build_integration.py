@@ -117,6 +117,67 @@ def test_phase3_archetypes_build_pdf_and_review_sheets(tmp_path):
     assert pdf.exists() and pdf.stat().st_size > 10_000, "최종 PDF 없음"
 
 
+PHASE4_MD = """# 검증 원고
+
+## 검증 챕터
+
+```infographic
+{"layout":"topology","title":"구성 요소는 흐름을 따라 연결된다","kicker":"구성",
+ "nodes":[{"id":"a","label":"입력 수집"},{"id":"b","label":"전처리"},
+          {"id":"c","label":"변환"},{"id":"d","label":"저장"},{"id":"e","label":"질의"}],
+ "edges":[{"from":"a","to":"b"},{"from":"b","to":"c"},{"from":"c","to":"d"},
+          {"from":"c","to":"e","dashed":true}]}
+```
+(간선 구조 주의 — 연쇄 a→b→c→d→e는 층위 5 → 5열이라 노드 폭 하상수 에러로
+빌드 실패한다. 이 간선은 층위 a=0·b=1·c=2·d=3·e=3 → 4열(practical node_w
+55.6pt ≥ 하상수 54pt)로 저작 규약 '층위 ≤ 4'를 정확히 쓴다.)
+
+```infographic
+{"layout":"approval","title":"결재는 검토를 거쳐 집행으로 이어진다","kicker":"결재",
+ "path":[{"title":"기획","text":"방향 확정"},{"title":"부서 검토","gate":true},
+         {"title":"예산 승인","gate":true},{"title":"집행","text":"실행"}]}
+```
+
+```infographic
+{"layout":"layers","title":"계층은 표현에서 자료로 내려간다","kicker":"구조",
+ "stack":[{"label":"표현 계층"},{"label":"응용 계층"},
+          {"label":"도메인 계층"},{"label":"자료 계층"}]}
+```
+"""
+
+
+def test_phase4_archetypes_build_pdf_and_review_sheets(tmp_path):
+    # 종료 조건(스펙 §8 Phase 4): 신규 3종 펜스가 빌드 전 과정을 통과한다 —
+    # 펜스↔emit 1:1 · 챕터 typ include 치환 · PDF 생성 · 검수 시트 신규 필드 행.
+    book = tmp_path / "book4"
+    (book / "manuscript").mkdir(parents=True)
+    (book / "manuscript" / "ch01.md").write_text(PHASE4_MD, encoding="utf-8")
+    (book / "typst-build.yaml").write_text(
+        'style: practical\n' 'title: "페이즈4책"\n' 'subtitle: "부"\n'
+        'author: "KLIC"\n' 'date: "2026-08"\n'
+        "chapters:\n  - manuscript/ch01.md\n", encoding="utf-8")
+    r = subprocess.run([sys.executable, str(SKILL / "scripts" / "build.py"), str(book)],
+                       capture_output=True, text=True, timeout=180)
+    assert r.returncode == 0, r.stderr
+    typ = (book / "build" / "typ" / "000-ch01.typ").read_text(encoding="utf-8")
+    for n in (1, 2, 3):
+        assert f'#include "../infographic/000-fig0{n}.typ"' in typ
+        assert (book / "build" / "infographic" / f"000-fig0{n}.typ").exists()
+    assert len(list((book / "build" / "infographic").glob("000-fig*.typ"))) == 3   # 중복 emit 방어
+    sheets = {n: (book / "build" / "infographic" / f"000-fig0{n}.review.md").read_text(encoding="utf-8")
+              for n in (1, 2, 3)}
+    assert "nodes[2].label" in sheets[1]                     # topology 변환 노드
+    assert "nodes[0].label" in sheets[1]                     # 첫 노드 — 전진 경로
+    assert "path[1].title" in sheets[2]                      # approval 게이트 스텝
+    assert "path[3].title" in sheets[2]                      # 마지막 스텝
+    assert "stack[3].label" in sheets[3]                     # layers 마지막 계층
+    assert "stack[0].label" in sheets[3]
+    for s in sheets.values():
+        assert "I1 통과" in s                                # 숫자 전부 교차검증 통과
+    pdf = book / "draft" / "페이즈4책.pdf"
+    assert pdf.exists() and pdf.stat().st_size > 10_000, "최종 PDF 없음"
+
+
 def test_i1_blocks_build_with_full_report(tmp_path):
     book = _make_book(tmp_path)
     ch = book / "manuscript" / "ch01.md"

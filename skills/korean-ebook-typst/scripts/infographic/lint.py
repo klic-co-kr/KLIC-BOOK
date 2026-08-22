@@ -137,6 +137,15 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
             fields.append((f"phases[{i}].title", p["title"]))
             for j, it in enumerate(p["items"]):
                 fields.append((f"phases[{i}].items[{j}]", it))
+        for i, nd in enumerate(f.data.get("nodes", [])):
+            fields.append((f"nodes[{i}].label", nd["label"]))
+        for i, st in enumerate(f.data.get("path", [])):
+            fields.append((f"path[{i}].title", st["title"]))
+            if "text" in st:
+                fields.append((f"path[{i}].text", st["text"]))
+        for key in ("stack", "rings"):
+            for i, row in enumerate(f.data.get(key, [])):
+                fields.append((f"{key}[{i}].label", row["label"]))
         if "x_axis" in f.data:
             fields.append(("axis.x0", f.data["x_axis"]["low"]))
             fields.append(("axis.x1", f.data["x_axis"]["high"]))

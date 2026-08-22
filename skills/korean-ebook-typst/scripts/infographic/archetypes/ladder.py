@@ -1,10 +1,10 @@
-"""ladder — 계단식 성숙도(스펙 §6.3). x·y 동시 증가 오프셋, 하→상. 판형 상한 없음(절대 3~5만)."""
+"""ladder — 계단식 성숙도(스펙 §6.3). x·y 동시 증가 오프셋, 하→상. 판형 상한 PACK_STAGES(§6.2 개정 5판 — essay 4, 나머지 5) + 절대 3~5."""
 from __future__ import annotations
 
 from .. import budget
 from ..model import ArrowOp, FigModel, RectOp, TextOp
 from ..parse import DEFAULT_NOTE, Fence
-from .base import LayoutError
+from .base import LayoutError, sizes
 
 P = 14.0
 BOX_W_FRAC = 0.56
@@ -12,6 +12,8 @@ STAGE_PAD_V = 10.0
 STEP_GAP_MIN = 16.0            # 계단 단 사이 최소 시각 간격
 LEADING = 1.3
 HEIGHT_LIMIT = 0.85
+
+PACK_STAGES = {"essay": 4, "practical": 5, "b5": 5, "business": 5, "lecture": 5}
 
 
 class LadderLayoutError(LayoutError):
@@ -23,17 +25,20 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     W = frame["x1"] - frame["x0"]
     H_frame = frame["y1"] - frame["y0"]
     pack = tokens.get("style", "practical")
-    f = tokens["fonts"]
-    body = f["body"]["size_pt"]
-    kicker_size = f["label"]["size_pt"]
-    title_size = f["heading2"]["size_pt"]
-    if abs(title_size - body) <= 0.3:
-        title_size = body + 1.5
-    st_title_size = body + 1
-    st_text_size = body - 1
+    s = sizes(tokens)
+    kicker_size = s["kicker"]
+    title_size = s["title"]
+    st_title_size = s["ph_title"]
+    st_text_size = s["item"]
 
     stages = fence.data["stages"]
     n = len(stages)
+    cap = PACK_STAGES.get(pack)
+    if cap is None:
+        raise LadderLayoutError(f"알 수 없는 스타일 팩 {pack!r}")
+    if len(stages) > cap:
+        raise LadderLayoutError(
+            f"단계 {len(stages)}개 > 판형 상한 {cap}단계({pack}) — 단계 통합 또는 펜스 분할")
     avail_w = W - 2 * P
     box_w = BOX_W_FRAC * avail_w
     box_pad_h = 8.0
@@ -51,6 +56,7 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     texts: list[TextOp] = []
     cy = 0.0
     if fence.kicker:
+        # kicker: 저작 계약 초단문(1줄)
         texts.append(TextOp(x=W / 2, y=cy + kicker_size * LEADING / 2, size=kicker_size,
                             text=fence.kicker, role="ink-mute", field="kicker"))
         cy += kicker_size * LEADING
@@ -66,7 +72,8 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     y = cy + 18.0
 
     note = fence.note or DEFAULT_NOTE
-    note_h = st_text_size * LEADING
+    nl = budget.line_count(note, W - 2 * P, st_text_size, 8.0, pack)
+    note_h = nl * st_text_size * LEADING
     H_avail = H_frame * HEIGHT_LIMIT - y - note_h - 12.0 - P
     dy = (H_avail - n * box_h) / (n - 1)
     if dy < STEP_GAP_MIN:
@@ -112,8 +119,9 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
 def _ink_ok(ops, width: float, height: float) -> None:
     for o in ops:
         if isinstance(o, RectOp):
-            if (o.x < -0.001 or o.x + o.w > width + 0.001
-                    or o.y < -0.001 or o.y + o.h > height + 0.001):
+            s = o.stroke_w / 2
+            if (o.x - s < -0.001 or o.x + o.w + s > width + 0.001
+                    or o.y - s < -0.001 or o.y + o.h + s > height + 0.001):
                 raise LadderLayoutError(
                     f"잉크 bbox 프레임 이탈: rect({o.x:.1f},{o.y:.1f},{o.w:.1f},{o.h:.1f})")
         elif isinstance(o, ArrowOp):

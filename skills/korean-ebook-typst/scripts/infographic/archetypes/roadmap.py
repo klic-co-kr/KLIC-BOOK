@@ -4,7 +4,7 @@ from __future__ import annotations
 from .. import budget
 from ..model import ArrowOp, FigModel, RectOp, TextOp
 from ..parse import DEFAULT_NOTE, Fence
-from .base import LayoutError
+from .base import LayoutError, sizes
 
 P = 14.0
 G = 28.0
@@ -28,14 +28,11 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     W = frame["x1"] - frame["x0"]
     H_frame = frame["y1"] - frame["y0"]
     pack = tokens.get("style", "practical")
-    f = tokens["fonts"]
-    body = f["body"]["size_pt"]
-    kicker_size = f["label"]["size_pt"]
-    title_size = f["heading2"]["size_pt"]
-    if abs(title_size - body) <= 0.3:
-        title_size = body + 1.5
-    ph_title_size = body + 1
-    item_size = body - 1
+    s = sizes(tokens)
+    kicker_size = s["kicker"]
+    title_size = s["title"]
+    ph_title_size = s["ph_title"]
+    item_size = s["item"]
 
     phases = fence.data["phases"]
     n = len(phases)
@@ -66,6 +63,7 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     texts: list[TextOp] = []
     cy = 0.0
     if fence.kicker:
+        # kicker: 저작 계약 초단문(1줄)
         texts.append(TextOp(x=W / 2, y=cy + kicker_size * LEADING / 2, size=kicker_size,
                             text=fence.kicker, role="ink-mute", field="kicker"))
         cy += kicker_size * LEADING
@@ -107,9 +105,10 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
 
     y = y + band_h + 12.0
     note = fence.note or DEFAULT_NOTE
-    texts.append(TextOp(x=W / 2, y=y + item_size * LEADING / 2, size=item_size,
+    nl = budget.line_count(note, W - 2 * P, item_size, 8.0, pack)
+    texts.append(TextOp(x=W / 2, y=y + nl * item_size * LEADING / 2, size=item_size,
                         text=note, role="ink-mute", max_w=W - 2 * P, field="note"))
-    y += item_size * LEADING
+    y += nl * item_size * LEADING
 
     if y > H_frame * HEIGHT_LIMIT:
         raise RoadmapLayoutError(
@@ -124,8 +123,9 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
 def _ink_ok(ops, width: float, height: float) -> None:
     for o in ops:
         if isinstance(o, RectOp):
-            if (o.x < -0.001 or o.x + o.w > width + 0.001
-                    or o.y < -0.001 or o.y + o.h > height + 0.001):
+            s = o.stroke_w / 2
+            if (o.x - s < -0.001 or o.x + o.w + s > width + 0.001
+                    or o.y - s < -0.001 or o.y + o.h + s > height + 0.001):
                 raise RoadmapLayoutError(
                     f"잉크 bbox 프레임 이탈: rect({o.x:.1f},{o.y:.1f},{o.w:.1f},{o.h:.1f})")
         elif isinstance(o, ArrowOp):

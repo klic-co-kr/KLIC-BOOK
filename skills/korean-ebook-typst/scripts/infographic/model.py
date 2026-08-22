@@ -14,6 +14,15 @@ class RectOp:
     fill_role: str = "surface-tint"
     stroke_role: str = "rule"
     stroke_w: float = 0.5
+    rot: float = 0.0            # 도 단위 회전(중심 기준) — 0=방출 생략(게이트 마커 등)
+
+
+@dataclass(frozen=True)
+class CircleOp:
+    x: float; y: float; r: float
+    fill_role: str = "surface-tint"
+    stroke_role: str = "rule"
+    stroke_w: float = 0.5
 
 
 @dataclass(frozen=True)
