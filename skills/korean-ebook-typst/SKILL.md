@@ -22,12 +22,13 @@ python3 scripts/qc_gate.py <책dir>   # PASS 시에만 → <책dir>/final/
 
 (final/은 qc_gate.py만 생성한다. 빌드 산물 `build/`·`draft/`·`final/`·`gate-report.json`은 gitignore.)
 
-## 챕터 도식 (인포그래픽 — Phase 3)
+## 챕터 도식 (인포그래픽 — Phase 4)
 
 챕터 md에 ```infographic 펜스(JSON)를 넣으면 출판 품질 벡터 도식이 그
-자리에 삽입된다. Phase 3 layout: `flow`(순차 2~8단계)·`cards`(병렬
+자리에 삽입된다. layout: `flow`(순차 2~8단계)·`cards`(병렬
 강조)·`matrix`(2축 비교)·`before_after`(전환 대비)·`ladder`(성숙도
-계단)·`roadmap`(시간 전개). 좌표는 Python이 계산하고 I1 린트(텍스트
+계단)·`roadmap`(시간 전개)·`topology`(구성 관계)·`approval`(결재
+흐름)·`layers`(계층 구조). 좌표는 Python이 계산하고 I1 린트(텍스트
 예산·잉크 컨테인먼트·숫자-evidence 교차검증)를 통과해야 빌드된다. 도식
 하나 검사·미리보기:
 `python3 scripts/infographic/cli.py lint|preview …`. 저작 규약·라우팅 표는

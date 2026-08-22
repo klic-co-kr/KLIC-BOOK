@@ -1,4 +1,4 @@
-"""ladder — 계단식 성숙도(스펙 §6.3). x·y 동시 증가 오프셋, 하→상. 판형 상한 없음(절대 3~5만)."""
+"""ladder — 계단식 성숙도(스펙 §6.3). x·y 동시 증가 오프셋, 하→상. 판형 상한 PACK_STAGES(§6.2 개정 5판 — essay 4, 나머지 5) + 절대 3~5."""
 from __future__ import annotations
 
 from .. import budget
@@ -12,6 +12,8 @@ STAGE_PAD_V = 10.0
 STEP_GAP_MIN = 16.0            # 계단 단 사이 최소 시각 간격
 LEADING = 1.3
 HEIGHT_LIMIT = 0.85
+
+PACK_STAGES = {"essay": 4, "practical": 5, "b5": 5, "business": 5, "lecture": 5}
 
 
 class LadderLayoutError(LayoutError):
@@ -31,6 +33,12 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
 
     stages = fence.data["stages"]
     n = len(stages)
+    cap = PACK_STAGES.get(pack)
+    if cap is None:
+        raise LadderLayoutError(f"알 수 없는 스타일 팩 {pack!r}")
+    if len(stages) > cap:
+        raise LadderLayoutError(
+            f"단계 {len(stages)}개 > 판형 상한 {cap}단계({pack}) — 단계 통합 또는 펜스 분할")
     avail_w = W - 2 * P
     box_w = BOX_W_FRAC * avail_w
     box_pad_h = 8.0

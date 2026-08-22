@@ -26,11 +26,17 @@ def test_parse_bounds():
         _fence(6)
 
 
-def test_no_pack_cap_only_absolute():
-    # ladder는 판형 상한 없음 — practical 5단계(절대 상한)가 레이아웃 에러 없이 통과
-    # (C4a: essay 5단계는 폭 249pt에서 dy<16 에러 — 도달 불가 조합이므로 practical 사용)
-    fig = ladder_arch.layout(_fence(5), TOKENS)    # 예외 없음 자체가 검증
+def test_practical_five_at_pack_cap():
+    # ladder 판형 상한(§6.2 개정 5판) — practical 5단계는 상한과 일치, 에러 없이 통과
+    fig = ladder_arch.layout(_fence(5), TOKENS)
     assert fig.height > 0
+
+
+def test_essay_five_stages_pack_cap_error():
+    # essay 5단계 — 판형 상한 4 초과 에러가 계단 단 간격 에러에 앞선다(개정 5판)
+    essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
+    with pytest.raises(ladder_arch.LadderLayoutError, match="판형 상한"):
+        ladder_arch.layout(_fence(5), essay)
 
 
 def test_stair_offsets_both_axes():
