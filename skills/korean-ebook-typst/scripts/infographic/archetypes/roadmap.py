@@ -54,7 +54,7 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     # 밴드 높이 — 최대 위상 기준, 전부 실측
     def phase_h(p: dict) -> float:
         h = 2 * BAND_PAD_V
-        h += kicker_size * LEADING + 6.0                      # period
+        h += budget.line_count(p["period"], band_w, kicker_size, BAND_PAD_IN, pack) * kicker_size * LEADING + 6.0
         h += budget.line_count(p["title"], band_w, ph_title_size, BAND_PAD_IN, pack) * ph_title_size * LEADING + 4.0
         for it in p["items"]:
             h += budget.line_count(it, band_w, item_size, BAND_PAD_IN, pack) * item_size * LEADING + ITEM_GAP
@@ -92,7 +92,7 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
         texts.append(TextOp(x=bx + band_w / 2, y=ty + kicker_size * LEADING / 2, size=kicker_size,
                             text=p["period"], role="ink-mute", weight="bold",
                             max_w=band_w, field=f"phases[{i}].period"))
-        ty += kicker_size * LEADING + 6.0
+        ty += budget.line_count(p["period"], band_w, kicker_size, BAND_PAD_IN, pack) * kicker_size * LEADING + 6.0
         tl = budget.line_count(p["title"], band_w, ph_title_size, BAND_PAD_IN, pack)
         texts.append(TextOp(x=bx + band_w / 2, y=ty + tl * ph_title_size * LEADING / 2,
                             size=ph_title_size, text=p["title"], role="ink", weight="bold",

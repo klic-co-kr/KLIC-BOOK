@@ -8,7 +8,6 @@ from .base import LayoutError
 
 P = 14.0
 BOX_W_FRAC = 0.56
-STAGE_PAD_IN = 8.0
 STAGE_PAD_V = 10.0
 STEP_GAP_MIN = 16.0            # 계단 단 사이 최소 시각 간격
 LEADING = 1.3

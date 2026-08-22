@@ -9,7 +9,6 @@ from .base import LayoutError
 P = 14.0
 G = 14.0                    # 패널-중앙존 여백(커넥터 복도 아님 — §6.1 대상 외)
 CENTER_ZONE = 56.0
-BA_ITEM_MIN, BA_ITEM_MAX = 1, 5
 PANEL_PAD_H = 8.0           # lint 예산 pad=8과 일치
 PANEL_PAD_V = 12.0
 ITEM_GAP = 6.0

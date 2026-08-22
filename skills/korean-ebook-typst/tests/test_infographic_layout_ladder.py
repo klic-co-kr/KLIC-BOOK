@@ -39,6 +39,7 @@ def test_stair_offsets_both_axes():
     assert len(boxes) == 4
     box_w = boxes[0].w
     avail = W - 2 * P
+    assert abs(box_w - 0.56 * avail) < 0.01                    # BOX_W_FRAC 0.56 고정
     dx = (avail - box_w) / 3
     for i in range(4):
         assert abs(boxes[i].x - (P + i * dx)) < 0.01          # x 단조 증가

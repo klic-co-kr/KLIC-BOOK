@@ -105,6 +105,7 @@ def test_phase3_archetypes_build_pdf_and_review_sheets(tmp_path):
     for n in (1, 2, 3):
         assert f'#include "../infographic/000-fig0{n}.typ"' in typ
         assert (book / "build" / "infographic" / f"000-fig0{n}.typ").exists()
+    assert len(list((book / "build" / "infographic").glob("000-fig*.typ"))) == 3   # 중복 emit 방어
     sheets = {n: (book / "build" / "infographic" / f"000-fig0{n}.review.md").read_text(encoding="utf-8")
               for n in (1, 2, 3)}
     assert "before[0]" in sheets[1] and "after[1]" in sheets[1] and "center" in sheets[1]

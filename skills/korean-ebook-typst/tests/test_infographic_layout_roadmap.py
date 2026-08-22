@@ -47,6 +47,22 @@ def test_band_height_measured_max():
     assert bands[0].h == bands[1].h
 
 
+def test_period_measured_multi_line_essay():
+    # 최종 리뷰 1 — period 1줄 가정 금지: essay 밴드 55.15pt에서 "2026년 하반기"는
+    # 모델상 2줄 — 밴드 높이 예산은 실측 줄수를 따른다(1줄 가정이면 차 0)
+    essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
+    kicker = essay["fonts"]["label"]["size_pt"]
+
+    def band_h(period):
+        phases = [{"period": period, "title": "위상 1", "items": ["항목 0"]} for _ in range(3)]
+        f = parse_fence(1, 1, json.dumps(
+            {"layout": "roadmap", "title": "도입 로드맵", "phases": phases}, ensure_ascii=False))
+        fig = rm_arch.layout(f, essay)
+        return [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"][0].h
+
+    assert abs(band_h("2026년 하반기") - band_h("2026년") - kicker * 1.3) < 0.01
+
+
 def test_pack_cap_essay():
     essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
     with pytest.raises(rm_arch.RoadmapLayoutError, match=r"판형 상한 3위상\(essay\)"):
@@ -62,6 +78,16 @@ def test_pack_cap_success_all_packs():
         bands = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"]
         assert len(bands) == cap, name
         assert bands[0].w >= rm_arch.MIN_BAND_W - 0.01, name
+
+
+def test_height_limit_85pct():
+    # 최종 리뷰 3 — 85% 높이 게이트: 4위상×장문 항목(판형 상한 내) → 밴드 줄수 폭증
+    long_text = "아주 긴 항목 문장이다 " * 8
+    phases = [{"period": "2025년", "title": "위상", "items": [long_text] * 2} for _ in range(4)]
+    f = parse_fence(1, 1, json.dumps(
+        {"layout": "roadmap", "title": "도입 로드맵", "phases": phases}, ensure_ascii=False))
+    with pytest.raises(rm_arch.RoadmapLayoutError, match="85"):
+        rm_arch.layout(f, TOKENS)
 
 
 def test_roadmap_elements_reach_lint_and_sheet():

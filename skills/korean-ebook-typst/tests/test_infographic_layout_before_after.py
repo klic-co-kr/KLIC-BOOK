@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from scripts.infographic.archetypes import before_after as ba_arch
-from scripts.infographic.model import ArrowOp, FigModel, RectOp, TextOp
+from scripts.infographic.model import ArrowOp, RectOp, TextOp
 from scripts.infographic.parse import ParseError, parse_fence
 
 TOKENS = json.loads((Path(__file__).resolve().parents[1] / "styles" / "practical" / "tokens.json").read_text(encoding="utf-8"))
@@ -84,6 +84,14 @@ def test_pack_cap_success_all_packs():
                                     [f"이후 {i}" for i in range(cap)], center="전환"), toks)
         panels = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"]
         assert len(panels) == 2, name
+
+
+def test_height_limit_85pct():
+    # 최종 리뷰 3 — 85% 높이 게이트: 4장문 항목/측(판형 상한 내) → 줄수 폭증
+    # (n=5는 practical 판형 상한 에러가 먼저)
+    long_text = "아주 긴 근거 문장이다 " * 8
+    with pytest.raises(ba_arch.BeforeAfterLayoutError, match="85"):
+        ba_arch.layout(_fence([long_text] * 4, [long_text] * 4), TOKENS)
 
 
 def test_before_after_elements_reach_lint_and_sheet():
