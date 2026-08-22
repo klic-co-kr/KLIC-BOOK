@@ -178,6 +178,83 @@ def test_phase4_archetypes_build_pdf_and_review_sheets(tmp_path):
     assert pdf.exists() and pdf.stat().st_size > 10_000, "최종 PDF 없음"
 
 
+PHASE5_MD = """# 검증 원고
+
+## 검증 챕터
+
+```infographic
+{"layout":"topology","title":"구성 요소는 흐름을 따라 연결된다","kicker":"구성",
+ "nodes":[{"id":"a","label":"입력 수집"},{"id":"b","label":"전처리"},
+          {"id":"c","label":"변환"},{"id":"d","label":"저장"},{"id":"e","label":"질의"}],
+ "edges":[{"from":"a","to":"b"},{"from":"b","to":"c"},{"from":"c","to":"d"},
+          {"from":"c","to":"e","dashed":true}]}
+```
+(간선 구조 주의 — 연쇄 a→b→c→d→e는 층위 5 → 5열이라 노드 폭 하상수 에러로
+빌드 실패한다. 이 간선은 층위 a=0·b=1·c=2·d=3·e=3 → 4열(practical node_w
+55.6pt ≥ 하상수 54pt)로 저작 규약 '층위 ≤ 4'를 정확히 쓴다.)
+
+```infographic
+{"layout":"approval","title":"결재는 검토를 거쳐 집행으로 이어진다","kicker":"결재",
+ "path":[{"title":"기획","text":"방향 확정"},{"title":"부서 검토","gate":true},
+         {"title":"예산 승인","gate":true},{"title":"집행","text":"실행"}]}
+```
+
+```infographic
+{"layout":"layers","title":"계층은 표현에서 자료로 내려간다","kicker":"구조",
+ "stack":[{"label":"표현 계층"},{"label":"응용 계층"},
+          {"label":"도메인 계층"},{"label":"자료 계층"}]}
+```
+
+구성과 절차를 한 장에 정리하면 대응이 명확해진다.
+
+```infographic
+{"layout":"composite","title":"구성과 절차를 한 장에 담는다",
+ "modules":[
+   {"slot":"primary","layout":"cards","title":"핵심 구성은 세 축으로 정리된다",
+    "cards":[{"title":"수집","text":"입력을 모은다."},
+             {"title":"정제","text":"형식을 통일한다."},
+             {"title":"배포","text":"산출물을 전달한다."}]},
+   {"slot":"supporting","layout":"flow","title":"적용 절차는 준비에서 확정으로 이어진다",
+    "steps":[{"title":"준비","text":"전제를 확인한다."},
+             {"title":"확정","text":"결과를 승인한다."}]}]}
+```
+"""
+
+
+def test_phase5_composite_integration(tmp_path):
+    # 스펙 §7 종료 조건: 9종+composite fixture 책이 build → PDF를 내고
+    # qc_gate의 infographic_pages 대응이 manifest와 일치한다(통합 완료).
+    # 빌드·컴파일은 기존 통합 테스트 호출 계약(subprocess build.py) 그대로.
+    FIG_NO = 4                     # PHASE5_MD 배치 순서 — topology·approval·layers 뒤 composite
+    EXPECTED_FIGS = 4              # 기존 3종 + composite 1
+    book = tmp_path / "book5"
+    (book / "manuscript").mkdir(parents=True)
+    (book / "manuscript" / "ch01.md").write_text(PHASE5_MD, encoding="utf-8")
+    (book / "typst-build.yaml").write_text(
+        'style: practical\n' 'title: "페이즈5책"\n' 'subtitle: "부"\n'
+        'author: "KLIC"\n' 'date: "2026-08"\n'
+        "chapters:\n  - manuscript/ch01.md\n", encoding="utf-8")
+    r = subprocess.run([sys.executable, str(SKILL / "scripts" / "build.py"), str(book)],
+                       capture_output=True, text=True, timeout=180)
+    assert r.returncode == 0, r.stderr
+    build = book / "build"
+    manifest = json.loads((build / "infographic" / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["count"] == EXPECTED_FIGS
+    assert f"000-fig{FIG_NO:02d}.typ" in [f["name"] for f in manifest["figs"]]
+    # gate-report.json은 qc_gate가 쓴다 — 기존 통합 테스트는 qc_gate를 돌리지
+    # 않으므로 명시적으로 호출(tests/test_infographic_pages_report.py 관례).
+    from scripts import qc_gate
+    rc = qc_gate.run(book)
+    assert rc == 0
+    report = json.loads((book / "gate-report.json").read_text(encoding="utf-8"))
+    assert report["infographic_pages"]["match"] is True
+    assert report["infographic_pages"]["count"] == manifest["count"] == EXPECTED_FIGS
+    sheet = (build / "infographic" / f"000-fig{FIG_NO:02d}.review.md").read_text(encoding="utf-8")
+    assert "modules[0].cards[0].title" in sheet and "modules[1].steps[0].title" in sheet
+    pdf = book / "draft" / "페이즈5책.pdf"
+    assert pdf.exists() and pdf.stat().st_size > 10_000, "최종 PDF 없음"
+
+
 def test_i1_blocks_build_with_full_report(tmp_path):
     book = _make_book(tmp_path)
     ch = book / "manuscript" / "ch01.md"
