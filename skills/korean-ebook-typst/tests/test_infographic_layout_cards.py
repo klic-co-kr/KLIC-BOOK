@@ -97,7 +97,7 @@ def test_value_wrapped_lines_measured_in_card_height():
         return card.h
 
     assert abs(card_h_of(long_value) - card_h_of("3단계")
-               - value_size * cards_arch.LEADING) < 0.01
+               - (cards_arch.block_h(2, value_size) - cards_arch.block_h(1, value_size))) < 0.01
 
 
 def test_g3_invariant_and_ink_bbox():
@@ -133,3 +133,50 @@ def test_cards_golden_snapshot():
         GOLDEN.parent.mkdir(parents=True, exist_ok=True)
         GOLDEN.write_text(out, encoding="utf-8")
     assert out == GOLDEN.read_text(encoding="utf-8")
+
+
+def test_card_text_max_w_excludes_padding():
+    # 실측(2026-08-22, PyMuPDF): max_w=카드 전폭이면 잉크가 테두리에 닿는다/넘는다
+    # (ch00 −2.01pt, ch04 −1.59pt 관측). line_count 예산(pad=8)이 감안하는 좌우
+    # CARD_PAD_IN을 렌더에도 반영 — 예산과 렌더가 같은 폭을 본다.
+    fig = cards_arch.layout(_fence(3), TOKENS)
+    card = next(r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint")
+    fields = [o for o in fig.ops if isinstance(o, TextOp) and o.field and o.field.startswith("cards[0].")]
+    assert fields
+    for o in fields:
+        assert o.max_w == pytest.approx(card.w - 2 * cards_arch.CARD_PAD_IN)
+
+
+def test_block_h_matches_typst_line_advance():
+    # typst 실측(2026-08-22, Pretendard 11pt·leading 1.3em): 줄 진행 2.008em
+    # = leading 1.3em + cap 0.71em. 첫 줄 레이아웃 높이는 cap≈0.72em.
+    # 구형 1.3·n 근사는 n≥2부터 줄당 0.71em 과소 — max_w 수복으로 실측 줄 수가
+    # 예산 줄 수와 같아지면 카드 하단 이탈로 발화한다.
+    assert cards_arch.block_h(1, 10.0) == pytest.approx(7.5)
+    assert cards_arch.block_h(2, 10.0) == pytest.approx(28.0)
+    assert cards_arch.block_h(3, 10.0) == pytest.approx(48.5)
+
+
+def test_card_height_grows_with_measured_advance():
+    # value 2줄 vs 1줄 카드 높이 차 = block_h(2)−block_h(1) = 2.05em
+    # (구형 기대치 value_size*1.3은 2줄 블록을 0.75em 과소).
+    body_size = TOKENS["fonts"]["body"]["size_pt"]
+    value_size = body_size + 1 + cards_arch.VALUE_BONUS_PT
+    long_value = "열 번 다시 확인하는 긴 값"
+    from scripts.infographic import budget
+    cardW = (W - 2 * P - 2 * G) / 3
+    assert budget.line_count(long_value, cardW, value_size,
+                            cards_arch.CARD_PAD_IN, "practical") == 2       # 사전 조건
+
+    def card_h_of(value: str) -> float:
+        body = json.dumps({"layout": "cards", "title": "t", "cards": [
+            {"title": "a", "value": value, "text": "근거"},
+            {"title": "b", "value": value, "text": "근거"},
+            {"title": "c", "value": value, "text": "근거"}]}, ensure_ascii=False)
+        fig = cards_arch.layout(parse_fence(1, 1, body), TOKENS)
+        card = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"][0]
+        return card.h
+
+    assert abs(card_h_of(long_value) - card_h_of("3단계")
+               - (cards_arch.block_h(2, value_size) - cards_arch.block_h(1, value_size))) < 0.01
+

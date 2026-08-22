@@ -13,8 +13,20 @@ MIN_CARD_W = 80.0
 CARD_PAD_IN = 8.0
 CARD_PAD_V = 10.0
 LEADING = 1.3
+# typst 실측(2026-08-22, Pretendard 11pt·par leading 1.3em): 줄 진행 2.008em
+# = leading 1.3em + cap-height 0.71em, 첫 줄 레이아웃 높이 = cap 0.72em.
+# 줄 n개 블록 높이 = size·(0.75 + 2.05·(n−1)) — 구형 1.3·n 근사는 n≥2부터
+# 줄당 0.71em을 과소 계산했다(max_w가 카드 전폭이라 실측 줄 수가 예산보다
+# 적어 가려져 있었음 — PyMuPDF 스팬 실측으로 발견).
+LINE_FIRST_EM = 0.75
+LINE_STEP_EM = 2.05
 HEIGHT_LIMIT = 0.85
 VALUE_BONUS_PT = 2.0                       # value 강조 — 카드 제목+2pt
+
+
+def block_h(n: int, size: float) -> float:
+    """줄 n개 텍스트 블록의 typst 레이아웃 높이(pt) — 실측 줄 진행 공식."""
+    return size * (LINE_FIRST_EM + LINE_STEP_EM * (n - 1))
 
 PACK_COLS = {"essay": 2, "practical": 3, "b5": 3, "business": 3, "lecture": 3}
 
@@ -55,9 +67,9 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
         # value도 실측 줄 수 반영 — _card_texts(렌더)와 동일 파라미터(cardW·CARD_PAD_IN·pack)
         h = 2 * CARD_PAD_V
         if "value" in c:
-            h += budget.line_count(c["value"], cardW, value_size, CARD_PAD_IN, pack) * value_size * LEADING + 4.0
-        h += budget.line_count(c["title"], cardW, card_title_size, CARD_PAD_IN, pack) * card_title_size * LEADING + 4.0
-        h += budget.line_count(c["text"], cardW, card_text_size, CARD_PAD_IN, pack) * card_text_size * LEADING
+            h += block_h(budget.line_count(c["value"], cardW, value_size, CARD_PAD_IN, pack), value_size) + 4.0
+        h += block_h(budget.line_count(c["title"], cardW, card_title_size, CARD_PAD_IN, pack), card_title_size) + 4.0
+        h += block_h(budget.line_count(c["text"], cardW, card_text_size, CARD_PAD_IN, pack), card_text_size)
         return h
 
     # 헤더(Phase 1 flow와 동일 구조)
@@ -65,18 +77,18 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     cy = 0.0
     if fence.kicker:
         # kicker: 저작 계약 초단문(1줄)
-        texts.append(TextOp(x=W / 2, y=cy + kicker_size * LEADING / 2, size=kicker_size,
+        texts.append(TextOp(x=W / 2, y=cy + block_h(1, kicker_size) / 2, size=kicker_size,
                             text=fence.kicker, role="ink-mute", field="kicker"))
-        cy += kicker_size * LEADING
+        cy += block_h(1, kicker_size)
     t_lines = budget.line_count(fence.title, W - 2 * P, title_size, 0.0, pack)
-    texts.append(TextOp(x=W / 2, y=cy + t_lines * title_size * LEADING / 2, size=title_size,
+    texts.append(TextOp(x=W / 2, y=cy + block_h(t_lines, title_size) / 2, size=title_size,
                         text=fence.title, role="ink", weight="bold", max_w=W - 2 * P, field="title"))
-    cy += t_lines * title_size * LEADING
+    cy += block_h(t_lines, title_size)
     if fence.thesis:
         th = budget.line_count(fence.thesis, W - 2 * P, card_text_size, 0.0, pack)
-        texts.append(TextOp(x=W / 2, y=cy + th * card_text_size * LEADING / 2, size=card_text_size,
+        texts.append(TextOp(x=W / 2, y=cy + block_h(th, card_text_size) / 2, size=card_text_size,
                             text=fence.thesis, role="ink-soft", max_w=W - 2 * P, field="thesis"))
-        cy += th * card_text_size * LEADING
+        cy += block_h(th, card_text_size)
     y = cy + 18.0
 
     rows = [items[i:i + cols] for i in range(0, n, cols)]
@@ -95,9 +107,9 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     y += 12.0
     note = fence.note or DEFAULT_NOTE
     nl = budget.line_count(note, W - 2 * P, card_text_size, 8.0, pack)
-    texts.append(TextOp(x=W / 2, y=y + nl * card_text_size * LEADING / 2, size=card_text_size,
+    texts.append(TextOp(x=W / 2, y=y + block_h(nl, card_text_size) / 2, size=card_text_size,
                         text=note, role="ink-mute", max_w=W - 2 * P, field="note"))
-    y += nl * card_text_size * LEADING
+    y += block_h(nl, card_text_size)
 
     if y > H_frame * HEIGHT_LIMIT:
         raise CardsLayoutError(
@@ -112,25 +124,28 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
 
 def _card_texts(out: list, c: dict, cx: float, cy: float, cw: float, ch: float,
                 t_size: float, x_size: float, v_size: float, idx: int, pack: str) -> None:
-    # pad를 CARD_PAD_IN으로 명시 — card_h(높이 예산)와 같은 파라미터로 줄 수 일치 보장
+    # pad를 CARD_PAD_IN으로 명시 — card_h(높이 예산)와 같은 파라미터로 줄 수 일치 보장.
+    # max_w도 cw 전폭이 아니라 좌우 CARD_PAD_IN 감소폭 — 잉크가 테두리에 닿지 않는다
+    # (실측 2026-08-22: 전폭 기준 최대 −2.01pt 이탈).
     t_lines = budget.line_count(c["title"], cw, t_size, CARD_PAD_IN, pack)
     x_lines = budget.line_count(c["text"], cw, x_size, CARD_PAD_IN, pack)
     v_lines = budget.line_count(c.get("value", ""), cw, v_size, CARD_PAD_IN, pack) if "value" in c else 0
-    block = (v_lines * v_size * LEADING + 4.0 if "value" in c else 0.0) \
-        + t_lines * t_size * LEADING + 4.0 + x_lines * x_size * LEADING
+    block = (block_h(v_lines, v_size) + 4.0 if "value" in c else 0.0) \
+        + block_h(t_lines, t_size) + 4.0 + block_h(x_lines, x_size)
     top = cy + (ch - block) / 2
     cur = top
+    mw = cw - 2 * CARD_PAD_IN
     if "value" in c:
-        out.append(TextOp(x=cx + cw / 2, y=cur + v_lines * v_size * LEADING / 2, size=v_size,
-                          text=c["value"], role="focus", weight="bold", max_w=cw,
+        out.append(TextOp(x=cx + cw / 2, y=cur + block_h(v_lines, v_size) / 2, size=v_size,
+                          text=c["value"], role="focus", weight="bold", max_w=mw,
                           field=f"cards[{idx}].value"))
-        cur += v_lines * v_size * LEADING + 4.0
-    out.append(TextOp(x=cx + cw / 2, y=cur + t_lines * t_size * LEADING / 2, size=t_size,
-                      text=c["title"], role="ink", weight="bold", max_w=cw,
+        cur += block_h(v_lines, v_size) + 4.0
+    out.append(TextOp(x=cx + cw / 2, y=cur + block_h(t_lines, t_size) / 2, size=t_size,
+                      text=c["title"], role="ink", weight="bold", max_w=mw,
                       field=f"cards[{idx}].title"))
-    cur += t_lines * t_size * LEADING + 4.0
-    out.append(TextOp(x=cx + cw / 2, y=cur + x_lines * x_size * LEADING / 2, size=x_size,
-                      text=c["text"], role="ink-soft", max_w=cw, field=f"cards[{idx}].text"))
+    cur += block_h(t_lines, t_size) + 4.0
+    out.append(TextOp(x=cx + cw / 2, y=cur + block_h(x_lines, x_size) / 2, size=x_size,
+                      text=c["text"], role="ink-soft", max_w=mw, field=f"cards[{idx}].text"))
 
 
 def _ink_ok(ops, width: float, height: float) -> None:
