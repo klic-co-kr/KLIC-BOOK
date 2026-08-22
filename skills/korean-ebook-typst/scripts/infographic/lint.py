@@ -156,43 +156,51 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
     pack = tokens.get("style", "practical")
     section_cache: dict[str, str | None] = {}
 
+    def _sec(ev: str | None) -> str | None:
+        # evidence §N 해석 캐시 — 모듈별 evidence도 같은 캐시로 정규화한다.
+        if not ev:
+            return None
+        if ev not in section_cache:
+            m = re.fullmatch(r"§(\d+)", ev.strip())
+            section_cache[ev] = (
+                _section_text(chapter_md, int(m.group(1))) if m else None)
+        return section_cache[ev]
+
     for f in fences:
         prefix = f"{chapter_name} #{f.index}"
 
         # 4. 숫자-evidence 교차검증(§3.3) — 미검증은 비치명.
         # composite은 모듈 Fence를 modules[] prefix로 전개해 모듈 필드까지 검사.
-        fields = rows_from(f.title, f.kicker, f.thesis, f.data, "")
+        # 모듈 행 evidence는 모듈 자체 값 우선·상위 펜스 폴백(최종 리뷰) —
+        # 모듈이 다른 절을 인용해도 자기 근거로 검증된다.
+        fields = [(path, text, f.evidence)
+                  for path, text in rows_from(f.title, f.kicker, f.thesis, f.data, "")]
         for j, m in enumerate(f.data.get("modules", [])):
-            fields.extend(rows_from(m.title, m.kicker, m.thesis, m.data, f"modules[{j}]."))
-        sec = None
-        if f.evidence:
-            if f.evidence not in section_cache:
-                m = re.fullmatch(r"§(\d+)", f.evidence.strip())
-                section_cache[f.evidence] = (
-                    _section_text(chapter_md, int(m.group(1))) if m else None)
-            sec = section_cache[f.evidence]
-        for path, text in fields:
+            fields.extend((path, text, m.evidence or f.evidence)
+                          for path, text in rows_from(m.title, m.kicker, m.thesis,
+                                                      m.data, f"modules[{j}]."))
+        for path, text, ev in fields:
             nums = _numbers_in(text)
             if not nums:
                 continue
-            if not f.evidence:
+            if not ev:
                 out.append(LintFinding(
                     "number-evidence", f"{prefix} {path}",
                     f"숫자 {nums} 존재, evidence 필드 없음",
                     ("원문 절 앵커 evidence 추가(예: \"§1\")",)))
-            elif sec is None:
+            elif _sec(ev) is None:
                 out.append(LintFinding(
                     "number-unverified", f"{prefix} {path}",
-                    f"숫자 {nums} — 미검증(evidence {f.evidence!r} 해석 불가·범위 밖) "
+                    f"숫자 {nums} — 미검증(evidence {ev!r} 해석 불가·범위 밖) "
                     "→ 검수 시트 사람 대조 필수",
                     ("evidence를 §N 형식으로 바꾸거나 검수 시트에서 사람 대조",),
                     fatal=False))
             else:
                 for num in nums:
-                    if num not in sec:
+                    if num not in _sec(ev):
                         out.append(LintFinding(
                             "number-evidence", f"{prefix} {path}",
-                            f"숫자 {num!r} 원문(evidence {f.evidence})에 없음",
+                            f"숫자 {num!r} 원문(evidence {ev})에 없음",
                             (LEV_SHORTEN, "원문에 있는 숫자로 교체")))
 
         # 5. FigModel ops — 예산(§5.2-2)·G3(§5.2-9)·커넥터(§5.2-4)

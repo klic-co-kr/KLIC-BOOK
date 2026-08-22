@@ -69,6 +69,75 @@ def test_unresolvable_evidence_nonfatal():
     assert ev[0].fatal is False                    # 빌드 안 막음 — 검수 시트 이관(§3.3)
 
 
+COMPOSITE_CH = """## 구성
+
+주 모듈의 근거 문장. 핵심 지표는 3축으로 정리된다.
+
+## 절차
+
+보조 모듈의 근거 문장. 검증은 5단계로 이루어진다.
+"""
+
+CARDS_EV = {"layout": "cards", "title": "구성은 3축이다",
+            "cards": [{"title": "수집", "text": "입력을 모은다."},
+                      {"title": "정제", "text": "형식을 맞춘다."},
+                      {"title": "배포", "text": "결과를 낸다."}]}
+FLOW_EV = {"layout": "flow", "title": "검증은 5단계다",
+           "steps": [{"title": "준비", "text": "전제를 확인한다."},
+                     {"title": "확정", "text": "결과를 승인한다."}]}
+
+
+def _composite(mods, **top):
+    body = {"layout": "composite", "modules": mods}
+    body.update(top)
+    return parse_fence(1, 1, json.dumps(body, ensure_ascii=False))
+
+
+def test_composite_module_evidence_takes_precedence():
+    # 모듈 evidence 우선(최종 리뷰) — "5"는 §2에만 있고 §1에는 없다.
+    # 모듈 자체 evidence가 무시되면 §1 탓에 치명 "원문에 없음"이 났다.
+    f = _composite([dict(CARDS_EV, slot="primary", evidence="§1"),
+                    dict(FLOW_EV, slot="supporting", evidence="§2")],
+                   title="구성과 절차를 한 장에 담는다", evidence="§1")
+    found = check([f], {}, TOKENS, COMPOSITE_CH, "ch01.md")
+    assert not [x for x in found if x.kind == "number-evidence"]
+
+
+def test_composite_module_evidence_falls_back_to_fence():
+    # 폴백 — 모듈 evidence 없으면 상위 펜스 evidence로 검증: 모듈 숫자 "3"은
+    # 상위 §1에 있어 통과(기존 통과 경로 회귀 방어).
+    flow_no_num = {"layout": "flow", "title": "검증은 단계로 이어진다",
+                   "steps": [{"title": "준비", "text": "전제를 확인한다."},
+                             {"title": "확정", "text": "결과를 승인한다."}]}
+    f = _composite([dict(CARDS_EV, slot="primary"),
+                    dict(flow_no_num, slot="supporting")],
+                   title="구성과 절차를 한 장에 담는다", evidence="§1")
+    found = check([f], {}, TOKENS, COMPOSITE_CH, "ch01.md")
+    assert not [x for x in found
+                if x.kind in ("number-evidence", "number-unverified")]
+
+
+def test_bare_composite_module_evidence_suffices():
+    # 최상위 evidence 없어도 모듈마다 evidence가 있으면 치명 아니다(최종 리뷰) —
+    # 초판 동작은 모듈 행 전부에 "evidence 필드 없음" 치명을 냈다.
+    f = _composite([dict(CARDS_EV, slot="primary", evidence="§1"),
+                    dict(FLOW_EV, slot="supporting", evidence="§2")],
+                   title="구성과 절차를 한 장에 담는다")
+    found = check([f], {}, TOKENS, COMPOSITE_CH, "ch01.md")
+    assert not [x for x in found if x.kind == "number-evidence"]
+
+
+def test_composite_module_number_without_any_evidence_stays_fatal():
+    # 모듈·상위 어느 쪽 evidence도 없으면 여전히 치명 — fails closed
+    f = _composite([dict(CARDS_EV, slot="primary"),
+                    dict(FLOW_EV, slot="supporting")],
+                   title="구성과 절차를 한 장에 담는다")
+    found = check([f], {}, TOKENS, COMPOSITE_CH, "ch01.md")
+    hits = [x for x in found if x.kind == "number-evidence" and "modules[" in x.loc]
+    assert hits and "evidence 필드 없음" in hits[0].measured
+    assert "ch01.md #1 modules[1].title" in [x.loc for x in hits]   # flow "5"
+
+
 def test_budget_density_violation_reported_with_field_loc():
     long_title = "아주 긴 단계 제목이라 밀도 상한을 초과하는 텍스트가 이곳에 있다 " * 3
     fs = _fences([{"layout": "flow", "title": "t", "steps": [

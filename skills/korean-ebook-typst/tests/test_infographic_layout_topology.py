@@ -98,7 +98,7 @@ def test_dashed_edge_style():
 def test_topology_elements_reach_lint_and_sheet():
     # test_before_after_elements_reach_lint_and_sheet 패턴 복제 —
     # lint.check는 5인자(fences, figs, tokens, chapter_md, chapter_name)·반환은 LintFinding 리스트,
-    # loc는 "{chapter} #{index} {필드}"형. _sheet_rows는 2-튜플 (필드경로, 문구).
+    # loc는 "{chapter} #{index} {필드}"형. _sheet_rows는 3-튜플 (필드경로, 문구, 해석 evidence).
     from scripts.infographic.lint import check
     from scripts.infographic.render import _review_sheet, _sheet_rows
     f = _fence(n=3)
@@ -106,7 +106,7 @@ def test_topology_elements_reach_lint_and_sheet():
     figs = {1: topo_arch.layout(f, TOKENS)}
     found = check([f], figs, TOKENS, "원문 없음", "ch01.md")
     assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 nodes[0].label" for x in found)
-    rows = dict(_sheet_rows(f))
+    rows = {p: t for p, t, _ in _sheet_rows(f)}
     assert {"nodes[0].label", "nodes[1].label", "nodes[2].label"} <= set(rows)
     sheet = _review_sheet(f, [])
     for i in range(3):

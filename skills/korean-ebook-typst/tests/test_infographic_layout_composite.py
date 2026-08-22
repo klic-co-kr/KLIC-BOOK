@@ -113,9 +113,68 @@ def test_determinism():
 def test_sheet_rows_reach_module_fields():
     from scripts.infographic import render as ig_render
     f = _fence([dict(CARDS3, slot="primary"), dict(FLOW2, slot="supporting")])
-    rows = dict(ig_render._sheet_rows(f))
+    rows = {p: t for p, t, _ in ig_render._sheet_rows(f)}
     assert rows["modules[0].cards[0].title"] == "카드 1"
     assert rows["modules[1].steps[0].title"] == "준비"
+
+
+def test_sheet_rows_carry_resolved_module_evidence():
+    # 모듈 행 evidence 열은 해석 규칙 그대로 — 모듈 값 우선·상위 폴백(최종 리뷰).
+    # 검수 시트가 모듈 evidence를 보여주지 않으면 대조자가 근거를 확인 못 한다.
+    from scripts.infographic import render as ig_render
+    f = _fence([dict(CARDS3, slot="primary", evidence="§2"),
+                dict(FLOW2, slot="supporting")], evidence="§1")
+    rows = {p: ev for p, t, ev in ig_render._sheet_rows(f)}
+    assert rows["modules[0].cards[0].title"] == "§2"   # 모듈 자체 우선
+    assert rows["modules[1].steps[0].title"] == "§1"   # 상위 폴백
+    assert rows["title"] == "§1"
+
+
+def test_module_alias_normalized_like_top_level():
+    # 모듈 별칭도 재귀 파싱이 정규화한다(최종 리뷰) — 사전 VALID_LAYOUTS 검사가
+    # 별칭을 "알 수 없는 layout"으로 죽이던 것을 폈다. 재귀 금지(composite) 검사는 잔존.
+    f = _fence([dict(CARDS3, slot="primary"),
+                dict(FLOW2, slot="supporting", layout="process")])
+    m = f.data["modules"][1]
+    assert m.layout == "flow" and m.data["_alias"] == "process"
+    assert m.data["_slot"] == "supporting"
+
+
+MODULE_ALIAS_MD = """## 검증 장
+
+```infographic
+{"layout": "composite", "title": "구성과 절차를 한 장에 담는다",
+ "modules": [
+   {"slot": "primary", "layout": "cards", "title": "핵심 구성은 세 축이다",
+    "cards": [{"title": "수집", "text": "입력을 모은다."},
+              {"title": "정제", "text": "형식을 통일한다."},
+              {"title": "배포", "text": "산출물을 전달한다."}]},
+   {"slot": "supporting", "layout": "process", "title": "적용 절차는 준비에서 확정으로 이어진다",
+    "steps": [{"title": "준비", "text": "전제를 확인한다."},
+              {"title": "확정", "text": "결과를 승인한다."}]}]}
+```
+
+본문 산문 한 줄.
+"""
+
+
+def test_module_alias_builds_and_warns(tmp_path, capsys):
+    # 모듈 별칭(최종 리뷰) — 정규화돼 빌드는 계속되고 최상위와 같은 2채널 경고:
+    # 채널 1 콘솔 print + 채널 2 검수 시트 상단 줄.
+    from scripts.infographic import render as ig_render
+    (tmp_path / "ch01.md").write_text(MODULE_ALIAS_MD, encoding="utf-8")
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / "tokens.json").write_text(
+        (SKILL / "styles" / "practical" / "tokens.json").read_text(encoding="utf-8"),
+        encoding="utf-8")
+    out = ig_render.render_book_fences(tmp_path, build, {"chapters": ["ch01.md"]})
+    assert out[0][1] == "000-fig01.typ"            # 별칭 모듈 포함 빌드 성공
+    stdout = capsys.readouterr().out
+    assert "별칭 process→flow — 정식 키워드 권장" in stdout
+    assert "#1 modules[1]" in stdout
+    sheet = (build / "infographic" / "000-fig01.review.md").read_text(encoding="utf-8")
+    assert "별칭 process→flow — 정식 키워드 권장" in sheet
 
 
 GOLDEN = Path(__file__).parent / "fixtures" / "infographic" / "golden-composite-practical.typ"

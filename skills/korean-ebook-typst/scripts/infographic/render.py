@@ -60,6 +60,12 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
                 if "_alias" in f.data:
                     print(f"[경고] 별칭 {f.data['_alias']}→{f.layout} — 정식 키워드 권장 "
                           f"({chapter_name} #{f.index})")
+                # 모듈 별칭(최종 리뷰) — 재귀 파싱이라 경고 데이터가 m.data에 남는다.
+                # 상위 펜스와 같은 2채널 계약으로 인쇄한다.
+                for j, m in enumerate(f.data.get("modules", [])):
+                    if "_alias" in m.data:
+                        print(f"[경고] 별칭 {m.data['_alias']}→{m.layout} — 정식 키워드 권장 "
+                              f"({chapter_name} #{f.index} modules[{j}])")
             except ParseError as e:
                 all_findings.append(lint.LintFinding(
                     "schema", f"{chapter_name} #{e.fence_index}", e.detail,
@@ -167,11 +173,18 @@ def rows_from(title: str, kicker: str | None, thesis: str | None, data: dict,
     return rows
 
 
-def _sheet_rows(f) -> list[tuple[str, str]]:
-    # composite 모듈은 parse가 Fence로 정규화 — m.title·m.data 속성으로 전개
-    rows = rows_from(f.title, f.kicker, f.thesis, f.data, "")
+def _sheet_rows(f) -> list[tuple[str, str, str]]:
+    """(경로, 문구, 해석 evidence) 3-튜플 — composite 모듈은 parse가 Fence로
+    정규화해 m.title·m.data 속성으로 전개한다. 모듈 행 evidence는 모듈 자체
+    값 우선·상위 펜스 폴백(lint.check와 같은 해석 규칙 — 시트 열이 실제
+    검증에 쓰인 근거를 보여야 대조자가 따라온다, 최종 리뷰)."""
+    rows = [(p, t, f.evidence or "—")
+            for p, t in rows_from(f.title, f.kicker, f.thesis, f.data, "")]
     for j, m in enumerate(f.data.get("modules", [])):
-        rows.extend(rows_from(m.title, m.kicker, m.thesis, m.data, f"modules[{j}]."))
+        ev = m.evidence or f.evidence or "—"
+        rows.extend((p, t, ev)
+                    for p, t in rows_from(m.title, m.kicker, m.thesis, m.data,
+                                          f"modules[{j}]."))
     return rows
 
 
@@ -187,6 +200,11 @@ def _review_sheet(f, unverified: list) -> str:
     if "_alias" in f.data:
         lines.append(f"**⚠ 별칭 {f.data['_alias']}→{f.layout} — 정식 키워드 권장**")
         lines.append("")
+    for j, m in enumerate(f.data.get("modules", [])):
+        if "_alias" in m.data:
+            lines.append(f"**⚠ 별칭 {m.data['_alias']}→{m.layout} — "
+                         f"정식 키워드 권장 (modules[{j}])**")
+            lines.append("")
     lines += [
         f"> 고지: {f.note or DEFAULT_NOTE}",
         f"> evidence: {f.evidence or '—'}",
@@ -194,8 +212,7 @@ def _review_sheet(f, unverified: list) -> str:
         "| 요소 | 문구 | evidence | 교차검증 | 확인란 |",
         "|---|---|---|---|---|",
     ]
-    ev = f.evidence or "—"
-    for p, t in rows:
+    for p, t, ev in rows:
         flag = "미검증" if any(f" {p}" in u.loc for u in unverified) else "I1 통과"
         lines.append(f"| {p} | {t} | {ev} | {flag} |  |")
     lines += ["", "- [ ] 원문 대조 완료"]

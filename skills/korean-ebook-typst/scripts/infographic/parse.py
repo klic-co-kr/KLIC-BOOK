@@ -285,10 +285,11 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
             if slot not in ("primary", "supporting"):
                 raise ParseError(index, f"modules[{j}].slot {slot!r} — primary|supporting", line)
             mlayout = m.get("layout")
+            # 재귀 금지는 재귀 호출 앞에서 명시적으로 — 재귀에 맡기면 모듈
+            # 스키마 에러로 위장한다. layout 검증·별칭 정규화는 재귀가 맡는다
+            # (최종 리뷰: 사전 VALID_LAYOUTS 검사가 모듈 별칭을 unknown으로 죽였다).
             if mlayout == "composite":
                 raise ParseError(index, f"modules[{j}].layout composite — 모듈 재귀 금지(전 슬롯)", line)
-            if mlayout not in VALID_LAYOUTS:
-                raise ParseError(index, f"modules[{j}].layout {mlayout!r} — 알 수 없는 layout", line)
             # 모듈 페이로드를 parse_fence에 재통과 — 개수 상한·스키마 검증 전수 승계(판정 3)
             payload = {k: v for k, v in m.items() if k != "slot"}
             mf = parse_fence(index, line, json.dumps(payload, ensure_ascii=False))

@@ -424,7 +424,7 @@ python3 scripts/infographic/cli.py preview <ch.md> --fig 2 [--style practical]
 3. **before_after + ladder + roadmap** — 동일 구조.
 4. **topology + approval + layers(rings 변형)** — 동일 구조.
 5. **composite + 가이드 완성** — 복합 씬, authoring.md 전체
-   (라우팅 표 9종·검수 절차·치트시트 practical 기준 — 전 팩형 수치
+   (라우팅 표 10종·검수 절차·치트시트 practical 기준 — 전 팩형 수치
    확장은 본 플랜 범위 밖), SKILL.md 요약 갱신,
    통합 테스트 마무리.
 
@@ -477,4 +477,5 @@ authoring.md 해당 섹션 존재 + 검수 시트 생성 확인.
   3~5(§3.2)와 별개로 layout이 판형 행을 우선 검사한다.
 - 개정 6판: 2026-08-22 — Phase 5 플랜과 함께. composite 자동 축소 제거·
   에러 스키마 2종 확정, 최상위 title 선택·모듈 재귀 전 슬롯 금지 명시,
-  리포트 명칭 gate-report 정합, 치트시트 practical 기준 명시.
+  리포트 명칭 gate-report 정합, 치트시트 practical 기준 명시,
+  라우팅 표 표기 정정(9종→10종 — composite 포함).

@@ -97,7 +97,7 @@ def test_layers_elements_reach_lint_and_sheet():
     figs = {1: layers_arch.layout(f, TOKENS)}
     found = check([f], figs, TOKENS, "원문 없음", "ch01.md")
     assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 stack[0].label" for x in found)
-    rows = dict(_sheet_rows(f))
+    rows = {p: t for p, t, _ in _sheet_rows(f)}
     assert {"stack[0].label", "stack[3].label"} <= set(rows)
     sheet = _review_sheet(f, [])
     assert "stack[0].label" in sheet

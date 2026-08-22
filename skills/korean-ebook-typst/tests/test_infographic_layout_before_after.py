@@ -106,7 +106,7 @@ def test_before_after_elements_reach_lint_and_sheet():
     found = check([f], figs, TOKENS, "원문 없음", "ch01.md")
     assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 before[0]" for x in found)
     assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 after[0]" for x in found)
-    rows = dict(_sheet_rows(f))
+    rows = {p: t for p, t, _ in _sheet_rows(f)}
     assert {"before[0]", "before[1]", "after[0]", "center",
             "before_label", "after_label"} <= set(rows)
     sheet = _review_sheet(f, [])
