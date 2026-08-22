@@ -23,7 +23,7 @@
 - **높이·폭 예산은 전부 `budget.line_count(text, box_w, size_pt, pad, pack)` 실측** — 1줄 가정 금지. 유일 예외: `kicker`·패널/스텝 라벨류는 저작 계약상 초단문(1줄) — authoring.md 규칙으로 통제(코드 주석에 계약 명시).
 - 판형 상한은 layout이 즉시 에러(스펙 §6.2). 상한 검사는 parse 하한·상한(절대)과 별개 경로 — 양쪽 모두 도달 가능 테스트 유지.
 - 판형 상한(§6.2 표): topology 노드 essay 5 / practical 6 / b5 7 / business 8 / lecture 8. **ladder 단계(개정 5판 신규 행) essay 4 / practical·b5·business·lecture 5.** approval·layers는 판형 표에 없음 — 폭 하상수(MIN_STEP_W 등) 도달 에러로 갈음.
-- 절대 상한(§3.2): topology 노드 3~8, approval 경로 3~8·게이트 ≤4, layers(stack 또는 rings) 2~6.
+- 절대 상한(§3.2): topology 노드 3~8, approval 경로 3~8·게이트 ≤4, layers(stack 또는 rings) 2~6. **approval 경로 상한 8은 플랜 결정(스펙 미정의)** — MIN_STEP_W 48 폭 하상수가 실질 상한을 더 조인다: 팩별 최대 스텝 essay 3·practical 4·b5 5·business 5·lecture 6(n=6에서 47.59<48).
 - 별칭 확장: `network` → `topology`(스펙 §3.4). approval·layers 별칭 없음.
 - 텍스트 크기: 스텝/노드 제목=본문+1, 항목/본문=본문−1, 제목=H2(essay +1.5), 라벨=label 크기 — Phase 2·3 cards 관례. 공용 산출은 `base.sizes(tokens)` 팩토리(본 플랜 Task 1 도입).
 - **archetype별 골든 스냅샷 필수** — 3종 각 1개 practical, `IG_REGEN_GOLDEN=1` 절차. Task 1은 기존 골든 6종 전량 재생성 웨이브(emit max-w 인자 추가로 바이트 변경 — 내용 불변).
@@ -54,30 +54,17 @@
 
 - [ ] **Step 1: 실패 테스트 작성**
 
+신규 파일 전체(임포트 관례는 기존 테스트 파일과 동일 — conftest가 스킬 루트 sys.path 추가):
+
 ```python
-# tests/test_infographic_emit_max_w.py — emit max_w 방출·note 다중 줄 예산.
+# tests/test_infographic_emit_max_w.py — emit max_w 방출 + note 다중 줄 예산.
 """test_infographic_emit_max_w.py — 스펙 §5.1 emit max_w 방출 + note 다중 줄 예산화."""
-import pytest
-
-from scripts.infographic.archetypes import flow, roadmap
 from scripts.infographic.emit import render_typ
-from scripts.infographic.parse import DEFAULT_NOTE
-
-from .test_infographic_layout import TOKENS  # conftest 경로 관례에 따라 기존 테스트 파일의
-# TOKENS practical 딕트 임포트(없으면 해당 파일에서 복제해 온 것을 쓴다 — 관례 준수)
+from scripts.infographic.model import FigModel, TextOp
 
 
-def _flow_fence():
-    from scripts.infographic.parse import parse_fence
-    return parse_fence(0, """{"layout":"flow","title":"흐름 검증 제목",
-      "steps":[{"title":"준비","text":"준비 문장"},{"title":"실행","text":"실행 문장"}]}""")
-```
-```
-
-```python
 def test_emit_max_w_unit_synthetic():
     # 합성 FigModel — TextOp 2개(폭 0·폭 100)로 방출 문자열 직접 단언(펜스 의존 없음).
-    from scripts.infographic.model import FigModel, RectOp, TextOp
     fig = FigModel(width=300.0, height=100.0, source_index=0, ops=(
         TextOp(x=150.0, y=20.0, size=9.0, text="폭 없음", max_w=0.0),
         TextOp(x=150.0, y=50.0, size=9.0, text="폭 있음", max_w=100.0),
@@ -85,34 +72,49 @@ def test_emit_max_w_unit_synthetic():
     lines = [l for l in render_typ(fig).splitlines() if "ig-text(" in l]
     assert len(lines) == 2
     assert "max-w" not in lines[0] and "폭 없음" in lines[0]
-    assert "max-w: 100.00pt" in lines[1]
+    assert "max-w: 100.00pt" in lines[1]        # _n()은 2자리 반올림(f"{v:.2f}") 방출
 ```
 
-노트: `TOKENS`·`_essay_tokens`·`_tokens(pack)`·`_fence(...)` 조달은 기존 `test_infographic_layout_*.py`의 관례(tokens.json 직독 헬퍼·펜스 생성자)를 그대로 재사용한다. essay DEFAULT_NOTE 2줄 회귀(클리핑 결함의 핵심 사례)는 `test_infographic_layout_flow.py`에 추가:
+essay DEFAULT_NOTE 2줄 회귀(클리핑 결함의 핵심 사례)는 기존 `test_infographic_layout_flow.py` 말미에 추가 — 모듈 상단 임포트(`json`·`Path`·`flow_arch`·`parse_fence`·`TOKENS`)는 이미 있으므로 함수 본문만 붙인다(토큰 직독·펜스 3인자 — 기존 파일 관례 그대로):
 
 ```python
-def test_note_measured_two_lines_essay(_tokens):  # _tokens("essay") 관례 헬퍼
-    essay = _tokens("essay")
+def test_note_measured_two_lines_essay():
+    # Phase 4 — note 높이는 line_count 실측(1줄 가정 제거). essay 기본 노트 2줄.
+    from scripts.infographic import budget
+    from scripts.infographic.parse import DEFAULT_NOTE
+    essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
     item = essay["fonts"]["body"]["size_pt"] - 1
     w = essay["body_frame_pt"]["x1"] - essay["body_frame_pt"]["x0"] - 28.0
-    nl = budget.line_count(parse_mod.DEFAULT_NOTE, w, item, 8.0, "essay")
+    nl = budget.line_count(DEFAULT_NOTE, w, item, 8.0, "essay")
     assert nl == 2  # 전제 — Phase 3 최종 리뷰 실측(essay 본문폭에서 기본 노트 2줄)
-    h_short = flow_arch.layout(_fence(note="한 줄 노트"), essay).height
-    h_default = flow_arch.layout(_fence(note=None), essay).height
+    mk = lambda note: parse_fence(1, 1, json.dumps(
+        {"layout": "flow", "title": "결론 제목",
+         "steps": [{"title": "단계 1", "text": "근거 문장"}],
+         **({"note": note} if note else {})}, ensure_ascii=False))
+    h_short = flow_arch.layout(mk("한 줄 노트"), essay).height
+    h_default = flow_arch.layout(mk(None), essay).height
     assert abs((h_default - h_short) - (nl - 1) * item * 1.3) < 0.01
 ```
 
-`test_infographic_layout_roadmap.py`에도 동일 구조 1건(전제 `nl` practical == 1, 델타 0 — 배관 회귀):
+`test_infographic_layout_roadmap.py`에도 동일 구조 1건(전제 `nl` practical == 2 — **practical 기본 노트도 2줄, units 30.2 > 상한 29.0**. `_fence(n, items)`는 note 인자가 없으므로 펜스를 직접 만든다):
 
 ```python
 def test_note_measured_pushes_fig_height():
-    short = rm_arch.layout(_fence(note="한 줄 노트"), TOKENS)
-    default = rm_arch.layout(_fence(note=None), TOKENS)
-    nl = budget.line_count(parse_mod.DEFAULT_NOTE,
+    from scripts.infographic import budget
+    from scripts.infographic.parse import DEFAULT_NOTE
+    nl = budget.line_count(DEFAULT_NOTE,
                            TOKENS["body_frame_pt"]["x1"] - TOKENS["body_frame_pt"]["x0"] - 28.0,
                            TOKENS["fonts"]["body"]["size_pt"] - 1, 8.0, "practical")
-    assert nl == 1
-    assert abs((default.height - short.height) - (nl - 1) * (TOKENS["fonts"]["body"]["size_pt"] - 1) * 1.3) < 0.01
+    assert nl == 2  # Phase 4 실측 — practical 기본 노트 2줄(1줄 아님)
+    mk = lambda note: parse_fence(1, 1, json.dumps(
+        {"layout": "roadmap", "title": "도입 로드맵",
+         "phases": [{"period": "2026년", "title": "위상 1", "items": ["항목 0"]},
+                    {"period": "2027년", "title": "위상 2", "items": ["항목 1"]}],
+         **({"note": note} if note else {})}, ensure_ascii=False))
+    short = rm_arch.layout(mk("한 줄 노트"), TOKENS)
+    default = rm_arch.layout(mk(None), TOKENS)
+    item = TOKENS["fonts"]["body"]["size_pt"] - 1
+    assert abs((default.height - short.height) - (nl - 1) * item * 1.3) < 0.01
 ```
 
 - [ ] **Step 2: RED 확인**
@@ -139,7 +141,9 @@ Expected: FAIL — `max-w` 방출 없음(assert "max-w: " in out 실패), note �
 // 줄은 상자 안에서 중앙 정렬 — 폭 없는 박스(내용 밀착) 시대의 시각과 동일하게.
 #let ig-text(x, y, fw, fh, size, role, weight: "regular", max-w: 0pt, body) = place(
   center + horizon, dx: pt(x - fw / 2), dy: pt(y - fh / 2),
-  box(inset: 0pt, width: if max-w > 0pt { pt(max-w) })[#set par(leading: 1.3em)
+  // max-w는 emit이 "306.49pt"형 길이로 넘긴다 — pt() 재감싸면 length×length 오류(typst 0.15.1 실증).
+  // if에 else가 없으면 none이 되어 width 위치 타입 오류 — 반드시 else { auto }.
+  box(inset: 0pt, width: if max-w > 0pt { max-w } else { auto })[#set par(leading: 1.3em)
     #align(center)[#text(size: pt(size), fill: ig-color(role),
           weight: if weight == "bold" { "bold" } else { "regular" })[#body]]],
 )
@@ -163,16 +167,32 @@ def sizes(tokens: dict) -> dict:
 
 각 모듈(flow·cards·matrix·before_after·ladder·roadmap)에 동일 적용:
 
-(a) 인라인 크기 산출 블록을 팩토리 치환(지역 변수명은 유지 — `s = sizes(tokens)` 후 언팩):
+(a) 인라인 크기 산출 블록을 팩토리 치환. 단 **flow·matrix는 기존 `_sizes(tokens)` 튜플 헬퍼를 쓰는 중**(`flow.py:44` 4-튜플·`matrix.py:31` 5-튜플 — 지역 `sizes` 변수에 얹어 `_header(..., sizes)` 등으로 전달)이라 기계적 치환은 깨진다. 두 모듈은 **헬퍼를 base 위임형으로 재작성**한다(호출부·변수명 불변):
+
+```python
+# flow.py — 기존 4줄 산출 본체를 이 한 줄로(시그니처·튜플 순서 불변):
+from .base import LayoutError, sizes as _base_sizes
+
+def _sizes(tokens: dict) -> tuple[float, float, float, float]:
+    s = _base_sizes(tokens)
+    return (s["kicker"], s["title"], s["ph_title"], s["item"])
+
+# matrix.py — 5-튜플(body 포함) 동일 패턴:
+def _sizes(tokens: dict):
+    s = _base_sizes(tokens)
+    return (s["kicker"], s["title"], s["ph_title"], s["item"], s["body"])
+```
+
+나머지 4개 모듈(cards·before_after·ladder·roadmap)은 인라인 산출 블록을 언팩으로 치환(지역 변수명 유지):
 
 ```python
 from .base import LayoutError, sizes
-# ... 기존 f["body"]["size_pt"] 등 5줄 산출을:
+# ... 기존 f["body"]["size_pt"] 등 산출 블록을:
 s = sizes(tokens)
 kicker_size, title_size = s["kicker"], s["title"]
 ph_title_size, item_size = s["ph_title"], s["item"]
 ```
-(모듈이 쓰지 않는 키는 언팩 생략 — 예: roadmap은 전부 사용. cards/matrix의 기존 변수명이 다르면 그 이름으로 언팩. 만약 모듈 기존 산출값이 팩토리 값과 다르면(예: cards의 kicker 계산) **팩토리 값을 따른다** — 값 변화가 생기면 골든 눈검 단계에서 확인하고 보고서에 명기.)
+(모듈이 쓰지 않는 키는 언팩 생략 — 예: roadmap은 전부 사용. 만약 모듈 기존 산출값이 팩토리 값과 다르면(예: cards의 kicker 계산) **팩토리 값을 따른다** — 값 변화가 생기면 골든 눈검 단계에서 확인하고 보고서에 명기.)
 
 (b) note 블록 다중 줄 예산화(전 모듈 동일 패턴 — 아래는 roadmap.py:108-112 개정):
 
@@ -205,10 +225,15 @@ Expected: 골든 스냅샷 6종 FAIL(바이트 변경 — max-w 인자), 나머�
 
 - [ ] **Step 8: 골든 6종 재생성 웨이브**
 
+**필수 선행**: 골든 테스트는 두 모드가 섞여 있다 — before_after·ladder·roadmap은 `IG_REGEN_GOLDEN=1`이면 항상 덮어쓰지만, **flow(test_infographic_emit.py:13)·cards·matrix는 create-if-missing형**(파일이 있으면 재작성 안 함 → 바이트 불일치로 영구 FAIL). 따라서 재생성 전 이 3골든을 삭제한다:
+
 ```bash
+rm skills/korean-ebook-typst/tests/fixtures/infographic/golden-flow-practical.typ \
+   skills/korean-ebook-typst/tests/fixtures/infographic/golden-cards-practical.typ \
+   skills/korean-ebook-typst/tests/fixtures/infographic/golden-matrix-practical.typ
 IG_REGEN_GOLDEN=1 python3 -m pytest skills/korean-ebook-typst/tests/ -q
 ```
-Expected: 6골든 write+FAIL(설계상). 이후 눈검: 기존 하네스 관례(`.scratch/` 임시 typst 컴파일 `--ppi 144` PNG)로 6종 전부 — ① practical 시각적 레이아웃 변화 없음(줄바꿈 변화 0 — practical 텍스트는 전부 예산 내 1줄) ② 텍스트 중앙 정렬 유지. 추가로 `cli.py preview --style essay`로 essay 1종 — DEFAULT_NOTE가 2줄로 **보이게** 렌더되는지(클리핑 소멸 확인 — 본 태스크의 목적).
+Expected: 6골든 write(+create-if-missing 3종은 재생성 직후 PASS, 항상작성 3종은 의도적 FAIL — "골든 재생성 — 눈검 후 커밋"). 이후 눈검: 기존 하네스 관례(`.scratch/` 임시 typst 컴파일 `--ppi 144` PNG)로 6종 전부 — ① **practical 프레임 paper rect 높이가 약 +11.7pt** (note 예산이 1→2줄 — DEFAULT_NOTE 텍스트 자체는 여전히 1줄로 보임. 이 높이 변화는 의도된 것) ② note 외 텍스트 줄바꿈 변화 0·중앙 정렬 유지. 추가로 essay 1종 — `python3 skills/korean-ebook-typst/scripts/infographic/cli.py preview <md> --fig 0 --style essay --out essay-preview.pdf` (`--fig` 필수 인자 — 누락 시 argparse exit 2): DEFAULT_NOTE가 2줄로 **보이게** 렌더되는지(클리핑 소멸 확인 — 본 태스크의 목적).
 재실행: `python3 -m pytest skills/korean-ebook-typst/tests/ -q` → 전부 PASS(바이트 안정).
 
 - [ ] **Step 9: 커밋**
@@ -250,12 +275,17 @@ git commit -m "fix: emit max_w 파이프라인 — ig-text 상자 폭 강제·no
 # tests/test_infographic_layout_topology.py — 스펙 §6.2·§6.3 topology 지오메트리·결정론.
 """test_infographic_layout_topology.py — 스펙 §6.2·§6.3 topology 지오메트리·결정론."""
 import json
+from pathlib import Path
 
 import pytest
 
 from scripts.infographic.archetypes import topology as topo_arch
 from scripts.infographic.archetypes.topology import TopologyLayoutError
+from scripts.infographic.model import ArrowOp, RectOp
 from scripts.infographic.parse import ParseError, parse_fence
+
+TOKENS = json.loads((Path(__file__).resolve().parents[1] / "styles" / "practical" / "tokens.json").read_text(encoding="utf-8"))
+ETOKENS = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
 
 
 def _fence(n=6, edges=None, **extra):
@@ -264,12 +294,12 @@ def _fence(n=6, edges=None, **extra):
     if edges is not None:
         payload["edges"] = [{"from": f"n{a}", "to": f"n{b}"} for a, b in edges]
     payload.update(extra)
-    return parse_fence(0, json.dumps(payload, ensure_ascii=False))
+    return parse_fence(1, 1, json.dumps(payload, ensure_ascii=False))
 
 
 def test_parse_bounds():
     with pytest.raises(ParseError):
-        parse_fence(0, '{"layout":"topology","title":"t","nodes":[]}')                # 하한 3 미만
+        parse_fence(1, 1, '{"layout":"topology","title":"t","nodes":[]}')                # 하한 3 미만
     with pytest.raises(ParseError):
         _fence(n=9)                                                                    # 절대 상한 8 초과
     with pytest.raises(ParseError):
@@ -277,15 +307,15 @@ def test_parse_bounds():
     with pytest.raises(ParseError):
         _fence(n=3, edges=[(0, 3)])                                                    # 미참조 id
     with pytest.raises(ParseError):
-        parse_fence(0, '{"layout":"topology","title":"t","nodes":['
+        parse_fence(1, 1, '{"layout":"topology","title":"t","nodes":['
                        '{"id":"n0","label":"중복"},{"id":"n0","label":"중복"},'
                        '{"id":"n1","label":"노드"}]}')                                 # id 중복
     with pytest.raises(ParseError):
-        parse_fence(0, '{"layout":"topology","title":"t",'
+        parse_fence(1, 1, '{"layout":"topology","title":"t",'
                        '"nodes":[{"id":"a","label":"원"},{"id":"b","label":"변환"},'
                        '{"id":"c","label":"결과"}],'
                        '"edges":[{"from":"a","to":"b"},{"from":"a","to":"b"}]}')       # 간선 중복
-    assert parse_fence(0, '{"layout":"network","title":"t","nodes":['  # 별칭 network
+    assert parse_fence(1, 1, '{"layout":"network","title":"t","nodes":['  # 별칭 network
         '{"id":"a","label":"클라"},{"id":"b","label":"게이트"},{"id":"c","label":"저장"}]}').layout == "topology"
 ```
 
@@ -293,35 +323,44 @@ def test_parse_bounds():
 
 - [ ] **Step 3: parse.py 확장**
 
-상수부에 추가: `NODE_MIN, NODE_MAX = 3, 8`, ALIASES에 `"network": "topology"`, VALID_LAYOUTS에 `"topology"`. 검증 분기(roadmap 뒤) — 기존 분기 스타일 동일:
+상수부에 추가: `NODE_MIN, NODE_MAX = 3, 8`, ALIASES에 `"network": "topology"`, VALID_LAYOUTS에 `"topology"`. 검증 분기(roadmap 분기 뒤) — **parse.py 실제 구조를 따른다**: 로컬 `d`에서 읽고 검증 후 정규화값을 어큐뮬레이터 `data`에 쓴다(`if layout ==` 체인, `elif f.layout` 아님 — `f`는 아직 없음). ParseError은 3인자 `(index, 상세, line)` 관례:
 
 ```python
-    elif f.layout == "topology":
-        nodes = data.get("nodes")
+    if layout == "topology":
+        nodes = d.get("nodes", [])
         if not isinstance(nodes, list) or not (NODE_MIN <= len(nodes) <= NODE_MAX):
-            raise ParseError("노드 수는 3~8개 필요")
+            n = len(nodes) if isinstance(nodes, list) else 0
+            raise ParseError(index, f"nodes 개수 {n} — 하한 {NODE_MIN}, 상한 {NODE_MAX}", line)
         seen = set()
-        for nd in nodes:
+        for i, nd in enumerate(nodes):
             if (not isinstance(nd, dict) or not isinstance(nd.get("id"), str)
-                    or not isinstance(nd.get("label"), str) or not nd["id"] or not nd["label"]):
-                raise ParseError("노드는 id·label 비빈 문자열 필요")
-            if nd["id"] in seen:
-                raise ParseError(f"노드 id 중복: {nd['id']}")
-            seen.add(nd["id"])
-        edges = data.get("edges", [])
+                    or not isinstance(nd.get("label"), str) or not nd["id"].strip() or not nd["label"].strip()):
+                raise ParseError(index, f"nodes[{i}] id·label 비빈 문자열 필요", line)
+            if nd["id"].strip() in seen:
+                raise ParseError(index, f"노드 id 중복: {nd['id'].strip()}", line)
+            seen.add(nd["id"].strip())
+        edges = d.get("edges", [])
         if not isinstance(edges, list):
-            raise ParseError("edges는 배열 필요")
+            raise ParseError(index, "edges는 배열 필요", line)
         eset = set()
-        for e in edges:
-            if (not isinstance(e, dict) or e.get("from") not in seen or e.get("to") not in seen):
-                raise ParseError(f"간선 from·to는 노드 id 참조 필요: {e}")
-            if e["from"] == e["to"]:
-                raise ParseError(f"자기 간선 금지: {e['from']}")
-            if (e["from"], e["to"]) in eset:
-                raise ParseError(f"간선 중복: {e['from']}→{e['to']}")
-            eset.add((e["from"], e["to"]))
+        norm_edges = []
+        for i, e in enumerate(edges):
+            if (not isinstance(e, dict) or str(e.get("from", "")).strip() not in seen
+                    or str(e.get("to", "")).strip() not in seen):
+                raise ParseError(index, f"edges[{i}].from/.to는 노드 id 참조 필요", line)
+            fr, to = str(e["from"]).strip(), str(e["to"]).strip()
+            if fr == to:
+                raise ParseError(index, f"자기 간선 금지: {fr}", line)
+            if (fr, to) in eset:
+                raise ParseError(index, f"간선 중복: {fr}→{to}", line)
+            eset.add((fr, to))
             if "dashed" in e and not isinstance(e["dashed"], bool):
-                raise ParseError("dashed는 불리언")
+                raise ParseError(index, f"edges[{i}].dashed는 불리언", line)
+            norm_edges.append({"from": fr, "to": to,
+                               **({"dashed": e["dashed"]} if e.get("dashed") else {})})
+        data["nodes"] = [{"id": str(nd["id"]).strip(), "label": str(nd["label"]).strip()}
+                         for nd in nodes]
+        data["edges"] = norm_edges
 ```
 
 - [ ] **Step 4: topology.py 구현**
@@ -496,22 +535,21 @@ def _ink_ok(ops, width: float, height: float) -> None:
 
 주의: `bottom` 산정의 `max(r for _, r in pos.values())`는 최대 행 인덱스 — `*(node_h+G_V)` 후 `+node_h`로 열 바닥이 된다.
 
-`layout.py` dispatch: `"topology": topology.layout` 등록. `lint.py` 필드 수집(roadmap phases 블록 뒤):
+`layout.py` dispatch: `"topology": topology.layout` 등록. `lint.py` 필드 수집 — **플랫 for-루프 체인**(`elif f.layout` 없음 — 기존 구조는 레이아웃별 분기가 아니라 `f.data.get(...)` 전수 수집). phases 루프 뒤·`x_axis` 블록 앞에 삽입:
 
 ```python
-    elif f.layout == "topology":
         for i, nd in enumerate(f.data.get("nodes", [])):
-            fields.append((f"nodes[{i}].label", nd.get("label", "")))
+            fields.append((f"nodes[{i}].label", nd["label"]))
 ```
 
-`render.py` `_sheet_rows`(phases 행 뒤):
+`render.py` `_sheet_rows` — **2-튜플 `(필드경로, 문구)` 계약**(`_review_sheet`가 `for p, t in rows:`로 소비 — 3-튜플 아님). cells 루프 뒤·axis 블록 앞에 삽입:
 
 ```python
     for i, nd in enumerate(f.data.get("nodes", [])):
-        rows.append(("노드", f"nodes[{i}].label", str(nd.get("label", ""))))
+        rows.append((f"nodes[{i}].label", nd["label"]))
 ```
 
-(배치 순서는 cards→before/after→stages→phases→**nodes** — Task 3 path·stack/rings는 nodes 뒤.)
+(lint는 노드 라벨, render는 동일 2-튜플 — Task 3 path·stack/rings 행은 이 뒤에 같은 형태로 추가.)
 
 - [ ] **Step 5: 지오메트리·결정론·상한 테스트**
 
@@ -543,16 +581,15 @@ def test_dag_cycle_rejected():
 
 
 def test_pack_cap_essay():
-    essay = _tokens("essay")
-    topo_arch.layout(_fence(n=5), essay)                       # essay 상한 5 — 통과
+    topo_arch.layout(_fence(n=5), ETOKENS)                     # essay 상한 5 — 통과
     with pytest.raises(TopologyLayoutError, match="판형 상한"):
-        topo_arch.layout(_fence(n=6), essay)
+        topo_arch.layout(_fence(n=6), ETOKENS)
 
 
 def test_node_width_floor():
     # essay 5노드 DAG로 열수 5를 만들면 노드 폭이 하상수에 걸린다(n0→n1→n2→n3→n4).
     with pytest.raises(TopologyLayoutError, match="노드 폭"):
-        topo_arch.layout(_fence(n=5, edges=[(0, 1), (1, 2), (2, 3), (3, 4)]), _tokens("essay"))
+        topo_arch.layout(_fence(n=5, edges=[(0, 1), (1, 2), (2, 3), (3, 4)]), ETOKENS)
 
 
 def test_determinism():
@@ -568,22 +605,57 @@ def test_dashed_edge_style():
 
 
 def test_topology_elements_reach_lint_and_sheet():
-    # 숫자 증거 주입 → I1 검증 단언(loc=nodes[0].label) + 검수 시트 행(nodes[0])
+    # test_before_after_elements_reach_lint_and_sheet 패턴 복제 —
+    # lint.check는 5인자(fences, figs, tokens, chapter_md, chapter_name)·반환은 LintFinding 리스트,
+    # loc는 "{chapter} #{index} {필드}"형. _sheet_rows는 2-튜플 (필드경로, 문구).
+    from scripts.infographic.lint import check
+    from scripts.infographic.render import _review_sheet, _sheet_rows
     f = _fence(n=3)
-    f.data["nodes"][0]["label"] = "노드 삼개 관문"
-    result = lint_mod.check([f], TOKENS)        # 기존 before_after 테스트와 동일 호출 관례
-    assert any(getattr(e, "loc", None) == "nodes[0].label" for e in result.verified)
-    rows = render_mod._sheet_rows(f)            # 기존 관례 — 실제 함수명은 render.py 참조
-    assert ("노드", "nodes[0].label", "노드 삼개 관문") in rows
+    f.data["nodes"][0]["label"] = "관문 3개를 지난다"
+    figs = {1: topo_arch.layout(f, TOKENS)}
+    found = check([f], figs, TOKENS, "원문 없음", "ch01.md")
+    assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 nodes[0].label" for x in found)
+    rows = dict(_sheet_rows(f))
+    assert {"nodes[0].label", "nodes[1].label", "nodes[2].label"} <= set(rows)
+    sheet = _review_sheet(f, [])
+    for i in range(3):
+        assert f"nodes[{i}].label" in sheet
 ```
 
-`_tokens`·`TOKENS`·`lint_mod`·`render_mod` 임포트는 기존 archetype 테스트 파일 관례 그대로(`test_infographic_layout_before_after.py` 참조 — lint는 `lint.check(fences, tokens)` 반환 구조, render는 `_sheet_rows(fence)` 시그니처를 해당 파일에서 확인해 관례에 맞춘다).
+(임포트는 함수 내부에서 — before_after 테스트와 동일 배치. 숫자 "3"이 원문에 없으므로 number-evidence 미검증 finding이 나오는 것이 정상 경로다.)
 
 Run: `python3 -m pytest skills/korean-ebook-typst/tests/test_infographic_layout_topology.py -q` → 전부 PASS.
 
 - [ ] **Step 6: 골든 스냅샷**
 
-cards 패턴 복제 `test_topology_golden_snapshot` — fixture `golden-topology-practical.typ`(5노드 4간선 practical, 숫자·약어 부재). `IG_REGEN_GOLDEN=1` 재생성 → 눈검(grid/층위 정합·화살표 tip-gap·넘침 없음) → 재실행 바이트 동일 PASS.
+cards 패턴 복제 `test_topology_golden_snapshot` — fixture `golden-topology-practical.typ`. 데이터는 **층위 수 ≤3을 명시적으로 보장**하는 구조(5노드 practical, 결론형 제목·숫자·약어 부재):
+
+```python
+def test_topology_golden_snapshot():
+    import os
+    from scripts.infographic.emit import render_typ
+    GOLDEN = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "infographic" / "golden-topology-practical.typ"
+    payload = {"layout": "topology", "title": "구성 요소는 흐름을 따라 연결된다",
+               "kicker": "구성",
+               "nodes": [{"id": "a", "label": "수집"}, {"id": "b", "label": "정제"},
+                         {"id": "c", "label": "변환"}, {"id": "d", "label": "저장"},
+                         {"id": "e", "label": "질의"}],
+               "edges": [{"from": "a", "to": "b"}, {"from": "a", "to": "c"},
+                         {"from": "c", "to": "d"}, {"from": "c", "to": "e", "dashed": True}]}
+    # 층위: a=0, b/c=1, d/e=2 → 3열 — practical node_w 83.5pt(MIN 54 통과).
+    # 연쇄 a→b→c→d→e는 5층 5열 → 38.9pt로 하상수 에러가 나므로 금지(5노드 체인 불가).
+    f = parse_fence(1, 1, json.dumps(payload, ensure_ascii=False))
+    code = render_typ(topo_arch.layout(f, TOKENS))
+    if os.environ.get("IG_REGEN_GOLDEN") != "1":
+        if not GOLDEN.exists():
+            pytest.fail("골든 없음 — `IG_REGEN_GOLDEN=1 python3 -m pytest …` 실행 후 눈검·커밋")
+        assert code == GOLDEN.read_text(encoding="utf-8")
+    else:
+        GOLDEN.parent.mkdir(parents=True, exist_ok=True)
+        GOLDEN.write_text(code, encoding="utf-8")
+        pytest.fail("골든 재생성 — 눈검 후 커밋")
+```
+눈검: grid/층위 정합(3열)·화살표 tip-gap·dashed 스타일·넘침 없음. → 재실행 바이트 동일 PASS.
 
 - [ ] **Step 7: 전체 스위트** — `python3 -m pytest skills/korean-ebook-typst/tests/ -q` → 207 + 신규 전부 PASS
 
@@ -606,7 +678,7 @@ cards 패턴 복제 `test_topology_golden_snapshot` — fixture `golden-topology
 - Produces: `model.RectOp.rot: float = 0.0`(0=방출 생략 — 골든 바이트 불변), `model.CircleOp(x, y, r, fill_role="surface-tint", stroke_role="rule", stroke_w=0.5)`, `archetypes.approval.layout`·`ApprovalLayoutError`, `archetypes.layers.layout`·`LayersLayoutError`
 - 펜스 데이터: approval `path[]`({title, text?, gate?}), layers `stack[]` 또는 `rings[]`(각 {label}) — 정확히 하나
 
-**지오메트리:** approval = 가로 경로 스텝 카드(rx 8) + 게이트 스텝에 상단변 중심 45° 회전 마커(한 변 12pt, bbox 16.97pt). G=28(tip-gap 8 양측 → 샤프트 12pt). MIN_STEP_W=48.0(도달 한계 실측: essay 3스텝 55.2 / practical 4·55.6 / b5 5·49.3 / lecture 6·49.5pt). layers stack = 전폭 행 스택(순서 = 상→하), rings = 동심원(외→내, 반경 R_max=(W−2P)/2에서 등간격, R_min=0.25·R_max), 링 라벨은 12시 방향 현(chord) 폭 안 실측.
+**지오메트리:** approval = 가로 경로 스텝 카드(rx 8) + 게이트 스텝에 상단변 중심 45° 회전 마커(한 변 12pt, bbox 16.97pt). G=28(tip-gap 8 양측 → 샤프트 12pt). MIN_STEP_W=48.0 — 팩별 도달 한계 실측: essay 3·55.15 / practical 4·55.62 / b5 5·49.10 / business 5(n=6이면 47.59<48 → 상한 5) / lecture 6·49.48pt. layers stack = 전폭 행 스택(순서 = 상→하), rings = 동심원(외→내, 반경 R_max=(W−2P)/2에서 등간격, R_min=0.25·R_max), 링 라벨은 12시 방향 현(chord) 폭 안 실측.
 
 - [ ] **Step 1: parse 실패 테스트 2종 작성**
 
@@ -627,7 +699,7 @@ def _fence(n=4, gates=(1, 3), **extra):
              for i in range(n)]
     payload = {"layout": "approval", "title": "결재 흐름 점검 제목", "path": steps}
     payload.update(extra)
-    return parse_fence(0, json.dumps(payload, ensure_ascii=False))
+    return parse_fence(1, 1, json.dumps(payload, ensure_ascii=False))
 
 
 def test_parse_bounds():
@@ -638,8 +710,11 @@ def test_parse_bounds():
     with pytest.raises(ParseError):
         _fence(n=5, gates=(0, 1, 2, 3, 4))                # 게이트 5개 > 상한 4
     with pytest.raises(ParseError):
-        parse_fence(0, '{"layout":"approval","title":"t","path":['
+        parse_fence(1, 1, '{"layout":"approval","title":"t","path":['
                        '{"title":"기획"},{"text":"제목 누락"},{"title":"승인"}]}')
+    with pytest.raises(ParseError):
+        parse_fence(1, 1, '{"layout":"approval","title":"t","path":['
+                       '{"title":"기획","gate":"예"},{"title":"검토"},{"title":"승인"}]}')  # gate 불리언 아님
 ```
 
 ```python
@@ -657,58 +732,71 @@ def _stack_fence(n=4, **extra):
     payload = {"layout": "layers", "title": "계층 구조 점검 제목",
                "stack": [{"label": f"계층 {i}"} for i in range(n)]}
     payload.update(extra)
-    return parse_fence(0, json.dumps(payload, ensure_ascii=False))
+    return parse_fence(1, 1, json.dumps(payload, ensure_ascii=False))
 
 
 def _rings_fence(n=4):
-    return parse_fence(0, json.dumps({"layout": "layers", "title": "계층 구조 점검 제목",
+    return parse_fence(1, 1, json.dumps({"layout": "layers", "title": "계층 구조 점검 제목",
                                       "rings": [{"label": f"링 {i}"} for i in range(n)]},
                                      ensure_ascii=False))
 
 
 def test_parse_bounds():
     with pytest.raises(ParseError):                        # stack·rings 동시
-        parse_fence(0, '{"layout":"layers","title":"t","stack":[{"label":"외부"},{"label":"내부"}],'
+        parse_fence(1, 1, '{"layout":"layers","title":"t","stack":[{"label":"외부"},{"label":"내부"}],'
                        '"rings":[{"label":"외부"},{"label":"내부"}]}')
     with pytest.raises(ParseError):                        # 둘 다 없음
-        parse_fence(0, '{"layout":"layers","title":"t"}')
+        parse_fence(1, 1, '{"layout":"layers","title":"t"}')
     with pytest.raises(ParseError):
         _stack_fence(n=7)                                  # 상한 6 초과
     with pytest.raises(ParseError):
         _stack_fence(n=1)                                  # 하한 2 미만
     with pytest.raises(ParseError):
-        parse_fence(0, '{"layout":"layers","title":"t","stack":[{"label":"외부"},{"label":""}]}')
+        parse_fence(1, 1, '{"layout":"layers","title":"t","stack":[{"label":"외부"},{"label":""}]}')
 ```
 
 - [ ] **Step 2: RED 확인** — ImportError
 
 - [ ] **Step 3: parse.py** — 상수 `PATH_MIN, PATH_MAX = 3, 8`, `GATE_MAX = 4`, `LAYER_MIN, LAYER_MAX = 2, 6`, VALID_LAYOUTS + approval·layers, 분기 2개(topology 뒤):
 
+topology 분기와 동일 어큐뮬레이터 패턴(로컬 `d` 읽기 → 검증 → `data` 쓰기, ParseError 3인자):
+
 ```python
-    elif f.layout == "approval":
-        path = data.get("path")
+    if layout == "approval":
+        path = d.get("path", [])
         if not isinstance(path, list) or not (PATH_MIN <= len(path) <= PATH_MAX):
-            raise ParseError("경로 스텝 수는 3~8개 필요")
+            n = len(path) if isinstance(path, list) else 0
+            raise ParseError(index, f"path 개수 {n} — 하한 {PATH_MIN}, 상한 {PATH_MAX}", line)
         gates = 0
-        for st in path:
-            if not isinstance(st, dict) or not isinstance(st.get("title"), str) or not st["title"]:
-                raise ParseError("경로 스텝은 title 비빈 문자열 필요")
-            if "text" in st and not isinstance(st["text"], str):
-                raise ParseError("text는 문자열 필요")
+        norm = []
+        for i, st in enumerate(path):
+            if not isinstance(st, dict) or not str(st.get("title", "")).strip():
+                raise ParseError(index, f"path[{i}].title 필수", line)
+            if "gate" in st and not isinstance(st["gate"], bool):
+                raise ParseError(index, f"path[{i}].gate는 불리언", line)
+            row = {"title": str(st["title"]).strip()}
+            if str(st.get("text", "")).strip():
+                row["text"] = str(st["text"]).strip()
             if st.get("gate"):
+                row["gate"] = True
                 gates += 1
+            norm.append(row)
         if gates > GATE_MAX:
-            raise ParseError(f"게이트 {gates}개 > 상한 {GATE_MAX}개 — 게이트 통합")
-    elif f.layout == "layers":
-        stack, rings = data.get("stack"), data.get("rings")
+            raise ParseError(index, f"게이트 {gates}개 > 상한 {GATE_MAX}개 — 게이트 통합", line)
+        data["path"] = norm
+    if layout == "layers":
+        stack, rings = d.get("stack"), d.get("rings")
         if (stack is None) == (rings is None):
-            raise ParseError("stack·rings 중 정확히 하나 필요")
+            raise ParseError(index, "stack·rings 중 정확히 하나 필요", line)
         rows = stack if stack is not None else rings
         if not isinstance(rows, list) or not (LAYER_MIN <= len(rows) <= LAYER_MAX):
-            raise ParseError("계층 수는 2~6개 필요")
-        for row in rows:
-            if not isinstance(row, dict) or not isinstance(row.get("label"), str) or not row["label"]:
-                raise ParseError("계층은 label 비빈 문자열 필요")
+            n = len(rows) if isinstance(rows, list) else 0
+            raise ParseError(index, f"계층 수 {n} — 하한 {LAYER_MIN}, 상한 {LAYER_MAX}", line)
+        for i, row in enumerate(rows):
+            if not isinstance(row, dict) or not str(row.get("label", "")).strip():
+                raise ParseError(index, f"계층 label 필수 — rows[{i}]", line)
+        key = "stack" if stack is not None else "rings"
+        data[key] = [{"label": str(r["label"]).strip()} for r in rows]
 ```
 
 - [ ] **Step 4: model.py·emit.py·helper.typ 프리미티브**
@@ -734,7 +822,7 @@ class CircleOp:
     stroke_w: float = 0.5
 ```
 
-emit.py RectOp 행에 `rot` 조건 인자 추가·CircleOp 분기 추가:
+emit.py — ① 상단 model 임포트(4행)에 `CircleOp` 추가: `from .model import ArrowOp, CircleOp, FigModel, RectOp, TextOp` ② 방출 해더 임포트(24행)에 ig-circle 추가: `'#import "../helper.typ": ig-rect, ig-text, ig-arrow, ig-circle, ig-figure'` ③ RectOp 행에 `rot` 조건 인자 추가·CircleOp 분기 추가:
 
 ```python
         if isinstance(op, RectOp):
@@ -791,7 +879,7 @@ G = 28.0                     # 커넥터 복도 — tip-gap 8 양측 후 샤프�
 STEP_PAD_IN = 8.0
 STEP_PAD_V = 10.0
 STEP_GAP_V = 6.0             # 제목·본문 사이
-MIN_STEP_W = 48.0            # 도달 한계 실측 — essay 3·55.2 / practical 4·55.6 / b5 5·49.3 / lecture 6·49.5pt
+MIN_STEP_W = 48.0            # 도달 한계 실측 — essay 3·55.15 / practical 4·55.62 / b5 5·49.10 / business 5(n=6=47.59<48) / lecture 6·49.48pt
 MARK_SIDE = 12.0             # 게이트 다이아몬드 한 변 — 회전 bbox 16.97pt
 LEADING = 1.3
 HEIGHT_LIMIT = 0.85
@@ -1048,13 +1136,35 @@ def _ink_ok(ops, width: float, height: float) -> None:
                     f"잉크 bbox 프레임 이탈: text({o.field}) x={o.x:.1f} max_w={o.max_w:.1f}")
 ```
 
-`layout.py` dispatch 2행·`lint.py` 필드(path[i].title·path[i].text / stack[i].label·rings[i].label — nodes 뒤)·`render.py` `_sheet_rows`(경로·계층 행) 각 추가.
+`layout.py` dispatch 2행(`"approval": approval.layout`·`"layers": layers.layout`)·`lint.py` 필드 루프(nodes 루프 뒤에 플랫 추가 — Task 2와 동일 형태)·`render.py` `_sheet_rows` 행(2-튜플 — nodes 뒤에 동일 형태):
 
-- [ ] **Step 7: 테스트 수량**
+```python
+        # lint.py — nodes 루프 뒤:
+        for i, st in enumerate(f.data.get("path", [])):
+            fields.append((f"path[{i}].title", st["title"]))
+            if "text" in st:
+                fields.append((f"path[{i}].text", st["text"]))
+        for key in ("stack", "rings"):
+            for i, row in enumerate(f.data.get(key, [])):
+                fields.append((f"{key}[{i}].label", row["label"]))
+```
 
-approval: parse 경계 4·스텝 지오메트리(간격·균일 높이)·게이트 마커 rot=45 방출·폭 하상수 에러(practical 5스텝 → `스텝 폭` 매치)·결정론·lint/sheet 도달 = 8종.
-layers: parse 경계 5(동시·둘다 없음·상한·하한·빈 라벨)·스택 행 지오메트리(전폭·간격 10)·rings 반경 등간격·rings 라벨 chord 상한·결정론·lint/sheet 도달 = 8종.
-핵심 단언 예:
+```python
+    # render.py _sheet_rows — nodes 루프 뒤:
+    for i, st in enumerate(f.data.get("path", [])):
+        rows.append((f"path[{i}].title", st["title"]))
+        if "text" in st:
+            rows.append((f"path[{i}].text", st["text"]))
+    for key in ("stack", "rings"):
+        for i, row in enumerate(f.data.get(key, [])):
+            rows.append((f"{key}[{i}].label", row["label"]))
+```
+
+- [ ] **Step 7: 테스트 작성(함수 수 기준 — approval 7·layers 8, 골든 포함)**
+
+각 파일 상단에는 topology 테스트와 동일 관례로 `Path`·`TOKENS`(practical 직독)·`ETOKENS`(essay 직독)·model ops 임포트(approval은 `ArrowOp, RectOp`, layers는 `CircleOp, RectOp, TextOp`)를 둔다.
+
+approval — parse 경계(Step 1 작성분)에 이어:
 
 ```python
 def test_approval_step_geometry_and_gate_marker():
@@ -1078,6 +1188,29 @@ def test_approval_step_width_floor():
         appr_arch.layout(_fence(n=5), TOKENS)             # practical 5스텝 → 38.9pt < 48pt
 
 
+def test_approval_determinism():
+    f = _fence(n=4, gates=(1, 3))
+    assert appr_arch.layout(f, TOKENS).ops == appr_arch.layout(f, TOKENS).ops
+
+
+def test_approval_elements_reach_lint_and_sheet():
+    # Task 2 topology 패턴과 동일 — lint.check 5인자·loc "{chapter} #{index} {필드}".
+    from scripts.infographic.lint import check
+    from scripts.infographic.render import _review_sheet, _sheet_rows
+    f = _fence(n=4, gates=(1,))
+    f.data["path"][0]["title"] = "기획 3일 안에 확정한다"
+    figs = {1: appr_arch.layout(f, TOKENS)}
+    found = check([f], figs, TOKENS, "원문 없음", "ch01.md")
+    assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 path[0].title" for x in found)
+    rows = dict(_sheet_rows(f))
+    assert {"path[0].title", "path[1].title", "path[2].text", "path[3].title"} <= set(rows)
+    sheet = _review_sheet(f, [])
+    assert "path[1].title" in sheet
+```
+
+layers — parse 경계(Step 1 작성분)에 이어:
+
+```python
 def test_stack_rows_full_width():
     fig = layers_arch.layout(_stack_fence(n=4), TOKENS)
     rects = [o for o in fig.ops if isinstance(o, RectOp) and o.fill_role != "paper"]
@@ -1085,11 +1218,8 @@ def test_stack_rows_full_width():
     assert len(rects) == 4
     assert all(abs(r.x - 14.0) < 0.01 and abs(r.w - (W - 28.0)) < 0.01 for r in rects)
     assert abs(rects[1].y - rects[0].y - rects[0].h - 10.0) < 0.01
-```
 
-```python
 
-```python
 def test_rings_radii_equidistant():
     fig = layers_arch.layout(_rings_fence(), TOKENS)          # rings 4개 practical
     cs = [o for o in fig.ops if isinstance(o, CircleOp)]
@@ -1098,9 +1228,46 @@ def test_rings_radii_equidistant():
     step = (r_max - 0.25 * r_max) / 3
     assert abs(cs[0].r - r_max) < 0.01
     assert abs(cs[3].r - (r_max - 3 * step)) < 0.01
+
+
+def test_rings_label_max_w_within_chord():
+    # 링 라벨 상자 폭 = 12시 현(chord) − pad — 최내곽 링이 가장 좁다.
+    import math
+    fig = layers_arch.layout(_rings_fence(), TOKENS)
+    labels = sorted((o for o in fig.ops if isinstance(o, TextOp)
+                     and o.field.startswith("rings[")), key=lambda o: o.max_w)
+    r_max = (TOKENS["body_frame_pt"]["x1"] - TOKENS["body_frame_pt"]["x0"] - 28.0) / 2
+    step = (r_max - 0.25 * r_max) / 3
+    item = TOKENS["fonts"]["body"]["size_pt"] - 1
+    d = 6.0 + item * 1.3 / 2
+    r_inner = r_max - 3 * step
+    expect = 2 * math.sqrt(r_inner * r_inner - d * d) - 16.0
+    assert labels[0].field == "rings[3].label"
+    assert abs(labels[0].max_w - expect) < 0.01
+
+
+def test_layers_determinism():
+    f = _stack_fence(n=4)
+    assert layers_arch.layout(f, TOKENS).ops == layers_arch.layout(f, TOKENS).ops
+
+
+def test_layers_elements_reach_lint_and_sheet():
+    from scripts.infographic.lint import check
+    from scripts.infographic.render import _review_sheet, _sheet_rows
+    f = _stack_fence(n=4)
+    f.data["stack"][0]["label"] = "표현 계층은 3종 뷰를 가진다"
+    figs = {1: layers_arch.layout(f, TOKENS)}
+    found = check([f], figs, TOKENS, "원문 없음", "ch01.md")
+    assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 stack[0].label" for x in found)
+    rows = dict(_sheet_rows(f))
+    assert {"stack[0].label", "stack[3].label"} <= set(rows)
+    sheet = _review_sheet(f, [])
+    assert "stack[0].label" in sheet
 ```
 
-- [ ] **Step 8: 골든 2종** — `golden-approval-practical.typ`(4스텝·게이트 2·rings 아님)·`golden-layers-practical.typ`(stack 4행). 재생성→눈검(다이아몬드 마커 45°·스택 간격·넘침 없음)→바이트 동일 PASS.
+Run: `python3 -m pytest skills/korean-ebook-typst/tests/test_infographic_layout_approval.py skills/korean-ebook-typst/tests/test_infographic_layout_layers.py -q` → 전부 PASS(골든 제외 — Step 8에서 재생성).
+
+- [ ] **Step 8: 골든 2종** — `golden-approval-practical.typ`(4스텝·게이트 2, 결론형 제목·숫자 부재 — 예 "결재는 검토를 거쳐 집행으로 이어진다")·`golden-layers-practical.typ`(stack 4행 — 예 "계층은 표현에서 자료로 내려간다"). Task 2 골든 테스트 코드 복제(파일명·펜스만 교체). 재생성→눈검(다이아몬드 마커 45°·스택 간격·넘침 없음)→바이트 동일 PASS.
 
 - [ ] **Step 9: 전체 스위트 + 커밋** — `feat: approval·layers archetype — 결재 경로 게이트 다이아몬드·스택/동심원 + rot·circle 프리미티브`
 
@@ -1138,22 +1305,40 @@ layout 진입 초반 — stages 파악 직후·계단 지오메트리 앞에 삽
             f"단계 {len(stages)}개 > 판형 상한 {cap}단계({pack}) — 단계 통합 또는 펜스 분할")
 ```
 
-기존 essay 5단계 테스트 기대치 갱신(`grep -n "계단" tests/test_infographic_layout_ladder.py` 로 위치 확인 — 메시지 매치를 `간격` → `판형 상한` 으로):
+기존 테스트 정합 — `tests/test_infographic_layout_ladder.py`에 실제로 존재하는 것(사전 grep 확인): `_fence(n)`(:20, note 인자 없음)·`test_no_pack_cap_only_absolute`(:29 — "ladder는 판형 상한 없음" 주석과 함께 practical 5단계 통과를 단언)·`test_step_gap_error_on_tall_stages`(:61 — practical 5단계 긴 텍스트로 `단 간격` 에러). **essay 5단계 테스트는 존재하지 않는다(신규 추가)**. 갱신 내역:
+
+1. `ladder.py:1` 모듈 docstring — `"판형 상한 없음(절대 3~5만)"` → `"판형 상한 PACK_STAGES(§6.2 개정 5판 — essay 4, 나머지 5) + 절대 3~5"`.
+2. `:29` 테스트 교체(이름·주석이 규칙과 어긋남 — practical 5 통과는 유지):
 
 ```python
-def test_essay_five_stages_pack_cap():     # 기존 essay 5단계 케이스를 이 형태로 교체
-    with pytest.raises(LadderLayoutError, match="판형 상한"):
-        ladder_arch.layout(_fence(n=5), _tokens("essay"))
+def test_practical_five_at_pack_cap():
+    # ladder 판형 상한(§6.2 개정 5판) — practical 5단계는 상한과 일치, 에러 없이 통과
+    fig = ladder_arch.layout(_fence(5), TOKENS)
+    assert fig.height > 0
+
+
+def test_essay_five_stages_pack_cap_error():
+    # essay 5단계 — 판형 상한 4 초과 에러가 계단 단 간격 에러에 앞선다(개정 5판)
+    essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
+    with pytest.raises(ladder_arch.LadderLayoutError, match="판형 상한"):
+        ladder_arch.layout(_fence(5), essay)
 ```
 
-- [ ] **Step 2: calib fixture 3종** — Phase 3 관례(5팩 전수 렌더 전제·숫자·약어 부재·음절 변주 4/9/13):
-  - `calib-topology.md`: 노드 6(무간선 grid — 층위 수 편차로 5팩 폭 실패 방지), 라벨 음절 4·9·13 변주
-  - `calib-approval.md`: 경로 4·게이트 2, title 음절 4/9/13 + text 음절 9
+(`ladder_arch.LadderLayoutError` 속성 경로 사용 — 파일 상단 임포트 불변. `test_step_gap_error_on_tall_stages`는 practical 5단계 → 판형 상한 통과 후 지오메트리 에러 경로 그대로 — **수정 금지**.)
+
+- [ ] **Step 2: calib fixture 3종** — Phase 3 관례(5팩 전수 렌더 전제·숫자·약어 부재·음절 변주 4/9/13). **5팩 전수 렌더가 전제이므로 가장 좁은 팩(essay)의 상한·하상수를 통과하는 규모여야 한다**:
+  - `calib-topology.md`: 노드 **5**·무간선 grid(essay 판형 상한 5 — 6노드는 essay에서 즉시 에러. grid 3열 → essay node_w 55.15pt ≥ 54 통과), 라벨 음절 4·9·13 변주
+  - `calib-approval.md`: 경로 **3**·게이트 2(essay 4스텝은 34.36pt < 48 하상수 에러 — 3스텝이 전팩 최소 통과), title 음절 4/9/13 + text 음절 9
   - `calib-layers.md`: stack 4(전팩 렌더 안전 — rings는 chord 실측 편차 큼), 라벨 음절 4·9·13
 
-- [ ] **Step 3: 교정 3주기** — Phase 2·3 절차 동일: 3 fixture × 5팩 15렌더(`cli.py preview --style <팩>`) → PyMuPDF 스팬 bbox 자당폭 + measure() 프로브 2중화 → 실측수용자수 vs `max_units` 비율 → 팩 평균 드리프트 vs Phase 2 계수 → ±0.05 데드밴드 판정. **PACK_KO_FACTOR 갱신 시에만** budget.py 수정 + m7 골든 9종 재확증(IG_REGEN_GOLDEN 웨이브). 무갱신이면 budget.py·골든 불변. 실측치 전부 커밋 body에 기록.
+- [ ] **Step 3: 교정 3주기** — Phase 2·3 절차 동일: 3 fixture × 5팩 15렌더(`cli.py preview <md> --fig 0 --style <팩> --out <pdf>` — **`--fig 0` 필수**, 누락 시 argparse exit 2) → PyMuPDF 스팬 bbox 자당폭 + measure() 프로브 2중화 → 실측수용자수 vs `max_units` 비율 → 팩 평균 드리프트 vs Phase 2 계수 → ±0.05 데드밴드 판정. **PACK_KO_FACTOR 갱신 시에만** budget.py 수정 + m7 골든 9종 재확증(IG_REGEN_GOLDEN 웨이브 — Task 1 Step 8과 동일하게 create-if-missing 골든 3종 삭제 선행). 무갱신이면 budget.py·골든 불변. 실측치 전부 커밋 body에 기록.
 
-- [ ] **Step 4: authoring.md Phase 4판** — 헤더 "(Phase 4 — +topology·approval·layers)"·`### topology`·`### approval`·`### layers` 3섹션(roadmap 뒤, cards 구조 복제 — 예시 펜스 payload는 Task 2·3 골든/테스트 데이터에서)·치트시트 행(노드 라벨·경로 제목/본문·스택 라벨·링 라벨 — 폭 종류 문단 갱신)·판형 상한 표 topology 행(5/6/7/8/8) + **ladder 단계 행(4/5/5/5/5) 추가** + approval·layers "판형 표 없음 — 폭 하상수 에러" 불릿·라우팅 3행 "Phase 4 사용 가능"·공통 필드 layout 행 9종 + `network` 별칭·emit max_w 강제 노트(Task 1 — "상자 폭 초과 시 상자 안 줄바꿈, 예산표와 렌더가 일치")·교정 3주기 수치 기록·kicker 초단문 1줄 계약 명시.
+- [ ] **Step 4: authoring.md Phase 4판** — 헤더 "(Phase 4 — +topology·approval·layers)"·`### topology`·`### approval`·`### layers` 3섹션(roadmap 뒤, cards 구조 복제 — 예시 펜스 payload는 Task 2·3 골든/테스트 데이터에서)·치트시트 행(노드 라벨·경로 제목/본문·스택 라벨·링 라벨 — 폭 종류 문단 갱신)·판형 상한 표 topology 행(5/6/7/8/8) + **ladder 단계 행(4/5/5/5/5) 추가** + approval·layers "판형 표 없음 — 폭 하상수 에러" 불릿·라우팅 3행 "Phase 4 사용 가능"·공통 필드 layout 행 9종 + `network` 별칭·emit max_w 강제 노트(Task 1 — "상자 폭 초과 시 상자 안 줄바꿈, 예산표와 렌더가 일치")·교정 3주기 수치 기록·kicker 초단문 1줄 계약 명시. 추가 필수 항목:
+  - **approval 팩별 최대 스텝 수**(실질 상한 — MIN_STEP_W 48 도달 한계): essay 3 / practical 4 / b5 5 / business 5 / lecture 6. 게이트는 상한 4개.
+  - **게이트 마커 해석 근거**: 스텝 상단변 중심 45° 회전 사각(한 변 12pt) = 승인 관문 — `gate: true` 스텝에만. 저자는 게이트=결재선, 비게이트=준비·집행으로 읽는다(스펙 §6.3 다이아몬드 표현 근거).
+  - **topology 간선 설계 규칙**: 노드 5개로 연쇄(a→b→c→d→e)를 쓰면 5층 5열 → 노드 폭 하상수 에러. **층위(최장경로 깊이) ≤ 4**로 간선을 설계하라(예: a→b, a→c, c→d, c→e). `dashed: true` = 참조 간선.
+  - **rings 링 라벨 상한 규칙**: 라벨은 12시 현(chord) 폭 안에서 실측 줄바꿈 — 최내곽 링일수록 폭이 좁다. 링 라벨은 노드 라벨보다 더 짧게(음절 4 이내 권장) — 저작 계약 초단문.
+  - ladder essay 4단계 상한을 상한 표·ladder 섹션 양쪽에 명시(기존 "essay는 4단계까지" 문구와 정합).
   수치는 전부 실측 산출(`.scratch/` 스크립트 — tokens.json 실값 + 모듈 공식) 후 기재.
 
 - [ ] **Step 5: SKILL.md** — :25 헤더 "(인포그래픽 — Phase 4)", :28 나열에 `topology`(구성 관계)·`approval`(결재 흐름)·`layers`(계층 구조) 추가(괄호 gloss는 authoring 섹션 제목 그대로).
@@ -1168,21 +1353,22 @@ PHASE4_MD = """# 검증 원고
 ## 검증 챕터
 
 ​```infographic
-{"layout":"topology","title":"구성 요소 관계","kicker":"구성",
+{"layout":"topology","title":"구성 요소는 흐름을 따라 연결된다","kicker":"구성",
  "nodes":[{"id":"a","label":"입력 수집"},{"id":"b","label":"전처리"},
           {"id":"c","label":"변환"},{"id":"d","label":"저장"},{"id":"e","label":"질의"}],
  "edges":[{"from":"a","to":"b"},{"from":"b","to":"c"},{"from":"c","to":"d"},
-          {"from":"d","to":"e","dashed":true}]}
+          {"from":"c","to":"e","dashed":true}]}
 ​```
+(간선 구조 주의 — 층위 a=0·b=1·c=1·d=2·e=2 → 3열(practical node_w 83.5pt). 연쇄 a→b→c→d→e는 5열 → 노드 폭 하상수 에러로 빌드 실패.)
 
 ​```infographic
-{"layout":"approval","title":"결재 흐름","kicker":"결재",
+{"layout":"approval","title":"결재는 검토를 거쳐 집행으로 이어진다","kicker":"결재",
  "path":[{"title":"기획","text":"방향 확정"},{"title":"부서 검토","gate":true},
          {"title":"예산 승인","gate":true},{"title":"집행","text":"실행"}]}
 ​```
 
 ​```infographic
-{"layout":"layers","title":"계층 구조","kicker":"구조",
+{"layout":"layers","title":"계층은 표현에서 자료로 내려간다","kicker":"구조",
  "stack":[{"label":"표현 계층"},{"label":"응용 계층"},
           {"label":"도메인 계층"},{"label":"자료 계층"}]}
 ​```
@@ -1223,6 +1409,6 @@ def test_phase4_archetypes_build_pdf_and_review_sheets(tmp_path):
 
 (모듈 상단 `subprocess`·`sys`·`SKILL` 임포트는 기존 파일 상단에 이미 존재 — 그대로 사용. PHASE4_MD의 펜스 블록 경계는 원고 안 실제 삼중 백틱.)
 
-- [ ] **Step 7: 종료 조건 확인** — 단위(topology 7+·approval 7+·layers 7+)·골든 9종 전부 존재+PASS·통합 2종(Phase 3+4)·authoring 섹션 3개·검수 시트(빌드 경로)·전체 스위트 green.
+- [ ] **Step 7: 종료 조건 확인** — 단위 테스트 함수 수(골든 포함) **topology 10·approval 7·layers 8**(parse 경계는 단일 함수 다중 케이스 — 함수 수 기준)·골든 9종 전부 존재+PASS·통합 2종(Phase 3+4)·authoring 섹션 3개·검수 시트(빌드 경로)·전체 스위트 green.
 
 - [ ] **Step 8: 커밋** — `docs: 인포그래픽 가이드 Phase 4판 — topology·approval·layers 저작 규칙·치트시트 + 교정 3주기 + ladder 판형 상한` (코드·fixture·문서·테스트 함께 — Phase 3 Task 4 관례)
