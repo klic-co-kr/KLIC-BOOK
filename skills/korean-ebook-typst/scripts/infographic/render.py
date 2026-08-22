@@ -104,6 +104,22 @@ def _sheet_rows(f) -> list[tuple[str, str]]:
         rows.append((f"cards[{i}].text", c["text"]))
         if "value" in c:
             rows.append((f"cards[{i}].value", c["value"]))
+    for side in ("before", "after"):
+        for i, it in enumerate(f.data.get(side, [])):
+            rows.append((f"{side}[{i}]", it))
+    if f.data.get("center"):
+        rows.append(("center", f.data["center"]))
+    for k in ("before_label", "after_label"):
+        if f.data.get(k):
+            rows.append((k, f.data[k]))
+    for i, s in enumerate(f.data.get("stages", [])):
+        rows.append((f"stages[{i}].title", s["title"]))
+        rows.append((f"stages[{i}].text", s["text"]))
+    for i, p in enumerate(f.data.get("phases", [])):
+        rows.append((f"phases[{i}].period", p["period"]))
+        rows.append((f"phases[{i}].title", p["title"]))
+        for j, it in enumerate(p["items"]):
+            rows.append((f"phases[{i}].items[{j}]", it))
     for c, h in enumerate(f.data.get("headers", [])):
         rows.append((f"headers[{c}]", h))
     for r, row in enumerate(f.data.get("rows", [])):

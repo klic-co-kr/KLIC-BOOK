@@ -121,6 +121,22 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
         for i, cell in enumerate(f.data.get("cells", [])):
             fields.append((f"cells[{i}].title", cell["title"]))
             fields.append((f"cells[{i}].text", cell["text"]))
+        for side in ("before", "after"):
+            for i, it in enumerate(f.data.get(side, [])):
+                fields.append((f"{side}[{i}]", it))
+        if f.data.get("center"):
+            fields.append(("center", f.data["center"]))
+        for k in ("before_label", "after_label"):
+            if f.data.get(k):
+                fields.append((k, f.data[k]))
+        for i, s in enumerate(f.data.get("stages", [])):
+            fields.append((f"stages[{i}].title", s["title"]))
+            fields.append((f"stages[{i}].text", s["text"]))
+        for i, p in enumerate(f.data.get("phases", [])):
+            fields.append((f"phases[{i}].period", p["period"]))
+            fields.append((f"phases[{i}].title", p["title"]))
+            for j, it in enumerate(p["items"]):
+                fields.append((f"phases[{i}].items[{j}]", it))
         if "x_axis" in f.data:
             fields.append(("axis.x0", f.data["x_axis"]["low"]))
             fields.append(("axis.x1", f.data["x_axis"]["high"]))
