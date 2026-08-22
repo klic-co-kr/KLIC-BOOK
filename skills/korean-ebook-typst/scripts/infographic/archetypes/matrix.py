@@ -150,7 +150,8 @@ def _qualitative(fence: Fence, tokens: dict) -> FigModel:
     xl_h = kicker_size * LEADING + 6.0
     for j, lab in enumerate((xa["low"], xa["high"])):
         texts.append(TextOp(x=P + AXIS_W + j * (cellW + G) + cellW / 2, y=y + xl_h / 2,
-                            size=kicker_size, text=lab, role="ink-mute", field=f"axis.x{j}"))
+                            size=kicker_size, text=lab, role="ink-mute", max_w=cellW,
+                            field=f"axis.x{j}"))
     y += xl_h
     ops: list = [RectOp(x=0.0, y=0.0, w=W, h=0.1, rx=0.0, fill_role="paper",
                         stroke_role="rule", stroke_w=0.0)]

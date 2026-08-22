@@ -76,6 +76,30 @@ def test_value_renders_large_focus_text():
     assert values[0].size > TOKENS["fonts"]["body"]["size_pt"] + 2
 
 
+def test_value_wrapped_lines_measured_in_card_height():
+    # 최종 리뷰 — value 2줄 감싸짐: card_h(높이 예산)이 실측 줄 수를 반영해
+    # _card_texts(렌더 블록)와 일치. 1줄 가정이면 높이 차 0 → 잉크 bbox 이탈.
+    from scripts.infographic import budget
+    body_size = TOKENS["fonts"]["body"]["size_pt"]
+    value_size = body_size + 1 + cards_arch.VALUE_BONUS_PT
+    cardW = (W - 2 * P - 2 * G) / 3
+    long_value = "열 번 다시 확인하는 긴 값"
+    assert budget.line_count(long_value, cardW, value_size,
+                            cards_arch.CARD_PAD_IN, "practical") == 2       # 사전 조건
+
+    def card_h_of(value: str) -> float:
+        body = json.dumps({"layout": "cards", "title": "t", "cards": [
+            {"title": "a", "value": value, "text": "근거"},
+            {"title": "b", "value": value, "text": "근거"},
+            {"title": "c", "value": value, "text": "근거"}]}, ensure_ascii=False)
+        fig = cards_arch.layout(parse_fence(1, 1, body), TOKENS)
+        card = [r for r in fig.ops if isinstance(r, RectOp) and r.fill_role == "surface-tint"][0]
+        return card.h
+
+    assert abs(card_h_of(long_value) - card_h_of("3단계")
+               - value_size * cards_arch.LEADING) < 0.01
+
+
 def test_g3_invariant_and_ink_bbox():
     body_size = TOKENS["fonts"]["body"]["size_pt"]
     for n in (2, 3, 4, 6):

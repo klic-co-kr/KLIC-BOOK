@@ -55,9 +55,10 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
             f"카드폭 {cardW:.1f}pt < {MIN_CARD_W:.0f}pt({pack}) — 글자 축약, 요소 수 감소 또는 펜스 분할")
 
     def card_h(c: dict) -> float:
+        # value도 실측 줄 수 반영 — _card_texts(렌더)와 동일 파라미터(cardW·CARD_PAD_IN·pack)
         h = 2 * CARD_PAD_V
         if "value" in c:
-            h += value_size * LEADING + 4.0
+            h += budget.line_count(c["value"], cardW, value_size, CARD_PAD_IN, pack) * value_size * LEADING + 4.0
         h += budget.line_count(c["title"], cardW, card_title_size, CARD_PAD_IN, pack) * card_title_size * LEADING + 4.0
         h += budget.line_count(c["text"], cardW, card_text_size, CARD_PAD_IN, pack) * card_text_size * LEADING
         return h
@@ -112,9 +113,10 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
 
 def _card_texts(out: list, c: dict, cx: float, cy: float, cw: float, ch: float,
                 t_size: float, x_size: float, v_size: float, idx: int, pack: str) -> None:
-    t_lines = budget.line_count(c["title"], cw, t_size, pack=pack)
-    x_lines = budget.line_count(c["text"], cw, x_size, pack=pack)
-    v_lines = budget.line_count(c.get("value", ""), cw, v_size, pack=pack) if "value" in c else 0
+    # pad를 CARD_PAD_IN으로 명시 — card_h(높이 예산)와 같은 파라미터로 줄 수 일치 보장
+    t_lines = budget.line_count(c["title"], cw, t_size, CARD_PAD_IN, pack)
+    x_lines = budget.line_count(c["text"], cw, x_size, CARD_PAD_IN, pack)
+    v_lines = budget.line_count(c.get("value", ""), cw, v_size, CARD_PAD_IN, pack) if "value" in c else 0
     block = (v_lines * v_size * LEADING + 4.0 if "value" in c else 0.0) \
         + t_lines * t_size * LEADING + 4.0 + x_lines * x_size * LEADING
     top = cy + (ch - block) / 2

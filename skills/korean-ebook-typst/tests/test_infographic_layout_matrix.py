@@ -70,6 +70,17 @@ def test_qualitative_four_cells_with_axis_labels():
     assert abs(cells[0].w - expect) < 0.01
 
 
+def test_qualitative_x_labels_bound_to_cell_width():
+    # 최종 리뷰 — x축 라벨 max_w 지정: y축(AXIS_W)과 동일한 예산 검사 계약.
+    # 없으면 긴 라벨이 셀 경계 넘어도 lint가 잡지 못한다.
+    fig = matrix_arch.layout(_qual_fence(), TOKENS)
+    AXIS_W = 40.0
+    cellW = (W - 2 * P - AXIS_W - 28.0) / 2
+    for j in (0, 1):
+        ops = [t for t in fig.ops if isinstance(t, TextOp) and t.field == f"axis.x{j}"]
+        assert ops and abs(ops[0].max_w - cellW) < 0.01
+
+
 def test_quadrant_alias_routes_to_qualitative():
     body = json.dumps({
         "layout": "quadrant", "title": "t",
