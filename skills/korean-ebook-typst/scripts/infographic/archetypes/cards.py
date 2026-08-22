@@ -14,11 +14,14 @@ CARD_PAD_IN = 8.0
 CARD_PAD_V = 10.0
 LEADING = 1.3
 # typst 실측(2026-08-22, Pretendard 11pt·par leading 1.3em): 줄 진행 2.008em
-# = leading 1.3em + cap-height 0.71em, 첫 줄 레이아웃 높이 = cap 0.72em.
-# 줄 n개 블록 높이 = size·(0.75 + 2.05·(n−1)) — 구형 1.3·n 근사는 n≥2부터
-# 줄당 0.71em을 과소 계산했다(max_w가 카드 전폭이라 실측 줄 수가 예산보다
-# 적어 가려져 있었음 — PyMuPDF 스팬 실측으로 발견).
-LINE_FIRST_EM = 0.75
+# = leading 1.3em + cap-height 0.71em.
+# 1줄 박스 높이는 1.19em(ascent 1.06 + descent 0.13 — 스팬 bbox 실측).
+# ig-text는 블록 "중심" 앵커이므로 예산이 박스보다 작으면 인접 블록이
+# 중심끼리 밀려 잉크가 겹친다(헤더 kicker↔title 4.89pt, value↔title 1.31pt
+# 스팬 실측 — LINE_FIRST_EM=0.75 시대의 값). 예산은 박스 이상을 확보한다.
+# 줄 n개 블록 높이 = size·(1.19 + 2.05·(n−1)) — step 2.05는 실측 진행
+# 2.008em에 여유를 둔 상한.
+LINE_FIRST_EM = 1.19
 LINE_STEP_EM = 2.05
 HEIGHT_LIMIT = 0.85
 VALUE_BONUS_PT = 2.0                       # value 강조 — 카드 제목+2pt
@@ -72,18 +75,21 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
         h += block_h(budget.line_count(c["text"], cardW, card_text_size, CARD_PAD_IN, pack), card_text_size)
         return h
 
-    # 헤더(Phase 1 flow와 동일 구조)
+    # 헤더(Phase 1 flow와 동일 구조). 블록 사이 4.0pt 간격 — 중심 앵커 블록이
+    # 박스 높이(1.19em)만큼 위아래로 뻗으므로 간격이 없으면 잉크가 맞닿는다
+    # (카드 내부 value→title→text의 +4.0과 같은 리듬).
+    HEADER_GAP = 4.0
     texts: list[TextOp] = []
     cy = 0.0
     if fence.kicker:
         # kicker: 저작 계약 초단문(1줄)
         texts.append(TextOp(x=W / 2, y=cy + block_h(1, kicker_size) / 2, size=kicker_size,
                             text=fence.kicker, role="ink-mute", field="kicker"))
-        cy += block_h(1, kicker_size)
+        cy += block_h(1, kicker_size) + HEADER_GAP
     t_lines = budget.line_count(fence.title, W - 2 * P, title_size, 0.0, pack)
     texts.append(TextOp(x=W / 2, y=cy + block_h(t_lines, title_size) / 2, size=title_size,
                         text=fence.title, role="ink", weight="bold", max_w=W - 2 * P, field="title"))
-    cy += block_h(t_lines, title_size)
+    cy += block_h(t_lines, title_size) + HEADER_GAP
     if fence.thesis:
         th = budget.line_count(fence.thesis, W - 2 * P, card_text_size, 0.0, pack)
         texts.append(TextOp(x=W / 2, y=cy + block_h(th, card_text_size) / 2, size=card_text_size,

@@ -149,12 +149,31 @@ def test_card_text_max_w_excludes_padding():
 
 def test_block_h_matches_typst_line_advance():
     # typst 실측(2026-08-22, Pretendard 11pt·leading 1.3em): 줄 진행 2.008em
-    # = leading 1.3em + cap 0.71em. 첫 줄 레이아웃 높이는 cap≈0.72em.
-    # 구형 1.3·n 근사는 n≥2부터 줄당 0.71em 과소 — max_w 수복으로 실측 줄 수가
-    # 예산 줄 수와 같아지면 카드 하단 이탈로 발화한다.
-    assert cards_arch.block_h(1, 10.0) == pytest.approx(7.5)
-    assert cards_arch.block_h(2, 10.0) == pytest.approx(28.0)
-    assert cards_arch.block_h(3, 10.0) == pytest.approx(48.5)
+    # = leading 1.3em + cap 0.71em. 1줄 박스 높이 1.19em(ascent 1.06 +
+    # descent 0.13, 스팬 bbox 실측). 구형 LINE_FIRST_EM=0.75는 박스를 0.44em
+    # 과소 — 중심 앵커 블록끼리 밀려 헤더 잉크 겹침(4.89pt 스팬 실측).
+    assert cards_arch.block_h(1, 10.0) == pytest.approx(11.9)
+    assert cards_arch.block_h(2, 10.0) == pytest.approx(32.4)
+    assert cards_arch.block_h(3, 10.0) == pytest.approx(52.9)
+
+
+def test_header_blocks_have_ink_gap():
+    # 중심 앵커 TextOp는 size·1.19em 박스가 중심에서 뻗는다 — 인접 헤더 블록
+    # 중심 거리가 (박스1+박스2)/2 + 여유보다 작으면 잉크 겹침(agent-papers
+    # 5개 cards 펜스 실측 4.89/4.85pt). gap 3pt 이상을 보증한다.
+    body = json.dumps({"layout": "cards", "title": "결론 제목", "kicker": "KICKER",
+                       "thesis": "단일 문장 논지", "cards": [
+                         {"title": "a", "value": "3단계", "text": "근거"},
+                         {"title": "b", "value": "3단계", "text": "근거"},
+                         {"title": "c", "value": "3단계", "text": "근거"}]}, ensure_ascii=False)
+    fig = cards_arch.layout(parse_fence(1, 1, body), TOKENS)
+    heads = sorted((t for t in fig.ops if isinstance(t, TextOp)
+                    and t.field in ("kicker", "title", "thesis")),
+                   key=lambda t: t.y)
+    assert len(heads) == 3
+    for a, b in zip(heads, heads[1:]):
+        need = (a.size + b.size) * 1.19 / 2
+        assert b.y - a.y >= need + 3.0
 
 
 def test_card_height_grows_with_measured_advance():
