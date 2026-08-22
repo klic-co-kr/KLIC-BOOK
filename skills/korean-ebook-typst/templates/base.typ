@@ -41,6 +41,9 @@
   set table(inset: (x: 7pt, y: 5pt), stroke: 0.5pt + rgb(tokens.colors.rule),
     fill: (x, y) => if y == 0 { rgb(tokens.colors.rule) }
       else if calc.even(y) { rgb(tokens.colors.rule).lighten(76%) } else { none })
+  // 표 글자는 본문보다 1.5pt(≈2px) 작게 — 표가 본문 산문과 같은 크기면
+  // 행이 촘촘해져 페이지를 누른다(사용자 지시).
+  show table.cell: set text(size: pt(tokens.fonts.body.size_pt - 1.5))
   show table.cell.where(y: 0): set text(weight: "bold")
 
   // 공통 헤딩 — theme.typ의 show 규칙이 뒤에서 오버라이드 가능
