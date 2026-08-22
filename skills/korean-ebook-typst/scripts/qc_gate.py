@@ -3,9 +3,15 @@
 import json
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 import fitz  # PyMuPDF
+
+try:
+    from build import typst_binary  # CLI 컨텍스트 — scripts/가 sys.path에 있다
+except ImportError:  # scripts.* 패키지로 임포트되는 테스트 환경(korean_lint 관례)
+    from scripts.build import typst_binary
 
 
 def load_frame(tokens_path: Path) -> tuple:
@@ -177,6 +183,42 @@ def check_review_sheets(build: Path) -> list[str]:
     return incomplete
 
 
+def _infographic_pages(book: Path, pdf: Path | None) -> dict:
+    """§5.4 개정 6판 — typst query metadata로 도식-페이지 대응·일치 검사·검수 PNG."""
+    build = book / "build"
+    main = build / "main.typ"
+    mf = build / "infographic" / "manifest.json"
+    if not (main.exists() and mf.exists()):
+        return {"count": 0, "expected": 0, "match": True, "figs": []}
+    manifest = json.loads(mf.read_text(encoding="utf-8"))
+    r = subprocess.run([typst_binary(), "query", str(main), "metadata",
+                        "--field", "value", "--root", str(build)],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return {"count": 0, "expected": manifest["count"], "match": False, "figs": []}
+    queried = json.loads(r.stdout or "[]")   # stdout = JSON 배열 하나(줄 단위 아님)
+    figs = [{"name": f["name"], "chapter": f["chapter"], "index": f["index"],
+             "page": q["page"]}
+            for q in queried if isinstance(q, dict) and q.get("kind") == "ig-fig"
+            for f in manifest["figs"] if f["name"] == q.get("name")]
+    # §5.4 "실제 페이지 수와의 일치 검사" — page가 PDF 범위 내인가(G1-M6)
+    pages_ok = True
+    if pdf is not None and pdf.exists():
+        with fitz.open(pdf) as doc:
+            pages_ok = doc.page_count > 0 and all(
+                1 <= f["page"] <= doc.page_count for f in figs)
+    out = {"count": len(figs), "expected": manifest["count"],
+           "match": len(figs) == manifest["count"] and pages_ok, "figs": figs}
+    # 검수 렌더 PNG — 도식이 실린 unique 페이지별 1장(170 DPI). best-effort:
+    # 실패해도 게이트 판정에 영향 없다(검수자 안내물).
+    for pno in sorted({f["page"] for f in figs} if pages_ok else set()):
+        png = build / "infographic" / f"review-p{pno:03d}.png"
+        subprocess.run([typst_binary(), "compile", str(main), str(png),
+                        "--pages", str(pno), "--ppi", "170", "--root", str(build)],
+                       capture_output=True, text=True, check=False)
+    return out
+
+
 def run(book_dir: Path) -> int:
     build = book_dir / "build"
     draft = book_dir / "draft"
@@ -218,11 +260,19 @@ def run(book_dir: Path) -> int:
     # §5.4 미완료 검수 시트 WARN도 리포트 채널로 — stdout 인쇄만으로는
     # gate-report.json을 읽는 downstream이 이 사실을 못 본다(최종 리뷰 Minor).
     unreviewed = check_review_sheets(build)
+    igp = _infographic_pages(book_dir, pdf)
     report = {"g1_overflow": overflow, "g2_fonts": fonts, "g3_band_warns": warns,
               "g4_style_warns": style_warns, "ig_review_warns": unreviewed,
+              "infographic_pages": igp,
               "pass": not overflow and not fonts}
     (book_dir / "gate-report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    if igp["expected"]:
+        print(f"[qc] 도식 페이지 대응 {igp['count']}/{igp['expected']}"
+              + ("" if igp["match"] else " — 일치 불량"))
+    if igp["count"] == 0 and igp["expected"] > 0:
+        # emit은 됐으나 본문 페이지 매핑이 0건 — build 붕괴 신호(WARN 채널).
+        print("[WARN] 도식 페이지 대응 0건 — build.py 재실행 필요", file=sys.stderr)
     if not report["pass"]:
         # FAIL 시 낡은 final/<책>.pdf가 남으면 직전 PASS 결과로 오탐된다 —
         # 폐기한다(2026-08-15 종단 검증 발견, 컨트롤러 판정).

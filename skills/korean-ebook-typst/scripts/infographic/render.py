@@ -78,7 +78,13 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
         for f in fences:
             fig = figs[f.index]
             name = f"{idx:03d}-fig{f.index:02d}.typ"
-            (out_dir / name).write_text(emit.render_typ(fig), encoding="utf-8")
+            # #context 필수 — typst 0.15.1은 context 없는 metadata가
+            # "can only be used when context is known" 컴파일 에러로 전 도식을
+            # 깨뜨린다(검토 G3-C1 실증). 프리픽스는 파일에만 붙는다 — standalone
+            # 골든(emit.render_typ 출력) 바이트는 불변.
+            (out_dir / name).write_text(
+                f'#context metadata((kind: "ig-fig", name: "{name}", '
+                f'page: here().page()))\n' + emit.render_typ(fig), encoding="utf-8")
             unverified = [x for x in all_findings
                           if x.kind == "number-unverified"
                           and x.loc.startswith(f"{chapter_name} #{f.index} ")]
@@ -86,6 +92,12 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
                 _review_sheet(f, unverified), encoding="utf-8")
             emits[f.index] = name
         result[idx] = emits
+    # §5.4 개정 6판 — qc_gate의 typst query 페이지 대응이 짝지을 이름·챕터·인덱스.
+    manifest = {"count": sum(len(e) for e in result.values()),
+                "figs": [{"name": nm, "chapter": idx, "index": fi}
+                         for idx, emits in result.items() for fi, nm in emits.items()]}
+    (out_dir / "manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     return result
 
 
