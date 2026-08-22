@@ -121,6 +121,14 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
         for i, cell in enumerate(f.data.get("cells", [])):
             fields.append((f"cells[{i}].title", cell["title"]))
             fields.append((f"cells[{i}].text", cell["text"]))
+        for side in ("before", "after"):
+            for i, it in enumerate(f.data.get(side, [])):
+                fields.append((f"{side}[{i}]", it))
+        if f.data.get("center"):
+            fields.append(("center", f.data["center"]))
+        for k in ("before_label", "after_label"):
+            if f.data.get(k):
+                fields.append((k, f.data[k]))
         if "x_axis" in f.data:
             fields.append(("axis.x0", f.data["x_axis"]["low"]))
             fields.append(("axis.x1", f.data["x_axis"]["high"]))

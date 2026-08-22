@@ -8,11 +8,13 @@ DEFAULT_NOTE = ("편집 요약: 본문의 장·절 구조와 핵심 문장을 �
                 "원문을 대체하지 않습니다.")
 
 # 스펙 §3.4 — 구시스템 별칭 → 규범 키워드
-ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards", "quadrant": "matrix"}
-VALID_LAYOUTS = {"flow", "cards", "matrix"}          # Phase 1·2. 이후 Task에서 확장
+ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards",
+           "quadrant": "matrix", "bridge": "before_after"}
+VALID_LAYOUTS = {"flow", "cards", "matrix", "before_after"}   # Phase 1·2·3
 STEP_MIN, STEP_MAX = 2, 8
 CARD_MIN, CARD_MAX = 2, 6
 LANE_MIN, LANE_MAX = 2, 4      # lanes 레인 수·레인당 steps 공용(스펙 §3.2)
+BA_ITEM_MIN, BA_ITEM_MAX = 1, 5          # 스펙 §3.2 before_after 항목/측
 
 
 class ParseError(Exception):
@@ -142,6 +144,23 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
             data["x_axis"] = {"low": str(d["x_axis"]["low"]).strip(), "high": str(d["x_axis"]["high"]).strip()}
             data["y_axis"] = {"low": str(d["y_axis"]["low"]).strip(), "high": str(d["y_axis"]["high"]).strip()}
             data["cells"] = [{"title": str(c["title"]).strip(), "text": str(c["text"]).strip()} for c in cells]
+    if layout == "before_after":
+        for side in ("before", "after"):
+            items = d.get(side, [])
+            if not isinstance(items, list) or not (BA_ITEM_MIN <= len(items) <= BA_ITEM_MAX):
+                n = len(items) if isinstance(items, list) else 0
+                raise ParseError(index, f"{side} 항목 수 {n} — 하한 {BA_ITEM_MIN}, 상한 {BA_ITEM_MAX}(스펙 §3.2)", line)
+            for i, it in enumerate(items):
+                if not str(it).strip():
+                    raise ParseError(index, f"{side}[{i}] 비어 있음", line)
+            data[side] = [str(it).strip() for it in items]
+        center = str(d.get("center", "")).strip()
+        if center:
+            data["center"] = center
+        for k in ("before_label", "after_label"):
+            v = str(d.get(k, "")).strip()
+            if v:
+                data[k] = v
     if alias:
         data["_alias"] = raw_layout
 
