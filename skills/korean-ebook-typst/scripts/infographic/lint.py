@@ -48,6 +48,69 @@ def _section_text(md: str, n: int) -> str | None:
     return md[idx[n - 1]:end]
 
 
+def rows_from(title: str, kicker: str | None, thesis: str | None, data: dict,
+              prefix: str = "") -> list[tuple[str, str]]:
+    """§3.3 숫자 검사 대상 필드 평탄화 — thesis는 편집자 문구라 제외(스펙 §3.3).
+    인자형은 render.rows_from과 동일(prefix 경로 관계 공용)이되 본체는 각자
+    유지한다 — render가 lint를 임포트하므로 역방향 임포트는 순환이 된다."""
+    fields: list[tuple[str, str]] = [(f"{prefix}title", title)]
+    if kicker:
+        fields.append((f"{prefix}kicker", kicker))
+    for i, s in enumerate(data.get("steps", [])):
+        fields.append((f"{prefix}steps[{i}].title", s["title"]))
+        fields.append((f"{prefix}steps[{i}].text", s["text"]))
+    for i, ln in enumerate(data.get("lanes", [])):
+        fields.append((f"{prefix}lanes[{i}].actor", ln["actor"]))
+        for j, s in enumerate(ln["steps"]):
+            fields.append((f"{prefix}lanes[{i}].steps[{j}].title", s["title"]))
+            fields.append((f"{prefix}lanes[{i}].steps[{j}].text", s["text"]))
+    for i, c in enumerate(data.get("cards", [])):
+        fields.append((f"{prefix}cards[{i}].title", c["title"]))
+        fields.append((f"{prefix}cards[{i}].text", c["text"]))
+        if "value" in c:
+            fields.append((f"{prefix}cards[{i}].value", c["value"]))
+    for c, h in enumerate(data.get("headers", [])):
+        fields.append((f"{prefix}headers[{c}]", h))
+    for r, row in enumerate(data.get("rows", [])):
+        for c, cell in enumerate(row):
+            fields.append((f"{prefix}cell[{r}][{c}]", cell))
+    for i, cell in enumerate(data.get("cells", [])):
+        fields.append((f"{prefix}cells[{i}].title", cell["title"]))
+        fields.append((f"{prefix}cells[{i}].text", cell["text"]))
+    for side in ("before", "after"):
+        for i, it in enumerate(data.get(side, [])):
+            fields.append((f"{prefix}{side}[{i}]", it))
+    if data.get("center"):
+        fields.append((f"{prefix}center", data["center"]))
+    for k in ("before_label", "after_label"):
+        if data.get(k):
+            fields.append((f"{prefix}{k}", data[k]))
+    for i, s in enumerate(data.get("stages", [])):
+        fields.append((f"{prefix}stages[{i}].title", s["title"]))
+        fields.append((f"{prefix}stages[{i}].text", s["text"]))
+    for i, p in enumerate(data.get("phases", [])):
+        fields.append((f"{prefix}phases[{i}].period", p["period"]))
+        fields.append((f"{prefix}phases[{i}].title", p["title"]))
+        for j, it in enumerate(p["items"]):
+            fields.append((f"{prefix}phases[{i}].items[{j}]", it))
+    for i, nd in enumerate(data.get("nodes", [])):
+        fields.append((f"{prefix}nodes[{i}].label", nd["label"]))
+    for i, st in enumerate(data.get("path", [])):
+        fields.append((f"{prefix}path[{i}].title", st["title"]))
+        if "text" in st:
+            fields.append((f"{prefix}path[{i}].text", st["text"]))
+    for key in ("stack", "rings"):
+        for i, row in enumerate(data.get(key, [])):
+            fields.append((f"{prefix}{key}[{i}].label", row["label"]))
+    if "x_axis" in data:
+        fields.append((f"{prefix}axis.x0", data["x_axis"]["low"]))
+        fields.append((f"{prefix}axis.x1", data["x_axis"]["high"]))
+    if "y_axis" in data:
+        fields.append((f"{prefix}axis.y0", data["y_axis"]["low"]))
+        fields.append((f"{prefix}axis.y1", data["y_axis"]["high"]))
+    return fields
+
+
 def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
           chapter_md: str, chapter_name: str) -> list[LintFinding]:
     # 펜스 마커의 순번 숫자(⟦IG:2⟧)가 원문에 없는 숫자를 우연 통과시킬 수
@@ -96,62 +159,11 @@ def check(fences: list[Fence], figs: dict[int, FigModel], tokens: dict,
     for f in fences:
         prefix = f"{chapter_name} #{f.index}"
 
-        # 4. 숫자-evidence 교차검증(§3.3) — 미검증은 비치명
-        fields: list[tuple[str, str]] = [("title", f.title)]
-        if f.kicker:
-            fields.append(("kicker", f.kicker))
-        for i, s in enumerate(f.data.get("steps", [])):
-            fields.append((f"steps[{i}].title", s["title"]))
-            fields.append((f"steps[{i}].text", s["text"]))
-        for i, ln in enumerate(f.data.get("lanes", [])):
-            fields.append((f"lanes[{i}].actor", ln["actor"]))
-            for j, s in enumerate(ln["steps"]):
-                fields.append((f"lanes[{i}].steps[{j}].title", s["title"]))
-                fields.append((f"lanes[{i}].steps[{j}].text", s["text"]))
-        for i, c in enumerate(f.data.get("cards", [])):
-            fields.append((f"cards[{i}].title", c["title"]))
-            fields.append((f"cards[{i}].text", c["text"]))
-            if "value" in c:
-                fields.append((f"cards[{i}].value", c["value"]))
-        for c, h in enumerate(f.data.get("headers", [])):
-            fields.append((f"headers[{c}]", h))
-        for r, row in enumerate(f.data.get("rows", [])):
-            for c, cell in enumerate(row):
-                fields.append((f"cell[{r}][{c}]", cell))
-        for i, cell in enumerate(f.data.get("cells", [])):
-            fields.append((f"cells[{i}].title", cell["title"]))
-            fields.append((f"cells[{i}].text", cell["text"]))
-        for side in ("before", "after"):
-            for i, it in enumerate(f.data.get(side, [])):
-                fields.append((f"{side}[{i}]", it))
-        if f.data.get("center"):
-            fields.append(("center", f.data["center"]))
-        for k in ("before_label", "after_label"):
-            if f.data.get(k):
-                fields.append((k, f.data[k]))
-        for i, s in enumerate(f.data.get("stages", [])):
-            fields.append((f"stages[{i}].title", s["title"]))
-            fields.append((f"stages[{i}].text", s["text"]))
-        for i, p in enumerate(f.data.get("phases", [])):
-            fields.append((f"phases[{i}].period", p["period"]))
-            fields.append((f"phases[{i}].title", p["title"]))
-            for j, it in enumerate(p["items"]):
-                fields.append((f"phases[{i}].items[{j}]", it))
-        for i, nd in enumerate(f.data.get("nodes", [])):
-            fields.append((f"nodes[{i}].label", nd["label"]))
-        for i, st in enumerate(f.data.get("path", [])):
-            fields.append((f"path[{i}].title", st["title"]))
-            if "text" in st:
-                fields.append((f"path[{i}].text", st["text"]))
-        for key in ("stack", "rings"):
-            for i, row in enumerate(f.data.get(key, [])):
-                fields.append((f"{key}[{i}].label", row["label"]))
-        if "x_axis" in f.data:
-            fields.append(("axis.x0", f.data["x_axis"]["low"]))
-            fields.append(("axis.x1", f.data["x_axis"]["high"]))
-        if "y_axis" in f.data:
-            fields.append(("axis.y0", f.data["y_axis"]["low"]))
-            fields.append(("axis.y1", f.data["y_axis"]["high"]))
+        # 4. 숫자-evidence 교차검증(§3.3) — 미검증은 비치명.
+        # composite은 모듈 Fence를 modules[] prefix로 전개해 모듈 필드까지 검사.
+        fields = rows_from(f.title, f.kicker, f.thesis, f.data, "")
+        for j, m in enumerate(f.data.get("modules", [])):
+            fields.extend(rows_from(m.title, m.kicker, m.thesis, m.data, f"modules[{j}]."))
         sec = None
         if f.evidence:
             if f.evidence not in section_cache:

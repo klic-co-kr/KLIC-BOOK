@@ -89,58 +89,70 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
     return result
 
 
-def _sheet_rows(f) -> list[tuple[str, str]]:
-    rows = [("title", f.title), ("kicker", f.kicker or "—"), ("thesis", f.thesis or "—")]
-    for i, s in enumerate(f.data.get("steps", [])):
-        rows.append((f"steps[{i}].title", s["title"]))
-        rows.append((f"steps[{i}].text", s["text"]))
-    for i, ln in enumerate(f.data.get("lanes", [])):
-        rows.append((f"lanes[{i}].actor", ln["actor"]))
+def rows_from(title: str, kicker: str | None, thesis: str | None, data: dict,
+              prefix: str = "") -> list[tuple[str, str]]:
+    """펜스 필드 평탄 수집(검수 시트 5열 계약용 2-튜플) — composite 모듈
+    전개가 같은 본체를 prefix로 재사용한다(lint.rows_from과 경로 관계 공용)."""
+    rows = [(f"{prefix}title", title), (f"{prefix}kicker", kicker or "—"),
+            (f"{prefix}thesis", thesis or "—")]
+    for i, s in enumerate(data.get("steps", [])):
+        rows.append((f"{prefix}steps[{i}].title", s["title"]))
+        rows.append((f"{prefix}steps[{i}].text", s["text"]))
+    for i, ln in enumerate(data.get("lanes", [])):
+        rows.append((f"{prefix}lanes[{i}].actor", ln["actor"]))
         for j, s in enumerate(ln["steps"]):
-            rows.append((f"lanes[{i}].steps[{j}].title", s["title"]))
-            rows.append((f"lanes[{i}].steps[{j}].text", s["text"]))
-    for i, c in enumerate(f.data.get("cards", [])):
-        rows.append((f"cards[{i}].title", c["title"]))
-        rows.append((f"cards[{i}].text", c["text"]))
+            rows.append((f"{prefix}lanes[{i}].steps[{j}].title", s["title"]))
+            rows.append((f"{prefix}lanes[{i}].steps[{j}].text", s["text"]))
+    for i, c in enumerate(data.get("cards", [])):
+        rows.append((f"{prefix}cards[{i}].title", c["title"]))
+        rows.append((f"{prefix}cards[{i}].text", c["text"]))
         if "value" in c:
-            rows.append((f"cards[{i}].value", c["value"]))
+            rows.append((f"{prefix}cards[{i}].value", c["value"]))
     for side in ("before", "after"):
-        for i, it in enumerate(f.data.get(side, [])):
-            rows.append((f"{side}[{i}]", it))
-    if f.data.get("center"):
-        rows.append(("center", f.data["center"]))
+        for i, it in enumerate(data.get(side, [])):
+            rows.append((f"{prefix}{side}[{i}]", it))
+    if data.get("center"):
+        rows.append((f"{prefix}center", data["center"]))
     for k in ("before_label", "after_label"):
-        if f.data.get(k):
-            rows.append((k, f.data[k]))
-    for i, s in enumerate(f.data.get("stages", [])):
-        rows.append((f"stages[{i}].title", s["title"]))
-        rows.append((f"stages[{i}].text", s["text"]))
-    for i, p in enumerate(f.data.get("phases", [])):
-        rows.append((f"phases[{i}].period", p["period"]))
-        rows.append((f"phases[{i}].title", p["title"]))
+        if data.get(k):
+            rows.append((f"{prefix}{k}", data[k]))
+    for i, s in enumerate(data.get("stages", [])):
+        rows.append((f"{prefix}stages[{i}].title", s["title"]))
+        rows.append((f"{prefix}stages[{i}].text", s["text"]))
+    for i, p in enumerate(data.get("phases", [])):
+        rows.append((f"{prefix}phases[{i}].period", p["period"]))
+        rows.append((f"{prefix}phases[{i}].title", p["title"]))
         for j, it in enumerate(p["items"]):
-            rows.append((f"phases[{i}].items[{j}]", it))
-    for c, h in enumerate(f.data.get("headers", [])):
-        rows.append((f"headers[{c}]", h))
-    for r, row in enumerate(f.data.get("rows", [])):
+            rows.append((f"{prefix}phases[{i}].items[{j}]", it))
+    for c, h in enumerate(data.get("headers", [])):
+        rows.append((f"{prefix}headers[{c}]", h))
+    for r, row in enumerate(data.get("rows", [])):
         for c, cell in enumerate(row):
-            rows.append((f"cell[{r}][{c}]", cell))
-    for i, cell in enumerate(f.data.get("cells", [])):
-        rows.append((f"cells[{i}].title", cell["title"]))
-        rows.append((f"cells[{i}].text", cell["text"]))
-    for i, nd in enumerate(f.data.get("nodes", [])):
-        rows.append((f"nodes[{i}].label", nd["label"]))
-    for i, st in enumerate(f.data.get("path", [])):
-        rows.append((f"path[{i}].title", st["title"]))
+            rows.append((f"{prefix}cell[{r}][{c}]", cell))
+    for i, cell in enumerate(data.get("cells", [])):
+        rows.append((f"{prefix}cells[{i}].title", cell["title"]))
+        rows.append((f"{prefix}cells[{i}].text", cell["text"]))
+    for i, nd in enumerate(data.get("nodes", [])):
+        rows.append((f"{prefix}nodes[{i}].label", nd["label"]))
+    for i, st in enumerate(data.get("path", [])):
+        rows.append((f"{prefix}path[{i}].title", st["title"]))
         if "text" in st:
-            rows.append((f"path[{i}].text", st["text"]))
+            rows.append((f"{prefix}path[{i}].text", st["text"]))
     for key in ("stack", "rings"):
-        for i, row in enumerate(f.data.get(key, [])):
-            rows.append((f"{key}[{i}].label", row["label"]))
+        for i, row in enumerate(data.get(key, [])):
+            rows.append((f"{prefix}{key}[{i}].label", row["label"]))
     for ax in ("x_axis", "y_axis"):
-        if ax in f.data:
-            rows.append((f"axis.{ax[0]}0", f.data[ax]["low"]))
-            rows.append((f"axis.{ax[0]}1", f.data[ax]["high"]))
+        if ax in data:
+            rows.append((f"{prefix}axis.{ax[0]}0", data[ax]["low"]))
+            rows.append((f"{prefix}axis.{ax[0]}1", data[ax]["high"]))
+    return rows
+
+
+def _sheet_rows(f) -> list[tuple[str, str]]:
+    # composite 모듈은 parse가 Fence로 정규화 — m.title·m.data 속성으로 전개
+    rows = rows_from(f.title, f.kicker, f.thesis, f.data, "")
+    for j, m in enumerate(f.data.get("modules", [])):
+        rows.extend(rows_from(m.title, m.kicker, m.thesis, m.data, f"modules[{j}]."))
     return rows
 
 

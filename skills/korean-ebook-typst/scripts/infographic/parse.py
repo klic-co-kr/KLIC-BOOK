@@ -64,12 +64,14 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
     raw_layout = str(d.get("layout", "")).strip()
     alias = raw_layout in ALIASES
     layout = ALIASES.get(raw_layout, raw_layout)
-    if layout not in VALID_LAYOUTS:
+    # composite은 VALID_LAYOUTS 밖 별도 취급 — 모듈 layout이 될 수 없고(재귀 금지)
+    # 최상위 title이 선택이므로 게이트를 통과시킨 뒤 자기 분기에서 검증한다.
+    if layout not in VALID_LAYOUTS and layout != "composite":
         raise ParseError(index,
                          f"unknown layout {raw_layout!r} (가능: {', '.join(sorted(VALID_LAYOUTS))})", line)
 
     title = str(d.get("title", "")).strip()
-    if not title:
+    if not title and layout != "composite":
         raise ParseError(index, "title 필수 — 결론형 제목을 넣어라", line)
 
     def opt(key: str) -> str | None:
@@ -270,6 +272,32 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
                 raise ParseError(index, f"계층 label 필수 — rows[{i}]", line)
         key = "stack" if stack is not None else "rings"
         data[key] = [{"label": str(r["label"]).strip()} for r in rows]
+    if layout == "composite":
+        mods = d.get("modules")
+        if not isinstance(mods, list) or not (2 <= len(mods) <= 3):
+            raise ParseError(index, "composite modules — 주 1 + 보조 1~2(2~3개 배열)", line)
+        seen_slots = []
+        mod_fences = []
+        for j, m in enumerate(mods):
+            if not isinstance(m, dict):
+                raise ParseError(index, f"modules[{j}] — 객체여야 한다", line)
+            slot = m.get("slot")
+            if slot not in ("primary", "supporting"):
+                raise ParseError(index, f"modules[{j}].slot {slot!r} — primary|supporting", line)
+            mlayout = m.get("layout")
+            if mlayout == "composite":
+                raise ParseError(index, f"modules[{j}].layout composite — 모듈 재귀 금지(전 슬롯)", line)
+            if mlayout not in VALID_LAYOUTS:
+                raise ParseError(index, f"modules[{j}].layout {mlayout!r} — 알 수 없는 layout", line)
+            # 모듈 페이로드를 parse_fence에 재통과 — 개수 상한·스키마 검증 전수 승계(판정 3)
+            payload = {k: v for k, v in m.items() if k != "slot"}
+            mf = parse_fence(index, line, json.dumps(payload, ensure_ascii=False))
+            mf.data["_slot"] = slot          # data 여분 키 — "_alias"와 동일 관례(archetype은 무시)
+            seen_slots.append(slot)
+            mod_fences.append(mf)
+        if seen_slots.count("primary") != 1:
+            raise ParseError(index, f"primary 정확히 1개 필요(현재 {seen_slots.count('primary')})", line)
+        data["modules"] = mod_fences
     if alias:
         data["_alias"] = raw_layout
 
