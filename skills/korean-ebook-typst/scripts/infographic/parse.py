@@ -9,8 +9,9 @@ DEFAULT_NOTE = ("편집 요약: 본문의 장·절 구조와 핵심 문장을 �
 
 # 스펙 §3.4 — 구시스템 별칭 → 규범 키워드
 ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards",
-           "quadrant": "matrix", "bridge": "before_after"}
-VALID_LAYOUTS = {"flow", "cards", "matrix", "before_after", "ladder", "roadmap"}   # Phase 1·2·3
+           "quadrant": "matrix", "bridge": "before_after", "network": "topology"}
+VALID_LAYOUTS = {"flow", "cards", "matrix", "before_after", "ladder", "roadmap",
+                 "topology"}   # Phase 1·2·3·4
 STEP_MIN, STEP_MAX = 2, 8
 CARD_MIN, CARD_MAX = 2, 6
 LANE_MIN, LANE_MAX = 2, 4      # lanes 레인 수·레인당 steps 공용(스펙 §3.2)
@@ -18,6 +19,7 @@ BA_ITEM_MIN, BA_ITEM_MAX = 1, 5          # 스펙 §3.2 before_after 항목/측
 STAGE_MIN, STAGE_MAX = 3, 5              # 스펙 §3.2 ladder — 절대 상한만(판형 표 부재)
 PHASE_MIN, PHASE_MAX = 2, 5              # 스펙 §3.2 roadmap 위상
 PHASE_ITEMS_MIN, PHASE_ITEMS_MAX = 1, 4  # 플랜 결정 — 높이 예산 보호
+NODE_MIN, NODE_MAX = 3, 8                # 스펙 §3.2 topology 절대 상한(판형 상한은 archetype)
 
 
 class ParseError(Exception):
@@ -195,6 +197,41 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
                     raise ParseError(index, f"phases[{i}].items[{j}] 비어 있음", line)
         data["phases"] = [{"period": str(p["period"]).strip(), "title": str(p["title"]).strip(),
                            "items": [str(it).strip() for it in p["items"]]} for p in phases]
+    if layout == "topology":
+        nodes = d.get("nodes", [])
+        if not isinstance(nodes, list) or not (NODE_MIN <= len(nodes) <= NODE_MAX):
+            n = len(nodes) if isinstance(nodes, list) else 0
+            raise ParseError(index, f"nodes 개수 {n} — 하한 {NODE_MIN}, 상한 {NODE_MAX}", line)
+        seen = set()
+        for i, nd in enumerate(nodes):
+            if (not isinstance(nd, dict) or not isinstance(nd.get("id"), str)
+                    or not isinstance(nd.get("label"), str) or not nd["id"].strip() or not nd["label"].strip()):
+                raise ParseError(index, f"nodes[{i}] id·label 비빈 문자열 필요", line)
+            if nd["id"].strip() in seen:
+                raise ParseError(index, f"노드 id 중복: {nd['id'].strip()}", line)
+            seen.add(nd["id"].strip())
+        edges = d.get("edges", [])
+        if not isinstance(edges, list):
+            raise ParseError(index, "edges는 배열 필요", line)
+        eset = set()
+        norm_edges = []
+        for i, e in enumerate(edges):
+            if (not isinstance(e, dict) or str(e.get("from", "")).strip() not in seen
+                    or str(e.get("to", "")).strip() not in seen):
+                raise ParseError(index, f"edges[{i}].from/.to는 노드 id 참조 필요", line)
+            fr, to = str(e["from"]).strip(), str(e["to"]).strip()
+            if fr == to:
+                raise ParseError(index, f"자기 간선 금지: {fr}", line)
+            if (fr, to) in eset:
+                raise ParseError(index, f"간선 중복: {fr}→{to}", line)
+            eset.add((fr, to))
+            if "dashed" in e and not isinstance(e["dashed"], bool):
+                raise ParseError(index, f"edges[{i}].dashed는 불리언", line)
+            norm_edges.append({"from": fr, "to": to,
+                               **({"dashed": e["dashed"]} if e.get("dashed") else {})})
+        data["nodes"] = [{"id": str(nd["id"]).strip(), "label": str(nd["label"]).strip()}
+                         for nd in nodes]
+        data["edges"] = norm_edges
     if alias:
         data["_alias"] = raw_layout
 

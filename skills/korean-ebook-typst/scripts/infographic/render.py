@@ -128,6 +128,8 @@ def _sheet_rows(f) -> list[tuple[str, str]]:
     for i, cell in enumerate(f.data.get("cells", [])):
         rows.append((f"cells[{i}].title", cell["title"]))
         rows.append((f"cells[{i}].text", cell["text"]))
+    for i, nd in enumerate(f.data.get("nodes", [])):
+        rows.append((f"nodes[{i}].label", nd["label"]))
     for ax in ("x_axis", "y_axis"):
         if ax in f.data:
             rows.append((f"axis.{ax[0]}0", f.data[ax]["low"]))
