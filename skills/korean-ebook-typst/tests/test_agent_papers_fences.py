@@ -5,7 +5,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 BOOK = REPO / "books" / "agent-papers-2026-ko" / "manuscript"
-FENCE = re.compile(r"```infographic\n(.*?)\n```", re.S)
+# md2typst.IG_RE와 동일 패턴 — 검증 대상과 파서가 같은 펜스를 보게(후행 공백·들여쓰기 경계 포함)
+FENCE = re.compile(r"^```infographic[ \t]*\n(.*?)^```[ \t]*$", re.S | re.M)
 
 EXPECTED = {
     "00-들어가며.md": ["cards"],
