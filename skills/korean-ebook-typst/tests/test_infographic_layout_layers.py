@@ -60,7 +60,7 @@ def test_rings_radii_equidistant():
 
 
 def test_rings_label_max_w_within_chord():
-    # 링 라벨 상자 폭 = 12시 현(chord) − pad — 최내곽 링이 가장 좁다.
+    # 링 라벨 상자 폭 = 라벨 중심선(원 중심에서 r−d 위)의 현(chord) − pad — 최내곽 링이 가장 좁다.
     import math
     fig = layers_arch.layout(_rings_fence(), TOKENS)
     labels = sorted((o for o in fig.ops if isinstance(o, TextOp)
@@ -70,7 +70,7 @@ def test_rings_label_max_w_within_chord():
     item = TOKENS["fonts"]["body"]["size_pt"] - 1
     d = 6.0 + item * 1.3 / 2
     r_inner = r_max - 3 * step
-    expect = 2 * math.sqrt(r_inner * r_inner - d * d) - 16.0
+    expect = 2 * math.sqrt(r_inner * r_inner - (r_inner - d) ** 2) - 16.0
     assert labels[0].field == "rings[3].label"
     assert abs(labels[0].max_w - expect) < 0.01
 

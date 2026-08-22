@@ -79,8 +79,8 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
         for i, ring in enumerate(rings):
             r = r_max - i * step
             d = RING_LABEL_IN + item_size * LEADING / 2
-            chord = 2 * math.sqrt(max(r * r - d * d, 0.0)) - 2 * ROW_PAD_IN
-            rl = budget.line_count(ring["label"], chord, item_size, ROW_PAD_IN, pack)
+            # 라벨 중심선은 원 중심에서 r−d 위(12시) — 그 선의 현 폭만이 라벨 상자 폭.
+            chord = 2 * math.sqrt(max(r * r - (r - d) ** 2, 0.0)) - 2 * ROW_PAD_IN
             texts.append(TextOp(x=W / 2, y=cc_y - r + d, size=item_size,
                                 text=ring["label"], role="ink", max_w=chord,
                                 field=f"rings[{i}].label"))
