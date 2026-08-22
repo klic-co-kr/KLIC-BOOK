@@ -97,7 +97,7 @@ def test_layers_elements_reach_lint_and_sheet():
     figs = {1: layers_arch.layout(f, TOKENS)}
     found = check([f], figs, TOKENS, "원문 없음", "ch01.md")
     assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 stack[0].label" for x in found)
-    rows = dict(_sheet_rows(f))
+    rows = {p: t for p, t, _ in _sheet_rows(f)}
     assert {"stack[0].label", "stack[3].label"} <= set(rows)
     sheet = _review_sheet(f, [])
     assert "stack[0].label" in sheet
@@ -112,6 +112,27 @@ def test_layers_golden_snapshot():
                "stack": [{"label": "표현 계층"}, {"label": "응용 계층"},
                          {"label": "논리 계층"}, {"label": "자료 계층"}]}
     # stack 기본 변형 — 전폭 4행, 순서 = 위→아래(표현이 가장 위).
+    f = parse_fence(1, 1, json.dumps(payload, ensure_ascii=False))
+    code = render_typ(layers_arch.layout(f, TOKENS))
+    if os.environ.get("IG_REGEN_GOLDEN") != "1":
+        if not GOLDEN.exists():
+            pytest.fail("골든 없음 — `IG_REGEN_GOLDEN=1 python3 -m pytest …` 실행 후 눈검·커밋")
+        assert code == GOLDEN.read_text(encoding="utf-8")
+    else:
+        GOLDEN.parent.mkdir(parents=True, exist_ok=True)
+        GOLDEN.write_text(code, encoding="utf-8")
+        pytest.fail("골든 재생성 — 눈검 후 커밋")
+
+
+def test_layers_rings_golden_snapshot():
+    import os
+    from scripts.infographic.emit import render_typ
+    GOLDEN = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "infographic" / "golden-layers-rings-practical.typ"
+    payload = {"layout": "layers", "title": "계층은 표현에서 자료로 내려간다",
+               "rings": [{"label": "표현"}, {"label": "문서"},
+                         {"label": "자료"}, {"label": "부호"}]}
+    # rings 변형 — 동심원 4겹, 순서 = 바깥→안(표현이 가장 바깥). 골든은 stack 골든과
+    # 동일 절차(IG_REGEN_GOLDEN 재생성 → 눈검 → 커밋).
     f = parse_fence(1, 1, json.dumps(payload, ensure_ascii=False))
     code = render_typ(layers_arch.layout(f, TOKENS))
     if os.environ.get("IG_REGEN_GOLDEN") != "1":

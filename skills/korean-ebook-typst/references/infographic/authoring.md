@@ -1,4 +1,4 @@
-# 인포그래픽 저작 가이드 (Phase 4 — +topology·approval·layers)
+# 인포그래픽 저작 가이드 (Phase 5 — +composite·검수 렌더·리포트)
 
 챕터 md에 ` ```infographic ` 펜스(JSON)를 넣으면 그 자리에 출판 품질 벡터
 도식이 삽입된다. 도식은 원고의 **편집적 재배열**이다 — 원문 근거를 벗어나지
@@ -30,7 +30,7 @@
 | 구성·관계망 | `topology` | **Phase 4 사용 가능** |
 | 결재·승인 경로 | `approval` | **Phase 4 사용 가능** |
 | 계층 구조 | `layers` | **Phase 4 사용 가능** |
-| 복합 씬(주+보조) | `composite` | Phase 5 예정 |
+| 복합 씬(주+보조) | `composite` | **Phase 5 사용 가능** |
 
 요소 수 판형 상한(스펙 §6.2 — 초과 시 I1 에러). 상한 내 배치 결정론:
 flow는 가로 1행(카드폭 ≥ 80pt) → 2행 랩 → 에러. cards는 팩 열수 그리드 →
@@ -371,12 +371,62 @@ I1 에러다. 가로 진행만 있고 세로 화살표는 없다.
   (**음절 4 이내 권장**) — 저작 계약 초단문이다.
 - I1: `stack[i].label`·`rings[i].label` 전부 숫자-evidence 검사 대상이다.
 
+### composite — 복합 씬
+
+한 장에서 대비·근거(주)와 절차(보조)를 **함께** 보여야 할 때 — 모듈 2~3개를
+세로로 쌓는다. `modules`는 `{slot, layout, …}` 배열이고 각 모듈 페이로드는
+독립 펜스와 동일한 스키마 검증을 받는다(개수 상한·I1 전수 승계).
+
+```infographic
+{
+  "layout": "composite",
+  "kicker": "한 장 요약",
+  "title": "근거와 절차를 한 장에 담는다",
+  "evidence": "§2",
+  "modules": [
+    { "slot": "primary", "layout": "cards", "title": "확정판의 세 요소",
+      "cards": [
+        { "title": "요소 1", "text": "근거 문장 1." },
+        { "title": "요소 2", "text": "근거 문장 2." },
+        { "title": "요소 3", "text": "근거 문장 3." } ] },
+    { "slot": "supporting", "layout": "flow", "title": "적용은 두 단계로 끝난다",
+      "steps": [
+        { "title": "준비", "text": "전제를 확인한다." },
+        { "title": "실행", "text": "절차를 수행한다." } ],
+      "note": "위 카드의 적용 절차" } ]
+}
+```
+
+- **slot 규칙**: `primary` 정확히 1개 + `supporting` 1~2개(모듈 총 2~3).
+  모듈 `layout`에 `composite`은 올 수 없다(재귀 금지). 모듈 `layout`에도
+  구별칭이 최상위와 같은 규칙으로 정규화된다(경고도 동일 — 아래 검수).
+  composite은 최상위 `title`이 선택인 유일한 layout이다 — 모듈 제목들이
+  장 구성을 대신한다.
+- **모듈은 각자 결론형 제목을 가진다** — 모듈 `title`은 필수이고 "구성"·
+  "절차" 같은 주제 라벨이 아닌 명제로 쓴다. 모듈 `note`도 각자 렌더된다
+  (생략 시 기본 고지문이 모듈마다 붙는다 — 고지 중복이 싫으면 모듈 `note`를
+  짧게 준다).
+- **배분 규칙 — 측정 우선, 자동 축소 없음(개정 6판)**: 도식 헤더(kicker·
+  title) 높이를 먼저 빼고(헤더 선차감), 가용높이 = 프레임 85% − 헤더에서
+  주 ≤ 60%, 보조는 잔여 균분, 슬롯 사이 간격(GAP) 24pt. 각 모듈은 단독
+  펜스와 동일하게 먼저 측정되며, 배분을 넘으면 축소하지 않고 에러다:
+  - 주 초과: `primary {layout} 측정높이 {h}pt > 배분 {H}pt — 주 모듈 요소 수 감소 또는 펜스 분할 권장`
+  - 보조 초과: `supporting {layout} 측정높이 {h}pt > 배분 {H}pt — 보조 모듈 {n}을(를) 별도 펜스로 분할 권장`
+  - 총량 초과: `도식 높이 {y}pt > 프레임 {H}pt(85%) — 펜스 분할 권장`
+- 해결 레버는 기존과 같다 — 글자 축약·요소 수 감소·펜스 분할. 배분이
+  닿지 않으면 모듈을 억지로 넣지 말고 아예 별도 펜스로 나눈다.
+- I1: 모듈 내부 필드 전부(`modules[j].` prefix) 숫자-evidence 검사 대상이다.
+  모듈 `evidence`가 있으면 모듈 숫자는 그 근거로 검증되고, 없으면 상위 펜스
+  `evidence`로 폴백된다 — 어느 쪽도 없으면 치명(검수 시트의 evidence 열이
+  행마다 실제 검증에 쓰인 근거를 보여준다).
+
 ### 공통 필드
 
 | 필드 | 필수 | 규약 |
 |---|---|---|
-| `layout` | O | `flow`·`cards`·`matrix`·`before_after`·`ladder`·`roadmap`·`topology`·`approval`·`layers` (구별칭 `process`→flow, `principles`·`dashboard`→cards, `quadrant`→matrix 정성, `bridge`→before_after, `network`→topology — 자동 변환) |
-| `title` | O | 결론형 명제 — 주제 라벨 금지 |
+| `layout` | O | `flow`·`cards`·`matrix`·`before_after`·`ladder`·`roadmap`·`topology`·`approval`·`layers`·`composite` (구별칭 `process`→flow, `principles`·`dashboard`→cards, `quadrant`→matrix 정성, `bridge`→before_after, `network`→topology — 자동 변환, composite 모듈 layout에서도 동일) |
+| `title` | O (composite 최상위는 선택) | 결론형 명제 — 주제 라벨 금지. composite 모듈 `title`은 필수 |
+| `modules` | composite | 2~3개 `{slot, layout, …}` 배열. `slot`(`primary` 1 + `supporting` 1~2)은 **모듈 전용 필수 필드** — 모듈 layout에 `composite`은 금지(재귀) |
 | `steps` | flow | 2~8개(판형 상한표), 각 `{title, text}` — 둘 다 필수 |
 | `lanes` | flow | `steps`와 배타. 각 `{actor, steps}` — 레인 셀 수는 판형 상한표 |
 | `cards` | cards | 2~6개(판형 상한표), 각 `{title, text, 선택 value}` |
@@ -393,7 +443,7 @@ I1 에러다. 가로 진행만 있고 세로 화살표는 없다.
 | `thesis` | | 한두 문장 설명 |
 | `kicker` | | 짧은 영문·한국어 라벨(도식 상단) — **초단문 1줄 계약**(줄바꿈 없음) |
 | `note` | | 고지문. 생략 시 기본문: "편집 요약: 본문의 장·절 구조와 핵심 문장을 재배열한 도식이며, 원문을 대체하지 않습니다." |
-| `evidence` | | `"§N"` — 같은 챕터 md의 N번째 `## ` 헤딩 범위(보통 §1 = 장 전체). 숫자가 있으면 필수(아래) |
+| `evidence` | | `"§N"` — 같은 챕터 md의 N번째 `## ` 헤딩 범위(보통 §1 = 장 전체). 숫자가 있으면 필수(아래). composite 모듈은 모듈 `evidence` 우선·상위 펜스 값 폴백 |
 
 근거 경계(스펙 §3.3):
 
@@ -471,6 +521,10 @@ I1 에러다. 가로 진행만 있고 세로 화살표는 없다.
   (~5~6자)보다 1자 좁다(교정 2주기 실측) — 밴드 항목은 표보다 더 짧게
   쓴다.
 - 박스당 **3줄 상한**(I1) — 초과하면 글자 축약·요소 수 감소·펜스 분할.
+- **composite 배분**(practical 기준): 주 모듈 ≤ 가용높이의 60%(가용높이 =
+  프레임 85% − 헤더, 헤더 선차감) · 보조 모듈은 잔여 균분 · 슬롯 간 GAP
+  24pt · 총 도식 높이 상한 프레임 85%. 모듈 텍스트 예산은 각 모듈 레이아웃의
+  위 표 행을 그대로 적용한다.
 - 라틴 장토큰(URL·약어)은 한글 1자의 0.55배 폭으로 환산된다.
 
 ## 골든 교정 절차 (스펙 §7 — 1~3주기 완료 2026-08-22, archetype 추가·계수 드리프트 의심 시 반복)
@@ -520,10 +574,21 @@ python3 scripts/infographic/cli.py preview manuscript/ch01.md --fig 1   # 펜스
 
 ## 검수
 
+- 빌드 직후 `gate-report.json`의 `infographic_pages`를 읽는다 — `count`(PDF에서
+  `ig-fig` metadata로 실측한 도식 페이지 수) · `expected`(manifest 총 도식
+  수) · `match`(count == expected). `match`가 거짓이면 도식이 인쇄물에서
+  누락·중복된 것이다 — 펜스와 빌드 로그를 재확인 후 재빌드한다.
+- qc_gate은 도식 페이지를 `build/infographic/review-p*.png`(170 DPI)로
+  렌더해 둔다. 시트 대조와 함께 **PNG 눈검**을 한다(스펙 §5.4): 카드 내부
+  줄바꿈 · 표 셀 잘림 · 화살표 충돌 · 작은 글씨 · 텍스트 카드 밖 이탈.
 - 빌드 시 도식마다 `build/infographic/NNN-figNN.review.md` 검수 시트가 생성된다
-  — 5열: 요소 | 문구 | evidence | 교차검증 | 확인란. 원문과 대조해 확인란과
-  하단 `- [ ] 원문 대조 완료` 체크박스를 채운다(`- [x]`).
+  — 5열: 요소 | 문구 | evidence | 교차검증 | 확인란. 원문 대조와 위 PNG
+  눈검을 마친 뒤 요소별 확인란과 하단 `- [ ] 원문 대조 완료` 체크박스를
+  채운다(`- [x]`) — 눈검은 체크의 전제 절차다.
 - qc_gate은 미완료 검수 시트가 남아 있으면 **WARN**을 출력한다(에러 아님 —
   검수는 사람 판단. final/ 생성은 기존 규칙 그대로).
 - I1 "미검증" 플래그(타 챕터 인용·evidence 불해석 숫자)는 기계 교차검증을
   건너뛴 것이다 — **사람 대조 필수**. 해당 도식 시트 상단에 경고로 표시된다.
+- 구별칭(`process`→flow 등 — composite 모듈 layout 포함)로 쓴 펜스는 빌드는
+  되지만 콘솔 경고와 함께 검수 시트 상단에 `별칭 … — 정식 키워드 권장` 줄이
+  남는다 — 다음 펜스부터 정식 키워드로 바꾼다.

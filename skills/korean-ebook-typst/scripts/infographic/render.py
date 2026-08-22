@@ -52,7 +52,20 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
         fences = []
         for raw in fences_raw:
             try:
-                fences.append(parse_fence(raw["index"], raw["line"], raw["body"]))
+                f = parse_fence(raw["index"], raw["line"], raw["body"])
+                fences.append(f)
+                # 구별칭 경고(채널 1) — 정규화돼 빌드는 계속되는 정상 경로라 finding이
+                # 아닌 non-fatal print. stdout만으론 gate 산출물을 읽는 downstream이
+                # 못 본다 → 검수 시트에 병기(채널 2, _review_sheet).
+                if "_alias" in f.data:
+                    print(f"[경고] 별칭 {f.data['_alias']}→{f.layout} — 정식 키워드 권장 "
+                          f"({chapter_name} #{f.index})")
+                # 모듈 별칭(최종 리뷰) — 재귀 파싱이라 경고 데이터가 m.data에 남는다.
+                # 상위 펜스와 같은 2채널 계약으로 인쇄한다.
+                for j, m in enumerate(f.data.get("modules", [])):
+                    if "_alias" in m.data:
+                        print(f"[경고] 별칭 {m.data['_alias']}→{m.layout} — 정식 키워드 권장 "
+                              f"({chapter_name} #{f.index} modules[{j}])")
             except ParseError as e:
                 all_findings.append(lint.LintFinding(
                     "schema", f"{chapter_name} #{e.fence_index}", e.detail,
@@ -78,7 +91,13 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
         for f in fences:
             fig = figs[f.index]
             name = f"{idx:03d}-fig{f.index:02d}.typ"
-            (out_dir / name).write_text(emit.render_typ(fig), encoding="utf-8")
+            # #context 필수 — typst 0.15.1은 context 없는 metadata가
+            # "can only be used when context is known" 컴파일 에러로 전 도식을
+            # 깨뜨린다(검토 G3-C1 실증). 프리픽스는 파일에만 붙는다 — standalone
+            # 골든(emit.render_typ 출력) 바이트는 불변.
+            (out_dir / name).write_text(
+                f'#context metadata((kind: "ig-fig", name: "{name}", '
+                f'page: here().page()))\n' + emit.render_typ(fig), encoding="utf-8")
             unverified = [x for x in all_findings
                           if x.kind == "number-unverified"
                           and x.loc.startswith(f"{chapter_name} #{f.index} ")]
@@ -86,61 +105,86 @@ def render_book_fences(book_dir: Path, build: Path, cfg: dict) -> dict[int, dict
                 _review_sheet(f, unverified), encoding="utf-8")
             emits[f.index] = name
         result[idx] = emits
+    # §5.4 개정 6판 — qc_gate의 typst query 페이지 대응이 짝지을 이름·챕터·인덱스.
+    manifest = {"count": sum(len(e) for e in result.values()),
+                "figs": [{"name": nm, "chapter": idx, "index": fi}
+                         for idx, emits in result.items() for fi, nm in emits.items()]}
+    (out_dir / "manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
     return result
 
 
-def _sheet_rows(f) -> list[tuple[str, str]]:
-    rows = [("title", f.title), ("kicker", f.kicker or "—"), ("thesis", f.thesis or "—")]
-    for i, s in enumerate(f.data.get("steps", [])):
-        rows.append((f"steps[{i}].title", s["title"]))
-        rows.append((f"steps[{i}].text", s["text"]))
-    for i, ln in enumerate(f.data.get("lanes", [])):
-        rows.append((f"lanes[{i}].actor", ln["actor"]))
+def rows_from(title: str, kicker: str | None, thesis: str | None, data: dict,
+              prefix: str = "") -> list[tuple[str, str]]:
+    """펜스 필드 평탄 수집(검수 시트 5열 계약용 2-튜플) — composite 모듈
+    전개가 같은 본체를 prefix로 재사용한다(lint.rows_from과 경로 관계 공용)."""
+    rows = [(f"{prefix}title", title), (f"{prefix}kicker", kicker or "—"),
+            (f"{prefix}thesis", thesis or "—")]
+    for i, s in enumerate(data.get("steps", [])):
+        rows.append((f"{prefix}steps[{i}].title", s["title"]))
+        rows.append((f"{prefix}steps[{i}].text", s["text"]))
+    for i, ln in enumerate(data.get("lanes", [])):
+        rows.append((f"{prefix}lanes[{i}].actor", ln["actor"]))
         for j, s in enumerate(ln["steps"]):
-            rows.append((f"lanes[{i}].steps[{j}].title", s["title"]))
-            rows.append((f"lanes[{i}].steps[{j}].text", s["text"]))
-    for i, c in enumerate(f.data.get("cards", [])):
-        rows.append((f"cards[{i}].title", c["title"]))
-        rows.append((f"cards[{i}].text", c["text"]))
+            rows.append((f"{prefix}lanes[{i}].steps[{j}].title", s["title"]))
+            rows.append((f"{prefix}lanes[{i}].steps[{j}].text", s["text"]))
+    for i, c in enumerate(data.get("cards", [])):
+        rows.append((f"{prefix}cards[{i}].title", c["title"]))
+        rows.append((f"{prefix}cards[{i}].text", c["text"]))
         if "value" in c:
-            rows.append((f"cards[{i}].value", c["value"]))
+            rows.append((f"{prefix}cards[{i}].value", c["value"]))
     for side in ("before", "after"):
-        for i, it in enumerate(f.data.get(side, [])):
-            rows.append((f"{side}[{i}]", it))
-    if f.data.get("center"):
-        rows.append(("center", f.data["center"]))
+        for i, it in enumerate(data.get(side, [])):
+            rows.append((f"{prefix}{side}[{i}]", it))
+    if data.get("center"):
+        rows.append((f"{prefix}center", data["center"]))
     for k in ("before_label", "after_label"):
-        if f.data.get(k):
-            rows.append((k, f.data[k]))
-    for i, s in enumerate(f.data.get("stages", [])):
-        rows.append((f"stages[{i}].title", s["title"]))
-        rows.append((f"stages[{i}].text", s["text"]))
-    for i, p in enumerate(f.data.get("phases", [])):
-        rows.append((f"phases[{i}].period", p["period"]))
-        rows.append((f"phases[{i}].title", p["title"]))
+        if data.get(k):
+            rows.append((f"{prefix}{k}", data[k]))
+    for i, s in enumerate(data.get("stages", [])):
+        rows.append((f"{prefix}stages[{i}].title", s["title"]))
+        rows.append((f"{prefix}stages[{i}].text", s["text"]))
+    for i, p in enumerate(data.get("phases", [])):
+        rows.append((f"{prefix}phases[{i}].period", p["period"]))
+        rows.append((f"{prefix}phases[{i}].title", p["title"]))
         for j, it in enumerate(p["items"]):
-            rows.append((f"phases[{i}].items[{j}]", it))
-    for c, h in enumerate(f.data.get("headers", [])):
-        rows.append((f"headers[{c}]", h))
-    for r, row in enumerate(f.data.get("rows", [])):
+            rows.append((f"{prefix}phases[{i}].items[{j}]", it))
+    for c, h in enumerate(data.get("headers", [])):
+        rows.append((f"{prefix}headers[{c}]", h))
+    for r, row in enumerate(data.get("rows", [])):
         for c, cell in enumerate(row):
-            rows.append((f"cell[{r}][{c}]", cell))
-    for i, cell in enumerate(f.data.get("cells", [])):
-        rows.append((f"cells[{i}].title", cell["title"]))
-        rows.append((f"cells[{i}].text", cell["text"]))
-    for i, nd in enumerate(f.data.get("nodes", [])):
-        rows.append((f"nodes[{i}].label", nd["label"]))
-    for i, st in enumerate(f.data.get("path", [])):
-        rows.append((f"path[{i}].title", st["title"]))
+            rows.append((f"{prefix}cell[{r}][{c}]", cell))
+    for i, cell in enumerate(data.get("cells", [])):
+        rows.append((f"{prefix}cells[{i}].title", cell["title"]))
+        rows.append((f"{prefix}cells[{i}].text", cell["text"]))
+    for i, nd in enumerate(data.get("nodes", [])):
+        rows.append((f"{prefix}nodes[{i}].label", nd["label"]))
+    for i, st in enumerate(data.get("path", [])):
+        rows.append((f"{prefix}path[{i}].title", st["title"]))
         if "text" in st:
-            rows.append((f"path[{i}].text", st["text"]))
+            rows.append((f"{prefix}path[{i}].text", st["text"]))
     for key in ("stack", "rings"):
-        for i, row in enumerate(f.data.get(key, [])):
-            rows.append((f"{key}[{i}].label", row["label"]))
+        for i, row in enumerate(data.get(key, [])):
+            rows.append((f"{prefix}{key}[{i}].label", row["label"]))
     for ax in ("x_axis", "y_axis"):
-        if ax in f.data:
-            rows.append((f"axis.{ax[0]}0", f.data[ax]["low"]))
-            rows.append((f"axis.{ax[0]}1", f.data[ax]["high"]))
+        if ax in data:
+            rows.append((f"{prefix}axis.{ax[0]}0", data[ax]["low"]))
+            rows.append((f"{prefix}axis.{ax[0]}1", data[ax]["high"]))
+    return rows
+
+
+def _sheet_rows(f) -> list[tuple[str, str, str]]:
+    """(경로, 문구, 해석 evidence) 3-튜플 — composite 모듈은 parse가 Fence로
+    정규화해 m.title·m.data 속성으로 전개한다. 모듈 행 evidence는 모듈 자체
+    값 우선·상위 펜스 폴백(lint.check와 같은 해석 규칙 — 시트 열이 실제
+    검증에 쓰인 근거를 보여야 대조자가 따라온다, 최종 리뷰)."""
+    rows = [(p, t, f.evidence or "—")
+            for p, t in rows_from(f.title, f.kicker, f.thesis, f.data, "")]
+    for j, m in enumerate(f.data.get("modules", [])):
+        ev = m.evidence or f.evidence or "—"
+        rows.extend((p, t, ev)
+                    for p, t in rows_from(m.title, m.kicker, m.thesis, m.data,
+                                          f"modules[{j}]."))
     return rows
 
 
@@ -152,6 +196,15 @@ def _review_sheet(f, unverified: list) -> str:
         lines.append("**⚠ 미검증 숫자 — 사람 대조 필수:**")
         lines += [f"- {u.loc}: {u.measured}" for u in unverified]
         lines.append("")
+    # 구별칭 경고(채널 2) — 고지 블록 위. 콘솔 로그를 놓쳐도 gate 산출물에 남는다.
+    if "_alias" in f.data:
+        lines.append(f"**⚠ 별칭 {f.data['_alias']}→{f.layout} — 정식 키워드 권장**")
+        lines.append("")
+    for j, m in enumerate(f.data.get("modules", [])):
+        if "_alias" in m.data:
+            lines.append(f"**⚠ 별칭 {m.data['_alias']}→{m.layout} — "
+                         f"정식 키워드 권장 (modules[{j}])**")
+            lines.append("")
     lines += [
         f"> 고지: {f.note or DEFAULT_NOTE}",
         f"> evidence: {f.evidence or '—'}",
@@ -159,8 +212,7 @@ def _review_sheet(f, unverified: list) -> str:
         "| 요소 | 문구 | evidence | 교차검증 | 확인란 |",
         "|---|---|---|---|---|",
     ]
-    ev = f.evidence or "—"
-    for p, t in rows:
+    for p, t, ev in rows:
         flag = "미검증" if any(f" {p}" in u.loc for u in unverified) else "I1 통과"
         lines.append(f"| {p} | {t} | {ev} | {flag} |  |")
     lines += ["", "- [ ] 원문 대조 완료"]

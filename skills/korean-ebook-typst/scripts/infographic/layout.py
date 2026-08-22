@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 from .archetypes import (approval as _appr, before_after as _ba, cards as _cards,
-                         flow as _flow, ladder as _lad, layers as _layers,
-                         matrix as _matrix, roadmap as _rm, topology as _topo)
+                         composite as _comp, flow as _flow, ladder as _lad,
+                         layers as _layers, matrix as _matrix, roadmap as _rm,
+                         topology as _topo)
 from .parse import Fence
 
 
@@ -26,4 +27,6 @@ def dispatch(fence: Fence, tokens: dict):
         return _appr.layout(fence, tokens)
     if fence.layout == "layers":
         return _layers.layout(fence, tokens)
+    if fence.layout == "composite":
+        return _comp.layout(fence, tokens)
     raise ValueError(f"지원하지 않는 layout: {fence.layout!r}")

@@ -79,7 +79,7 @@ def test_approval_elements_reach_lint_and_sheet():
     figs = {1: appr_arch.layout(f, TOKENS)}
     found = check([f], figs, TOKENS, "원문 없음", "ch01.md")
     assert any(x.kind == "number-evidence" and x.loc == "ch01.md #1 path[0].title" for x in found)
-    rows = dict(_sheet_rows(f))
+    rows = {p: t for p, t, _ in _sheet_rows(f)}
     assert {"path[0].title", "path[1].title", "path[2].text", "path[3].title"} <= set(rows)
     sheet = _review_sheet(f, [])
     assert "path[1].title" in sheet
