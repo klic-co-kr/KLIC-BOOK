@@ -115,6 +115,11 @@ def _sheet_rows(f) -> list[tuple[str, str]]:
     for i, s in enumerate(f.data.get("stages", [])):
         rows.append((f"stages[{i}].title", s["title"]))
         rows.append((f"stages[{i}].text", s["text"]))
+    for i, p in enumerate(f.data.get("phases", [])):
+        rows.append((f"phases[{i}].period", p["period"]))
+        rows.append((f"phases[{i}].title", p["title"]))
+        for j, it in enumerate(p["items"]):
+            rows.append((f"phases[{i}].items[{j}]", it))
     for c, h in enumerate(f.data.get("headers", [])):
         rows.append((f"headers[{c}]", h))
     for r, row in enumerate(f.data.get("rows", [])):

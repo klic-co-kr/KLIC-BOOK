@@ -104,3 +104,20 @@ def test_before_after_elements_reach_lint_and_sheet():
     sheet = _review_sheet(f, [])
     for path in ("before[0]", "after[0]", "center", "before_label", "after_label"):
         assert path in sheet
+
+
+def test_before_after_golden_snapshot():
+    # cards 골든 패턴(test_infographic_layout_cards.py:124-135) 복제 — I2:
+    # emit 심볼은 render_typ(fig)뿐(emit.py:21), os는 파일 상단 임포트
+    import os
+    GOLDEN = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "infographic" / "golden-before-after-practical.typ"
+    fig = ba_arch.layout(_fence(["리드타임 2주", "수작업 5단계"], ["리드타임 3일", "자동화 1단계"], center="AI 도입"), TOKENS)
+    from scripts.infographic.emit import render_typ
+    code = render_typ(fig)
+    if os.environ.get("IG_REGEN_GOLDEN") != "1":
+        if not GOLDEN.exists():
+            pytest.fail("골든 없음 — `IG_REGEN_GOLDEN=1 python3 -m pytest …` 실행 후 눈검·커밋")
+        assert code == GOLDEN.read_text(encoding="utf-8")
+    else:
+        GOLDEN.write_text(code, encoding="utf-8")
+        pytest.fail("골든 재생성 — 눈검 후 커밋")

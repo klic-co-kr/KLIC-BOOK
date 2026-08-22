@@ -66,3 +66,20 @@ def test_step_gap_error_on_tall_stages():
         {"layout": "ladder", "title": "성숙도", "stages": stages}, ensure_ascii=False))
     with pytest.raises(ladder_arch.LadderLayoutError, match="단 간격"):
         ladder_arch.layout(f, TOKENS)
+
+
+def test_ladder_golden_snapshot():
+    # cards 골든 패턴(test_infographic_layout_cards.py:124-135) 복제 — I2:
+    # emit 심볼은 render_typ(fig)뿐(emit.py:21), os는 파일 상단 임포트
+    import os
+    GOLDEN = Path(__file__).resolve().parents[1] / "tests" / "fixtures" / "infographic" / "golden-ladder-practical.typ"
+    fig = ladder_arch.layout(_fence(4), TOKENS)
+    from scripts.infographic.emit import render_typ
+    code = render_typ(fig)
+    if os.environ.get("IG_REGEN_GOLDEN") != "1":
+        if not GOLDEN.exists():
+            pytest.fail("골든 없음 — `IG_REGEN_GOLDEN=1 python3 -m pytest …` 실행 후 눈검·커밋")
+        assert code == GOLDEN.read_text(encoding="utf-8")
+    else:
+        GOLDEN.write_text(code, encoding="utf-8")
+        pytest.fail("골든 재생성 — 눈검 후 커밋")

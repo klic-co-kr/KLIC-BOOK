@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from .archetypes import (before_after as _ba, cards as _cards, flow as _flow,
-                         ladder as _lad, matrix as _matrix)
+                         ladder as _lad, matrix as _matrix, roadmap as _rm)
 from .parse import Fence
 
 
@@ -17,4 +17,6 @@ def dispatch(fence: Fence, tokens: dict):
         return _ba.layout(fence, tokens)
     if fence.layout == "ladder":
         return _lad.layout(fence, tokens)
+    if fence.layout == "roadmap":
+        return _rm.layout(fence, tokens)
     raise ValueError(f"지원하지 않는 layout: {fence.layout!r}")

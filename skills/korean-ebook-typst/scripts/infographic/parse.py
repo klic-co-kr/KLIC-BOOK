@@ -10,12 +10,14 @@ DEFAULT_NOTE = ("편집 요약: 본문의 장·절 구조와 핵심 문장을 �
 # 스펙 §3.4 — 구시스템 별칭 → 규범 키워드
 ALIASES = {"process": "flow", "principles": "cards", "dashboard": "cards",
            "quadrant": "matrix", "bridge": "before_after"}
-VALID_LAYOUTS = {"flow", "cards", "matrix", "before_after", "ladder"}   # Phase 1·2·3
+VALID_LAYOUTS = {"flow", "cards", "matrix", "before_after", "ladder", "roadmap"}   # Phase 1·2·3
 STEP_MIN, STEP_MAX = 2, 8
 CARD_MIN, CARD_MAX = 2, 6
 LANE_MIN, LANE_MAX = 2, 4      # lanes 레인 수·레인당 steps 공용(스펙 §3.2)
 BA_ITEM_MIN, BA_ITEM_MAX = 1, 5          # 스펙 §3.2 before_after 항목/측
 STAGE_MIN, STAGE_MAX = 3, 5              # 스펙 §3.2 ladder — 절대 상한만(판형 표 부재)
+PHASE_MIN, PHASE_MAX = 2, 5              # 스펙 §3.2 roadmap 위상
+PHASE_ITEMS_MIN, PHASE_ITEMS_MAX = 1, 4  # 플랜 결정 — 높이 예산 보호
 
 
 class ParseError(Exception):
@@ -174,6 +176,25 @@ def parse_fence(index: int, line: int, body: str) -> Fence:
                 raise ParseError(index, f"stages[{i}].title/.text 비어 있음", line)
         data["stages"] = [{"title": str(s["title"]).strip(), "text": str(s["text"]).strip()}
                           for s in stages]
+    if layout == "roadmap":
+        phases = d.get("phases", [])
+        if not isinstance(phases, list) or not (PHASE_MIN <= len(phases) <= PHASE_MAX):
+            n = len(phases) if isinstance(phases, list) else 0
+            raise ParseError(index, f"phases 개수 {n} — 하한 {PHASE_MIN}, 상한 {PHASE_MAX}(스펙 §3.2)", line)
+        for i, p in enumerate(phases):
+            if not isinstance(p, dict):
+                raise ParseError(index, f"phases[{i}] 객체 아님", line)
+            if not str(p.get("period", "")).strip() or not str(p.get("title", "")).strip():
+                raise ParseError(index, f"phases[{i}].period/.title 비어 있음", line)
+            items = p.get("items", [])
+            if not isinstance(items, list) or not (PHASE_ITEMS_MIN <= len(items) <= PHASE_ITEMS_MAX):
+                m = len(items) if isinstance(items, list) else 0
+                raise ParseError(index, f"phases[{i}].items 개수 {m} — 하한 {PHASE_ITEMS_MIN}, 상한 {PHASE_ITEMS_MAX}", line)
+            for j, it in enumerate(items):
+                if not str(it).strip():
+                    raise ParseError(index, f"phases[{i}].items[{j}] 비어 있음", line)
+        data["phases"] = [{"period": str(p["period"]).strip(), "title": str(p["title"]).strip(),
+                           "items": [str(it).strip() for it in p["items"]]} for p in phases]
     if alias:
         data["_alias"] = raw_layout
 
