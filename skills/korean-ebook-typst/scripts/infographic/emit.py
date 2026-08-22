@@ -35,8 +35,9 @@ def render_typ(fig: FigModel) -> str:
                          f"style: \"{op.style}\")")
         elif isinstance(op, TextOp):
             w = f", weight: \"{op.weight}\"" if op.weight != "regular" else ""
+            mw = f", max-w: {_n(op.max_w)}pt" if op.max_w > 0 else ""
             # ig-text는 컨테이너 중심 앵커라 절대좌표 환산에 fw·fh가 필요하다(helper 참조).
             lines.append(f"  #ig-text({_n(op.x)}, {_n(op.y)}, {_n(fig.width)}, "
-                         f"{_n(fig.height)}, {_n(op.size)}, \"{op.role}\"{w})[{_esc(op.text)}]")
+                         f"{_n(fig.height)}, {_n(op.size)}, \"{op.role}\"{w}{mw})[{_esc(op.text)}]")
     lines.append("]")
     return "\n".join(lines) + "\n"

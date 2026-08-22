@@ -126,3 +126,21 @@ def test_roadmap_golden_snapshot():
     else:
         GOLDEN.write_text(code, encoding="utf-8")
         pytest.fail("골든 재생성 — 눈검 후 커밋")
+
+
+def test_note_measured_pushes_fig_height():
+    from scripts.infographic import budget
+    from scripts.infographic.parse import DEFAULT_NOTE
+    nl = budget.line_count(DEFAULT_NOTE,
+                           TOKENS["body_frame_pt"]["x1"] - TOKENS["body_frame_pt"]["x0"] - 28.0,
+                           TOKENS["fonts"]["body"]["size_pt"] - 1, 8.0, "practical")
+    assert nl == 2  # Phase 4 실측 — practical 기본 노트 2줄(1줄 아님)
+    mk = lambda note: parse_fence(1, 1, json.dumps(
+        {"layout": "roadmap", "title": "도입 로드맵",
+         "phases": [{"period": "2026년", "title": "위상 1", "items": ["항목 0"]},
+                    {"period": "2027년", "title": "위상 2", "items": ["항목 1"]}],
+         **({"note": note} if note else {})}, ensure_ascii=False))
+    short = rm_arch.layout(mk("한 줄 노트"), TOKENS)
+    default = rm_arch.layout(mk(None), TOKENS)
+    item = TOKENS["fonts"]["body"]["size_pt"] - 1
+    assert abs((default.height - short.height) - (nl - 1) * item * 1.3) < 0.01

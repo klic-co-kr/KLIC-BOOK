@@ -4,7 +4,7 @@ from __future__ import annotations
 from .. import budget
 from ..model import FigModel, RectOp, TextOp
 from ..parse import DEFAULT_NOTE, Fence
-from .base import LayoutError
+from .base import LayoutError, sizes
 
 P = 14.0
 G = 28.0
@@ -28,14 +28,11 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     W = frame["x1"] - frame["x0"]
     H_frame = frame["y1"] - frame["y0"]
     pack = tokens.get("style", "practical")
-    f = tokens["fonts"]
-    body = f["body"]["size_pt"]
-    title_size = f["heading2"]["size_pt"]
-    if abs(title_size - body) <= 0.3:
-        title_size = body + 1.5
-    kicker_size = f["label"]["size_pt"]
-    card_title_size = body + 1
-    card_text_size = body - 1
+    s = sizes(tokens)
+    title_size = s["title"]
+    kicker_size = s["kicker"]
+    card_title_size = s["ph_title"]
+    card_text_size = s["item"]
     value_size = card_title_size + VALUE_BONUS_PT
 
     cols_n = PACK_COLS.get(pack)
@@ -67,6 +64,7 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
     texts: list[TextOp] = []
     cy = 0.0
     if fence.kicker:
+        # kicker: 저작 계약 초단문(1줄)
         texts.append(TextOp(x=W / 2, y=cy + kicker_size * LEADING / 2, size=kicker_size,
                             text=fence.kicker, role="ink-mute", field="kicker"))
         cy += kicker_size * LEADING
@@ -96,9 +94,10 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
 
     y += 12.0
     note = fence.note or DEFAULT_NOTE
-    texts.append(TextOp(x=W / 2, y=y + card_text_size * LEADING / 2, size=card_text_size,
+    nl = budget.line_count(note, W - 2 * P, card_text_size, 8.0, pack)
+    texts.append(TextOp(x=W / 2, y=y + nl * card_text_size * LEADING / 2, size=card_text_size,
                         text=note, role="ink-mute", max_w=W - 2 * P, field="note"))
-    y += card_text_size * LEADING
+    y += nl * card_text_size * LEADING
 
     if y > H_frame * HEIGHT_LIMIT:
         raise CardsLayoutError(

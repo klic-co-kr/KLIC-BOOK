@@ -1,7 +1,7 @@
 """matrix — 비교 격자 + 정성 2×2(스펙 §6.2·§6.3). 셀 간격 0(격자), 정성 셀 간 G."""
 from __future__ import annotations
 
-from .base import LayoutError
+from .base import LayoutError, sizes as _base_sizes
 from .. import budget
 from ..model import FigModel, RectOp, TextOp
 from ..parse import DEFAULT_NOTE, Fence
@@ -29,18 +29,16 @@ def layout(fence: Fence, tokens: dict) -> FigModel:
 
 
 def _sizes(tokens: dict):
-    f = tokens["fonts"]
-    body = f["body"]["size_pt"]
-    title_size = f["heading2"]["size_pt"]
-    if abs(title_size - body) <= 0.3:
-        title_size = body + 1.5
-    return (f["label"]["size_pt"], title_size, body + 1, body - 1, body)
+    # G3 불변식(§5.2-9): 본문±0.3pt 밖. essay처럼 heading2==body인 팩은 +1.5로 밀어낸다.
+    s = _base_sizes(tokens)
+    return (s["kicker"], s["title"], s["ph_title"], s["item"], s["body"])
 
 
 def _header_block(fence, tokens, W, texts):
     kicker_size, title_size, ct_size, cx_size, body = _sizes(tokens)
     cy = 0.0
     if fence.kicker:
+        # kicker: 저작 계약 초단문(1줄)
         texts.append(TextOp(x=W / 2, y=cy + kicker_size * LEADING / 2, size=kicker_size,
                             text=fence.kicker, role="ink-mute", field="kicker"))
         cy += kicker_size * LEADING
@@ -51,11 +49,13 @@ def _header_block(fence, tokens, W, texts):
     return cy + 18.0
 
 
-def _footer(fence, texts, y, cx_size, W):
-    texts.append(TextOp(x=W / 2, y=y + cx_size * LEADING / 2, size=cx_size,
-                        text=fence.note or DEFAULT_NOTE, role="ink-mute",
+def _footer(fence, texts, y, cx_size, W, pack):
+    note = fence.note or DEFAULT_NOTE
+    nl = budget.line_count(note, W - 2 * P, cx_size, 8.0, pack)
+    texts.append(TextOp(x=W / 2, y=y + nl * cx_size * LEADING / 2, size=cx_size,
+                        text=note, role="ink-mute",
                         max_w=W - 2 * P, field="note"))
-    return y + cx_size * LEADING
+    return y + nl * cx_size * LEADING
 
 
 def _finish(ops, texts, W, y, H_frame, source_index: int):
@@ -117,7 +117,7 @@ def _grid(fence: Fence, tokens: dict) -> FigModel:
                                 field=f"cell[{r}][{c}]"))
         y += rh
     y += 12.0
-    y = _footer(fence, texts, y, cx_size, W)
+    y = _footer(fence, texts, y, cx_size, W, pack)
     return _finish(ops, texts, W, y, H_frame, fence.index)
 
 
@@ -175,5 +175,5 @@ def _qualitative(fence: Fence, tokens: dict) -> FigModel:
                 field=f"cells[{idx}].text"))
     y = y + h0 + h1 + G
     y += 12.0
-    y = _footer(fence, texts, y, cx_size, W)
+    y = _footer(fence, texts, y, cx_size, W, pack)
     return _finish(ops, texts, W, y, H_frame, fence.index)

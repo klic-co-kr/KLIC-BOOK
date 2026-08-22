@@ -101,3 +101,22 @@ def test_figmodel_is_frozen_deterministic():
     f1 = flow_arch.layout(_fence(5), TOKENS)
     f2 = flow_arch.layout(_fence(5), TOKENS)
     assert f1 == f2                                 # 결정론 — 같은 입력 같은 모델
+
+
+def test_note_measured_two_lines_essay():
+    # Phase 4 — note 높이는 line_count 실측(1줄 가정 제거). essay 기본 노트 2줄.
+    from scripts.infographic import budget
+    from scripts.infographic.parse import DEFAULT_NOTE
+    essay = json.loads((Path(__file__).resolve().parents[1] / "styles" / "essay" / "tokens.json").read_text(encoding="utf-8"))
+    item = essay["fonts"]["body"]["size_pt"] - 1
+    w = essay["body_frame_pt"]["x1"] - essay["body_frame_pt"]["x0"] - 28.0
+    nl = budget.line_count(DEFAULT_NOTE, w, item, 8.0, "essay")
+    assert nl == 2  # 전제 — Phase 3 최종 리뷰 실측(essay 본문폭에서 기본 노트 2줄)
+    mk = lambda note: parse_fence(1, 1, json.dumps(
+        {"layout": "flow", "title": "결론 제목",
+         "steps": [{"title": "단계 1", "text": "근거 문장"},
+                   {"title": "단계 2", "text": "근거 문장"}],
+         **({"note": note} if note else {})}, ensure_ascii=False))
+    h_short = flow_arch.layout(mk("한 줄 노트"), essay).height
+    h_default = flow_arch.layout(mk(None), essay).height
+    assert abs((h_default - h_short) - (nl - 1) * item * 1.3) < 0.01

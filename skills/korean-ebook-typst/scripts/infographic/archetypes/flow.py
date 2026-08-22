@@ -7,7 +7,7 @@ import math
 from .. import budget
 from ..model import ArrowOp, FigModel, RectOp, TextOp
 from ..parse import DEFAULT_NOTE
-from .base import LayoutError
+from .base import LayoutError, sizes as _base_sizes
 
 P = 14.0          # 패널 패딩
 G = 28.0          # 카드 간격(가로·랩 공용)
@@ -42,13 +42,9 @@ def _ink_ok(ops, width: float, height: float) -> None:
 
 
 def _sizes(tokens: dict) -> tuple[float, float, float, float]:
-    f = tokens["fonts"]
-    body = f["body"]["size_pt"]
     # G3 불변식(§5.2-9): 본문±0.3pt 밖. essay처럼 heading2==body인 팩은 +1.5로 밀어낸다.
-    title_size = f["heading2"]["size_pt"]
-    if abs(title_size - body) <= 0.3:
-        title_size = body + 1.5
-    return (f["label"]["size_pt"], title_size, body + 1, body - 1)
+    s = _base_sizes(tokens)
+    return (s["kicker"], s["title"], s["ph_title"], s["item"])
 
 
 def layout(fence, tokens: dict) -> FigModel:
@@ -70,6 +66,7 @@ def _header(fence, W: float, texts: list, pack: str, sizes: tuple) -> float:
     t_lines = budget.line_count(fence.title, W - 2 * P, title_size, 0.0, pack)
     cy = 0.0
     if fence.kicker:
+        # kicker: 저작 계약 초단문(1줄)
         texts.append(TextOp(x=W / 2, y=cy + kicker_size * LEADING / 2, size=kicker_size,
                             text=fence.kicker, role="ink-mute", field="kicker"))
         cy += kicker_size * LEADING
@@ -87,13 +84,14 @@ def _header(fence, W: float, texts: list, pack: str, sizes: tuple) -> float:
 
 
 def _finish(fence, cards: list, arrows: list, texts: list, y: float,
-            W: float, H_frame: float, cx_size: float, remedy: str) -> FigModel:
+            W: float, H_frame: float, cx_size: float, pack: str, remedy: str) -> FigModel:
     """note 부착 → 85% 높이 검사 → 잉크 bbox → FigModel. steps/lanes 공통 마무리."""
     y += 12.0
     note = fence.note or DEFAULT_NOTE
-    texts.append(TextOp(x=W / 2, y=y + cx_size * LEADING / 2, size=cx_size,
+    nl = budget.line_count(note, W - 2 * P, cx_size, 8.0, pack)
+    texts.append(TextOp(x=W / 2, y=y + nl * cx_size * LEADING / 2, size=cx_size,
                         text=note, role="ink-mute", max_w=W - 2 * P, field="note"))
-    y += cx_size * LEADING
+    y += nl * cx_size * LEADING
     if y > H_frame * HEIGHT_LIMIT:
         raise FlowLayoutError(
             f"도식 높이 {y:.0f}pt > 프레임 {H_frame * HEIGHT_LIMIT:.0f}pt(85%) — {remedy}")
@@ -166,7 +164,7 @@ def _steps(fence, W: float, H_frame: float, pack: str, sizes: tuple) -> FigModel
                     arrows.append(_harrow(prev_x + cardW, ry + row_h[r] / 2, cx))
         y = y + sum(row_h) + G * (len(rows) - 1)
 
-    return _finish(fence, cards, arrows, texts, y, W, H_frame, cx_size,
+    return _finish(fence, cards, arrows, texts, y, W, H_frame, cx_size, pack,
                    f"steps {n}개를 줄이거나(현재 {n}), 문구를 축약하거나, 도식을 2개 펜스로 분할")
 
 
@@ -212,7 +210,7 @@ def _lanes(fence, W: float, H_frame: float, pack: str, sizes: tuple) -> FigModel
         below += rh + G
     y += below - G                     # 마지막 레인 아래 간격 제거
 
-    return _finish(fence, cards, arrows, texts, y, W, H_frame, cx_size,
+    return _finish(fence, cards, arrows, texts, y, W, H_frame, cx_size, pack,
                    f"레인 {len(lanes)}개 또는 셀 문구를 줄이거나, 도식을 2개 펜스로 분할")
 
 

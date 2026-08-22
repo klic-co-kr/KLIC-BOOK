@@ -29,11 +29,16 @@
 // place(center+horizon)는 "컨테이너 중심 + (dx,dy)"에 블록 중심을 놓는다(실측:
 // raw dx 전달 시 전 텍스트가 (+W/2, +H/2) 치우침). 절대좌표 (x,y)에 놓으려면
 // dx = x − fw/2, dy = y − fh/2 를 전달해야 한다 — emit이 항상 이 환산을 수행한다.
-#let ig-text(x, y, fw, fh, size, role, weight: "regular", body) = place(
+// max-w>0이면 상자 폭을 강제해 상자 안에서 줄바꿈한다(Phase 4 — emit max_w 미강제 결함 수복).
+// 줄은 상자 안에서 중앙 정렬 — 폭 없는 박스(내용 밀착) 시대의 시각과 동일하게.
+#let ig-text(x, y, fw, fh, size, role, weight: "regular", max-w: 0pt, body) = place(
   center + horizon, dx: pt(x - fw / 2), dy: pt(y - fh / 2),
-  box(inset: 0pt)[#set par(leading: 1.3em)
-    #text(size: pt(size), fill: ig-color(role),
-          weight: if weight == "bold" { "bold" } else { "regular" })[#body]],
+  // max-w는 emit이 "306.49pt"형 길이로 넘긴다 — pt() 재감싸면 length×length 오류(typst 0.15.1 실증).
+  // if에 else가 없으면 none이 되어 width 위치 타입 오류 — 반드시 else { auto }.
+  // align 중첩 뒤 닫는 괄호는 3개(text 내용·align·box) — 2개면 box 미닫힘 unclosed delimiter.
+  box(inset: 0pt, width: if max-w > 0pt { max-w } else { auto })[#set par(leading: 1.3em)
+    #align(center)[#text(size: pt(size), fill: ig-color(role),
+          weight: if weight == "bold" { "bold" } else { "regular" })[#body]]],
 )
 
 // arrow — 샤프트(상대 종점) + open-V 헤드(tip에서 뒤꿈치±수직 날개, 절대 대각선).
