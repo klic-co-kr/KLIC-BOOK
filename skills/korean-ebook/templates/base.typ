@@ -214,7 +214,7 @@
     v(0.55em)
     // 다음 면 첫 엔트리에서 Pretendard-Bold 어센더 잉크가 프레임 상단을
     // 3.1pt 넘는다(ai-agent 목차 p3 실측) — h2와 동일 패드 방어.
-    pad(top: 3.5pt)[#grid(columns: (14mm, 1fr, auto),
+    pad(top: 3.5pt)[#grid(columns: (14mm, 1fr, auto), column-gutter: 3mm,
       align: (right + horizon, left + horizon, right + horizon),
       text(size: pt(tokens.fonts.heading1.size_pt * 0.62), weight: "bold",
         fill: rgb(tokens.colors.accent))[#_rank1(it.element)],
@@ -224,7 +224,7 @@
   }
   show outline.entry.where(level: 2): it => {
     v(0.15em, weak: true)
-    pad(top: 3.5pt)[#grid(columns: (14mm, 1fr, auto),
+    pad(top: 3.5pt)[#grid(columns: (14mm, 1fr, auto), column-gutter: 3mm,
       align: (right, left + horizon, right + horizon),
       [],
       text(size: pt(tokens.fonts.body.size_pt - 1.5),
