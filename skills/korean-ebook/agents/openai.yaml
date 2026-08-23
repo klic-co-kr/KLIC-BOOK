@@ -1,7 +1,0 @@
-interface:
-  display_name: "한국어 전자책 제작"
-  short_description: "원고를 1단 목차·도형·표가 있는 출판형 책자로 편집·검수"
-  brand_color: "#0A1A2A"
-  default_prompt: "이 원고를 korean-ebook 스킬로 출판형 PDF로 만들어. 목차는 1단으로 구성하고, 원문에서 근거를 추적할 수 있는 장별 도형·흐름도·비교표·요약 페이지를 적절히 넣어. 참고자료의 내용은 절대 합치지 말고, 전 페이지 렌더링과 무결성 검수까지 수행해."
-policy:
-  allow_implicit_invocation: true

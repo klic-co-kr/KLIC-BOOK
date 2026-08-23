@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""korean-ebook-typst 빌드 — typst-build.yaml → 스타일 팩 조립 → PDF."""
+"""korean-ebook 빌드 — typst-build.yaml → 스타일 팩 조립 → PDF."""
 import re
 import shutil
 import subprocess

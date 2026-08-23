@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""korean-ebook-typst QC 게이트 — PASS 시에만 final/ 생성."""
+"""korean-ebook QC 게이트 — PASS 시에만 final/ 생성."""
 import json
 import re
 import shutil

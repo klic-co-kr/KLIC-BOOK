@@ -15,8 +15,8 @@ Alex Xu 『System Design Interview – An Insider's Guide』 Vol.1·2 학습 노
 ## 빌드
 
 ```bash
-python3 ../../skills/korean-ebook-typst/scripts/build.py .   # → draft/
-python3 ../../skills/korean-ebook-typst/scripts/qc_gate.py . # PASS → final/
+python3 ../../skills/korean-ebook/scripts/build.py .   # → draft/
+python3 ../../skills/korean-ebook/scripts/qc_gate.py . # PASS → final/
 ```
 
 ## 원본

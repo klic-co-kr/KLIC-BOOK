@@ -109,7 +109,7 @@ set/show 규칙은 include된 파일 스코프에만 적용되므로, 베어 `#s
 4. **QC 풀 패스**: `qc_gate.run()` → final/ 생성, G3 WARN 확인
 
 ```bash
-cd skills/korean-ebook-typst && python3 -m pytest tests/test_style_<이름>.py -v
+cd skills/korean-ebook && python3 -m pytest tests/test_style_<이름>.py -v
 ```
 
 (typst 미설치 환경은 skip. 전체 스위트 회귀도 실행 — 기존 테스트 깨지지 않는지.)
@@ -216,7 +216,7 @@ BM 광학 균형(대시보드/마케팅 프로필 기대치)은 책 목차 면�
 
 ## 7. VERSION bump
 
-`skills/korean-ebook-typst/VERSION`(현재 0.1.0). 스타일 팩 추가·계약 변경(스키마 필드·
+`skills/korean-ebook/VERSION`(현재 0.1.0). 스타일 팩 추가·계약 변경(스키마 필드·
 밴드·폰트 계약)시 patch bump(0.1.0 → 0.1.1). 문서만의 변경은 bump 불필요.
 
 ---

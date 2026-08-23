@@ -28,13 +28,9 @@ GPU 데이터센터에서 AI 에이전트 실행 환경까지, NHN FactoryX의 �
 
 ## 빌드
 
-```bash
-/mnt/d/DEV/KLIC-BOOK/.venv/bin/python \
-  skills/korean-ebook/scripts/publish_book.py \
-  --input books/factoryx-ai-infrastructure/manuscript \
-  --output-dir books/factoryx-ai-infrastructure/build \
-  --config books/factoryx-ai-infrastructure/book-config.yaml
-```
+이 책은 구 WeasyPrint 판 스킬(publish_book.py, 26.08.09)으로 빌드했다. 해당
+빌더는 2026-08-23 typst 엔진 스킬로 대체되어 제거되었다 — 재빌드 시
+`skills/korean-ebook`(typst)으로 `typst-build.yaml` 방식을 새로 작성해야 한다.
 
 ## 검증
 

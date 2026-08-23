@@ -1,344 +1,151 @@
 ---
 name: korean-ebook
-description: Markdown·ZIP·문서 원고를 한국어 출판형 A4 PDF로 편집하고 렌더링·검수한다. 원문 근거를 벗어나지 않는 장별 도형·흐름도·비교표·시각 요약과 1단 목차를 선택적으로 적용한다. 참고 PDF·가이드·예시는 시각 스타일과 작업 절차에만 사용하고 본문에 합치지 않는다. 실용서, 가이드북, 백서, 매뉴얼, 전자책, 장문 보고서 제작에 사용한다. 단순 PDF 병합, 폼 입력, OCR만 필요한 작업에는 사용하지 않는다.
-license: MIT
-compatibility: Python 3.11+, WeasyPrint 68.x 권장. Poppler(pdftoppm, pdftotext, pdffonts)는 정밀 검수에 권장되며 PyMuPDF로 일부 대체 가능하다.
-metadata:
-  author: KLIC
-  version: "26.08.05"
-  language: ko
+description: "Markdown 원고를 한국어 출판형 PDF로 빌드 — 스타일 팩 4종(practical 신국판/essay 46판(B6)/business 백서판/lecture A4). typst 엔진(한국어 CJK + 수식 mitex 네이티브). QC 게이트(판면 오버플로 G1·폰트 계약 G2·글자수 밴드 G3) 통과 시에만 final/ 생성. 과거 WeasyPrint 판(26.08.09)을 대체해 이 이름을 계승했다."
 ---
 
-# Korean Editorial PDF
+# korean-ebook
 
-장문 한국어 원고를 **출판 가능한 편집 PDF**로 제작한다. 핵심 원칙은 다음 두 문장이다.
+## 정체성
 
-1. **원고의 내용은 보존하고, 편집 구조와 시각 체계만 개선한다.**
-2. **참고자료는 스타일과 절차만 참고하며, 참고자료의 문장·주장·목차·평가 기준을 본문에 섞지 않는다.**
+MD → 출판형 PDF. **typst 엔진**. 한국어 CJK + 수식(LaTeX mitex) 네이티브.
 
-## 0. 시작 전에 반드시 구분할 것
+**스타일 = 숫자 계약(tokens.json) + 문서 계약(STYLE.md) + 렌더 규칙(theme.typ)**.
+스타일 팩 4종이 `styles/`에 상주하며, build.py가 조립 시 `build/`로 복사한다.
 
-입력 파일을 다음 역할로 명시적으로 분리한다.
+## 워크플로우
 
-- `CONTENT`: 최종 PDF에 들어갈 원고와 원고 소속 이미지·표·각주
-- `REFERENCE`: 표지, 편집, 타이포그래피, 목차, 검수 방식의 예시
-- `CONFIG`: 제목, 부제, 저자, 판권, 파일 순서, 색상, 출력 이름
-- `EXCLUDE`: 임시 파일, 이전 결과물, 중복 사본, 개인 메모
+```bash
+# 책 디렉터리에 typst-build.yaml 작성 후:
+python3 scripts/build.py <책dir>     # → <책dir>/draft/<제목>.pdf
+python3 scripts/qc_gate.py <책dir>   # PASS 시에만 → <책dir>/final/
+```
 
-혼합 ZIP이라면 바로 빌드하지 말고 `references/input-contract.md`에 따라 소스 맵을 먼저 작성한다. 역할이 불명확한 파일은 내용에 합치지 않는다.
+(final/은 qc_gate.py만 생성한다. 빌드 산물 `build/`·`draft/`·`final/`·`gate-report.json`은 gitignore.)
 
-### 절대 금지
+## 챕터 도식 (인포그래픽 — Phase 5)
 
-- 참고자료의 내용을 원고에 요약·통합·보강하는 행위
-- 원고에 없는 방법론, 체크리스트, 수치, 출처를 임의로 추가하는 행위
-- 누락을 숨기기 위해 문장을 새로 만드는 행위
-- 원고의 사실관계를 자동으로 “교정”하면서 원문을 바꾸는 행위
-- 렌더링 검수 없이 PDF만 생성하고 완료 처리하는 행위
+챕터 md에 ```infographic 펜스(JSON)를 넣으면 출판 품질 벡터 도식이 그
+자리에 삽입된다. layout: `flow`(순차 2~8단계)·`cards`(병렬
+강조)·`matrix`(2축 비교)·`before_after`(전환 대비)·`ladder`(성숙도
+계단)·`roadmap`(시간 전개)·`topology`(구성 관계)·`approval`(결재
+흐름)·`layers`(계층 구조)·`composite`(복합 씬 — 주+보조). 좌표는 Python이 계산하고 I1 린트(텍스트
+예산·잉크 컨테인먼트·숫자-evidence 교차검증)를 통과해야 빌드된다. 도식
+하나 검사·미리보기:
+`python3 scripts/infographic/cli.py lint|preview …`. 저작 규약·라우팅 표는
+`references/infographic/authoring.md`.
 
-## 1. 입력 인벤토리와 경계 확정
+## 자동화 (2026-08)
 
-1. 모든 파일의 이름, 확장자, 크기, SHA-256을 기록한다.
-2. 숫자 접두 파일명(`01-`, `02-`)과 README/목차를 통해 원고 순서를 판단한다.
-3. 원고와 참고자료를 별도 경로로 둔다. 한 폴더에 섞여 있으면 작업 폴더에서 분리 복사한다.
-4. `REFERENCE`는 해시와 메타데이터만 빌드 기록에 남긴다. 빌드 스크립트의 본문 입력으로 전달하지 않는다.
-5. 저작권·배포 조건이 원고에 있으면 삭제하거나 완화하지 말고 그대로 유지한다.
+**`style: auto`** — 원고 콘텐츠에서 판형을 자동 판단(`scripts/style_pick.py`).
+챕터당 시각 요소(표 1.0 + 이미지 1.0 + 수식 0.5 + 코드펜스 0.3)가 1.5건 이상이면
+**lecture(A4)** — 논문·도표형 원고. 문단 평균 400자+·표 0.5건 미만이면
+**essay(B6)** 산문. 그 외 **practical(신국판)** 실용서. business는 정형
+리포트용이라 명시 지정만. 판단 사유는 빌드 로그에 출력된다.
 
-상세 기준: `references/content-boundary.md`
+**`cover: auto`(또는 생략)** — 4변형 벡터 표지 문법에서 자동 선택한다.
+변형은 제목 해시로 결정적 분배(같은 책 = 같은 표지, 책마다 상이)하며
+`cover_variant: 1|2|3|4`으로 직접 지정할 수 있다.
+V1 비대칭 좌측(엣지 바·두 원·바텀 앵커) · V2 이중 프레임 문고형(괘선·중앙
+타이포·코너 틱) · V3 수평 밴드형(브랜드 밴드 타이틀·원 클러스터) ·
+V4 엣지 포인트(우상단 하프톤 도트 필드 감쇠 + 도트 언더라인).
+모든 변형이 마지막 단어 강조 타이포·'지음'·발행 락업을 공유하고 판형 크기에 맞춘다.
+`cover_series`(상단 시리즈 라벨, 기본 "KLIC BOOKS")와
+`cover_notes`(하단 불릿 목록)로 원고별 안내문을 넣는다.
+명시 경로(`cover: assets/x.png`)를 주면 그 파일을 쓴다.
 
-## 2. 편집 계획 확정
+**G2 변형 접미사 매칭** — 임베드 PS명이 스택 가족명 + 짧은 스타일 접미사
+(NanumSquare_ac → NanumSquare_acR 등 4자 이하)면 같은 가족으로 통과.
+매 책마다 tokens.json에 ps 별칭을 손으로 추가하던 일이 필요없어졌다.
 
-원고를 읽고 다음을 먼저 결정한다.
+## 원고 헤딩 규약 (중요)
 
-- 책 제목, 부제, 저자, 판본 설명
-- README 또는 서문을 앞부분에 포함할지
-- 장·후기·부록의 순서
-- 표지, 속표지, 편집본 안내, 자동 목차, 장 표제지의 사용 여부
-- 본문 글꼴 계열, 색상, 여백, 머리말·꼬리말
-- 표·인용문·코드·각주의 처리 방식
+md2typst 매핑: `##`→H1(`=`), `###`→H2(`==`), `####`→H3(`===`). **`#` 단독도 H1(`=`)로 변환된다.**
 
-기본 스타일은 이 스킬의 `fde-midnight` 프리셋이다. 범용 원고에는 `assets/book-config.example.yaml`을 사용한다. FDE 원고를 1단 목차와 장별 시각 요약이 포함된 실무서형으로 편집하려면 `assets/book-config.fde-example.yaml`을 사용하고, 시각 요약 없이 본문 중심으로 만들려면 `assets/book-config.fde-text-only.yaml`을 사용한다. 스타일 규칙은 `references/editorial-system.md`를 읽는다.
+따라서 **챕터 md는 장 제목에 `##`를 쓰고 `#`를 쓰지 않는다** — `#`와 `##`를 혼용하면
+둘 다 H1으로 개면(장마다 pagebreak)해 충돌한다. 절 제목은 `###`, 소절은 `####`.
 
-FDE 시각 편집 프로필은 제공 원고 13개를 기준으로 회귀 검증되어 있다. 기준 결과는 A4 120쪽, 1단 목차 3쪽, 시각 요약 12쪽, PDF 북마크 140개다. 본문 중심 프로필은 A4 108쪽이며 목차는 동일하게 1단이다. 이는 동일 원고와 동일 렌더링 환경에서의 회귀 기준이며, 다른 원고의 페이지 수를 보장하지 않는다. 상세값은 `references/fde-regression-profile.md`를 따른다.
+> 참고: `tests/fixtures/sample-manuscript/`는 `#`를 사용해 실제로 이 충돌 상태다.
+> 스모크 테스트용 fixture이며 실제 원고 규약이 아니다.
 
-## 2.1 시각 편집 레이어
-
-실용서가 문단만 이어져 딱딱해지지 않도록 장 표제지 다음에 **시각 요약 페이지**를 선택적으로 넣는다. 시각화는 장식이 아니라 이해와 탐색을 돕는 편집 변환이어야 한다.
-
-필수 규칙:
-
-- 도형·표의 모든 문구는 해당 장의 제목·절 제목·본문 핵심 문장에서 추출하거나 충실하게 축약한다.
-- 원고에 없는 사실, 숫자, 사례, 출처, 평가 기준을 시각화라는 이유로 추가하지 않는다.
-- 각 시각 페이지 하단에 원문을 대체하지 않는 편집 요약임을 밝힌다.
-- 근거가 약하거나 비교 축이 성립하지 않으면 시각 페이지를 생략한다. 빈칸을 추측으로 채우지 않는다.
-- 표는 한 셀에 한 판단만 담고, A4에서 읽히도록 열 수와 문장 길이를 제한한다.
-- 목차는 기본적으로 1단으로 구성해 장·절·페이지 번호의 읽기 순서를 보존한다.
-
-지원 레이아웃:
-
-- `process`: 단계 흐름
-- `bridge`: 양쪽 영역을 연결하는 역할·가치 구조
-- `quadrant`: 네 가지 관점 또는 상태
-- `ladder`: 단계별 성숙도·레버리지
-- `principles`: 원칙 카드
-- `dashboard`: 지표·관점 묶음
-- `network`: 인물·팀·지식 원천 관계
-- `matrix`: 사례·항목 비교표
-
-설정 예:
+## typst-build.yaml
 
 ```yaml
-visuals:
-  enabled: true
-  default_note: "편집 요약: 본문의 장·절 구조와 핵심 문장을 재배열한 도식이며, 원문을 대체하지 않습니다."
-  chapters:
-    "1장 예시":
-      kicker: "CHAPTER MAP"
-      title: "이 장의 핵심 흐름"
-      thesis: "원문에서 확인한 핵심 명제를 한 문장으로 적습니다."
-      diagram:
-        layout: process
-        label: "WORKFLOW"
-        steps:
-          - {title: "진단", text: "원문 근거 문장"}
-          - {title: "검증", text: "원문 근거 문장"}
-      table:
-        title: "판단 기준"
-        headers: [구간, 확인할 것, 산출물]
-        rows:
-          - [진단, 원문 근거, 기록]
+style: practical        # practical | essay | business | lecture | auto(원고에서 자동판단)
+title: "책 제목"
+subtitle: "부제"
+author: "저자"
+date: "2026-08"
+chapters:
+  - manuscript/ch01.md  # 목록 순서가 책 순서(파일명 정렬 아님)
+cover: auto             # auto/생략 = 벡터 표지 자동생성, 경로 = 해당 파일 사용
+cover_series: "KLIC BOOKS"   # 선택 — 표지 상단 시리즈 라벨
+cover_notes:                 # 선택 — 표지 하단 불릿 목록
+  - "· 구성 요약 첫 줄"
+  - "· 구성 요약 둘째 줄"
 ```
 
-상세 계약과 검수법은 `references/visual-editorial-layer.md`를 따른다. 시각 요소에서 AI 생성물 티가 나는 패턴(gradient·이모지·무지개 구분색·가짜 수치·과장 카피)을 피하는 기준은 `references/ai-tells.md`를 따른다.
+기존 book-config.yaml(WeasyPrint 계약)과 별개 파일 — 공존, 간섭 없음.
 
-원고가 본문 안에 `<!-- figure-spec …… output: assets/figures/x.svg …… alt_ko: …… caption_ko: …… -->` 주석과 자리표시자 인용구를 박아둔 경우, 스킬이 빌드 시 이를 파싱한다. `output` 경로의 SVG(또는 이미지)가 `asset_root`(단일 파일 입력이면 입력 파일의 디렉터리, 폴더·ZIP이면 콘텐츠 루트)에 존재하면 `<figure>`로 본문에 임베드하고, 없으면 “제작 예정” 자리표시자로 바꾼다. 원시 스펙 텍스트가 PDF에 노출되지 않는다.
+## 스타일 선택
 
-표지와 도면의 색 팔레트는 `editorial.cover_theme`으로 정한다. `midnight`·`burgundy`·`forest`·`slate`·`plum`·`ink` 중 하나를 지정하거나, `auto`(기본)로 두면 책 제목의 MD5 해시로 자동 선택한다. 같은 제목은 같은 표지, 다른 제목은 다른 표지가 나온다(재현 가능). 원고에 이미 만들어진 표지 이미지가 있으면 `editorial.cover_image`에 경로를 지정한다. 절대경로, 콘텐츠 루트 상대경로, 현재 작업 디렉터리 상대경로 순으로 찾고, 파일이 있으면 풀블리드 이미지 표지로 쓰고 없으면 `cover_theme` 생성 표지로 폴백한다.
+| 스타일 | 판형 | G3 밴드(자/줄) | 대상 |
+|---|---|---|---|
+| practical | 153×225 신국판 | 30–40 | IT 실용서·가이드 |
+| essay | 128×188 46판(B6) | 22–26 | 산문·회고 |
+| business | 200×280 백서판 | 36–48 | 백서·컨설팅 리포트 |
+| lecture | 210×297 A4 | 40–52 | 강의자료 |
 
-장 제목은 자동으로 분류한다. `N장 …`·`NN. …`·`NN) …` 꼴은 장 번호를 추출해 표제지 번호와 정렬하고 제목에서 번호 접두사를 덜어낸다. `Part N. …`·`제N부 …`는 PART 분할자, `부록 X …`는 APPENDIX, `후기 …`는 AFTERWORD로 묶는다. `머리말`·`서문`·`들어가며`·`이 책을 사용하는 방법`·`읽는 법` 따위의 앞부분 제목은 CHAPTER 번호 없이 프런트매터로 렌더한다(`editorial.front_matter_header`로 상단 라벨을 바꾼다).
+G3 밴드는 판형별 물리값(판면 폭 × 본문 pt의 전각 환산 기준) — 스타일 간 공유 값이 아니다.
 
-## 3. 원고 보존 프리플라이트
+## QC 게이트
 
-빌드 전 다음을 집계한다.
+| 게이트 | 검사 | 판정 |
+|---|---|---|
+| G1 | 본문 잉크 bbox가 body_frame_pt 판면 내 (±3pt 허용, 표지 제외, 푸터 쪽번호 면제) | FAIL |
+| G2 | 실사용(임베드) 폰트 ⊆ tokens fonts 계약(stack + ps 별칭 + 변형 접미사 매칭, 수식 폰트 allowlist) | FAIL |
+| G3 | 본문 한 줄 자수가 스타일 밴드 내 (표지·목차 제외, 정렬 줄만) | WARN |
+| G4 | 한글 문체 — 기계 한국어·번역투 패턴(명사형 종결·조각문·되어지·상투구·'의' 연쇄·엠대시 밀도). 원고 md에서 검사, [fluent-korean](https://github.com/snflkd/fluent-korean) 규칙 기계화 | WARN |
 
-- 소스 파일 수
-- H1/H2/H3 제목 수
-- 본문 문단 수
-- 목록 항목 수
-- 표 수
-- 링크·각주 수
-- 이미지 수
+PASS 조건은 G1·G2 무위반. `gate-report.json`(책 디렉터리에 생성)을 참조해
+지적된 면만 수정 후 재빌드한다.
 
-원문을 수정해야 할 때는 원본 파일을 직접 덮어쓰지 않는다. 정규화 사본을 작업 폴더에 만들고 변경 내역을 기록한다. 허용되는 자동 변경은 다음뿐이다.
+## 새 스타일 작성
 
-- 파일 순서 정렬
-- 제목 ID 부여
-- 생성형 목차용 앵커 추가
-- 페이지 편집을 위한 래퍼 요소 추가
-- 명백한 Markdown 렌더링 오류의 구조적 복구
-- 설정에 명시된 저장소용 목차·읽기 안내·중복 판권·호출 문구를 편집면으로 이동하거나 제외
+`docs/style-authoring.md` 참조 — 스모크 테스트, 핵심 심볼 프로브, aesthete 기하 검사
+게이트 포함(텍스트 측정·aislop은 aesthete v1 한계로 제외).
 
-마지막 항목은 반드시 `strip_front_matter_sections`, `front_matter_drop_paragraphs`에 정확히 기록해야 한다. 문장 표현과 사실 내용은 변경하지 않는다.
+## md2typst 변환 규칙
 
-## 4. 빌드
+- 헤딩: 위 규약 참조(`#`·`##`→`=`, `###`→`==`, `####`→`===`)
+- 선두 YAML frontmatter(`---` 쌍) 제거 — 메타데이터 누출 방지
+- HTML 주석(`<!-- ... -->`) 제거 — 코드 스팬 내부는 보존
+- markdown 강조 `**굵게**`/`*기울임*` → typst `*strong*`/`_emph_` (코드 스팬은 리터럴)
+- `![](img)` → `#figure(image("img"))` — build.py가 에셋을 build/assets/로
+  복사(챕터 인덱스 prefix)하고 경로를 재작성
+- `$$...$$`(블록)·`$...$`(인라인) → `#mitex[...]` (LaTeX 그대로, 한국어 \text 포함)
+- 화폐 `$<숫자>/<단위>` escape
+- `>` 블록 인용 → `#quote[...]`
+- 헤딩 중간점(`·`) 뒤 줄바꿈 기회 삽입(U+200B ZWSP) — typst는 U+00B7을
+  break 기회로 안 씀. 수식·코드 헤딩 제외
+- 본문 typst 특수(`# [ ] < > @ * _ \ $`) escape, 비헤딩 `##` 잔재 escape
 
-먼저 의존성을 확인한다.
+## 의존성
 
-```bash
-python scripts/publish_book.py --check-deps
-```
+- typst 바이너리(0.15+, PATH / ~/.local/bin/typst)
+- python3 + `requirements.txt` (pymupdf>=1.23, pyyaml>=6.0) — `pip install -r requirements.txt`
+- @preview/mitex:0.2.7(첫 빌드 시 자동 다운)
+- aesthete 스킬(스타일 저작 시에만, bun)
 
-기본 실행:
+## 한계
 
-```bash
-python scripts/publish_book.py \
-  --input <CONTENT_폴더_또는_ZIP_또는_단일_MD> \
-  --output-dir <출력_폴더> \
-  --config assets/book-config.example.yaml
-```
+- 인라인 `$...$` 한국어 \text + 복잡 매크로 혼재 시 일부 깨짐 → `$$` 권장
+- 표·복잡 레이아웃은 typst 수동 작업
+- 레거시 수동 빌드: `templates/book.typ` 유지(신규 빌드는 build.py 사용)
+- 폰트 폴백 경고: 빌드 머신에 Pretendard·KoPubWorld바탕·Noto Serif KR 등
+  스택 하위 폰트가 없다는 typst 경고는 **폴백 설계상 무해**(2순위 이후 미설치는
+  정상 동작) — 무시해도 된다. 단 임베드 폰트가 바뀌면 G2 ps 별칭 등록 필요.
 
-`--input`은 콘텐츠 폴더, ZIP, 또는 **단일 Markdown 파일**을 받는다. 단일 `.md`(예: 전체 권을 합친 `BOOK.md`)을 넣으면 H1 단위로 장을 나눠 작업 폴더에 쓴 뒤 다중 파일 파이프라인과 같게 처리한다. 이때 첫 제목 블록(책 제목·표지 이미지)과 `목차`/`차례` H1 섹션은 스킬이 표지·제목 페이지·목차를 다시 만들므로 자동으로 제외한다.
+## 연계
 
-FDE 한국어판을 **1단 목차 + 장별 도형·표 12쪽**이 포함된 시각 편집본으로 제작할 때는 다음 설정을 사용한다.
-
-```bash
-python scripts/publish_book.py \
-  --input <FDE_CONTENT_ZIP> \
-  --output-dir <출력_폴더> \
-  --config assets/book-config.fde-example.yaml
-```
-
-본문 중심 판본이 필요하면 `assets/book-config.fde-text-only.yaml`로 바꾼다.
-
-참고자료가 있을 때는 **검수용으로만** 전달한다.
-
-```bash
-python scripts/publish_book.py \
-  --input <CONTENT> \
-  --reference <REFERENCE_1> \
-  --reference <REFERENCE_2> \
-  --output-dir <출력_폴더> \
-  --config <프로젝트용_book.yaml>
-```
-
-스크립트는 참고자료 본문을 PDF에 삽입하지 않는다. 출력 폴더에는 PDF, HTML, 소스 매니페스트, 빌드 보고서가 생성된다.
-
-## 5. 구조 검수
-
-```bash
-python scripts/verify_pdf.py \
-  --pdf <출력.pdf> \
-  --source-manifest <출력_폴더/source_manifest.json> \
-  --report-dir <출력_폴더/verification>
-```
-
-참고자료 오염 검사까지 수행하려면:
-
-```bash
-python scripts/verify_pdf.py \
-  --pdf <출력.pdf> \
-  --source-manifest <출력_폴더/source_manifest.json> \
-  --reference <REFERENCE_1> \
-  --reference <REFERENCE_2> \
-  --report-dir <출력_폴더/verification>
-```
-
-검사 항목:
-
-- A4 페이지 크기
-- PDF 열기 가능 여부와 페이지 수
-- 제목·저자 메타데이터
-- 북마크/아웃라인
-- 링크 주석
-- 글꼴 임베딩과 유니코드 매핑
-- 빈 페이지 후보
-- 원문 제목·문단 표본의 누락
-- 참고자료 고유 문구의 비의도적 유입
-
-자동 검사는 시각 검수를 대체하지 않는다.
-
-## 6. 전 페이지 렌더링과 시각 검수
-
-```bash
-python scripts/render_pdf.py \
-  --pdf <출력.pdf> \
-  --out-dir <출력_폴더/rendered> \
-  --dpi 160
-
-python scripts/make_contact_sheet.py \
-  --input-dir <출력_폴더/rendered> \
-  --output <출력_폴더/contact-sheet.jpg>
-```
-
-렌더된 페이지를 실제로 확인한다. 최소한 표지, 속표지, 편집본 안내, 목차 전 페이지, 각 장 표제지, 표·인용문·긴 목록·부록 페이지를 확인한다. 장문 표나 복잡한 페이지가 있으면 해당 페이지를 원본 크기로 별도 확인한다.
-
-시각 품질 기준:
-
-- 잘린 글자, 겹침, 검은 네모, 깨진 한글이 없어야 한다.
-- 제목이 페이지 하단에 홀로 남지 않아야 한다.
-- 표 행과 목록 항목이 부자연스럽게 잘리지 않아야 한다.
-- 1단 목차의 장·절·점선 리더·페이지 번호가 같은 읽기 흐름을 유지해야 한다.
-- 시각 요약의 카드·화살표·표가 겹치거나 잘리지 않고, 문구가 원문 근거와 대응해야 한다.
-- 머리말·꼬리말이 표지·장 표제지에 나타나지 않아야 한다.
-- 페이지 번호, 목차 페이지, PDF 북마크가 서로 맞아야 한다.
-- 지나치게 빈 페이지와 과밀 페이지가 반복되지 않아야 한다.
-- 참고자료와 비슷한 **시각 체계**는 허용되지만 참고자료의 콘텐츠 흔적은 없어야 한다.
-
-전체 품질 게이트: `references/quality-gates.md`
-
-## 6.1 요약본 생성 (선택)
-
-`summary.enabled: true`일 때, PDF 빌드·검수가 끝난 뒤 원문 기반 **요약본**(용어집 + 장별 요약) 스캐폴드를 생성한다. 요약본은 PDF 본문과는 별개의 참조 레이어로, 원문을 대체하지 않는다.
-
-```bash
-# 기본: H2 제목 + **굵은 용어** 후보 자동 추출, 하드코딩된 기본 안내문
-python3 scripts/generate_summary.py <manuscript_dir> <out_dir>
-
-# summary.auto_terms: false → 용어집 후보 자동 추출을 끔 (에이전트가 직접 채움)
-python3 scripts/generate_summary.py <manuscript_dir> <out_dir> --no-auto-terms
-
-# summary.default_note → 장·용어집 스캐폴드의 안내문을 config 값으로 덮어쓰기
-python3 scripts/generate_summary.py <manuscript_dir> <out_dir> \
-    --note "$(yq '.summary.default_note' book-config.yaml)"
-```
-
-`book-config.yaml`의 `summary` 섹션과 플래그 대응:
-
-- `summary.auto_terms: false` → `--no-auto-terms`를 전달한다. 용어집이 자동 후보(H2 제목·`**굵은 용어**`)를 내지 않고, 에이전트가 직접 채울 수 있도록 빈 구획만 남긴다.
-- `summary.default_note` → `--note <text>`로 전달한다. 이 값이 장 스캐폴드와 용어집 스캐폴드 양쪽의 하드코딩된 기본 안내문을 덮어쓴다. 플래그를 생략하면 스크립트의 기본 안내문을 그대로 쓴다.
-
-이 스크립트는 **결정론적 스캐폴드만** 생성한다(LLM 호출 없음). `out_dir/summary/chapters/ch<NN>-<slug>.md`와 `out_dir/summary/glossary.md`를 내며, 각 장 스캐폴드는 H1 제목, 자동 추출한 H2 절 목록, 그리고 비어 있는 네 가지 구획(핵심 아이디어·절 구성·주요 개념·핵심 요약)을 담는다. 용어집은 각 장의 H2 제목과 본문 `**굵은 용어**`를 후보로 나열한다(`--no-auto-terms`로 끄기 가능).
-
-스캐폴드를 만든 뒤, 에이전트가 각 장의 핵심 아이디어·주요 개념·핵심 요약을 작성하고 용어집 용어를 선별·정의한다. 이때 반드시 **원문 근거**(파일명·절)를 인용하고, 원문에 없는 의미·주장·사실을 부여하지 않는다. 허구의 개념을 만들거나 원문을 요약하면서 사실관계를 바꾸면 안 된다. 요약본 규칙은 `원문 보존 원칙`과 동일하게 적용된다.
-
-재실행은 멱등(같은 결과로 덮어쓰기)이므로, 원문이 바뀌면 스캐폴드를 다시 만들고 에이전트가 다시 채울 수 있다.
-
-## 7. 실패 시 수정 순서
-
-1. 내용 누락 또는 참고자료 오염
-2. 글자 깨짐·폰트 미임베딩
-3. 표·목록·제목 잘림
-4. 목차·북마크·페이지 번호 불일치
-5. 장 표제지와 본문 흐름
-6. 여백·타이포·장식 미세 조정
-
-미관 문제보다 내용 경계와 무결성을 먼저 고친다. 수정 후 PDF를 다시 생성하고, 다시 렌더링하며, 검증 보고서를 갱신한다.
-
-## 8. 완료 조건
-
-다음 조건을 모두 만족해야 완료다.
-
-- 원고 파일과 최종 PDF의 핵심 내용이 동기화됨
-- 참고자료 내용이 본문에 유입되지 않음
-- 표지·1단 목차·장 표제지·본문·부록 구조가 일관됨
-- 사용 설정에 시각 요약이 있으면 도형·표의 문구가 원문과 추적 가능하고 전 페이지 렌더 검수를 통과함
-- PDF 메타데이터, 북마크, 링크가 정상 작동함
-- 글꼴이 포함되고 한글이 정상 렌더링됨
-- 전 페이지 또는 전 페이지 접촉표를 검토함
-- 고위험 검수 오류가 0건임
-- 최종 PDF와 검수 보고서의 SHA-256을 기록함
-
-## 9. 완료 보고 형식
-
-```text
-Goal — 원고 편집 PDF 제작
-상태: 완료 / 조건부 완료 / 실패
-
-입력 경계
-- CONTENT: ...
-- REFERENCE: ...
-- 제외: ...
-
-제작 결과
-- 페이지 수: ...
-- 목차 레이아웃: 1단 / 기타
-- 시각 요약 페이지: ...
-- 목차 항목: ...
-- 북마크: ...
-- 글꼴: ...
-- 링크: ...
-
-무결성 검수
-- 소스 파일: ...
-- 제목/문단 누락: ...
-- 참고자료 오염 경고: ...
-- 렌더링 이상: ...
-
-산출물
-- PDF
-- 검수 보고서
-- 소스 매니페스트
-- 필요 시 전체 패키지 ZIP
-
-확인하지 못한 범위
-- 자동 또는 수동으로 확인하지 못한 사항을 정확히 기록
-```
-
-## 10. 이 스킬을 사용하지 않는 경우
-
-- 기존 PDF 여러 개를 단순 병합·분할하는 작업
-- 스캔 PDF OCR만 필요한 작업
-- 계약서 양식 입력·서명·레드액션 작업
-- 슬라이드형 발표자료 제작
-- 원고 내용을 새로 집필하거나 다른 자료와 통합하는 편집 작업
-
-이 경우 해당 목적에 맞는 PDF·DOCX·슬라이드 스킬을 사용한다.
+- 입력: 정제 MD(pdf-to-md 또는 직접)
+- 레거시: korean-ebook(WeasyPrint), templates/book.typ

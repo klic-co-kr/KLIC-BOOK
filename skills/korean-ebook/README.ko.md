@@ -1,179 +1,128 @@
 # korean-ebook
 
-Markdown·ZIP 원고를 **한국어 출판형 A4 PDF**로 편집하고, 1단 목차와 원문 기반 도형·흐름도·비교표·장별 시각 요약을 선택적으로 구성하며, 원문 무결성·참고자료 오염·글꼴·북마크·링크·전 페이지 렌더링을 검수하는 Agent Skill입니다.
+## 정체성
 
-이 스킬은 FDE 한국어판 편집 작업에서 성공한 방식을 재사용 가능하게 고정합니다. 참고자료의 **내용**을 합치는 스킬이 아니라, 원고와 참고자료의 경계를 지킨 상태에서 편집·렌더링·검수 절차를 반복 실행하는 스킬입니다.
+Markdown 원고 → 출판형 PDF. **typst 엔진** 기반. `korean-ebook`(WeasyPrint)의
+한국어 자모 분리·수식 한계를 근본 해결.
 
-- 표지, 속표지, 편집본 안내, **1단 자동 목차**, 장 표제지, 본문, 부록 구성
-- 장별 개념도·프로세스·비교표·판단표를 넣는 선택형 시각 편집 레이어
-- 명조 본문 + 고딕 제목의 한국어 타이포그래피
-- 짙은 네이비와 청록 포인트의 `fde-midnight` 프리셋
-- 참고자료는 스타일·절차에만 사용하고 본문에 섞지 않는 강제 경계
-- WeasyPrint 기반 PDF, 북마크, 내부 링크, 글꼴 임베딩
-- 원문 문단 표본 대조, 참고자료 고유 문구 오염 검사
-- 전 페이지 PNG 렌더와 접촉표 생성
-
-## 폴더 구조
-
-```text
-korean-ebook/
-├── SKILL.md
-├── agents/openai.yaml
-├── assets/book-config.example.yaml          # 범용 설정·시각 레이어는 기본 비활성
-├── assets/book-config.fde-example.yaml      # FDE 120쪽 시각 편집 프로필
-├── assets/book-config.fde-text-only.yaml    # FDE 108쪽 본문 중심 프로필
-├── references/
-├── scripts/
-├── evals/
-└── examples/
-```
-
-## Codex 설치
-
-프로젝트 전용:
-
-```text
-<repo>/.agents/skills/korean-ebook/
-```
-
-사용자 전체 적용:
-
-```text
-~/.agents/skills/korean-ebook/
-```
-
-Codex CLI·IDE에서는 `$korean-ebook`, ChatGPT 데스크톱에서는 `@korean-ebook`로 명시 호출할 수 있습니다. “원고를 출판형 PDF로 편집해”처럼 설명하면 설정에 따라 자동 선택될 수도 있습니다.
-
-## ChatGPT·OpenAI API용 ZIP
-
-배포 ZIP은 반드시 **단일 최상위 폴더**를 포함해야 합니다.
-
-```text
-korean-ebook.zip
-└── korean-ebook/
-    └── SKILL.md
-```
-
-OpenAI API 업로드 예:
-
-```bash
-curl -X POST "https://api.openai.com/v1/skills" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -F "files=@./korean-ebook.zip;type=application/zip"
-```
+- 한국어 CJK 네이티브(자모 분리 없음)
+- 수식 `$$...$$`/`$...$` → typst mitex(LaTeX 호환) 고품질 렌더
+- **스타일 팩 4종** — 숫자 계약(tokens.json) + 문서 계약(STYLE.md) + 렌더 규칙(theme.typ)
+- QC 게이트 통과 시에만 final/ 생성
 
 ## 설치
 
-Linux/macOS:
+typst 바이너리 필요(0.15+, PATH 또는 `~/.local/bin/typst`).
+```bash
+# typst 설치(바이너리)
+curl -sL https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar xJ
+mv typst-x86_64-unknown-linux-musl/typst ~/.local/bin/
+pip install -r requirements.txt   # pymupdf, pyyaml
+```
+mitex 패키지는 첫 빌드 시 자동 다운로드(@preview/mitex:0.2.7).
+
+### 폰트 확인
+
+스타일별 **1순위 폰트**가 설치돼 있어야 임베드 폰트 계약(G2)이 성립한다.
+스택 하위 폰트의 typst "폴백" 경고는 무해하지만, 1순위가 없으면 G2가 FAIL한다.
+
+| 스타일 | 본문 1순위 | 확인 |
+|---|---|---|
+| practical | Noto Serif CJK KR | `fc-list \| grep "Noto Serif CJK KR"` |
+| essay | Noto Serif CJK KR | 동일 |
+| business | Noto Sans KR | `fc-list \| grep "Noto Sans KR"` |
+| lecture | Noto Sans CJK KR | `fc-list \| grep "Noto Sans CJK KR"` |
 
 ```bash
-bash scripts/install.sh
-source .venv/bin/activate
+fc-list | grep -i noto   # 없으면: apt install fonts-noto-cjk 등으로 설치
 ```
 
-Windows PowerShell:
+## 워크플로우
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
-.\.venv\Scripts\Activate.ps1
+책 디렉터리에 `typst-build.yaml`을 작성한다.
+
+```yaml
+style: practical        # practical | essay | business | lecture
+title: "책 제목"
+author: "저자"
+date: "2026-08"
+chapters:
+  - manuscript/ch01.md  # 목록 순서가 책 순서
+cover: assets/cover.png   # 선택. 없으면 타이포그래픽 표지
 ```
-
-## 한 번에 실행
 
 ```bash
-python scripts/run_pipeline.py \
-  --input /path/to/manuscript.zip \
-  --output-dir /path/to/out \
-  --config assets/book-config.example.yaml \
-  --reference /path/to/layout-example.pdf
+python3 scripts/build.py <책dir>     # 조립+컴파일 → <책dir>/draft/<제목>.pdf
+python3 scripts/qc_gate.py <책dir>   # PASS 시에만 → <책dir>/final/
 ```
 
-FDE 시각 편집본 재현:
+- `build.py`: 스타일 팩(base.typ + theme.typ + tokens.json) 복사 → md2typst 변환 →
+  main.typ 조립 → typst 컴파일
+- `qc_gate.py`: 게이트 검사 → PASS면 final/ 복사. FAIL이면 기존 final/ PDF를
+  폐기(낡은 PASS 결과 방지). draft에 pdf가 2개 이상이면 경고
+- 빌드 산물(`build/`·`draft/`·`final/`·`gate-report.json`)은 gitignore
+
+## 스타일 팩
+
+| 스타일 | 판형 | G3 밴드(자/줄) | 대상 |
+|---|---|---|---|
+| practical | 153×225 신국판 | 30–40 | IT 실용서·가이드 |
+| essay | 128×188 46판(B6) | 22–26 | 산문·회고 |
+| business | 200×280 백서판 | 36–48 | 백서·컨설팅 리포트 |
+| lecture | 210×297 A4 | 40–52 | 강의자료 |
+
+새 스타일 작성은 `docs/style-authoring.md` 참조.
+
+## 원고 헤딩 규약 (중요)
+
+md2typst 매핑: `##`→H1(`=`), `###`→H2(`==`), `####`→H3(`===`).
+**`#` 단독도 H1로 변환된다** — `#`와 `##`를 혼용하면 둘 다 H1으로 개면(장마다
+pagebreak)해 충돌한다. **챕터 md는 장 제목에 `##`를 쓰고 `#`를 쓰지 않는다.**
+절 제목은 `###`, 소절은 `####`.
+
+## md2typst 변환 규칙
+
+- 헤딩: 위 규약 참조
+- 선두 YAML frontmatter(`---` 쌍) 제거 — 메타데이터 누출 방지
+- HTML 주석(`<!-- ... -->`) 제거 — 코드 스팬 내부는 보존
+- markdown 강조 `**굵게**`/`*기울임*` → typst `*strong*`/`_emph_` (코드 스팬은 리터럴)
+- `![](path)` → `#figure(image("path"))` — build.py가 경로를 재작성
+- `$$...$$` / `$...$` 수식 → `#mitex[`...`]` (LaTeX 그대로, 한국어 \text 포함)
+- `>` 블록 인용 → `#quote[...]`
+- 헤딩 중간점(`·`) 뒤 줄바꿈 기회 삽입(typst는 U+00B7을 break 기회로 안 씀)
+- 화폐 `$<숫자>/<단위>` escape, 본문 typst 특수(`# [ ] < > @ * _ \ $`) escape,
+  비헤딩 `##` 잔재 escape
+
+## QC 게이트
+
+| 게이트 | 검사 | 판정 |
+|---|---|---|
+| G1 | 본문 잉크 bbox가 body_frame_pt 판면 내 (±3pt 허용, 표지 제외, 푸터 쪽번호 면제) | FAIL |
+| G2 | 실사용(임베드) 폰트 ⊆ tokens fonts 계약(stack + ps 별칭, 수식 폰트 allowlist) | FAIL |
+| G3 | 본문 한 줄 자수가 스타일 밴드 내 (표지·목차 제외, 정렬 줄만) | WARN |
+
+PASS 조건은 G1·G2 무위반. `gate-report.json`을 참조해 지적된 면만 수정 후 재빌드.
+
+## 한계
+
+- 인라인 `$...$` 중 한국어 \text + 복잡 매크로 혼재 시 일부 깨짐 → 블록 `$$` 권장
+- 표·복잡 레이아웃은 typst 수동 작업 영역
+- 폰트 폴백 경고: 빌드 머신에 스택 하위 폰트가 없다는 typst 경고는 폴백 설계상
+  무해 — 단 임베드 폰트가 바뀌면 G2 ps 별칭 등록 필요
+
+## 역사 노트 (레거시 수동 워크플로)
+
+스타일 팩 도입 전에는 수동으로 빌드했다:
 
 ```bash
-python scripts/run_pipeline.py \
-  --input /path/to/FDE-manuscript.zip \
-  --output-dir /path/to/out \
-  --config assets/book-config.fde-example.yaml
+python3 scripts/md2typst.py <원고dir> --out build/typ
+cp templates/book.typ build/
+typst compile build/book.typ build/책.pdf --root build
 ```
 
-`--reference`는 여러 번 사용할 수 있습니다. 참고 파일은 매니페스트와 오염 검사에만 쓰이며 본문 입력으로 파싱되지 않습니다.
+`templates/book.typ`는 레거시로 유지되지만 신규 빌드는 `build.py`를 사용한다.
 
-## 단계별 실행
+## 연계
 
-```bash
-python scripts/publish_book.py --input manuscript.zip --output-dir out --config book.yaml
-python scripts/verify_pdf.py --pdf out/book.pdf --source-manifest out/source_manifest.json --report-dir out/verification
-python scripts/render_pdf.py --pdf out/book.pdf --out-dir out/rendered --dpi 160
-python scripts/make_contact_sheet.py --input-dir out/rendered --output out/contact-sheet.jpg
-```
-
-## 설정
-
-범용 원고는 `assets/book-config.example.yaml`을 프로젝트 폴더로 복사한 뒤 수정합니다. `book.title: auto`는 README 또는 첫 번째 원고의 H1을 책 제목으로 사용합니다.
-
-이번 FDE 한국어판을 1단 목차와 도형·표가 포함된 실무서형으로 재현하려면 `assets/book-config.fde-example.yaml`을 사용합니다. 시각 요약을 빼고 본문 중심으로 제작하려면 `assets/book-config.fde-text-only.yaml`을 사용합니다.
-
-제공 원고 13개와 동일한 렌더링 환경에서 확인한 회귀 기준은 다음과 같습니다.
-
-### 시각 편집 프로필
-
-- A4 120쪽
-- 목차 6~8쪽, **1단 구성**
-- 장·후기·부록 시각 요약 12쪽
-- PDF 북마크 140개, 상위 북마크 16개
-- 1장 9쪽, 8장 82쪽, 후기 97쪽
-- 부록 A 101쪽, 부록 B 106쪽, 부록 C 111쪽
-- 원문 문단 표본·제목 누락 0건
-- 자동 검수 high 0 / medium 0
-
-### 본문 중심 프로필
-
-- A4 108쪽
-- 목차는 동일하게 1단
-- 시각 요약 페이지 없음
-- 자동 검수 high 0 / medium 0
-
-이 값은 동일 원고의 회귀 검증값입니다. 다른 원고에서는 분량과 구조에 따라 페이지 수가 달라집니다. PDF 파일 자체가 회귀본과 바이트 단위로 동일하다는 뜻은 아닙니다.
-
-중요 항목:
-
-- `book`: 제목, 부제, 저자, 판본, 출력 파일명
-- `files`: README, 파일 순서, 제외 패턴, 저장소용 목차·안내 문구의 명시적 편집 변환
-- `editorial`: 표지·1단 목차·장 표제지, 표지 워터마크, 속표지 인용문, 편집본 안내
-- `visuals`: 장별 시각 요약 사용 여부, 레이아웃, 도형 문구, 비교표와 판단표
-- `style`: 글꼴, 색상, 여백, 본문 크기, 필요한 경우 장별 밀도 보정 CSS
-- `quality`: 문단 표본과 오염 검사 기준
-
-## 시각 편집 레이어
-
-`visuals.enabled: true`로 켜고, `visuals.chapters`에 장 제목 또는 장 순번별 사양을 적습니다. 지원 레이아웃은 `process`, `bridge`, `quadrant`, `ladder`, `principles`, `dashboard`, `network`, `matrix`입니다.
-
-시각화는 원고 외 지식을 보강하는 기능이 아닙니다. 도형과 표의 모든 문구는 해당 장의 원문에서 추적 가능해야 하며, 근거가 없으면 만들지 않습니다. 각 시각 페이지에는 “원문을 대체하지 않는 편집 요약” 고지가 자동으로 들어갑니다. 상세 사양은 `references/visual-editorial-layer.md`를 확인합니다.
-
-## 결과물
-
-```text
-out/
-├── <제목>_<판본>.pdf
-├── book.html
-├── source_manifest.json
-├── build_report.json
-├── verification/
-├── rendered/
-├── contact-sheet-01.jpg
-├── completion_report.md
-└── <제목>_<판본>_패키지.zip
-```
-
-## 경계 원칙
-
-“예시”, “참고”, “이런 느낌”으로 제공된 파일은 CONTENT가 아닙니다. 참고자료의 원칙·평가표·목차·문장을 최종 원고에 합치는 행위는 이 스킬의 실패로 판정합니다.
-
-## 스킬 자체 검증
-
-```bash
-python scripts/validate_skill.py
-```
-
-`SKILL.md` 메타데이터, 폴더명, 파일 수, 크기 제한, 필수 파일, 글꼴 파일 미포함 여부를 검사합니다.
+- 입력: 정제 MD(`pdf-to-md` 또는 직접)
+- 레거시: `korean-ebook`(WeasyPrint), `templates/book.typ`
