@@ -530,6 +530,9 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
         _json.dumps(tk, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     shutil.copy2(style / "theme.typ", build / "theme.typ")
     shutil.copy2(SKILL_DIR / "templates" / "base.typ", build / "base.typ")
+    # raw 테마 — set raw(theme:)은 파일 경로만 받는다(bytes 무시 실측).
+    shutil.copy2(SKILL_DIR / "templates" / "klic-flat-dark.tmTheme",
+                 build / "klic-flat-dark.tmTheme")
     shutil.copy2(SKILL_DIR / "templates" / "infographic" / "helper.typ", build / "helper.typ")
 
     # 표지: 명시 경로 > auto/생략(파라미터형 벡터 자동 생성)

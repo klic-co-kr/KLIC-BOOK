@@ -15,12 +15,11 @@
 #let pt(n) = n * 1pt
 #let em(n) = n * 1em
 
-// klic-flat-dark — 코드 블록 전용 syntect 테마(plist XML 임베드).
-// 모든 스코프를 무장식(italic/bold 없음) 단색 #E8EEF3로 평탄화한다:
-// ① 다크 배경(panel) 위 가독 확보 ② italic 코멘트의 변형 폰트 임베드로
-// 인한 G2 계약 위반 방지. 배경색은 테마가 아니라 block(fill: panel)이
-// 담당한다.
-#let _klic-theme = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict><key>name</key><string>KLIC Flat Dark</string><key>type</key><string>dark</string><key>settings</key><array><dict><key>settings</key><dict><key>background</key><string>#101D28</string><key>foreground</key><string>#E8EEF3</string><key>caret</key><string>#E8EEF3</string></dict></dict><dict><key>name</key><string>Flat — every token identical</string><key>scope</key><string>source, text, plain, keyword, storage, support, entity, constant, variable, string, comment, punctuation, meta, markup</string><key>settings</key><dict><key>foreground</key><string>#E8EEF3</string><key>fontStyle</key><string></string></dict></dict></array></dict></plist>"
+// klic-flat-dark — 코드 블록 전용 syntect 테마(templates/klic-flat-dark.tmTheme,
+// build.py가 build/로 복사). typst 0.15.1 실측: bytes 임베드는 무시되고
+// 파일 경로만 유효하며, 테마 전역 foreground는 plain 토큰에 안 닿는다 —
+// scope "source" 접두 매칭으로 언어 펜스 전체를 단색 평탄화한다.
+// 무언어 펜스는 아래 블록 raw show의 set text(fill)이 담당.
 
 // 장번호(2자리) — 오프너·목차 공용. numbering 없는 heading 내장 counter는
 // show 규칙 시점에 0(essay 실측)이라 H1 show에서 step하는 전용 카운터로
@@ -83,12 +82,11 @@
   // 폰트 계약(G2) 위반이 된다(실전시스템설계 코드 블록 실측).
   show raw: set text(font: tokens.fonts.at("mono", default: tokens.fonts.body).stack
     + tokens.fonts.body.stack)
-  // 구문 강조 — klic-flat-dark 테마(모든 스코프 무장식 단색 #E8EEF3).
-  // typst 기본 라이트 테마는 어두운 배경 위에 검은 토큰색을 얹어 읽힘이
-  // 없고, 범용 다크 테마는 이탤릭 변형 폰트를 임베드해 G2 계약이 깨진다.
-  // 테마는 bytes로 임베드 — 별도 .tmTheme 파일 경로는 base.typ만 떼어
-  // 쓰는 테스트 미니 빌드에서 깨진다.
-  set raw(theme: bytes(_klic-theme))
+  // 구문 강조 — klic-flat-dark 테마(모든 토큰 무장식 단색 #E8EEF3).
+  // typst 기본 라이트 테마의 어두운 토큰색은 다크 배경(panel) 위에서
+  // 읽히지 않는다(2026-08 사용자 지적). 범용 다크 테마는 italic 코멘트가
+  // 변형 폰트를 임베드해 G2 계약이 깨진다.
+  set raw(theme: "klic-flat-dark.tmTheme")
 
   // 코드 블록 상자 — 구판 pre{#101D28/#E8F0F3} 다크 콘솔 이식. 산문과의
   // 구분은 배경 명도차가 담당(2026-08 사용자 지적: 회색 물탄색은 퇴보).
@@ -98,7 +96,8 @@
     width: 100%, fill: rgb(tokens.colors.at("panel", default: "#101D28")),
     radius: 3pt, inset: (x: 8pt, y: 7pt))[
       #set par(leading: 0.65em)
-      #set text(size: pt(tokens.fonts.body.size_pt - 2.5))
+      // fill은 무언어 펜스용 — 언어 펜스는 테마 토큰색(단색)이 우선.
+      #set text(size: pt(tokens.fonts.body.size_pt - 2.5), fill: rgb("#E8EEF3"))
       #it
     ]
   // 인라인 코드(`...`) — 같은 계열 칩이되 box가 아니라 highlight로.

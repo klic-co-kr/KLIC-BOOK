@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- klic-flat-dark — korean-ebook 코드 블록 전용 syntect 테마(파일).
+     실측(2026-08-24, typst 0.15.1):
+     - set raw(theme: bytes(...))는 무시된다 — 파일 경로만 유효.
+     - 테마 전역 <key>foreground</key>는 plain 토큰에 적용되지 않는다.
+       반면 scope "source"는 언어 펜스(bash 등)의 모든 토큰(plain 포함)에
+       접두 매칭되므로 이것으로 평탄화한다.
+     - 무언어 펜스는 스코프가 없어 테마가 닿지 않는다 — base.typ의
+     블록 raw show 규칙이 set text(fill)로 담당.
+     모든 스코프를 무장식(italic/bold 없음) 단색 #E8EEF3로 평탄화:
+     범용 다크 테마의 italic 코멘트가 변형 폰트를 임베드해 G2 계약을
+     깨뜨린다. 배경색은 테마가 아니라 block(fill: panel)이 담당한다. -->
+<plist version="1.0">
+<dict>
+  <key>name</key>
+  <string>KLIC Flat Dark</string>
+  <key>type</key>
+  <string>dark</string>
+  <key>settings</key>
+  <array>
+    <dict>
+      <key>settings</key>
+      <dict>
+        <key>background</key>
+        <string>#101D28</string>
+        <key>foreground</key>
+        <string>#E8EEF3</string>
+        <key>caret</key>
+        <string>#E8EEF3</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>Flat — every token identical</string>
+      <key>scope</key>
+      <string>source</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key>
+        <string>#E8EEF3</string>
+        <key>fontStyle</key>
+        <string></string>
+      </dict>
+    </dict>
+  </array>
+</dict>
+</plist>

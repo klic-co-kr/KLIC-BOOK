@@ -30,6 +30,8 @@ SKILL = Path(__file__).resolve().parents[1]
 def _compile(tmp: Path, style: str) -> tuple[float, float]:
     for name, src in (
         ("base.typ", SKILL / "templates" / "base.typ"),
+        # set raw(theme:)은 파일을 즉시 로드한다 — base만 복사하면 컴파일 실패.
+        ("klic-flat-dark.tmTheme", SKILL / "templates" / "klic-flat-dark.tmTheme"),
         ("theme.typ", SKILL / "styles" / style / "theme.typ"),
         ("tokens.json", SKILL / "styles" / style / "tokens.json"),
     ):
