@@ -111,7 +111,7 @@ Terminal 복사
     git revert HEAD
     git push
     
-    # ⚠️ 아래는 작업과 기록을 영구 삭제. 절대 혼자 결정하지 마세요
+    # 주의 — 아래는 작업과 기록을 영구 삭제. 절대 혼자 결정하지 마세요
     # git reset --hard
     # git push --force
 ```

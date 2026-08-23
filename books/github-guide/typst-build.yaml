@@ -1,0 +1,31 @@
+---
+style: auto
+title: "GitHub 협업 실무 가이드"
+subtitle: "AI 코딩 시대, 협업의 기준점"
+author: "KLIC"
+date: "2026-08"
+chapters:
+  - 00-intro.md
+  - 01-chapter.md
+  - 02-chapter.md
+  - 03-chapter.md
+  - 04-chapter.md
+  - 05-chapter.md
+  - 06-chapter.md
+  - 07-chapter.md
+  - 08-chapter.md
+  - 09-chapter.md
+  - 10-chapter.md
+  - 11-chapter.md
+  - 12-chapter.md
+  - 13-chapter.md
+  - 14-chapter.md
+  - 15-chapter.md
+  - 16-chapter.md
+cover: auto
+
+cover_series: "실무 가이드 · GITHUB COLLABORATION"
+cover_notes:
+  - "· 공동 레포 + 브랜치 + PR 기본 모델"
+  - "· AI의 역할 — 작업 보조·diff 설명·PR 초안"
+  - "· 사람의 역할 — 범위 결정·검토·승인·병합"

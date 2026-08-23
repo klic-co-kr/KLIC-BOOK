@@ -33,7 +33,7 @@ main 브랜치 보호. 직접 push 금지, PR과 리뷰 승인을 의무화. `Se
 
 **status checks**
 
-CI(빌드·테스트)가 통과해야만 병합 허용. 빨간 ❌인 PR은 merge 버튼이 막힙니다.
+CI(빌드·테스트)가 통과해야만 병합 허용. 빨간 실패 표시인 PR은 merge 버튼이 막힙니다.
 
 **CODEOWNERS**
 
