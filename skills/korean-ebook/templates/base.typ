@@ -33,6 +33,28 @@
   show raw: set text(font: tokens.fonts.at("mono", default: tokens.fonts.body).stack
     + tokens.fonts.body.stack)
 
+  // 코드 블록 상자 — 배경 없으면 mono만으로는 산문과 구분이 안 돼
+  // 코드가 묻힌다(github-guide 사용자 지적 2026-08). 표 줄무늬와 같은
+  // rule 계열 밝은 바탕 + 둥근 모서리. 행간은 본문 leading_em(1.7 등)을
+  // 그대로 물려받으면 코드가 아래로 퍼져 보이므로 블록 안에서만 조이고,
+  // 글자 크기도 표 계열 축소(-1.5pt)보다 1pt 더 줄여 콘솔 밀도를 낸다.
+  // 언어 태그 펜스(bash 등)의 구문 강조 색은 typst 기본 테마를 그대로
+  // 쓴다 — 테마 교체 시 이탤릭 변형 폰트가 임베드돼 G2 계약이 깨진다.
+  show raw.where(block: true): it => block(
+    width: 100%, fill: rgb(tokens.colors.rule).lighten(72%),
+    radius: 3pt, inset: (x: 8pt, y: 7pt))[
+      #set par(leading: 0.65em)
+      #set text(size: pt(tokens.fonts.body.size_pt - 2.5))
+      #it
+    ]
+  // 인라인 코드(`...`) — 같은 계열 칩이되 box가 아니라 highlight로.
+  // box는 내용이 줄바꿈이 안 돼 원고의 긴 인라인 코드(한국어 문장을
+  // 백틱에 통째로 싼 경우, ai-agent-book ch9·ch10 — 연속 #quote가 한
+  // 문단으로 병합되는 typst 기본 동작과 만나)가 프레임 밖으로 60pt+
+  // 돌출한다(실측 2026-08). highlight는 채움이 줄바꿈을 따라간다.
+  show raw.where(block: false): it => highlight(
+    fill: rgb(tokens.colors.rule).lighten(72%), radius: 2pt, extent: 2.5pt, it)
+
   // 표(md 파이프 표 → md2typst #table). 미설정 시 typst 기본은 내용 폭으로
   // 줄어들어 표마다 폭이 제각각(들쭉날쭉)하고 블록이 면 중앙에 놓여 본문
   // 프레임과 어긋난다(agent-papers 본문 표 실측). 전폭(width: 100%)과
