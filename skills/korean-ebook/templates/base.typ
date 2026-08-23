@@ -4,10 +4,37 @@
 // include만으로는 본문에 스타일이 전파되지 않는다. 따라서 전역 스타일은
 // main.typ에서 `#show: base` / `#show: theme` 함수 적용으로 발동한다
 // (base가 먼저, theme가 나중 — 나중 규칙이 헤딩을 오버라이드).
+//
+// 판형 디자인 시스템(2026-08-24, 구 WeasyPrint판 publish_book.py CSS 이식):
+// 러닝헤드(좌 단축제목·우 장제목·전폭 헤어라인), 다크 패널 장 오프너,
+// 번호열 목차, 다크 콘솔 코드블록, wash 인용·표 헤더·h2 액센트바.
+// 팩별 색은 tokens.colors의 panel/wash/accent로 조정 — 토큰 없는 팩은
+// 디폴트 팔레트로 폴백한다. 하이픈 키(ink-mute 등)는 .at() 접근.
 #let tokens = json("tokens.json")
 #let mm(n) = n * 1mm
 #let pt(n) = n * 1pt
 #let em(n) = n * 1em
+
+// klic-flat-dark — 코드 블록 전용 syntect 테마(plist XML 임베드).
+// 모든 스코프를 무장식(italic/bold 없음) 단색 #E8EEF3로 평탄화한다:
+// ① 다크 배경(panel) 위 가독 확보 ② italic 코멘트의 변형 폰트 임베드로
+// 인한 G2 계약 위반 방지. 배경색은 테마가 아니라 block(fill: panel)이
+// 담당한다.
+#let _klic-theme = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"><plist version=\"1.0\"><dict><key>name</key><string>KLIC Flat Dark</string><key>type</key><string>dark</string><key>settings</key><array><dict><key>settings</key><dict><key>background</key><string>#101D28</string><key>foreground</key><string>#E8EEF3</string><key>caret</key><string>#E8EEF3</string></dict></dict><dict><key>name</key><string>Flat — every token identical</string><key>scope</key><string>source, text, plain, keyword, storage, support, entity, constant, variable, string, comment, punctuation, meta, markup</string><key>settings</key><dict><key>foreground</key><string>#E8EEF3</string><key>fontStyle</key><string></string></dict></dict></array></dict></plist>"
+
+// 장번호(2자리) — 오프너·목차 공용. numbering 없는 heading 내장 counter는
+// show 규칙 시점에 0(essay 실측)이라 H1 show에서 step하는 전용 카운터로
+// 계산한다(essay theme와 동일 패턴).
+#let _ch = counter("klic-chapter")
+#let _rank1(el) = context {
+  let n = _ch.at(el.location()).first()
+  if n < 10 { "0" + str(n) } else { str(n) }
+}
+
+// 머리말 좌측 단축제목 — build.py가 tokens.book.short로 주입.
+#let _book-short() = {
+  tokens.at("book", default: none).at("short", default: "BOOK")
+}
 
 #let base(body) = {
   set page(
@@ -15,12 +42,36 @@
     height: mm(tokens.trim.height_mm),
     margin: (top: mm(tokens.margin.top_mm), bottom: mm(tokens.margin.bottom_mm),
              left: mm(tokens.margin.inner_mm), right: mm(tokens.margin.outer_mm)),
+    // 러닝헤드 — 좌: 단축제목(트래킹), 우: 현재 장 제목, 전폭 헤어라인.
+    // 구판 @page @top-left/@top-right + border-bottom 이식. 표지는
+    // make-cover가 margin 0·header none으로, 차례 면은 선행 H1이 없어
+    // 비고, 장 오프너 면은 제목과 중복되지 않도록 억제된다.
+    header: context {
+      let cur = here().page()
+      let h1s = query(heading.where(level: 1))
+      let opener = h1s.any(h => h.location().page() == cur)
+      let prior = h1s.filter(h => h.location().page() < cur)
+      if prior.len() > 0 and not opener [
+        #set text(size: pt(tokens.fonts.label.size_pt),
+          fill: rgb(tokens.colors.at("ink-mute")))
+        #grid(columns: (1fr, auto), align: (left + horizon, right + horizon),
+          text(tracking: 1.2pt)[#upper(_book-short())],
+          [#prior.last().body])
+        #v(2.5pt)
+        #line(length: 100%, stroke: 0.45pt + rgb(tokens.colors.rule))
+      ]
+    },
     footer: context align(center)[#text(size: pt(tokens.fonts.label.size_pt),
       fill: rgb(tokens.colors.at("ink-mute")))[#counter(page).display("1")]],
   )
   set text(font: tokens.fonts.body.stack, size: pt(tokens.fonts.body.size_pt),
     lang: "ko", region: "kr", fill: rgb(tokens.colors.ink))
   set par(leading: em(tokens.leading_em), justify: true)
+
+  // 디스플레이 수식 — 급진(√)·분수 기호 잉크가 라인 박스를 8.9pt 초과해
+  // 올라간다. 면 상단에 배치되면 G1 프레임 초과(ai-agent p218 실측)이므로
+  // 블록 수식에 상단 패드로 상습 방어. 인라인 수식은 해당 없음.
+  show math.equation.where(block: true): it => pad(top: 9pt, bottom: 1pt, it)
 
   // 헤딩은 양쪽정렬 대상이 아니다 — justify를 상속하면 여러 줄 제목에서
   // 공백·제로폭공백이 늘어나 안쪽여백을 침범한다(실전시스템설계 ch20
@@ -32,16 +83,19 @@
   // 폰트 계약(G2) 위반이 된다(실전시스템설계 코드 블록 실측).
   show raw: set text(font: tokens.fonts.at("mono", default: tokens.fonts.body).stack
     + tokens.fonts.body.stack)
+  // 구문 강조 — klic-flat-dark 테마(모든 스코프 무장식 단색 #E8EEF3).
+  // typst 기본 라이트 테마는 어두운 배경 위에 검은 토큰색을 얹어 읽힘이
+  // 없고, 범용 다크 테마는 이탤릭 변형 폰트를 임베드해 G2 계약이 깨진다.
+  // 테마는 bytes로 임베드 — 별도 .tmTheme 파일 경로는 base.typ만 떼어
+  // 쓰는 테스트 미니 빌드에서 깨진다.
+  set raw(theme: bytes(_klic-theme))
 
-  // 코드 블록 상자 — 배경 없으면 mono만으로는 산문과 구분이 안 돼
-  // 코드가 묻힌다(github-guide 사용자 지적 2026-08). 표 줄무늬와 같은
-  // rule 계열 밝은 바탕 + 둥근 모서리. 행간은 본문 leading_em(1.7 등)을
-  // 그대로 물려받으면 코드가 아래로 퍼져 보이므로 블록 안에서만 조이고,
-  // 글자 크기도 표 계열 축소(-1.5pt)보다 1pt 더 줄여 콘솔 밀도를 낸다.
-  // 언어 태그 펜스(bash 등)의 구문 강조 색은 typst 기본 테마를 그대로
-  // 쓴다 — 테마 교체 시 이탤릭 변형 폰트가 임베드돼 G2 계약이 깨진다.
+  // 코드 블록 상자 — 구판 pre{#101D28/#E8F0F3} 다크 콘솔 이식. 산문과의
+  // 구분은 배경 명도차가 담당(2026-08 사용자 지적: 회색 물탄색은 퇴보).
+  // 행간은 본문 leading_em을 물려받으면 코드가 아래로 퍼져 보이므로
+  // 블록 안에서만 조이고, 글자도 표 계열보다 1pt 더 줄여 콘솔 밀도를 낸다.
   show raw.where(block: true): it => block(
-    width: 100%, fill: rgb(tokens.colors.rule).lighten(72%),
+    width: 100%, fill: rgb(tokens.colors.at("panel", default: "#101D28")),
     radius: 3pt, inset: (x: 8pt, y: 7pt))[
       #set par(leading: 0.65em)
       #set text(size: pt(tokens.fonts.body.size_pt - 2.5))
@@ -53,33 +107,80 @@
   // 문단으로 병합되는 typst 기본 동작과 만나)가 프레임 밖으로 60pt+
   // 돌출한다(실측 2026-08). highlight는 채움이 줄바꿈을 따라간다.
   show raw.where(block: false): it => highlight(
-    fill: rgb(tokens.colors.rule).lighten(72%), radius: 2pt, extent: 2.5pt, it)
+    fill: rgb(tokens.colors.at("wash", default: "#EFF3F4")), radius: 2pt,
+    extent: 2.5pt, it)
 
-  // 표(md 파이프 표 → md2typst #table). 미설정 시 typst 기본은 내용 폭으로
-  // 줄어들어 표마다 폭이 제각각(들쭉날쭉)하고 블록이 면 중앙에 놓여 본문
-  // 프레임과 어긋난다(agent-papers 본문 표 실측). 전폭(width: 100%)과
-  // 1fr 균등 열·table.header(첫 행)는 md2typst가, 채움·줄무늬·굵게는
-  // 여기서 담당(width는 set 규칙 대상이 아니라 호출처에서만 지정 가능).
-  set table(inset: (x: 7pt, y: 5pt), stroke: 0.5pt + rgb(tokens.colors.rule),
-    fill: (x, y) => if y == 0 { rgb(tokens.colors.rule) }
-      else if calc.even(y) { rgb(tokens.colors.rule).lighten(76%) } else { none })
+  // 인용구 — 구판 blockquote{wash 배경 + cyan-dark 좌변} 이식.
+  // 병합된 인용 문단도 하나의 블록으로 감싸져 시각 경계가 생긴다.
+  show quote: it => block(width: 100%,
+    fill: rgb(tokens.colors.at("wash", default: "#EFF3F4")),
+    stroke: (left: 2.4pt + rgb(tokens.colors.accent)), radius: 2pt,
+    inset: (top: 8pt, bottom: 8pt, left: 12pt, right: 10pt), it)
+
+  // 표(md 파이프 표 → md2typst #table). 구판 editorial 표 이식 —
+  // 헤더 wash 배경 + 상단 액센트 1.1pt, 본문 행 바닥 헤어라인만(세로선
+  // 없음). 전폭(width: 100%)과 1fr 균등 열·table.header(첫 행)는 md2typst가.
+  set table(inset: (x: 7pt, y: 5pt),
+    stroke: (x, y) => if y == 0 {
+        (top: 1.1pt + rgb(tokens.colors.accent),
+         bottom: 0.5pt + rgb(tokens.colors.rule))
+      } else {
+        (bottom: 0.5pt + rgb(tokens.colors.rule))
+      },
+    fill: (x, y) => if y == 0 { rgb(tokens.colors.at("wash", default: "#EFF3F4")) }
+      else if calc.even(y) {
+        rgb(tokens.colors.at("wash", default: "#EFF3F4")).lighten(70%)
+      } else { none })
   // 표 글자는 본문보다 1.5pt(≈2px) 작게 — 표가 본문 산문과 같은 크기면
   // 행이 촘촘해져 페이지를 누른다(사용자 지시).
   show table.cell: set text(size: pt(tokens.fonts.body.size_pt - 1.5))
   show table.cell.where(y: 0): set text(weight: "bold")
 
-  // 공통 헤딩 — theme.typ의 show 규칙이 뒤에서 오버라이드 가능
+  // 장 오프너 — 구판 chapteropener(네이비 전면 + eyebrow + 고스트 번호 +
+  // 백색 제목 + 하단 액센트 바) 이식. 본문은 다음 면에서 시작한다.
   show heading.where(level: 1): it => {
     pagebreak(weak: true)
-    v(2em)
-    text(size: pt(tokens.fonts.heading1.size_pt), weight: "bold")[#it.body]
-    v(1em)
+    _ch.update(n => n + 1)
+    let eyebrow = if tokens.at("label-top") != "" { tokens.at("label-top") } else { "CHAPTER" }
+    page(margin: 0pt, fill: rgb(tokens.colors.at("panel", default: "#101D28")),
+      header: none, footer: none)[
+      #place(bottom + left,
+        dx: mm(tokens.margin.inner_mm + 4), dy: -mm(20))[
+        #rect(width: mm(30), height: mm(1.4),
+          fill: rgb(tokens.colors.accent), radius: 1pt)]
+      #pad(top: mm(tokens.margin.top_mm + 8), bottom: mm(24),
+           left: mm(tokens.margin.inner_mm + 4),
+           right: mm(tokens.margin.outer_mm + 4))[
+        #text(size: pt(tokens.fonts.label.size_pt), tracking: 2pt,
+          fill: rgb(tokens.colors.accent))[#upper(eyebrow)]
+        #v(9mm)
+        // 고스트 장번호 — 백색 16% 대형 숫자(구판 .number 46pt).
+        #text(size: pt(tokens.fonts.heading1.size_pt * 2.1), weight: "bold",
+          fill: rgb(255, 255, 255, 16%))[#context _ch.display("01")]
+        #v(7mm)
+        #text(size: pt(tokens.fonts.heading1.size_pt), weight: "bold",
+          fill: white)[#it.body]
+      ]
+    ]
   }
+  // 절 헤딩 — 구판 h2{좌 액센트바 2.3pt + 들여쓰기} 이식. 상단 3.5pt 패드는
+  // 페이지 상단 v-붕괴 시 Pretendard/SUIT 어센더 잉크가 body_frame 위로
+  // 넘는 G1 오버플로 방어(기존 팩에서 이월).
   show heading.where(level: 2): it => {
+    v(1.0em)
+    block(width: 100%, stroke: (left: 2.3pt + rgb(tokens.colors.accent)),
+      inset: (top: 3.5pt, bottom: 0pt, left: 8pt, right: 0pt))[
+      #text(size: pt(tokens.fonts.heading2.size_pt), weight: "bold",
+        fill: rgb(tokens.colors.ink))[#it.body]]
+    v(0.4em)
+  }
+  show heading.where(level: 3): it => {
     v(0.8em)
-    text(size: pt(tokens.fonts.heading2.size_pt), weight: "bold")[#it.body]
+    pad(top: 3.5pt)[#text(size: pt(tokens.fonts.heading2.size_pt - 1),
+      weight: "bold", fill: rgb(tokens.colors.at("ink-soft")))[#it.body]]
     v(0.3em)
   }
+
   body
 }
 
@@ -100,13 +201,45 @@
   ]
 }
 
-// 목차 — toc_depth 토큰(기본 1=장급). 스타일 팩이 절급(2)으로 확장 가능.
+// 목차 — 구판 .toc 이식: 대형 제목 + 잉크 하단선, 항목별 헤어라인,
+// 액센트 2자리 장번호열, 소절은 소형 뮤트. link()는 SVG 내보내기에서
+// 글자보다 큰 투명 히트영역을 만들어 인접 엔트리와 collision 오탐을
+// 유발하므로 쓰지 않는다(essay 실측 이관 — 프린트 우선).
 #let make-toc() = {
+  // 목차 엔트리 재구성 — 기본 점선 리더 대신 번호열·헤어라인 레이아웃.
+  // show 규칙은 선언 이후 콘텐츠에만 적용되므로 page 블록 앞에 둔다.
+  show outline.entry.where(level: 1): it => {
+    v(1.0em, weak: true)
+    line(length: 100%, stroke: 0.5pt + rgb(tokens.colors.rule))
+    v(0.55em)
+    // 다음 면 첫 엔트리에서 Pretendard-Bold 어센더 잉크가 프레임 상단을
+    // 3.1pt 넘는다(ai-agent 목차 p3 실측) — h2와 동일 패드 방어.
+    pad(top: 3.5pt)[#grid(columns: (14mm, 1fr, auto),
+      align: (right + horizon, left + horizon, right + horizon),
+      text(size: pt(tokens.fonts.heading1.size_pt * 0.62), weight: "bold",
+        fill: rgb(tokens.colors.accent))[#_rank1(it.element)],
+      text(size: pt(tokens.fonts.body.size_pt + 0.8), weight: "bold")[#it.element.body],
+      text(fill: rgb(tokens.colors.at("ink-mute")))[
+        #context str(counter(page).at(it.element.location()).first())])]
+  }
+  show outline.entry.where(level: 2): it => {
+    v(0.15em, weak: true)
+    pad(top: 3.5pt)[#grid(columns: (14mm, 1fr, auto),
+      align: (right, left + horizon, right + horizon),
+      [],
+      text(size: pt(tokens.fonts.body.size_pt - 1.5),
+        fill: rgb(tokens.colors.at("ink-mute")))[#it.element.body],
+      text(size: pt(tokens.fonts.body.size_pt - 1.5),
+        fill: rgb(tokens.colors.at("ink-mute")))[
+        #context str(counter(page).at(it.element.location()).first())])]
+  }
   page[
     #v(0.4em)
     #text(size: pt(tokens.fonts.heading1.size_pt), weight: "bold")[차례]
-    #v(1em)
-    // title: none — outline 기본 제목이 lang별 헤딩으로 붙어 theme H1 규칙과
+    #v(0.5em)
+    #line(length: 100%, stroke: 1.2pt + rgb(tokens.colors.ink))
+    #v(0.9em)
+    // title: none — outline 기본 제목이 lang별 헤딩으로 붙어 H1 규칙과
     // 중복 렌더링되므로(make-toc가 직접 제목을 냄) 억제.
     #outline(title: none, indent: 1.5em, depth: tokens.at("toc_depth", default: 1))
   ]

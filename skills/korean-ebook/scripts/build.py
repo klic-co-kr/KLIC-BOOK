@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """korean-ebook 빌드 — typst-build.yaml → 스타일 팩 조립 → PDF."""
+import json as _json
 import re
 import shutil
 import subprocess
@@ -519,7 +520,14 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     (build / "fences").mkdir(parents=True, exist_ok=True)
 
     style = STYLE_DIR / cfg["style"]
-    shutil.copy2(style / "tokens.json", build / "tokens.json")
+    # tokens에 책 메타 주입 — base.typ 러닝헤드 좌측 단축제목이 읽는다.
+    # short는 config.short_title > 제목 첫 어절(구판 book.short_title 규칙).
+    tk = _json.loads((style / "tokens.json").read_text(encoding="utf-8"))
+    short = str(cfg.get("short_title") or " ".join(str(cfg["title"]).split()[:1])
+                or "BOOK")
+    tk["book"] = {"short": short[:20], "title": str(cfg["title"])}
+    (build / "tokens.json").write_text(
+        _json.dumps(tk, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     shutil.copy2(style / "theme.typ", build / "theme.typ")
     shutil.copy2(SKILL_DIR / "templates" / "base.typ", build / "base.typ")
     shutil.copy2(SKILL_DIR / "templates" / "infographic" / "helper.typ", build / "helper.typ")

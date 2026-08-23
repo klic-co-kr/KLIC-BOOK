@@ -1,34 +1,6 @@
-#import "base.typ": tokens, pt, em
+#import "base.typ": tokens
 
-// business — 컨설팅 백서 200×280. navy 시스템 + 액션 타이틀 헤딩.
-// main.typ의 `#show: theme`로 적용 — base 이후에 적용되어 base 헤딩을 오버라이드.
-// 하이픈 키(label-top, ink-mute 등)는 .at() 접근 — 마이너스 파싱 방지.
-// label-top은 이미 대문자 SECTION — upper() 없이 직접 렌더.
-#let theme(body) = {
-  show heading.where(level: 1): it => {
-    pagebreak(weak: true)
-    v(2em)
-    block(width: 100%, inset: (x: 0pt))[
-      #text(size: pt(tokens.fonts.label.size_pt), weight: "bold",
-        fill: rgb(tokens.colors.accent))[#tokens.at("label-top")]
-      #v(0.4em)
-      #text(size: pt(tokens.fonts.heading1.size_pt), weight: "bold",
-        fill: rgb(tokens.colors.accent))[#it.body]
-    ]
-    v(1em)
-    line(length: 100%, stroke: 2pt + rgb(tokens.colors.accent))
-    v(1em)
-  }
-  show heading.where(level: 2): it => {
-    v(1em)
-    // 페이지 상단에서 선행 v는 면 경계에서 소멸한다(weak 불문 — strong로도
-    // 실측 불변). Pretendard 계열 어센더 잉크가 프레임 상단을 넘어 G1
-    // 오버플로가 되므로 상단 패드로 방어(b5/practical과 동일 패턴).
-    pad(top: 3.5pt)[#box(fill: rgb(tokens.colors.accent), inset: (x: 6pt, y: 3pt))[
-      #text(size: pt(tokens.fonts.heading2.size_pt), weight: "bold",
-        fill: white)[#it.body]
-    ]]
-    v(0.6em)
-  }
-  body
-}
+// business — 컨설팅백서. 2026-08-24 디자인 시스템 통합: 러닝헤드·장 오프너·
+// 절 헤딩·목차·코드블록·인용·표 스타일을 base.typ가 일괄 담당한다.
+// 팩 고유 오버라이드 없음 — 팩별 차이는 tokens.json(판형·폰트·색)으로.
+#let theme(body) = body
