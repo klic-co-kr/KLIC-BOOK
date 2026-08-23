@@ -253,3 +253,27 @@ def test_typst_binary_fallback_and_fail(tmp_path, monkeypatch):
     local.unlink()
     with pytest.raises(SystemExit):
         b.typst_binary()
+
+def test_assemble_rasterizes_svg_images(tmp_path):
+    # SVG를 typst에 그대로 넘기면 내부 <text> 폰트를 typst가 해석해
+    # 계약 외 폰트(NotoColorEmoji·NotoSansKR-Thin 등)를 임베드한다
+    # (ai-agent-book-ko 133 이미지 실측). resvg로 PNG 베이크해 단절.
+    import subprocess
+    if not shutil.which("resvg"):
+        pytest.skip("resvg 없음")
+    (tmp_path / "img").mkdir()
+    svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40">'
+           '<text x="8" y="24" font-size="14" fill="#333">다이어그램 🐺</text></svg>')
+    (tmp_path / "img" / "fig.svg").write_text(svg, encoding="utf-8")
+    (tmp_path / "ch01.md").write_text(
+        "# 1장\n\n![그림](img/fig.svg)\n", encoding="utf-8")
+    _write_config(tmp_path, chapters=("ch01.md",))
+
+    cfg = load_config(tmp_path / "typst-build.yaml")
+    assemble(cfg, tmp_path)
+
+    assert (tmp_path / "build" / "assets" / "000-fig.png").exists()
+    assert not (tmp_path / "build" / "assets" / "000-fig.svg").exists()
+    typ = (tmp_path / "build" / "typ" / "000-ch01.typ").read_text(encoding="utf-8")
+    assert '#figure(image("../assets/000-fig.png"))' in typ
+    assert ".svg" not in typ

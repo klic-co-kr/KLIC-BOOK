@@ -195,3 +195,38 @@ def test_pipe_table_lone_asterisk_cell_escaped():
     out = convert(md)
     assert "[\\*]" in out
     assert "[*]" not in out
+
+# --- 인용구 내부 코드펜스 언랩 (ai-agent-book-ko 실측 회귀) ---
+
+def test_quoted_fence_unwrapped_to_toplevel():
+    md = "> 서론 문단\n>\n> ```xml\n> <agent_status>\n> N=3\n> </agent_status>\n> ```\n>\n> 마무리 문단\n"
+    out = convert(md)
+    assert "#quote[\\> ```xml]" not in out          # 펜스가 인용 안에 들어가면 unclosed delimiter
+    assert "```xml" in out and "<agent_status>" in out  # 펜스 내용 보존
+    assert "> <agent_status>" not in out            # 내부 > 접두 제거
+    assert out.count("#quote[") == 2                # 앞뒤 산문만 인용
+
+def test_quoted_fence_without_lang_unwrapped():
+    md = "> ```\n> 로그 1행\n> ```\n"
+    out = convert(md)
+    assert "#quote[" not in out
+    assert "로그 1행" in out
+
+def test_quoted_fence_preserves_prose_quote_escaping():
+    md = "> **굵게** 인용\n> ```python\n> x = 1\n> ```\n"
+    out = convert(md)
+    lines = [l for l in out.split("\n") if l]
+    assert lines[0].startswith("#quote[")
+    assert "*굵게*" in lines[0]                     # 인용 산문은 강조 변환 유지
+    assert "x = 1" in out
+
+def test_bold_after_inline_math_converts():
+    # #mitex 스태시가 줄 끝까지 삼키면 뒤따르는 **굵게**가 리터럴로 인쇄된다
+    out = convert(r"수식 $O$ 뒤의 **굵게** 표현과 *기울임* 확인\n")
+    assert "*굵게*" in out and "_기울임_" in out
+    assert "**" not in out
+
+def test_math_immediately_followed_by_paren_not_call_args():
+    # $수식$(주석) → #mitex[...](주석)은 typst 추가 인자 파싱 오류
+    out = convert(r"현재 정책 $\pi_\theta$(훈련 중인 모델)을 본다")
+    assert "#mitex[`\\pi_\\theta`] (훈련 중인 모델)" in out

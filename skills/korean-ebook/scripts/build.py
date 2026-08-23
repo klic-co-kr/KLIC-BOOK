@@ -79,6 +79,28 @@ def typst_binary() -> str:
         return str(fallback)
     _fail("typst 바이너리 없음 — PATH 등록 또는 ~/.local/bin/typst 설치")
 
+def _rasterize_svg(svg_path: Path) -> Path:
+    """SVG → PNG(resvg, 4배 래스터화). 원본 svg는 지우고 png 경로 반환.
+
+    SVG를 typst에 그대로 넘기면 내부 <text>의 폰트 해석이 typst 폰트
+    스택을 타고 계약 외 폰트(NotoColorEmoji·NotoSansKR-Thin 등)를
+    임베드해 G2가 깨진다(ai-agent-book-ko 이미지 133개 실측). resvg가
+    fontconfig로 한 번 베이크하면 폰트 문제가 이미지 픽셀로 닫힌다.
+    """
+    import subprocess
+    png_path = svg_path.with_suffix(".png")
+    resvg = shutil.which("resvg")
+    if not resvg:
+        _fail("SVG 이미지가 있는데 resvg 없음 — cargo install resvg 후 재빌드")
+    proc = subprocess.run(
+        [resvg, "--zoom", "4", str(svg_path), str(png_path)],
+        capture_output=True, text=True)
+    if proc.returncode != 0 or not png_path.exists():
+        _fail(f"resvg 래스터화 실패: {svg_path}\n{proc.stderr}")
+    svg_path.unlink()
+    return png_path
+
+
 def rebase_images(typ_file: Path, src_md: Path, build: Path, idx: int) -> None:
     """원고 이미지 경로를 build/ 루트로 재배치(복사 + 경로 재작성).
 
@@ -86,7 +108,7 @@ def rebase_images(typ_file: Path, src_md: Path, build: Path, idx: int) -> None:
     build/라 변환 결과를 그대로 두면 root를 탈출해 컴파일이 실패한다.
     이미지를 build/assets/로 복사하고 typ/ 기준 상대경로로 다시 쓴다.
     챕터 인덱스 prefix로 네임스페이스화 — 동명 이미지(pic.png)가 챕터별로
-    존재해도 덮어쓰지 않는다(2회차 검토 Important).
+    존재해도 덮어쓰지 않는다(2회차 검토 Important). SVG는 PNG로 베이크.
     """
     text = typ_file.read_text(encoding="utf-8")
     if not IMAGE_RE.search(text):
@@ -102,6 +124,8 @@ def rebase_images(typ_file: Path, src_md: Path, build: Path, idx: int) -> None:
         assets.mkdir(exist_ok=True)
         dst = f"{idx:03d}-{src.name}"
         shutil.copy2(src, assets / dst)
+        if src.suffix.lower() == ".svg":
+            dst = _rasterize_svg(assets / dst).name
         return f'#figure(image("../assets/{dst}"))'
     typ_file.write_text(IMAGE_RE.sub(rewrite, text), encoding="utf-8")
 

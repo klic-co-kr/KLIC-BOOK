@@ -29,6 +29,34 @@ def extract_fences(md: str) -> tuple[str, list[dict]]:
     return md, fences
 
 
+def unwrap_quoted_fences(md: str) -> str:
+    """인용구(> ) 안의 코드펜스를 최상위로 언랩.
+
+    펜스가 인용 안에 남으면 step 0.5 스태시가 매치를 > 접두 뒤에서 시작해
+    펜스를 인용 괄호 안에 조각내고, typst에서 unclosed delimiter가 된다
+    (ai-agent-book-ko ch02 `> ```xml` 실측). 펜스 시작·내부·종료 행의
+    > 접두를 벗겨 top-level 펜스로 만든다 — 앞뒤 산문 인용은 그대로 둔다.
+    """
+    out = []
+    in_fence = False
+    for line in md.split('\n'):
+        m_open = re.match(r'^>[ \t]?(```+)', line)
+        if not in_fence and m_open:
+            in_fence = True
+            out.append(line[m_open.start(1):])
+            continue
+        if in_fence:
+            m_close = re.match(r'^>[ \t]?(```+)[ \t]*$', line)
+            if m_close:
+                in_fence = False
+                out.append(line[m_close.start(1):])
+                continue
+            out.append(re.sub(r'^>[ \t]?', '', line))
+            continue
+        out.append(line)
+    return '\n'.join(out)
+
+
 def _restore_ig_markers(md: str, stash_str) -> str:
     # 가시 마커 ⟦IG:n⟧ → stash 보호. 변환 중간 단계 보호가 목적이고
     # step 7 복원으로 최종 .typ에는 ⟦IG:n⟧가 그대로 남는다(build.py 치환 대상).
@@ -43,6 +71,8 @@ def convert(md: str) -> str:
         return f"\x00{len(protected) - 1}\x00"
     def stash(m):
         return stash_str(m.group(0))
+    # -1.5 인용구 내부 펜스 언랩 — infographic/스태시보다 먼저(위 함수 주석).
+    md = unwrap_quoted_fences(md)
     # -1. infographic 펜스 — 다른 어떤 변환보다 먼저(스펙 §2 [1]).
     md, _fences = extract_fences(md)
     md = _restore_ig_markers(md, stash_str)
@@ -117,8 +147,16 @@ def convert(md: str) -> str:
     # 5. 인라인 수식 $...$ — \ / 알파벳 / ( 시작(숫자=화폐 제외), 한국어 \text 포함 허용
     md = re.sub(r'(?<!\\)(?<!\$)\$([\\A-Za-z(][^\$\n]{0,250})\$(?<!\\)(?!\$)',
                 lambda m: f'#mitex[`{m.group(1).strip()}`]', md)
-    # 새 #mitex 보호
-    md = re.sub(r'#mitex\b[^\n]*', stash, md)
+    # 새 #mitex 보호 직전 — `#mitex[...]` 뒤에 곧바로 '('가 오면 typst가
+    # 함수 추가 인자로 파싱해 "expected comma" 컴파일 오류가 난다
+    # (ai-agent-book-ko ch07 `$\pi_\theta$(훈련 중인 모델)` 실측).
+    # 공백을 하나 넣어 코드 모드를 끊고 마크업 텍스트 괄호로 만든다.
+    md = re.sub(r'(#mitex\[`[^`\n]*`\])\(', r'\1 (', md)
+    # 새 #mitex 보호 — 백틱 괄호(`...`)까지만. [^\n]*로 줄 끝까지 삼키면
+    # 같은 행의 한국어 산문 **굵게**가 step 6.5를 우회해 리터럴 별표로
+    # 인쇄된다(ai-agent-book-ko ch07 실측). 변환기가 만드는 mitex는 전부
+    # 백틱 래핑이라 [^`\n]*이 정확한 경계다.
+    md = re.sub(r'#mitex\[`[^`\n]*`\]', stash, md)
     # 6. 본문 typst 특수 이스케이프 (남은 $ 포함)
     md = md.replace('\\', r'\\').replace('#', r'\#').replace('[', r'\[').replace(']', r'\]')
     md = md.replace('$', r'\$').replace('<', r'\<').replace('>', r'\>').replace('@', r'\@')
@@ -136,8 +174,12 @@ def convert(md: str) -> str:
     md = re.sub(r'^\\#\\#\\#\s+(.+)$', r'== \1', md, flags=re.M)
     md = re.sub(r'^\\#\\#\s+(.+)$', r'= \1', md, flags=re.M)
     md = re.sub(r'^\\#\s+(.+)$', r'= \1', md, flags=re.M)
-    # 8.5 블록 인용 (step 6에서 > → \> escape되므로 escape된 형태에 매치)
-    md = re.sub(r'^\\>\s?(.+)$', r'#quote[\1]', md, flags=re.M)
+    # 8.5 블록 인용 (step 6에서 > → \> escape되므로 escape된 형태에 매치).
+    # 빈 인용행(>)은 먼저 지운다 — \s?가 개행을 삼켜 다음 행(언랩된 펜스 등)을
+    # 인용 괄호로 끌어들이는 원인이며(ai-agent-book-ko 실측), 남으면 리터럴
+    # '>'로 인쇄된다. 내용 매치는 [ \t]?로 한정해 행을 넘지 않게 한다.
+    md = re.sub(r'^\\>[ \t]*$\n?', '', md, flags=re.M)
+    md = re.sub(r'^\\>[ \t]?(.+)$', r'#quote[\1]', md, flags=re.M)
     # 8.7 헤딩 중간점(·) 뒤 줄바꿈 기회 — typst는 U+00B7을 break 기회로
     # 쓰지 않아 justify 헤딩에서 긴 라틴 ·연쇄 토큰이 프레임 밖으로 넘친다
     # (실전시스템설계 ch25 실측). 제로폭 공백(U+200B)을 심어 분량은 그대로
