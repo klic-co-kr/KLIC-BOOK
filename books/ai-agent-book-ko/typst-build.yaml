@@ -1,0 +1,26 @@
+---
+style: auto
+title: "AI 에이전트 깊이 이해하기"
+subtitle: "Agent = LLM + 컨텍스트 + 도구 — 10장으로 끝내는 AI 에이전트 설계와 실전"
+author: "원저작 chemark · 한국어 번역 KLIC"
+date: "2026-08"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/01-제1장-AI-에이전트-입문.md
+  - manuscript/02-제2장-컨텍스트-엔지니어링.md
+  - manuscript/03-제3장-사용자-메모리와-지식-베이스.md
+  - manuscript/04-제4장-도구.md
+  - manuscript/05-제5장-코딩-에이전트와-코드-생성.md
+  - manuscript/06-제6장-에이전트-평가.md
+  - manuscript/07-제7장-모델-포스트트레이닝.md
+  - manuscript/08-제8장-에이전트의-자기-진화.md
+  - manuscript/09-제9장-멀티모달과-실시간-인터랙션.md
+  - manuscript/10-제10장-멀티-에이전트-협업.md
+  - manuscript/11-맺음말.md
+cover: auto
+
+cover_series: "한국어 번역판 · DEEP UNDERSTANDING AI AGENT"
+cover_notes:
+  - "· 원저작 chemark 《深入理解 AI Agent》 Apache 2.0 번역"
+  - "· Agent = LLM + 컨텍스트 + 도구 3축 구조로 10장 구성"
+  - "· 실험 25종 · 실행 가능 코드 — 입문 ★부터 심화 ★★★까지"
