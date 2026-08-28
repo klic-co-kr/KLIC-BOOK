@@ -105,6 +105,7 @@ G3 밴드는 판형별 물리값(판면 폭 × 본문 pt의 전각 환산 기준
 | G2 | 실사용(임베드) 폰트 ⊆ tokens fonts 계약(stack + ps 별칭 + 변형 접미사 매칭, 수식 폰트 allowlist) | FAIL |
 | G3 | 본문 한 줄 자수가 스타일 밴드 내 (표지·목차 제외, 정렬 줄만) | WARN |
 | G4 | 한글 문체 — 기계 한국어·번역투 패턴(명사형 종결·조각문·되어지·상투구·'의' 연쇄·엠대시 밀도). 원고 md에서 검사, [fluent-korean](https://github.com/snflkd/fluent-korean) 규칙 기계화 | WARN |
+| G5 | 콘텐츠 정합성 — 미해결 라틴 시퀀스(allowlist 외 ALL-CAPS)·판독불능 표기(○○ 등)·"N장" 교차참조·HTML 주석 잔여. 원고 md 검사. `g5_rescan_inventory`(⚠️ 미스캔 면 목록)는 경고가 아닌 보고서 자산 | WARN |
 
 PASS 조건은 G1·G2 무위반. `gate-report.json`(책 디렉터리에 생성)을 참조해
 지적된 면만 수정 후 재빌드한다.

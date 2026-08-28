@@ -257,6 +257,16 @@ def run(book_dir: Path) -> int:
         cfg = yaml.safe_load(yml.read_text(encoding="utf-8")) or {}
         style_warns = korean_lint.lint_manuscript(cfg.get("chapters", []),
                                                   book_dir)
+    # G5 콘텐츠 정합성 — 라틴 잔존·판독불능·교차참조·주석 잔여(WARN) +
+    # ⚠️ 보강 마커 인벤토리(재스캔 자산 — 보고서가 인용). 원고 md에서 검사.
+    content_warns, rescan = [], []
+    if yml.exists():
+        try:
+            import content_lint
+        except ImportError:
+            from scripts import content_lint
+        content_warns, rescan = content_lint.lint(cfg.get("chapters", []),
+                                                  book_dir)
     # §5.4 미완료 검수 시트 WARN도 리포트 채널로 — stdout 인쇄만으로는
     # gate-report.json을 읽는 downstream이 이 사실을 못 본다(최종 리뷰 Minor).
     unreviewed = check_review_sheets(build)
@@ -264,6 +274,7 @@ def run(book_dir: Path) -> int:
     report = {"g1_overflow": overflow, "g2_fonts": fonts, "g3_band_warns": warns,
               "g4_style_warns": style_warns, "ig_review_warns": unreviewed,
               "infographic_pages": igp,
+              "g5_content_warns": content_warns, "g5_rescan_inventory": rescan,
               "pass": not overflow and not fonts}
     (book_dir / "gate-report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -287,11 +298,13 @@ def run(book_dir: Path) -> int:
     final.mkdir(exist_ok=True)
     shutil.copy2(pdf, final / pdf.name)
     n_style = sum(len(v) for v in style_warns.values())
+    n_content = sum(len(v) for v in content_warns.values()) if content_warns else 0
     if unreviewed:
         print(f"[WARN] 미확인 인포그래픽 검수 시트 {len(unreviewed)}건: "
               + ", ".join(unreviewed))
     print(f"[qc] PASS → {final / pdf.name} "
-          f"(WARN {len(warns)}건, 문체 {n_style}건, 검수시트 {len(unreviewed)}건)")
+          f"(WARN {len(warns)}건, 문체 {n_style}건, 정합성 {n_content}건, "
+          f"검수시트 {len(unreviewed)}건, 보강대상 {len(rescan)}면)")
     return 0
 
 
