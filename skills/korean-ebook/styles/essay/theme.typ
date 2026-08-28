@@ -25,8 +25,12 @@
     chapter-counter.update(n => n + 1)
     // 판면 상단에서 52mm 낙차 — base가 이미 띄운 top margin은 차감
     v(mm(52) - mm(tokens.margin.top_mm))
+    // display("01")은 10장 이상에서 "0" 접두가 붙는다(010) — 조건 패딩으로.
     text(size: pt(tokens.fonts.label.size_pt),
-      fill: rgb(tokens.colors.accent))[#context chapter-counter.display("01")]
+      fill: rgb(tokens.colors.accent))[#context {
+        let n = chapter-counter.at(it.location()).first()
+        if n < 10 { "0" + str(n) } else { str(n) }
+      }]
     v(mm(3))
     // H1 15pt Regular — 굵기 없음(위계는 크기·여백으로만)
     text(size: pt(tokens.fonts.heading1.size_pt), weight: "regular",

@@ -13,6 +13,29 @@ def test_h4_converts():
     out = convert("#### 깊은 제목\n")
     assert out.strip().startswith("=== 깊은 제목")
 
+def test_h5_converts():
+    out = convert("##### 더 깊은 제목\n")
+    assert out.strip().startswith("==== 더 깊은 제목")
+
+def test_task_list_becomes_glyph():
+    out = convert("- [ ] 첫 항목\n- [x] 완료 항목\n")
+    assert "- □ 첫 항목" in out
+    assert "- ☑ 완료 항목" in out
+    assert "\\[ \\]" not in out
+
+def test_h1_part_gets_part_label():
+    out = convert("## 제1부 · 고통받는 영혼에게 노크하라\n")
+    assert "<part>" in out
+
+def test_h1_frontmatter_gets_nonum_label():
+    for title in ("프롤로그 · 북한산 언저리에서", "서막 · 편견과 설득의 구조", "에필로그", "특별부록"):
+        out = convert(f"## {title}\n")
+        assert "<nonum>" in out, title
+
+def test_h1_chapter_still_numbered():
+    out = convert("## 뇌의 수문장을 통과하라\n")
+    assert out.strip().startswith("= 뇌의 수문장을 통과하라")
+
 def test_h1_still_converts():
     out = convert("# 장 제목\n")
     assert out.strip().startswith("= 장 제목")

@@ -27,3 +27,6 @@ books/*/gate-report.json
 
 # 제품 디자인 심리학 — 원문 라이선스 없음(개인 학습용 번역판), 공개 추적 제외
 books/product-design-psychology/
+
+# 설득의 구조 — 개인 소장용 재제작(OCR 전문 포함), 스캔 이미지 150MB 포함
+books/persuasion-structure-ko/

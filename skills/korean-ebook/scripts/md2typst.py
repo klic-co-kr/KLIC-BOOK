@@ -86,6 +86,10 @@ def convert(md: str) -> str:
     # 백틱이 있으면 페어링이 어긋나 내용이 step 6 이스케이프에 오염된다
     # (system-design-notes ch16·22 SQL 블록 실측).
     md = re.sub(r'```.*?```', stash, md, flags=re.S)
+    # 0.7 markdown 체크리스트 → 인쇄 글리프. typst에 체크박스 없어
+    # 미변환 시 "[ ] 첫 항목"이 리터럴로 인쇄된다(설득의 구조 부록3 실측).
+    md = re.sub(r'^(\s*[-*])\s\[ \]\s+', r'\1 □ ', md, flags=re.M)
+    md = re.sub(r'^(\s*[-*])\s\[[xX]\]\s+', r'\1 ☑ ', md, flags=re.M)
     # 1. 화폐 $<숫자>/<단위|통화> → escape
     md = re.sub(r'\$(\d[\d,.]*(?:\s*/\s*\w+|\s*(?:원|엔|달러|USD|시간)))',
                 lambda m: r'\$' + m.group(1), md)
@@ -170,9 +174,22 @@ def convert(md: str) -> str:
     # 7. 보호 복원
     md = re.sub(r'\x00(\d+)\x00', lambda m: protected[int(m.group(1))], md)
     # 8. 헤딩 (step 6에서 # → \# escape되므로 escape된 형태에 매치)
+    md = re.sub(r'^\\#\\#\\#\\#\\#\s+(.+)$', r'==== \1', md, flags=re.M)
     md = re.sub(r'^\\#\\#\\#\\#\s+(.+)$', r'=== \1', md, flags=re.M)
     md = re.sub(r'^\\#\\#\\#\s+(.+)$', r'== \1', md, flags=re.M)
-    md = re.sub(r'^\\#\\#\s+(.+)$', r'= \1', md, flags=re.M)
+    # 8.2 무번호 H1 — 파트 divider(제N부)와 전·후기 부속 장은 장번호
+    # 카운터에서 제외한다. 라벨 <part>/<nonum>을 붙이고 base.typ가
+    # 분기한다(설득의 구조 — 프롤로그·서막·6개 파트 때문에 1장이 "07"로
+    # 찍힌 실측).
+    def _h1(m):
+        t = m.group(1)
+        if re.match(r'^제\s*\d+\s*부\b', t):
+            return f'= {t} <part>'
+        if re.match(r'^(프롤로그|서막|서문|머리말|들어가며|나가며|에필로그|저자의 당부|'
+                    r'작가의 말|감사의 글|옮긴이의 말|특별부록|부록|appendix)\b', t, re.I):
+            return f'= {t} <nonum>'
+        return f'= {t}'
+    md = re.sub(r'^\\#\\#\s+(.+)$', _h1, md, flags=re.M)
     md = re.sub(r'^\\#\s+(.+)$', r'= \1', md, flags=re.M)
     # 8.5 블록 인용 (step 6에서 > → \> escape되므로 escape된 형태에 매치).
     # 빈 인용행(>)은 먼저 지운다 — \s?가 개행을 삼켜 다음 행(언랩된 펜스 등)을

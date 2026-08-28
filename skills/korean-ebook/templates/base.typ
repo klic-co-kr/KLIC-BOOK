@@ -139,8 +139,16 @@
   // 백색 제목 + 하단 액센트 바) 이식. 본문은 다음 면에서 시작한다.
   show heading.where(level: 1): it => {
     pagebreak(weak: true)
-    _ch.update(n => n + 1)
-    let eyebrow = if tokens.at("label-top") != "" { tokens.at("label-top") } else { "CHAPTER" }
+    // 무번호 H1 — <part>(제N부 divider)·<nonum>(프롤로그·에필로그 등 부속 장)는
+    // 장번호 카운터에서 제외. md2typst 8.2가 라벨을 붙인다. heading 요소에는
+    // label 필드가 없어 query+location으로 자기 라벨을 확인한다.
+    let here-loc = it.location()
+    let is-part = query(label("part")).any(h => h.location() == here-loc)
+    let is-nonum = query(label("nonum")).any(h => h.location() == here-loc)
+    if not is-part and not is-nonum { _ch.update(n => n + 1) }
+    let eyebrow = if tokens.at("label-top") != "" { tokens.at("label-top") }
+                  else if is-part { "PART" }
+                  else { "CHAPTER" }
     page(margin: 0pt, fill: rgb(tokens.colors.at("panel", default: "#101D28")),
       header: none, footer: none)[
       #place(bottom + left,
@@ -154,9 +162,12 @@
           fill: rgb(tokens.colors.accent))[#upper(eyebrow)]
         #v(9mm)
         // 고스트 장번호 — 백색 16% 대형 숫자(구판 .number 46pt).
-        #text(size: pt(tokens.fonts.heading1.size_pt * 2.1), weight: "bold",
-          fill: rgb(255, 255, 255, 16%))[#context _ch.display("01")]
-        #v(7mm)
+        // 무번호 H1은 숫자 대신 제목만.
+        #if not is-part and not is-nonum [
+          #text(size: pt(tokens.fonts.heading1.size_pt * 2.1), weight: "bold",
+            fill: rgb(255, 255, 255, 16%))[#_rank1(it)]
+          #v(7mm)
+        ]
         #text(size: pt(tokens.fonts.heading1.size_pt), weight: "bold",
           fill: white)[#it.body]
       ]

@@ -46,11 +46,13 @@ def test_b5_body_font_matches_practical_lineup():
 
 
 def test_b5_band_derives_from_frame_width():
-    """G3 밴드 35–45는 판면 136mm × 10pt 전각 물리값에서 유도된다."""
+    """G3 밴드 35–45는 판면 폭 × 본문 pt에서 유도. 실측 평균 glyph advance는
+    전각 em의 ~0.78(공백·라틴·문장부호 혼합 — 설득의 구조 10pt판 실측 0.771).
+    26.08.28 재보정: 본문 10→11.5pt·마진 22/18→24/20으로 48–52자 만선 해소."""
     t = _tokens()
     frame_mm = (t["trim"]["width_mm"] - t["margin"]["inner_mm"]
                 - t["margin"]["outer_mm"])
-    cpl = frame_mm / (t["fonts"]["body"]["size_pt"] * 25.4 / 72)
+    cpl = frame_mm / (t["fonts"]["body"]["size_pt"] * 25.4 / 72 * 0.78)
     assert t["chars_per_line"]["min"] <= cpl <= t["chars_per_line"]["max"]
 
 
