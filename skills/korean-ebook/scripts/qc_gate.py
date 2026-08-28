@@ -232,6 +232,13 @@ def run(book_dir: Path) -> int:
         print("[qc] draft/*.pdf 없음", file=sys.stderr)
         return 1
     pdf = pdfs[0]
+    # 신선도 검사 — build가 실패해도 낡은 draft가 남아 거짓 PASS가 난다
+    # (설득의 구조 표지 수정 중 실측: main.typ 15:40 vs draft 14:45).
+    main_typ = build / "main.typ"
+    if main_typ.exists() and main_typ.stat().st_mtime > pdf.stat().st_mtime:
+        print(f"[qc] draft가 main.typ보다 오래 됨 — 빌드 실패 잔여 가능. "
+              f"build.py 재실행 필요 ({pdf.name})", file=sys.stderr)
+        return 1
     if len(pdfs) > 1:
         # build.py는 항상 pdf 1개만 남기므로 2개 이상은 이전 빌드 잔여 —
         # 어떤 pdf가 검사됐는지 알려야 낡은 결과를 잘못 읽지 않는다.

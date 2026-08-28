@@ -54,6 +54,8 @@ def load_config(path: Path) -> dict:
         "cover": cfg.get("cover"),
         "cover_series": cfg.get("cover_series", "KLIC BOOKS"),
         "cover_notes": cfg.get("cover_notes"),
+        "cover_imprint": cfg.get("cover_imprint", "KLIC BOOKS"),
+        "short_title": cfg.get("short_title"),
     }
 
 MD2TYPST = SKILL_DIR / "scripts" / "md2typst.py"
@@ -180,13 +182,7 @@ COVER_AUTO = """// 자동 표지 v3 — KLIC 자체 문법: 비대칭 좌측 정
 #place(bottom + left, dx: 26mm, dy: -16mm)[
   #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
 ]
-#place(bottom + right, dx: -18mm, dy: -16mm)[
-  #align(right)[
-    #rect(width: 10mm, height: 0.8pt, fill: brand)
-    #v(2mm, weak: true)
-    #text(size: 8.5pt, weight: "semibold", fill: mute, tracking: 2pt)[{publisher}]
-  ]
-]
+{imprint}
 """
 
 
@@ -241,9 +237,7 @@ COVER_V2 = """// 자동 표지 변형2 — 이중 프레임 문고형: 얇은 �
 // 저자·발행 — 하단 중앙 수직 스택
 #place(bottom + center, dy: -22mm)[
   #align(center, stack(dir: ttb, spacing: 2.2mm,
-    text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]],
-    rect(width: 9mm, height: 0.8pt, fill: brand),
-    text(size: 8.5pt, weight: "semibold", fill: mute, tracking: 2pt)[{publisher}]))
+    text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]{imprint_items}))
 ]
 """
 
@@ -290,13 +284,7 @@ COVER_V3 = """// 자동 표지 변형3 — 수평 밴드형: 상단 브랜드 �
 #place(bottom + left, dx: 24mm, dy: -16mm)[
   #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
 ]
-#place(bottom + right, dx: -16mm, dy: -16mm)[
-  #align(right)[
-    #rect(width: 10mm, height: 0.8pt, fill: brand)
-    #v(2mm, weak: true)
-    #text(size: 8.5pt, weight: "semibold", fill: mute, tracking: 2pt)[{publisher}]
-  ]
-]
+{imprint}
 """
 
 
@@ -334,7 +322,7 @@ COVER_V4 = """// 자동 표지 변형4 — 엣지 포인트: 우상단 코너에
 #place(top + left, dx: 26mm, dy: 18mm)[
   #text(size: 9pt, fill: mute, tracking: 3pt, weight: "semibold")[{series}]
 ]
-// 주제목 — 좌측 수직 중앙 스택 + 도트 언더라인
+// 주제목 — 좌측 수직 중앙 스택 + 도트 언더라인 + 부제(스택 내)
 #place(top + left, dx: 26mm, dy: {title_y}mm)[
   #align(left, stack(dir: ttb, spacing: 7mm,
     ..if "{head}" != "" {{ (
@@ -346,27 +334,19 @@ COVER_V4 = """// 자동 표지 변형4 — 엣지 포인트: 우상단 코너에
     align(left, box(height: 3mm)[#{{for k in range(12) {{
       place(dx: k * {dstep}mm, circle(radius: (0.95mm - k * 0.06mm),
         fill: brand))
-    }}}}])
+    }}}}]),
+    // 부제 — 타이틀 스택 안(고정 dy 겹침 원천 차단, 설득의 구조 실측)
+    align(left, box(width: {w}mm - 70mm)[
+      #text(size: 12.5pt, fill: soft)[{subtitle}]])
   ))
 ]
-// 부제 — 타이틀 아래
-#place(top + left, dx: 26mm, dy: {sub_y}mm)[
-  #box(width: {w}mm - 70mm)[
-    #text(size: 12.5pt, fill: soft)[{subtitle}]
-  ]
-]
+// 부제 — 타이틀 스택 안(고정 dy 겹침 원천 차단, 설득의 구조 실측)
 {notes}
 // 저자 좌·발행 우
 #place(bottom + left, dx: 26mm, dy: -16mm)[
   #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
 ]
-#place(bottom + right, dx: -18mm, dy: -16mm)[
-  #align(right)[
-    #rect(width: 10mm, height: 0.8pt, fill: brand)
-    #v(2mm, weak: true)
-    #text(size: 8.5pt, weight: "semibold", fill: mute, tracking: 2pt)[{publisher}]
-  ]
-]
+{imprint}
 """
 
 def make_auto_cover(cfg: dict, build: Path) -> str:
@@ -403,7 +383,9 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
     if emph_pt > emph_max:
         k = emph_max / emph_pt
         head_pt, emph_pt = head_pt * k, emph_pt * k
-    block_h = (head_pt * 0.42 if head_word else 0) + 7 + emph_pt * 0.42
+    # 행 높이 근사 0.42(캡 높이)는 실제 라인박스(어센더+디센더)보다 작아
+    # 부제 고정 dy가 타이틀과 겹쳤다(설득의 구조 V4 실측). 0.55로 여유.
+    block_h = (head_pt * 0.55 if head_word else 0) + 7 + emph_pt * 0.55
 
     variant = cfg.get("cover_variant")
     if variant not in (1, 2, 3, 4, "1", "2", "3", "4"):
@@ -413,6 +395,27 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
     series = cfg.get("cover_series") or ""
     sub = _esc((cfg["subtitle"] or "").replace("\n", "#linebreak()"))
     author = _esc(cfg["author"] or "")
+    # 발행 임프린트 — 기본 KLIC BOOKS. cover_imprint: ""로 숨긴다
+    # (저작권 노출 우려 재제작 — 설득의 구조). 비면 우하단 락업 전체 생략.
+    pub = _esc(str(cfg.get("cover_imprint", "KLIC BOOKS") or ""))
+    imprint_r = ""
+    if pub:
+        imprint_r = (
+            "#place(bottom + right, dx: -{dx}mm, dy: -16mm)[\n"
+            "  #align(right)[\n"
+            "    #rect(width: 10mm, height: 0.8pt, fill: brand)\n"
+            "    #v(2mm, weak: true)\n"
+            '    #text(size: 8.5pt, weight: "semibold", fill: mute,'
+            f" tracking: 2pt)[{pub}]\n"
+            "  ]\n]"
+        )
+    imprint_items = (
+        ",\n    rect(width: 9mm, height: 0.8pt, fill: brand),\n"
+        '    text(size: 8.5pt, weight: "semibold", fill: mute,'
+        f" tracking: 2pt)[{pub}]"
+    ) if pub else ""
+    def _imprint(dx: int) -> str:
+        return imprint_r.replace("{dx}", str(dx))
     base = dict(
         w=w, h=h, font_stack=font_stack, paper="F7F4EE",
         ink=tokens["colors"]["ink"], brand=tokens["colors"]["accent"],
@@ -420,7 +423,7 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
         series=_esc(series.upper()), head=_esc(head_word),
         head_pt=f"{head_pt:.1f}", emph=_esc(emph_word),
         emph_pt=f"{emph_pt:.1f}", subtitle=sub,
-        author_bold=author, publisher="KLIC BOOKS",
+        author_bold=author,
     )
 
     if variant == 1:
@@ -442,7 +445,8 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
             pale=pale, motif_y=f"{h * 0.09:.0f}", motif_r=f"{motif_r:.1f}",
             motif_off=f"{motif_off:.1f}", motif=f"{motif_off + 2 * motif_r:.1f}",
             motiv_c=f"{tint_d:.1f}", title_block_h=title_dy,
-            sub_dy=f"{sub_dy:.0f}", notes=notes)
+            sub_dy=f"{sub_dy:.0f}", notes=notes,
+            imprint=_imprint(18))
         template = COVER_AUTO
     elif variant == 2:
         title_y = h * 0.30
@@ -455,7 +459,8 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
                      f'  #align(center, stack(spacing: 3mm, {lines}))\n]')
         else:
             notes = ""
-        base.update(title_y=f"{title_y:.0f}", sub_y=f"{sub_y:.0f}", notes=notes)
+        base.update(title_y=f"{title_y:.0f}", sub_y=f"{sub_y:.0f}", notes=notes,
+                     imprint_items=imprint_items)
         template = COVER_V2
     elif variant == 3:
         band_h = h * 0.34
@@ -473,7 +478,7 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
         base.update(
             band_h=f"{band_h:.0f}", cluster_y=f"{band_h - cl - 12:.0f}",
             cl=f"{cl:.1f}", cl_off=f"{cl_off:.1f}", cl_r=f"{cl_r:.1f}",
-            title_y=30, notes=notes)
+            title_y=30, notes=notes, imprint=_imprint(16))
         template = COVER_V3
     elif variant == 4:
         title_y = h * 0.34
@@ -489,7 +494,8 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
         base.update(
             step=7, field=0.62, reach=f"{w * 0.92:.0f}", maxr=3.2,
             dstep="4.6", title_y=f"{title_y:.0f}",
-            sub_y=f"{sub_y:.0f}", notes=notes)
+            sub_y=f"{sub_y:.0f}", notes=notes,
+            imprint=_imprint(18))
         template = COVER_V4
 
     src = template.format(**base)

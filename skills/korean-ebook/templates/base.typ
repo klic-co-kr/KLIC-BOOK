@@ -222,12 +222,17 @@
     v(1.0em, weak: true)
     line(length: 100%, stroke: 0.5pt + rgb(tokens.colors.rule))
     v(0.55em)
+    // 무번호 H1(파트·프롤로그 등)은 번호열을 비운다 — 카운터가 아직
+    // 올라가지 않아 엉터리 값(00·직전 장 번호)이 찍힌다(설득의 구조 실측).
+    let here-loc = it.element.location()
+    let unnum = query(label("part")).any(h => h.location() == here-loc) or query(label("nonum")).any(h => h.location() == here-loc)
+    let rank1txt = if unnum { none } else { _rank1(it.element) }
     // 다음 면 첫 엔트리에서 Pretendard-Bold 어센더 잉크가 프레임 상단을
     // 3.1pt 넘는다(ai-agent 목차 p3 실측) — h2와 동일 패드 방어.
     pad(top: 3.5pt)[#grid(columns: (14mm, 1fr, auto), column-gutter: 3mm,
       align: (right + horizon, left + horizon, right + horizon),
       text(size: pt(tokens.fonts.heading1.size_pt * 0.62), weight: "bold",
-        fill: rgb(tokens.colors.accent))[#_rank1(it.element)],
+        fill: rgb(tokens.colors.accent))[#rank1txt],
       text(size: pt(tokens.fonts.body.size_pt + 0.8), weight: "bold")[#it.element.body],
       text(fill: rgb(tokens.colors.at("ink-mute")))[
         #context str(counter(page).at(it.element.location()).first())])]
