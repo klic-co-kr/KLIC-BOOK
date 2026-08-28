@@ -44,9 +44,13 @@ def _ctx(line: str, seq: str) -> str:
 
 def scan_latin(text: str) -> list:
     hits = []
+    fence = False
     for ln, line in enumerate(text.splitlines(), 1):
         if line.lstrip().startswith("```"):
-            continue  # 코드펜스는 원문 영역
+            fence = not fence  # 코드·인포그래픽 펜스 내부는 원문 아님
+            continue
+        if fence:
+            continue
         clean = re.sub(r"`[^`]*`", "", line)  # 인라인 코드스팬 제외
         for m in _RE_LATIN.finditer(clean):
             seq = m.group(0)
