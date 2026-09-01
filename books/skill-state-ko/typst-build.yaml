@@ -1,4 +1,5 @@
-style: auto
+style: lecture
+short_title: "대화로 일하지 않는다"
 title: "에이전트는 대화로 일하지 않는다"
 subtitle: "SKILL.state 정독 — 이력을 버리고 상태를 남기는 실행 설계"
 author: "KLIC"

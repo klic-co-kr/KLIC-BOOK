@@ -53,7 +53,8 @@ def test_heading_with_specials():
     # (컨트롤러 승인: brief fixture $수식$ → $x$ 교체)
     out = convert("## 절 $x$ 과 [괄호]\n")
     assert out.strip().startswith("= 절 ")
-    assert "#mitex" in out
+    # 인라인 수식은 block:false 변형 #mi — #mitex는 디스플레이 전용
+    assert "#mi[`x`]" in out
 
 def test_heading_middledot_gets_break_opportunity():
     # typst는 U+00B7을 줄바꿈 기회로 쓰지 않는다 — justify 헤딩에서
@@ -250,6 +251,6 @@ def test_bold_after_inline_math_converts():
     assert "**" not in out
 
 def test_math_immediately_followed_by_paren_not_call_args():
-    # $수식$(주석) → #mitex[...](주석)은 typst 추가 인자 파싱 오류
+    # $수식$(주석) → #mi[...](주석)은 typst 추가 인자 파싱 오류
     out = convert(r"현재 정책 $\pi_\theta$(훈련 중인 모델)을 본다")
-    assert "#mitex[`\\pi_\\theta`] (훈련 중인 모델)" in out
+    assert "#mi[`\\pi_\\theta`] (훈련 중인 모델)" in out

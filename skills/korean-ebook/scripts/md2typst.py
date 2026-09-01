@@ -93,8 +93,22 @@ def convert(md: str) -> str:
     # 1. 화폐 $<숫자>/<단위|통화> → escape
     md = re.sub(r'\$(\d[\d,.]*(?:\s*/\s*\w+|\s*(?:원|엔|달러|USD|시간)))',
                 lambda m: r'\$' + m.group(1), md)
-    # 2. 이미지
-    md = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', r'#figure(image("\2"))', md)
+    # 2. 이미지 — alt 텍스트가 있으면 figure 캡션으로 올린다. 미변환 시
+    # 캡션이 통째로 사라진다(skill-state-ko 그림 8종 무캡션 실측).
+    # 캡션 본문은 step 6 규칙으로 미리 escape해 stash 보호한다.
+    def _esc_cap(s: str) -> str:
+        for a, b in (("\\", "\\\\"), ("#", "\\#"), ("[", "\\["), ("]", "\\]"),
+                     ("$", "\\$"), ("<", "\\<"), (">", "\\>"), ("@", "\\@"),
+                     ("*", "\\*"), ("_", "\\_"), ("~", "\\~")):
+            s = s.replace(a, b)
+        return s
+    def _img(m):
+        cap = m.group(1).strip()
+        if not cap:
+            return f'#figure(image("{m.group(2)}"))'
+        return (f'#figure(image("{m.group(2)}"), '
+                f'caption: [{stash_str(_esc_cap(cap))}])')
+    md = re.sub(r'!\[([^\]]*)\]\(([^)]+)\)', _img, md)
     # 2.5 md 파이프 표 → typst #table(). 미변환 시 | A | B | 가 리터럴
     # 파이프 문자로 인쇄된다(system-design-notes 표 148줄 실측).
     # 구분행(|---|---|)이 있는 블록만 표로 판정 — 본문의 홑파이프 줄은
@@ -148,19 +162,22 @@ def convert(md: str) -> str:
     # 4.5 HTML 주석 제거 — 그림 생산 메타데이터(<!-- figure-spec ... -->) 등.
     # 코드 스팬은 step 4에서 이미 보호되어 있다.
     md = re.sub(r'<!--.*?-->', '', md, flags=re.S)
-    # 5. 인라인 수식 $...$ — \ / 알파벳 / ( 시작(숫자=화폐 제외), 한국어 \text 포함 허용
-    md = re.sub(r'(?<!\\)(?<!\$)\$([\\A-Za-z(][^\$\n]{0,250})\$(?<!\\)(?!\$)',
-                lambda m: f'#mitex[`{m.group(1).strip()}`]', md)
-    # 새 #mitex 보호 직전 — `#mitex[...]` 뒤에 곧바로 '('가 오면 typst가
+    # 5. 인라인 수식 $...$ — \ / 알파벳 / ( / | 시작(숫자=화폐 제외), 한국어 \text 포함 허용.
+    #    #mi는 mitex의 block:false 변형 — #mitex 기본값이 block: true라 인라인
+    #    수식이 문단 한가운데 디스플레이 줄로 분리된다(skill-state-ko p16 실측).
+    #    첫 글자 | 허용은 $|C_t|$ 같은 절댓값 표기 누출 방지(같은 책 p28 실측).
+    md = re.sub(r'(?<!\\)(?<!\$)\$([\\A-Za-z(|][^\$\n]{0,250})\$(?<!\\)(?!\$)',
+                lambda m: f'#mi[`{m.group(1).strip()}`]', md)
+    # 새 #mi/#mitex 보호 직전 — `#mi[...]` 뒤에 곧바로 '('가 오면 typst가
     # 함수 추가 인자로 파싱해 "expected comma" 컴파일 오류가 난다
     # (ai-agent-book-ko ch07 `$\pi_\theta$(훈련 중인 모델)` 실측).
     # 공백을 하나 넣어 코드 모드를 끊고 마크업 텍스트 괄호로 만든다.
-    md = re.sub(r'(#mitex\[`[^`\n]*`\])\(', r'\1 (', md)
-    # 새 #mitex 보호 — 백틱 괄호(`...`)까지만. [^\n]*로 줄 끝까지 삼키면
+    md = re.sub(r'(#(?:mi|mitex)\[`[^`\n]*`\])\(', r'\1 (', md)
+    # 새 #mi/#mitex 보호 — 백틱 괄호(`...`)까지만. [^\n]*로 줄 끝까지 삼키면
     # 같은 행의 한국어 산문 **굵게**가 step 6.5를 우회해 리터럴 별표로
     # 인쇄된다(ai-agent-book-ko ch07 실측). 변환기가 만드는 mitex는 전부
     # 백틱 래핑이라 [^`\n]*이 정확한 경계다.
-    md = re.sub(r'#mitex\[`[^`\n]*`\]', stash, md)
+    md = re.sub(r'#(?:mi|mitex)\[`[^`\n]*`\]', stash, md)
     # 6. 본문 typst 특수 이스케이프 (남은 $ 포함)
     md = md.replace('\\', r'\\').replace('#', r'\#').replace('[', r'\[').replace(']', r'\]')
     md = md.replace('$', r'\$').replace('<', r'\<').replace('>', r'\>').replace('@', r'\@')
@@ -173,8 +190,13 @@ def convert(md: str) -> str:
     md = re.sub(r'\\\*\\\*(?=\S)([^\n]+?)(?<=\S)\\\*\\\*', '\x02\\1\x02', md)
     md = re.sub(r'(?<![\w\\])\\\*(?=\S)([^\\\n]+?)(?<=\S)\\\*(?!\*)', '_\\1_', md)
     md = md.replace('\x02', '*')
-    # 7. 보호 복원
-    md = re.sub(r'\x00(\d+)\x00', lambda m: protected[int(m.group(1))], md)
+    # 7. 보호 복원 — 중첩 스태시까지 푼다. 이미지 캡션 마커가 step 4의
+    # #figure 줄 스태시 안에 들어가 이중으로 숨는 경우(캡션 도입 실측),
+    # 단일 패스로는 안쪽 마커가 남는다. 마커가 없어질 때까지 반복.
+    prev = None
+    while prev != md:
+        prev = md
+        md = re.sub(r'\x00(\d+)\x00', lambda m: protected[int(m.group(1))], md)
     # 8. 헤딩 (step 6에서 # → \# escape되므로 escape된 형태에 매치)
     md = re.sub(r'^\\#\\#\\#\\#\\#\s+(.+)$', r'==== \1', md, flags=re.M)
     md = re.sub(r'^\\#\\#\\#\\#\s+(.+)$', r'=== \1', md, flags=re.M)
@@ -205,7 +227,7 @@ def convert(md: str) -> str:
     # 두고 줄바꿈만 허용한다. 수식·코드가 섞인 헤딩은 보호 대상이라 제외.
     md = re.sub(r'^(=+ .+)$',
                 lambda m: m.group(1).replace('·', '·​')
-                if '#mitex' not in m.group(1) and '`' not in m.group(1)
+                if '#mitex' not in m.group(1) and '#mi[' not in m.group(1) and '`' not in m.group(1)
                 else m.group(1),
                 md, flags=re.M)
     # 9. 남은 비헤딩 ## (markdown 잔재) escape
@@ -236,7 +258,7 @@ def main():
                 json.dumps(fences, ensure_ascii=False, indent=1), encoding='utf-8')
         t = convert(raw)
         (out / (md.stem + '.typ')).write_text(
-            '#import "@preview/mitex:0.2.7": mitex\n\n' + t, encoding='utf-8')
+            '#import "@preview/mitex:0.2.7": mitex, mi\n\n' + t, encoding='utf-8')
         print(f'{md.name} → {md.stem}.typ')
 
 

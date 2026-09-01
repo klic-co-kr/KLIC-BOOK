@@ -108,7 +108,7 @@ def test_assemble_rebases_manuscript_images_into_build(tmp_path):
 
     assert (tmp_path / "build" / "assets" / "000-pic.png").exists()
     typ = (tmp_path / "build" / "typ" / "000-ch01.typ").read_text(encoding="utf-8")
-    assert '#figure(image("../assets/000-pic.png"))' in typ
+    assert '#figure(image("../assets/000-pic.png"), caption: [그림])' in typ
 
 def test_assemble_missing_image_aborts(tmp_path):
     (tmp_path / "ch01.md").write_text(
@@ -187,8 +187,8 @@ def test_assemble_same_name_images_namespaced(tmp_path):
     assert assets[0].read_bytes() != assets[1].read_bytes()
     typ0 = (tmp_path / "build" / "typ" / "000-ch.typ").read_text(encoding="utf-8")
     typ1 = (tmp_path / "build" / "typ" / "001-ch.typ").read_text(encoding="utf-8")
-    assert '#figure(image("../assets/000-pic.png"))' in typ0
-    assert '#figure(image("../assets/001-pic.png"))' in typ1
+    assert '#figure(image("../assets/000-pic.png"), caption: [그림])' in typ0
+    assert '#figure(image("../assets/001-pic.png"), caption: [그림])' in typ1
 
 
 def test_assemble_resets_stale_assets(tmp_path):
@@ -275,5 +275,5 @@ def test_assemble_rasterizes_svg_images(tmp_path):
     assert (tmp_path / "build" / "assets" / "000-fig.png").exists()
     assert not (tmp_path / "build" / "assets" / "000-fig.svg").exists()
     typ = (tmp_path / "build" / "typ" / "000-ch01.typ").read_text(encoding="utf-8")
-    assert '#figure(image("../assets/000-fig.png"))' in typ
+    assert '#figure(image("../assets/000-fig.png"), caption: [그림])' in typ
     assert ".svg" not in typ

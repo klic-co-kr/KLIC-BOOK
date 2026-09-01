@@ -61,7 +61,7 @@ def load_config(path: Path) -> dict:
 MD2TYPST = SKILL_DIR / "scripts" / "md2typst.py"
 STYLE_DIR = SKILL_DIR / "styles"
 
-IMAGE_RE = re.compile(r'#figure\(image\("([^"]+)"\)\)')
+IMAGE_RE = re.compile(r'#figure\(image\("([^"]+)"\)(, caption: \[[^\n]*?\])?\)')
 
 def _esc(s: str) -> str:
     """make-cover 문자열 리터럴용 이스케이프 — \·" 만 main.typ을 깨뜨린다."""
@@ -129,7 +129,8 @@ def rebase_images(typ_file: Path, src_md: Path, build: Path, idx: int) -> None:
         shutil.copy2(src, assets / dst)
         if src.suffix.lower() == ".svg":
             dst = _rasterize_svg(assets / dst).name
-        return f'#figure(image("../assets/{dst}"))'
+        # 캡션 절(md2typst alt 텍스트)은 재배치 뒤에도 보존한다
+        return f'#figure(image("../assets/{dst}"){m.group(2) or ""})'
     typ_file.write_text(IMAGE_RE.sub(rewrite, text), encoding="utf-8")
 
 COVER_AUTO = """// 자동 표지 v3 — KLIC 자체 문법: 비대칭 좌측 정렬 + 두 겹치는 원(마음×마음)
