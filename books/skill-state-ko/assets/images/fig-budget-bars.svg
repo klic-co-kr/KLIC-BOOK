@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 470" width="840" height="470" style="background:#ffffff">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 470" width="600" height="336" style="background:#ffffff">
 <text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>같은 예산, 다른 결말 — 예산 매칭 대조 (창고 T=100)</text>
 <text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">모든 압축 구성을 SKILL.state 예산(약 1,800 토큰)에 맞춰도 점수는 갈린다 · 논문 표 5</text>
 <line x1="90" y1="368.0" x2="824" y2="368.0" stroke="#dddddd" stroke-width="1"/>

@@ -79,9 +79,15 @@ _HEAD = ('<defs>'
          'orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#8a8a8a"/></marker>'
          '</defs>')
 
+# 인쇄 축척 — 판면 대비 설계폭 840px이면 12px 라벨이 약 6.6pt로 인쇄돼
+# 하우스 최소(8.5pt)를 깬다. width 속성만 600으로(축척 0.775, 11px→8.5pt,
+# 선굵기 비례). viewBox·좌표 불변 — 책별 생성기와 동일 계약.
+_PRINT_W = 600
+
 def _svg(ops, w, h):
+    ph = round(h * _PRINT_W / w)
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
-            f'width="{w}" height="{h}" style="background:#ffffff">\n{_HEAD}\n'
+            f'width="{_PRINT_W}" height="{ph}" style="background:#ffffff">\n{_HEAD}\n'
             + "\n".join(ops) + "\n</svg>\n")
 
 def _title(ops, title, sub=None):

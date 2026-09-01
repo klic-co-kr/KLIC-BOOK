@@ -71,9 +71,15 @@ def title(ops, s, sub=None):
     if sub:
         ops.append(T(16, 48, sub, 13.5, "#555555"))
 
+# 인쇄 축척 — 판면(lecture 약 465pt) 대비 설계폭 840px이면 12px 라벨이
+# 6.6pt로 인쇄돼 하우스 최소(8.5pt)를 깬다. width 속성만 600으로 줄여
+# 축척을 0.775로 올린다(11px→8.5pt, 선굵기도 비례). viewBox·좌표 불변.
+PRINT_W = 600
+
 def write(name, ops, w=840, h=420):
+    ph = round(h * PRINT_W / w)
     svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
-           f'width="{w}" height="{h}" style="background:#ffffff">\n{HEAD}\n'
+           f'width="{PRINT_W}" height="{ph}" style="background:#ffffff">\n{HEAD}\n'
            + "\n".join(ops) + "\n</svg>\n")
     out = Path(__file__).resolve().parent.parent / "assets" / "images" / name
     out.write_text(svg, encoding="utf-8")

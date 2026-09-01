@@ -130,9 +130,14 @@ def fmt_tok(v):
         return f"{s}k"
     return str(v)
 
+# 인쇄 축척 — make_diagrams와 동일 계약: width 속성 600으로 인쇄 폰트
+# 하우스 플로어(8.5pt) 확보. viewBox·좌표 불변.
+PRINT_W = 600
+
 def write(name, ops, w=840, h=470):
+    ph = round(h * PRINT_W / w)
     svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" '
-           f'width="{w}" height="{h}" style="background:#ffffff">\n'
+           f'width="{PRINT_W}" height="{ph}" style="background:#ffffff">\n'
            + "\n".join(ops) + "\n</svg>\n")
     out = Path(__file__).resolve().parent.parent / "assets" / "images" / name
     out.parent.mkdir(parents=True, exist_ok=True)

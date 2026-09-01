@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520" width="860" height="520" style="background:#ffffff">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520" width="600" height="363" style="background:#ffffff">
 <text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>소형 모델에서도 방향은 같다 — 폭은 크게</text>
 <text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">창고 환경 점수 · 논문 표 7(Gemma-4-31B)·표 8(Qwen-3-8B) · 가로축은 실행 지평 T</text>
 <line x1="90" y1="368.0" x2="434" y2="368.0" stroke="#dddddd" stroke-width="1"/>

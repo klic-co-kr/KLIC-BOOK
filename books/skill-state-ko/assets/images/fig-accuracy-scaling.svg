@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 470" width="840" height="470" style="background:#ffffff">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 470" width="600" height="336" style="background:#ffffff">
 <text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>정확도 — 길어져도 무너지지 않는다</text>
 <text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">창고 환경 · 논문 표 1 · 이력 기반 런타임은 T가 늘수록 하락</text>
 <line x1="90" y1="368.0" x2="824" y2="368.0" stroke="#dddddd" stroke-width="1"/>

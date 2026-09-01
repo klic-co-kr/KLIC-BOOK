@@ -72,6 +72,11 @@
   // 블록 수식에 상단 패드로 상습 방어. 인라인 수식은 해당 없음.
   show math.equation.where(block: true): it => pad(top: 9pt, bottom: 1pt, it)
 
+  // 그림 캡션의 번호는 원고가 붙인다("그림 2-1 …" — 장-일련 체계).
+  // typst 자동 번호("그림 2:")를 그대로 두면 이중 번호가 된다
+  // (skill-state-ko 캡션 도입 실측). 표는 #table이라 영향 없음.
+  set figure(numbering: none)
+
   // 헤딩은 양쪽정렬 대상이 아니다 — justify를 상속하면 여러 줄 제목에서
   // 공백·제로폭공백이 늘어나 안쪽여백을 침범한다(실전시스템설계 ch20
   // 실측 +3.2pt). theme의 헤딩 오버라이드와도 조합된다.
