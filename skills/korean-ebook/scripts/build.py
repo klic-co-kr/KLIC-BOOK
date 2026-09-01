@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """korean-ebook 빌드 — typst-build.yaml → 스타일 팩 조립 → PDF."""
 import json as _json
+import os
 import re
 import shutil
 import subprocess
@@ -513,6 +514,39 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
     return png.name
 
 
+def _expand_diagrams(src: Path, idx: int) -> tuple[Path, Path | None]:
+    """챕터 md의 ```diagram 펜스를 SVG 에셋 + 이미지 마크다운으로 펼친다.
+
+    원고 파일은 불변 — 확장판을 같은 디렉터리의 임시 파일(점두어)로 쓰고
+    변환 뒤 지운다. 같은 디렉터리여야 이미지 상대경로 해석(rebase_images
+    의 src_md.parent 기준)이 원문과 일치한다. 반환 (변환입력, 임시파일).
+    """
+    import diagram as dg
+    text = src.read_text(encoding="utf-8")
+    if not dg.FENCE_RE.search(text):
+        return src, None
+    out_dir = src.parent.parent / "assets" / "diagrams"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    counter = [0]
+
+    def repl(m):
+        fence = _json.loads(m.group(1))
+        counter[0] += 1
+        svg = out_dir / f"{idx:03d}-{src.stem}-dg{counter[0]:02d}.svg"
+        try:
+            svg.write_text(dg.render_fence(fence), encoding="utf-8")
+        except ValueError as exc:
+            _fail(f"diagram 펜스 위반 ({src.name} #{counter[0]}): {exc}")
+        cap = fence.get("caption") or fence["title"]
+        rel = os.path.relpath(svg, src.parent).replace(os.sep, "/")
+        return f"![{cap}]({rel})"
+
+    expanded = dg.FENCE_RE.sub(repl, text)
+    tmp = src.parent / f".tmp-diag-{idx:03d}-{src.stem}.md"
+    tmp.write_text(expanded, encoding="utf-8")
+    return tmp, tmp
+
+
 def assemble(cfg: dict, book_dir: Path) -> Path:
     """스타일 팩 + 변환된 챕터를 build/에 조립해 main.typ 생성."""
     build = book_dir / "build"
@@ -525,6 +559,8 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     (build / "infographic").mkdir(parents=True, exist_ok=True)
     shutil.rmtree(build / "fences", ignore_errors=True)
     (build / "fences").mkdir(parents=True, exist_ok=True)
+    # diagram 펜스 에셋도 빌드마다 재생성 — 삭제된 펜스의 잔여 SVG 방지
+    shutil.rmtree(book_dir / "assets" / "diagrams", ignore_errors=True)
 
     style = STYLE_DIR / cfg["style"]
     # tokens에 책 메타 주입 — base.typ 러닝헤드 좌측 단축제목이 읽는다.
@@ -556,23 +592,28 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     converted = []
     for idx, ch in enumerate(cfg["chapters"]):
         src = book_dir / ch
-        r = subprocess.run(
-            [sys.executable, str(MD2TYPST), str(src), "--out", str(build / "typ"),
-             "--fences-out", str(build / "fences")],
-            capture_output=True, text=True,
-        )
-        if r.returncode != 0:
-            _fail(f"md2typst 실패 ({src}): {r.stderr.strip()}")
-        raw = build / "typ" / (src.stem + ".typ")
-        if not raw.exists():
-            _fail(f"변환 결과 없음: {src.stem}.typ")
-        # md2typst 출력명은 stem.typ이라 동명 챕터(*/00-part-introduction.md
-        # 7개)가 서로 덮어써 유실됐다(2026-08-15 최종 리뷰 Critical 1).
-        # 챕터 인덱스 prefix로 개명해 네임스페이스화 — md2typst 자체 불변.
-        namespaced = build / "typ" / f"{idx:03d}-{src.stem}.typ"
-        raw.rename(namespaced)
-        rebase_images(namespaced, src, build, idx)
-        converted.append(namespaced.name)
+        conv_src, tmp_diag = _expand_diagrams(src, idx)
+        try:
+            r = subprocess.run(
+                [sys.executable, str(MD2TYPST), str(conv_src), "--out", str(build / "typ"),
+                 "--fences-out", str(build / "fences")],
+                capture_output=True, text=True,
+            )
+            if r.returncode != 0:
+                _fail(f"md2typst 실패 ({src}): {r.stderr.strip()}")
+            raw = build / "typ" / (conv_src.stem + ".typ")
+            if not raw.exists():
+                _fail(f"변환 결과 없음: {conv_src.stem}.typ")
+            # md2typst 출력명은 stem.typ이라 동명 챕터(*/00-part-introduction.md
+            # 7개)가 서로 덮어써 유실됐다(2026-08-15 최종 리뷰 Critical 1).
+            # 챕터 인덱스 prefix로 개명해 네임스페이스화 — md2typst 자체 불변.
+            namespaced = build / "typ" / f"{idx:03d}-{src.stem}.typ"
+            raw.rename(namespaced)
+            rebase_images(namespaced, src, build, idx)
+            converted.append(namespaced.name)
+        finally:
+            if tmp_diag is not None:
+                tmp_diag.unlink(missing_ok=True)
 
     # 인포그래픽: 펜스 → emit + include 치환(스펙 §2 [2])
     from infographic import render as ig_render

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 392" width="840" height="392" style="background:#ffffff">
+<defs><marker id="ah" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#222222"/></marker><marker id="ahb" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#14497a"/></marker><marker id="ahr" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#b2182b"/></marker><marker id="ahg" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#8a8a8a"/></marker></defs>
+<text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>두 환경 — 평면의 지구력, 그래프의 파급</text>
+<text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">창고는 독립 변수의 장기 유지를, 저장소는 얽힌 의존의 구조 추론을 시험한다</text>
+<text x="206.0" y="76.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="14.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>창고 관리 — 500개 선반의 평면</text>
+<rect x="70.0" y="96.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="122.0" y="96.0" width="49.0" height="31.0" rx="3" fill="#e8eff6" stroke="#14497a" stroke-width="1.1"/>
+<rect x="174.0" y="96.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="226.0" y="96.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="278.0" y="96.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="330.0" y="96.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="70.0" y="130.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="122.0" y="130.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="174.0" y="130.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="226.0" y="130.0" width="49.0" height="31.0" rx="3" fill="#e8eff6" stroke="#14497a" stroke-width="1.1"/>
+<rect x="278.0" y="130.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="330.0" y="130.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="70.0" y="164.0" width="49.0" height="31.0" rx="3" fill="#e8eff6" stroke="#14497a" stroke-width="1.1"/>
+<rect x="122.0" y="164.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="174.0" y="164.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="226.0" y="164.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="278.0" y="164.0" width="49.0" height="31.0" rx="3" fill="#e8eff6" stroke="#14497a" stroke-width="1.1"/>
+<rect x="330.0" y="164.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="70.0" y="198.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="122.0" y="198.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="174.0" y="198.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="226.0" y="198.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="278.0" y="198.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="330.0" y="198.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="70.0" y="232.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="122.0" y="232.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="174.0" y="232.0" width="49.0" height="31.0" rx="3" fill="#e8eff6" stroke="#14497a" stroke-width="1.1"/>
+<rect x="226.0" y="232.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="278.0" y="232.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="330.0" y="232.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="70.0" y="266.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="122.0" y="266.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="174.0" y="266.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="226.0" y="266.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="278.0" y="266.0" width="49.0" height="31.0" rx="3" fill="#ffffff" stroke="#b9c6d2" stroke-width="1.1"/>
+<rect x="330.0" y="266.0" width="49.0" height="31.0" rx="3" fill="#e8eff6" stroke="#14497a" stroke-width="1.1"/>
+<text x="376.0" y="320.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="end" dominant-baseline="middle">■ 점유 선반 — 서로 얽히지 않는다</text>
+<path d="M 62 136 L 30 136" fill="none" stroke="#8c6d31" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="26.0" y="118.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#8c6d31" text-anchor="end" dominant-baseline="middle" font-weight='bold' transform="rotate(0 26 118)">입고·주문·정비</text>
+<line x1="500.0" y1="130.0" x2="560.0" y2="210.0" stroke="#8a8a8a" stroke-width="1.4" marker-end="url(#ahg)"/>
+<line x1="500.0" y1="130.0" x2="430.0" y2="230.0" stroke="#8a8a8a" stroke-width="1.4" marker-end="url(#ahg)"/>
+<line x1="560.0" y1="210.0" x2="560.0" y2="320.0" stroke="#8a8a8a" stroke-width="1.4" marker-end="url(#ahg)"/>
+<line x1="680.0" y1="130.0" x2="720.0" y2="240.0" stroke="#8a8a8a" stroke-width="1.4" marker-end="url(#ahg)"/>
+<line x1="720.0" y1="240.0" x2="560.0" y2="320.0" stroke="#8a8a8a" stroke-width="1.4" marker-end="url(#ahg)"/>
+<line x1="430.0" y1="230.0" x2="560.0" y2="320.0" stroke="#8a8a8a" stroke-width="1.4" marker-end="url(#ahg)"/>
+<rect x="526.0" y="305.0" width="68.0" height="30.0" rx="5" fill="#e9f2ea" stroke="#3a7d44" stroke-width="1.5"/>
+<text x="560.0" y="320.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>마스터</text>
+<rect x="466.0" y="115.0" width="68.0" height="30.0" rx="5" fill="#e8eff6" stroke="#14497a" stroke-width="1.5"/>
+<text x="500.0" y="130.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>브랜치 A</text>
+<rect x="646.0" y="115.0" width="68.0" height="30.0" rx="5" fill="#e8eff6" stroke="#14497a" stroke-width="1.5"/>
+<text x="680.0" y="130.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>브랜치 B</text>
+<rect x="526.0" y="195.0" width="68.0" height="30.0" rx="5" fill="#f5eede" stroke="#8c6d31" stroke-width="1.5"/>
+<text x="560.0" y="210.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>PR 1</text>
+<rect x="686.0" y="225.0" width="68.0" height="30.0" rx="5" fill="#f5eede" stroke="#8c6d31" stroke-width="1.5"/>
+<text x="720.0" y="240.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>PR 2</text>
+<rect x="396.0" y="215.0" width="68.0" height="30.0" rx="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.5"/>
+<text x="430.0" y="230.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>CI</text>
+<text x="610.0" y="76.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="14.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>소프트웨어 저장소 — 브랜치·PR·CI의 그래프</text>
+<text x="742.0" y="322.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13" fill="#666666" text-anchor="end" dominant-baseline="middle">병합 하나가</text>
+<text x="742.0" y="342.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13" fill="#666666" text-anchor="end" dominant-baseline="middle">그래프 전체를 바꾼다</text>
+</svg>

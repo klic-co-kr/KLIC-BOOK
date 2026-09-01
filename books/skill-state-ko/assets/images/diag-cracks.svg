@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 400" width="840" height="400" style="background:#ffffff">
+<defs><marker id="ah" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#222222"/></marker><marker id="ahb" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#14497a"/></marker><marker id="ahr" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#b2182b"/></marker><marker id="ahg" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#8a8a8a"/></marker></defs>
+<text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>전제가 깨지는 세 지점 — 충분통계량의 우산</text>
+<text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">상태가 미래에 필요한 전부를 품는 한 폐기는 무손실이다 · 논문 §7</text>
+<path d="M 124 200 A 296 116 0 0 1 716 200" fill="#e8eff6" stroke="#14497a" stroke-width="3"/>
+<line x1="420.0" y1="84.0" x2="420.0" y2="200.0" stroke="#14497a" stroke-width="3"/>
+<circle cx="420.0" cy="84.0" r="6" fill="#14497a" stroke="#14497a" stroke-width="1"/>
+<rect x="310.0" y="278.0" width="220.0" height="52.0" rx="6" fill="#ffffff" stroke="#222222" stroke-width="1.8"/>
+<text x="420.0" y="304.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="15" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>미래의 실행</text>
+<text x="420.0" y="354.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">상태 Σt 만으로 다음 행동이 결정된다</text>
+<line x1="48.0" y1="120.0" x2="40.0" y2="142.0" stroke="#8a8a8a" stroke-width="1.4"/>
+<line x1="62.0" y1="146.0" x2="54.0" y2="168.0" stroke="#8a8a8a" stroke-width="1.4"/>
+<line x1="76.0" y1="172.0" x2="68.0" y2="194.0" stroke="#8a8a8a" stroke-width="1.4"/>
+<line x1="792.0" y1="120.0" x2="784.0" y2="142.0" stroke="#8a8a8a" stroke-width="1.4"/>
+<line x1="806.0" y1="146.0" x2="798.0" y2="168.0" stroke="#8a8a8a" stroke-width="1.4"/>
+<line x1="820.0" y1="172.0" x2="812.0" y2="194.0" stroke="#8a8a8a" stroke-width="1.4"/>
+<text x="144.0" y="236.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="11.5" fill="#8a8a8a" text-anchor="start" dominant-baseline="middle" transform="rotate(-90 144 236)">과거의 관찰</text>
+<text x="832.0" y="236.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="11.5" fill="#8a8a8a" text-anchor="start" dominant-baseline="middle" transform="rotate(90 832 236)">과거의 관찰</text>
+<path d="M 198 119.07417332814241 l 12 14 l -9 12 l 14 15" fill="none" stroke="#ffffff" stroke-width="4"/>
+<path d="M 198 119.07417332814241 l 12 14 l -9 12 l 14 15" fill="none" stroke="#b2182b" stroke-width="1.6"/>
+<path d="M 224 169.1 L 322 272" fill="none" stroke="#b2182b" stroke-width="1.8" stroke-dasharray="3,4" marker-end="url(#ahr)"/>
+<text x="224.0" y="398.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#b2182b" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>① 스키마를 미리 모를 때</text>
+<path d="M 394 90.0 l 12 14 l -9 12 l 14 15" fill="none" stroke="#ffffff" stroke-width="4"/>
+<path d="M 394 90.0 l 12 14 l -9 12 l 14 15" fill="none" stroke="#b2182b" stroke-width="1.6"/>
+<path d="M 420 140.0 L 420 272" fill="none" stroke="#b2182b" stroke-width="1.8" stroke-dasharray="3,4" marker-end="url(#ahr)"/>
+<text x="420.0" y="398.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#b2182b" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>② 뒤늦은 관련성</text>
+<path d="M 590 119.07417332814241 l 12 14 l -9 12 l 14 15" fill="none" stroke="#ffffff" stroke-width="4"/>
+<path d="M 590 119.07417332814241 l 12 14 l -9 12 l 14 15" fill="none" stroke="#b2182b" stroke-width="1.6"/>
+<path d="M 616 169.1 L 518 272" fill="none" stroke="#b2182b" stroke-width="1.8" stroke-dasharray="3,4" marker-end="url(#ahr)"/>
+<text x="616.0" y="398.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#b2182b" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>③ 궤적이 대상일 때</text>
+</svg>

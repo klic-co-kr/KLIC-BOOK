@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 368" width="840" height="368" style="background:#ffffff">
+<defs><marker id="ah" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#222222"/></marker><marker id="ahb" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#14497a"/></marker><marker id="ahr" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#b2182b"/></marker><marker id="ahg" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#8a8a8a"/></marker></defs>
+<text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>상태 추적은 매 턴 장부만 고친다</text>
+<text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">대화 상태 추적(DST)의 갱신 순환 — 발화가 와도 바뀌는 것은 슬롯뿐이다</text>
+<circle cx="420.0" cy="218.0" r="56" fill="#e8eff6" stroke="#14497a" stroke-width="1.8"/>
+<text x="420.0" y="210.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="14.5" fill="#14497a" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>슬롯 장부</text>
+<text x="420.0" y="232.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="11" fill="#666666" text-anchor="middle" dominant-baseline="middle">날짜 · 도착지 · 인원</text>
+<rect x="368.0" y="91.0" width="104.0" height="38.0" rx="6" fill="#ffffff" stroke="#222222" stroke-width="1.6"/>
+<text x="420.0" y="110.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>발화 청취</text>
+<rect x="484.0" y="199.0" width="104.0" height="38.0" rx="6" fill="#ffffff" stroke="#222222" stroke-width="1.6"/>
+<text x="536.0" y="218.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>의미 해석</text>
+<rect x="368.0" y="307.0" width="104.0" height="38.0" rx="6" fill="#ffffff" stroke="#222222" stroke-width="1.6"/>
+<text x="420.0" y="326.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>장부 갱신</text>
+<rect x="252.0" y="199.0" width="104.0" height="38.0" rx="6" fill="#ffffff" stroke="#222222" stroke-width="1.6"/>
+<text x="304.0" y="218.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>행동 결정</text>
+<path d="M 482.5 122.6 A 114 114 0 0 1 515.4 155.5" fill="none" stroke="#222222" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M 515.4 280.5 A 114 114 0 0 1 482.5 313.4" fill="none" stroke="#222222" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M 357.5 313.4 A 114 114 0 0 1 324.6 280.5" fill="none" stroke="#222222" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M 324.6 155.5 A 114 114 0 0 1 357.5 122.6" fill="none" stroke="#222222" stroke-width="1.8" marker-end="url(#ah)"/>
+</svg>

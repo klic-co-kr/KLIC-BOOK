@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 356" width="840" height="356" style="background:#ffffff">
+<defs><marker id="ah" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#222222"/></marker><marker id="ahb" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#14497a"/></marker><marker id="ahr" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#b2182b"/></marker><marker id="ahg" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#8a8a8a"/></marker></defs>
+<text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>세계가 바뀐 뒤 — 환각의 길이가 회복력이다</text>
+<text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">보정 알림 도착(턴 0) 이후 · 논문 표 3·10</text>
+<text x="94.0" y="130.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="14" fill="#b2182b" text-anchor="end" dominant-baseline="middle" font-weight='bold'>이력 기반</text>
+<line x1="110.0" y1="130.0" x2="780.0" y2="130.0" stroke="#cccccc" stroke-width="2"/>
+<circle cx="110.0" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="193.8" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="277.5" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="361.2" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="445.0" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="528.8" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="612.5" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="696.2" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="780.0" cy="130.0" r="5" fill="#ffffff" stroke="#b2182b" stroke-width="1.8"/>
+<circle cx="193.8" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<circle cx="277.5" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<circle cx="361.2" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<circle cx="445.0" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<circle cx="528.8" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<rect x="179.8" y="108.0" width="363.0" height="44.0" rx="8" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.2"/>
+<circle cx="193.8" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<circle cx="277.5" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<circle cx="361.2" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<circle cx="445.0" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<circle cx="528.8" cy="130.0" r="5" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.4"/>
+<text x="361.2" y="96.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#b2182b" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>환각 5~8턴</text>
+<text x="612.5" y="156.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">그제야 올바른 행동</text>
+<text x="94.0" y="250.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="14" fill="#3a7d44" text-anchor="end" dominant-baseline="middle" font-weight='bold'>상태 기반</text>
+<line x1="110.0" y1="250.0" x2="780.0" y2="250.0" stroke="#cccccc" stroke-width="2"/>
+<circle cx="110.0" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="193.8" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="277.5" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="361.2" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="445.0" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="528.8" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="612.5" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="696.2" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="780.0" cy="250.0" r="5" fill="#ffffff" stroke="#3a7d44" stroke-width="1.8"/>
+<circle cx="193.8" cy="250.0" r="8" fill="#e9f2ea" stroke="#3a7d44" stroke-width="2.4"/>
+<text x="207.8" y="226.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#3a7d44" text-anchor="start" dominant-baseline="middle" font-weight='bold'>회복 0턴</text>
+<text x="207.8" y="276.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="start" dominant-baseline="middle">다음 행동이 곧 정답</text>
+<line x1="110.0" y1="96.0" x2="110.0" y2="282.0" stroke="#8c6d31" stroke-width="2" stroke-dasharray="6,4"/>
+<text x="118.0" y="92.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#8c6d31" text-anchor="start" dominant-baseline="middle" font-weight='bold'>보정 알림 도착 — 선반 이동·강제 푸시</text>
+<text x="110.0" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">0</text>
+<text x="193.8" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">1</text>
+<text x="277.5" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">2</text>
+<text x="361.2" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">3</text>
+<text x="445.0" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">4</text>
+<text x="528.8" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">5</text>
+<text x="612.5" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">6</text>
+<text x="696.2" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">7</text>
+<text x="780.0" y="312.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="middle" dominant-baseline="middle">8</text>
+<text x="445.0" y="336.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#666666" text-anchor="middle" dominant-baseline="middle">턴</text>
+</svg>

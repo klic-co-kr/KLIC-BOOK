@@ -25,7 +25,8 @@ python3 scripts/qc_gate.py <책dir>   # PASS 시에만 → <책dir>/final/
 ## 챕터 도식 (인포그래픽 — Phase 5)
 
 챕터 md에 ```infographic 펜스(JSON)를 넣으면 출판 품질 벡터 도식이 그
-자리에 삽입된다. layout: `flow`(순차 2~8단계)·`cards`(병렬
+자리에 삽입된다. 구조 도식(플로우차트·순환·타임라인·아키텍처 씬)은
+```diagram 펜스 — 저작 규약은 `references/diagram-authoring.md`. layout: `flow`(순차 2~8단계)·`cards`(병렬
 강조)·`matrix`(2축 비교)·`before_after`(전환 대비)·`ladder`(성숙도
 계단)·`roadmap`(시간 전개)·`topology`(구성 관계)·`approval`(결재
 흐름)·`layers`(계층 구조)·`composite`(복합 씬 — 주+보조). 좌표는 Python이 계산하고 I1 린트(텍스트

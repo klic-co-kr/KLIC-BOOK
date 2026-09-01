@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 262" width="840" height="262" style="background:#ffffff">
+<defs><marker id="ah" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#222222"/></marker><marker id="ahb" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#14497a"/></marker><marker id="ahr" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#b2182b"/></marker><marker id="ahg" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#8a8a8a"/></marker></defs>
+<text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>소형 모델의 실패는 준수의 문제다</text>
+<text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">Gemma-4-31B · 지평 100 실패 로그의 분포 — 논문 §5.7</text>
+<rect x="90.0" y="170.0" width="479.8" height="54.0" rx="4" fill="#f7e8e8" stroke="#b2182b" stroke-width="1.6"/>
+<text x="331.4" y="185.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="20" fill="#b2182b" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>68%</text>
+<text x="331.4" y="211.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">덮어쓰기·삭제</text>
+<rect x="572.8" y="170.0" width="139.0" height="54.0" rx="4" fill="#f5eede" stroke="#8c6d31" stroke-width="1.6"/>
+<text x="643.8" y="185.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="20" fill="#8c6d31" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>20%</text>
+<text x="643.8" y="211.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">스키마 이해·형식</text>
+<rect x="714.8" y="170.0" width="82.2" height="54.0" rx="4" fill="#efefef" stroke="#8a8a8a" stroke-width="1.6"/>
+<text x="757.4" y="185.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="20" fill="#8a8a8a" text-anchor="middle" dominant-baseline="middle" font-weight='bold'>12%</text>
+<text x="757.4" y="211.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">JSON 구문</text>
+<text x="90.0" y="136.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#666666" text-anchor="start" dominant-baseline="middle">갱신 계약 위반이 10건 중 9건 — 추론 능력이 아니라 형식 준수가 무너진다</text>
+<line x1="90.0" y1="250.0" x2="800.0" y2="250.0" stroke="#cccccc" stroke-width="1.6"/>
+<text x="90.0" y="272.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="start" dominant-baseline="middle">0%</text>
+<text x="800.0" y="272.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12" fill="#666666" text-anchor="end" dominant-baseline="middle">100%</text>
+</svg>
