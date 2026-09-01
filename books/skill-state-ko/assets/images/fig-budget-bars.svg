@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 470" width="840" height="470" style="background:#ffffff">
+<text x="16.0" y="26.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="19" fill="#222222" text-anchor="start" dominant-baseline="middle" font-weight='bold'>같은 예산, 다른 결말 — 예산 매칭 대조 (창고 T=100)</text>
+<text x="16.0" y="48.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#555555" text-anchor="start" dominant-baseline="middle">모든 압축 구성을 SKILL.state 예산(약 1,800 토큰)에 맞춰도 점수는 갈린다 · 논문 표 5</text>
+<line x1="90" y1="368.0" x2="824" y2="368.0" stroke="#dddddd" stroke-width="1"/>
+<text x="80.0" y="368.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#888888" text-anchor="end" dominant-baseline="middle">0.00</text>
+<line x1="90" y1="295.5" x2="824" y2="295.5" stroke="#dddddd" stroke-width="1"/>
+<text x="80.0" y="295.5" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#888888" text-anchor="end" dominant-baseline="middle">0.25</text>
+<line x1="90" y1="223.0" x2="824" y2="223.0" stroke="#dddddd" stroke-width="1"/>
+<text x="80.0" y="223.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#888888" text-anchor="end" dominant-baseline="middle">0.50</text>
+<line x1="90" y1="150.5" x2="824" y2="150.5" stroke="#dddddd" stroke-width="1"/>
+<text x="80.0" y="150.5" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#888888" text-anchor="end" dominant-baseline="middle">0.75</text>
+<line x1="90" y1="78.0" x2="824" y2="78.0" stroke="#dddddd" stroke-width="1"/>
+<text x="80.0" y="78.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#888888" text-anchor="end" dominant-baseline="middle">1.00</text>
+<line x1="90" y1="78" x2="90" y2="368" stroke="#222222" stroke-width="1.4"/>
+<line x1="90" y1="368" x2="824" y2="368" stroke="#222222" stroke-width="1.4"/>
+<rect x="139.1" y="124.4" width="80.5" height="243.6" fill="#c9c9c9" stroke="#222222" stroke-width="0.8" rx="2"/>
+<text x="179.4" y="109.4" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="16" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold' stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">0.84</text>
+<text x="179.4" y="390.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">ReAct</text>
+<text x="179.4" y="408.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">전체</text>
+<text x="179.4" y="434.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#666666" text-anchor="middle" dominant-baseline="middle">평균 36.4k · 총 1.25M</text>
+<rect x="277.9" y="315.8" width="80.5" height="52.2" fill="#c9c9c9" stroke="#222222" stroke-width="0.8" rx="2"/>
+<text x="318.2" y="300.8" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="16" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold' stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">0.18</text>
+<text x="318.2" y="390.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">슬라이딩</text>
+<text x="318.2" y="408.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">윈도</text>
+<text x="318.2" y="434.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#666666" text-anchor="middle" dominant-baseline="middle">평균 1.8k · 총 62.1k</text>
+<rect x="416.7" y="217.2" width="80.5" height="150.8" fill="#c9c9c9" stroke="#222222" stroke-width="0.8" rx="2"/>
+<text x="457.0" y="202.2" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="16" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold' stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">0.52</text>
+<text x="457.0" y="390.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">요약</text>
+<text x="457.0" y="408.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">상한</text>
+<text x="457.0" y="434.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#666666" text-anchor="middle" dominant-baseline="middle">평균 1.8k · 총 63.4k</text>
+<rect x="555.5" y="304.2" width="80.5" height="63.8" fill="#c9c9c9" stroke="#222222" stroke-width="0.8" rx="2"/>
+<text x="595.8" y="289.2" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="16" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold' stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">0.22</text>
+<text x="595.8" y="390.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">LLMLingua</text>
+<text x="595.8" y="434.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#666666" text-anchor="middle" dominant-baseline="middle">평균 1.8k · 총 62.4k</text>
+<rect x="694.3" y="95.4" width="80.5" height="272.6" fill="#14497a" stroke="#222222" stroke-width="0.8" rx="2"/>
+<text x="734.6" y="80.4" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="16" fill="#222222" text-anchor="middle" dominant-baseline="middle" font-weight='bold' stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">0.94</text>
+<text x="734.6" y="390.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="13.5" fill="#222222" text-anchor="middle" dominant-baseline="middle">SKILL.state</text>
+<text x="734.6" y="434.0" font-family="NanumSquare_ac, NanumGothic, sans-serif" font-size="12.5" fill="#666666" text-anchor="middle" dominant-baseline="middle">평균 1.9k · 총 65.4k</text>
+</svg>

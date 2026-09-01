@@ -26,6 +26,10 @@ LATIN_ALLOW = {
     # 일상 약어·미디어·학술 이니셜(설득의 구조 G5 실전 보정)
     "TV", "OK", "GB", "DVD", "CD", "VR", "AR", "PV", "ID", "IP", "URL",
     "RAZR",
+    # 에이전트 런타임 논문 해설(skill-state-ko G5 실전 보정)
+    "SKILL", "LLC", "DST", "DSTC", "SGD", "CTF", "CI", "PR", "JSON", "NOOP",
+    "ADD", "UPDATE", "DELETE", "ACL", "ICLR", "EMNLP", "TACL", "AAAI",
+    "SIGDIAL", "TRIPY", "UIST", "TRADE", "BACKGROUND", "TELEMETRY", "REST", "DB",
 }
 
 # ALL-CAPS 2자 이상 — 뒤에 한글이 붙은 OCR 침입(RASS, WAS 같은)도 잡는다.

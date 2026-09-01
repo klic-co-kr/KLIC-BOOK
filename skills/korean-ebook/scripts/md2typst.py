@@ -103,7 +103,7 @@ def convert(md: str) -> str:
     def _table_cell(c: str) -> str:
         c = c.replace('\\', r'\\').replace('#', r'\#').replace('[', r'\[').replace(']', r'\]')
         c = c.replace('$', r'\$').replace('<', r'\<').replace('>', r'\>').replace('@', r'\@')
-        c = c.replace('_', r'\_')
+        c = c.replace('_', r'\_').replace('~', r'\~')
         c = re.sub(r'\*\*(.+?)\*\*', '\x02\\1\x02', c)
         c = re.sub(r'(?<!\w)\*(?=\S)([^*]+?)(?<=\S)\*(?!\*)', '_\\1_', c)
         # 강조 변환 후 남은 홑 *(와일드카드 등)은 escape — [*]는 typst에서
@@ -164,7 +164,9 @@ def convert(md: str) -> str:
     # 6. 본문 typst 특수 이스케이프 (남은 $ 포함)
     md = md.replace('\\', r'\\').replace('#', r'\#').replace('[', r'\[').replace(']', r'\]')
     md = md.replace('$', r'\$').replace('<', r'\<').replace('>', r'\>').replace('@', r'\@')
-    md = md.replace('*', r'\*').replace('_', r'\_')
+    md = md.replace('*', r'\*').replace('_', r'\_').replace('~', r'\~')
+    # ~는 typst 마크업에서 줄바꿈 없는 공백으로 해석된다 — 범위 표기
+    # "5~8턴"이 "5 8턴"으로 인쇄되는 것을 막는다(skill-state-ko 실측).
     # 6.5 markdown 강조 (step 6에서 * → \* escape되므로 escape된 형태에 매치).
     # 미변환 시 **굵게**가 리터럴 별표로 인쇄된다(실전시스템설계 머리말 실측).
     # 굵게는 임시 마커(\x02)로 변환해 기울임 변환과 충돌하지 않게 한다.

@@ -1,0 +1,33 @@
+style: auto
+title: "에이전트는 대화로 일하지 않는다"
+subtitle: "SKILL.state 정독 — 이력을 버리고 상태를 남기는 실행 설계"
+author: "KLIC"
+date: "2026-09"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/01-제1장-대화가-곧-기억이라는-설계.md
+  - manuscript/02-제2장-세-개의-입력.md
+  - manuscript/03-제3장-상태는-어떻게-자라나나.md
+  - manuscript/04-제4장-복잡도의-산술.md
+  - manuscript/05-제5장-재현-가능한-세계.md
+  - manuscript/06-제6장-평평한-프롬프트.md
+  - manuscript/07-제7장-시끄러운-방과-무음의-붕괴.md
+  - manuscript/08-제8장-실전에서도-통하는가.md
+  - manuscript/09-제9장-짧아서-좋은-게-아니다.md
+  - manuscript/10-제10장-도구를-쥐는-손.md
+  - manuscript/11-제11장-이력의-계보.md
+  - manuscript/12-제12장-긴-문맥의-착각과-압축의-함정.md
+  - manuscript/13-제13장-대화-상태-추적에서-온-유전자.md
+  - manuscript/14-제14장-시험대의-설계.md
+  - manuscript/15-제15장-작은-모델은-어디서-무너지나.md
+  - manuscript/16-제16장-이-설계가-무너지는-세-지점.md
+  - manuscript/17-제17장-상태-설계-역설.md
+  - manuscript/18-맺음말.md
+cover: auto
+
+cover_series: "AGENT RUNTIME PAPERS"
+cover_notes:
+  - "· A. 병이 뭔가 — 대화 이력의 이차 팽창과 문맥 오염"
+  - "· B. 약이 뭔가 — 세 개의 입력, 상태 전이, 추론의 즉시 폐기"
+  - "· C. 증거 — 통제 벤치마크와 실전 벤치마크, 예산 매칭 대조"
+  - "· D. 계보 — 도구 · ReAct · MemGPT · 압축 · 대화 상태 추적 · 시험대"
