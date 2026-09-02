@@ -1,0 +1,23 @@
+style: lecture
+short_title: "하니스의 하니스"
+title: "하니스의 하니스"
+subtitle: "며칠짜리 자율 소프트웨어 개발과 지속 개선 — Harness-of-Harness 정독"
+author: "KLIC"
+date: "2026-09"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/01-제1장-원샷의-한계.md
+  - manuscript/02-제2장-세-역할과-하나의-문서.md
+  - manuscript/03-제3장-며칠짜리-개발의-설계-교훈.md
+  - manuscript/04-제4장-시험대.md
+  - manuscript/05-제5장-숫자가-말하는-것.md
+  - manuscript/06-제6장-진행-중인-사례-퓨즈포인트.md
+  - manuscript/07-맺음말-우리-시스템에-남는-것.md
+cover: auto
+
+cover_series: "AGENT RUNTIME PAPERS"
+cover_notes:
+  - "· A. 문제 — 원샷 하니스는 요구 흐름·문맥 상실·회귀 앞에서 사람 손을 요구한다"
+  - "· B. 설계 — 계획·코딩·테스트 순환, 개발문서와 증거번들이 반복을 잇는다"
+  - "· C. 증거 — 세 하니스-모델 구성, 세 벤치마크에서 일관된 향상"
+  - "· D. 시사점 — 전달은 엄격하게, 실행은 유연하게; 기록은 코드만큼 산다"
