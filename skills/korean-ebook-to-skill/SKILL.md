@@ -164,6 +164,10 @@ python3 scripts/validate.py <out_dir> --strict
    산출물(`candidates.yaml` 의 후보 id 집합)로부터 상태를 재구성한 뒤 진행.
 5. **게이트 통과 시** `phase: gate` 로 전환하고 `Generate-from-approved`
    모드와 호환 — 상태 파일이 모드 선택의 근거가 된다.
+6. **중복 흡수 (write 시 정제)**: 후보 등록 전 기존 후보의 `source_refs` 와
+   대조 — 동일 절에서 중복 발견 시 신규 항목을 만들지 않고 기존 항목에 통합한다.
+   판정 반복이 쌓일수록 후보 수가 아니라 후보 품질이 자라야 한다. 통합 내역은
+   `recall_followups` 에 기록.
 
 ## 판단 루브릭
 
