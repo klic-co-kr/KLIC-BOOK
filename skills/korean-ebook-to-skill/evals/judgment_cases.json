@@ -1,0 +1,18 @@
+{
+  "book_slug": "forward-deployed-engineer",
+  "chapter_under_test": "02",
+  "golden_must_extract": [
+    {
+      "id": "psf-3gate",
+      "category": "methodology",
+      "title_keyword": "PSF",
+      "source_ref": "ch02§2.2"
+    },
+    {
+      "id": "poc-purgatory",
+      "category": "research",
+      "title_keyword": "POC 연옥",
+      "source_ref": "ch02§2.1"
+    }
+  ]
+}
