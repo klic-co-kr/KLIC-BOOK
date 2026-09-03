@@ -152,7 +152,7 @@ def test_pipe_table_converts_to_typst_table():
     assert "#table(" in out
     assert "[A]" in out and "[B]" in out
     assert "[1]" in out and "[2]" in out
-    assert "columns: (0.55fr, 0.55fr)" in out
+    assert "columns: (19.3fr, 19.3fr)" in out
 
 def test_pipe_table_full_width_block():
     # block(width: 100%) — typst 0.15 table엔 width 인자가 없어 block으로
@@ -174,7 +174,7 @@ def test_pipe_table_columns_numeric_narrow():
     # 굶주려 인접 열 잉크 겹침이 난다(evoharness-rl 표1 p16 실측).
     md = "| a | b | c |\n|---|---|---|\n| 1 | 2 | 3 |\n"
     out = convert(md)
-    assert "columns: (0.55fr, 0.55fr, 0.55fr)" in out
+    assert "columns: (19.3fr, 19.3fr, 19.3fr)" in out
 
 def test_pipe_table_text_columns_wider_than_numeric():
     # 혼합 표: 텍스트 열 fr > 숫자 열 fr. 균등 폭에서 무분할 라틴
@@ -183,14 +183,14 @@ def test_pipe_table_text_columns_wider_than_numeric():
           "| ReAct | Qwen3-8B | 78.1 | 47.9 |\n"
           "| ExpeL | Qwen3-8B | 91.4 | 49.3 |\n")
     out = convert(md)
-    assert "columns: (1.2fr, 1.33fr, 0.57fr, 0.57fr)" in out
+    assert "columns: (40.5fr, 56.4fr, 35.2fr, 35.2fr)" in out
 
 def test_pipe_table_long_token_width_floor():
     # 긴 무분할 토큰(ReasoningBank†)은 열 폭 하한을 밀어올린다 —
     # 토큰이 열보다 넓으면 typst는 셀을 넘쳐 인쇄한다.
     md = ("| 방법 | 값 |\n|---|---|\n| ReasoningBank† | 55.7 |\n| ACE | 51.4 |\n")
     out = convert(md)
-    assert "columns: (2.33fr, 0.57fr)" in out
+    assert "columns: (88.2fr, 35.2fr)" in out
 
 def test_pipe_table_korean_cell_weighted_wider():
     # 한국어 음절은 라틴보다 렌더 폭이 넓다 — 가중 길이(1.8배)로 산정.
@@ -281,3 +281,30 @@ def test_math_immediately_followed_by_paren_not_call_args():
     # $수식$(주석) → #mi[...](주석)은 typst 추가 인자 파싱 오류
     out = convert(r"현재 정책 $\pi_\theta$(훈련 중인 모델)을 본다")
     assert "#mi[`\\pi_\\theta`] (훈련 중인 모델)" in out
+
+def test_table_newline_not_swallowed():
+    # 표 직후 공백 행 없는 헤딩도 변환돼야 한다 — 정규식 \n?가 마지막
+    # 개행까지 삼키면 stash와 헤딩이 접착해 장 제목이 리터럴로 인쇄된다.
+    md = "| a | b |\n|---|---|\n| 1 | 2 |\n## 다음 절\n"
+    out = convert(md)
+    assert "= 다음 절" in out
+
+def test_all_dash_data_row_preserved():
+    # 결측 표기 '-' 행은 데이터다 — 구분행(---)과 달리 삭제되면 안 된다.
+    md = "| a | b |\n|---|---|\n| - | - |\n"
+    out = convert(md)
+    assert "[-], [-]" in out
+
+def test_escaped_pipe_stays_in_cell():
+    # GFM \| 이스케이프는 셀 안 세로선이다 — split이 분해하면 열 시프트.
+    md = "| a\\|b | c |\n|---|---|\n| 1 | 2 |\n"
+    out = convert(md)
+    assert "[a|b]" in out
+    assert out.count("table.header") == 1
+
+def test_bold_numeric_cell_classified_numeric():
+    # **70,303** 같은 강조 수치 셀은 숫자 열로 분류돼야 한다 —
+    # 마크업 마커 때문에 텍스트열(1.2fr)로 오분류되면 폭을 도둑맞는다.
+    md = "| 방법 | 값 |\n|---|---|\n| X | **70,303** |\n"
+    out = convert(md)
+    assert "columns: (19.3fr, 45.8fr)" in out

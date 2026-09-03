@@ -55,6 +55,7 @@ def load_config(path: Path) -> dict:
         "cover": cfg.get("cover"),
         "cover_variant": cfg.get("cover_variant"),
         "cover_composition": cfg.get("cover_composition"),
+        "opener_composition": cfg.get("opener_composition"),
         "cover_series": cfg.get("cover_series", "KLIC BOOKS"),
         "cover_notes": cfg.get("cover_notes"),
         "cover_imprint": cfg.get("cover_imprint", "KLIC BOOKS"),
@@ -157,7 +158,7 @@ COVER_AUTO = """// 자동 표지 v3 — KLIC 자체 문법: 비대칭 좌측 정
   #text(size: 9pt, fill: mute, tracking: 3.2pt, weight: "semibold")[{series}]
 ]
 // 주제목 — 좌측 하단부 비대칭 스택. 마지막 단어 brand색.
-#place(bottom + left, dx: 26mm, dy: -{title_block_h}mm)[
+#place({title_side} + left, dx: 26mm, dy: {title_dy}mm)[
   #align(left, stack(dir: ttb, spacing: 6mm,
     ..if "{head}" != "" {{ (
       align(left, text(size: {head_pt}pt, weight: "bold", fill: ink,
@@ -166,7 +167,7 @@ COVER_AUTO = """// 자동 표지 v3 — KLIC 자체 문법: 비대칭 좌측 정
       tracking: -0.03em)[{emph}])))
 ]
 // 부제 — 주제목 위에 두는 역배치(비대칭 강조)
-#place(bottom + left, dx: 26mm, dy: -{sub_dy}mm)[
+#place({sub_side} + left, dx: 26mm, dy: {sub_dy}mm)[
   #box(width: {w}mm - 60mm)[
     #text(size: 12.5pt, fill: soft)[{subtitle}]
   ]
@@ -373,7 +374,7 @@ COVER_V5 = """// 자동 표지 변형5 — 위계 격자형: 얇은 외곽 프�
 #place(top + left, dx: 26mm, dy: 36mm,
   rect(width: 0.7pt, height: {axis_h}mm, fill: soft))
 // 주제목 — 좌측 하단부 대형 스택. 마지막 단어 brand색.
-#place(bottom + left, dx: 26mm, dy: -{title_block_h}mm)[
+#place({title_side} + left, dx: 26mm, dy: {title_dy}mm)[
   #align(left, stack(dir: ttb, spacing: 6mm,
     ..if "{head}" != "" {{ (
       align(left, text(size: {head_pt}pt, weight: "bold", fill: ink,
@@ -382,7 +383,7 @@ COVER_V5 = """// 자동 표지 변형5 — 위계 격자형: 얇은 외곽 프�
       tracking: -0.03em)[{emph}])))
 ]
 // 부제 — 제목 블록 위, 짧은 브랜드 룰과 함께
-#place(bottom + left, dx: 26mm, dy: -{sub_dy}mm)[
+#place({sub_side} + left, dx: 26mm, dy: {sub_dy}mm)[
   #align(left)[
     #rect(width: 12mm, height: 1.2pt, fill: brand)
     #v(4mm, weak: true)
@@ -439,6 +440,26 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
     # 행 높이 근사 0.42(캡 높이)는 실제 라인박스(어센더+디센더)보다 작아
     # 부제 고정 dy가 타이틀과 겹쳤다(설득의 구조 V4 실측). 0.55로 여유.
     block_h = (head_pt * 0.55 if head_word else 0) + 7 + emph_pt * 0.55
+    # block_h는 pt 단위 — dy 체인은 mm이므로 환산해 더한다(적대검토:
+    # 단위 혼합으로 sub_dy가 의도보다 +16mm 벌어졌다).
+    block_h_mm = block_h * 0.3528
+
+    def _anchor_layout(title_dy_bottom: float, block_mm: float):
+        """앵커별 (타이틀 side·dy, 부제 side·dy, 노트 bottom dy).
+
+        bottom = 현행 하단 앵커(부제·노트가 위로 쌓임). top/mid는 상단
+        체인 — 노트는 하단 고정으로 남겨 지면 양끝을 잡는다. dy는
+        side에 맞는 부호를 포함한다(bottom 음수, top 양수)."""
+        if anchor == "bottom":
+            tb = -(title_dy_bottom + block_mm + 12)
+            return (("bottom", f"-{title_dy_bottom:.0f}"), ("bottom", f"{tb:.0f}"),
+                    title_dy_bottom + block_mm + 28)
+        if anchor == "top":
+            return (("top", "30"), ("top", f"{30 + block_mm + 14:.0f}"),
+                    max(60.0, title_dy_bottom + 20))
+        t0 = max(30.0, (h - block_mm) / 2 - 20)
+        return (("top", f"{t0:.0f}"), ("top", f"{t0 + block_mm + 14:.0f}"),
+                max(60.0, title_dy_bottom + 20))
 
     variant = cfg.get("cover_variant")
     if variant not in (1, 2, 3, 4, 5, "1", "2", "3", "4", "5"):
@@ -481,19 +502,22 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
 
     composition = bool(cfg.get("cover_composition"))
     profile = None
+    anchor = "bottom"
     if composition:
         import cover_compositions as cc
         profile = cc.pick_profile(cfg["title"])
+        anchor = profile[1]
         print(f"[build] 표지 구성 프로파일: {profile[0]} — "
               f"{profile[1]} 앵커 · {profile[2]} 모티프 · 밀도 {profile[3]:.2f}")
+        if variant in (2, 3):
+            print("[build] 경고: 표지 변형 V2/V3는 구성 프로파일(모티프·앵커)을"
+                  " 반영하지 않는다 — 오프너만 변조된다. V5 권장.")
 
     if variant == 1:
         motif_r = min(26, w * 0.14)
         motif_off = motif_r * 0.62
         tint_d = motif_r + motif_off / 2 - motif_r * 0.45
-        title_dy = 44
-        sub_dy = title_dy + block_h + 10
-        notes_dy = sub_dy + 16
+        (t_side, t_dy), (s_side, s_dy), notes_dy = _anchor_layout(44, block_h_mm)
         if cfg["cover_notes"]:
             lines = ",\n    ".join(
                 f'text(size: 10pt, fill: mute)[{_esc(str(x))}]'
@@ -504,8 +528,7 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
             notes = ""
         if composition:
             motif_src = cc.motif_block(
-                profile, variant=1, w=w, h=h, brand=accent,
-                mute=tokens["colors"]["ink-mute"], pale=pale.lstrip("#"))
+                profile, variant=1, w=w, h=h, brand=accent, pale=pale.lstrip("#"))
         else:
             motif_src = (
                 f'#place(top + right, dx: -18mm, dy: {h * 0.09:.0f}mm)[\n'
@@ -519,9 +542,9 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
                 f'      circle(radius: {motif_r:.1f}mm, fill: brand.transparentize(88%)))\n'
                 f'  ]\n]')
         base.update(
-            pale=pale, motif_src=motif_src, title_block_h=title_dy,
-            sub_dy=f"{sub_dy:.0f}", notes=notes,
-            imprint=_imprint(18))
+            pale=pale, motif_src=motif_src,
+            title_side=t_side, title_dy=t_dy, sub_side=s_side, sub_dy=s_dy,
+            notes=notes, imprint=_imprint(18))
         template = COVER_AUTO
     elif variant == 2:
         title_y = h * 0.30
@@ -589,9 +612,8 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
         head5 = head_pt * 0.7
         emph5 = emph_pt * 0.7
         block5 = (head5 * 0.55 if head_word else 0) + 7 + emph5 * 0.55
-        title_dy = 46
-        sub_dy = title_dy + block5 + 12
-        notes_dy = sub_dy + 16
+        block5_mm = block5 * 0.3528
+        (t_side, t_dy), (s_side, s_dy), notes_dy = _anchor_layout(46, block5_mm)
         if cfg["cover_notes"]:
             lines = ",\n    ".join(
                 f'text(size: 10.5pt, fill: soft)[{_esc(str(x))}]'
@@ -602,8 +624,7 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
             notes = ""
         if composition:
             motif_src = cc.motif_block(
-                profile, variant=5, w=w, h=h, brand=accent,
-                mute=tokens["colors"]["ink-mute"], pale=pale.lstrip("#"))
+                profile, variant=5, w=w, h=h, brand=accent, pale=pale.lstrip("#"))
         else:
             import random as _random
             # 점 격자 — 제목 해시 시드. 같은 책은 같은 배치, 책마다 고유.
@@ -632,8 +653,9 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
             pale=pale, motif_src=motif_src,
             head_pt=f"{head5:.1f}", emph_pt=f"{emph5:.1f}",
             axis_h=f"{h * 0.28:.0f}",
-            year=_esc(str(cfg.get("date", ""))[:4]), title_block_h=title_dy,
-            sub_dy=f"{sub_dy:.0f}", notes=notes, imprint=_imprint(26))
+            year=_esc(str(cfg.get("date", ""))[:4]),
+            title_side=t_side, title_dy=t_dy, sub_side=s_side, sub_dy=s_dy,
+            notes=notes, imprint=_imprint(26))
         template = COVER_V5
 
     src = template.format(**base)
@@ -646,7 +668,8 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
         capture_output=True, text=True)
     if r.returncode != 0 or not png.exists():
         _fail(f"자동 표지 생성 실패: {r.stderr.strip()[:300]}")
-    print(f"[build] 표지 변형 V{variant} (제목 해시 결정적)")
+    _pinned = str(cfg.get("cover_variant", "")).strip() in ("1", "2", "3", "4", "5")
+    print(f"[build] 표지 변형 V{variant} ({'지정' if _pinned else '제목 해시 결정적'})")
     return png.name
 
 
@@ -779,7 +802,16 @@ def assemble(cfg: dict, book_dir: Path) -> Path:
     # 장 오프너 변조 — base.typ가 build/openers.typ을 import한다(코드 문자열은
     # json 경로로는 텍스트로 인쇄될 뿐 평가되지 않으므로 typst 모듈로 내놓는다).
     # opt-out이면 enabled: false — 현행 네이비 오프너 그대로.
-    if cfg.get("cover_composition"):
+    # 오프너 변조는 opener_composition 키가 우선, 미지정 시 표지 키를
+    # 따른다(적대검토 — 표지 키 하나로 본문까지 지배하던 결합 분리).
+    # 이전 설계 잔존물(composition.json)은 매 조립 때 정리한다.
+    (build / "composition.json").unlink(missing_ok=True)
+    # None 결정판: load_config가 미지정 키를 None으로 싣으므로
+    # dict.get 기본값은 작동하지 않는다 — None일 때 표지 키를 밟는다.
+    _opener_on = (cfg.get("opener_composition")
+                  if cfg.get("opener_composition") is not None
+                  else cfg.get("cover_composition"))
+    if _opener_on:
         import cover_compositions as cc
         toks = _json.loads(
             (STYLE_DIR / cfg["style"] / "tokens.json").read_text(encoding="utf-8"))

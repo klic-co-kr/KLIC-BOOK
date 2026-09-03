@@ -24,18 +24,18 @@ def test_pick_deterministic_and_varied():
 def test_motif_none_is_empty_and_others_emit_typst():
     # none → 빈 문자열. 나머지 → place 조각.
     assert motif_block(("x", "mid", "none", 0.0, 2, 1.0), variant=5,
-                       w=210, h=297, brand="1F3A5F", mute="444",
+                       w=210, h=297, brand="1F3A5F",
                        pale="C9D4E4") == ""
     for m in ("dots", "circles", "lines", "squares"):
         out = motif_block(("x", "mid", m, 0.5, 3, 1.0), variant=5,
-                          w=210, h=297, brand="1F3A5F", mute="444",
+                          w=210, h=297, brand="1F3A5F",
                           pale="C9D4E4")
         assert "#place(" in out and "#box(" in out
 
 def test_motif_deterministic():
     # 모티프 배치 재현성 — 같은 입력 = 같은 조각.
     a = motif_block(PICK, variant=5, w=210, h=297,
-                    brand="1F3A5F", mute="444", pale="C9D4E4")
+                    brand="1F3A5F", pale="C9D4E4")
     b = motif_block(PICK, variant=5, w=210, h=297,
-                    brand="1F3A5F", mute="444", pale="C9D4E4")
+                    brand="1F3A5F", pale="C9D4E4")
     assert a == b

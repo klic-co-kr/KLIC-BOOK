@@ -145,9 +145,9 @@
 
   // 장 오프너 — 구판 chapteropener(네이비 전면 + eyebrow + 고스트 번호 +
   // 백색 제목 + 하단 액센트 바) 이식. 본문은 다음 면에서 시작한다.
-  // composition.json이 enabled면 밝은 오프너(표지색 지면 + 우측 세로
-  // 진열 스트립 + 잉크 제목)로 바뀐다 — 표지와 같은 프로파일 계열이되
-  // 형태는 다르다(프레임 없음·모티프 수직 진열·상단 제목).
+  // openers.typ의 opener-enabled가 true면 밝은 오프너(표지색 지면 +
+  // 우측 세로 진열 스트립 + 잉크 제목)로 바뀐다 — 표지와 같은 프로파일
+  // 계열이되 형태는 다르다(프레임 없음·모티프 수직 진열·상단 제목).
   show heading.where(level: 1): it => {
     pagebreak(weak: true)
     // 무번호 H1 — <part>(제N부 divider)·<nonum>(프롤로그·에필로그 등 부속 장)는
@@ -166,8 +166,10 @@
         // 우측 에지 세로 진열 스트립 — 장 번호가 시드
         #place(top + right, dx: -mm(tokens.margin.outer_mm + 2),
                dy: mm(tokens.margin.top_mm + 6))[
+          // H1 수가 스트립 수를 넘으면(파트 divider 포함 원고) 마지막
+          // 반복 대신 순환시킨다 — 모든 장이 서로 다른 스트립을 얻는다.
           #let occ = _occ.at(it.location()).first()
-          #openers.at(calc.clamp(occ, 1, openers.len()) - 1)
+          #openers.at(calc.rem(occ - 1, openers.len()))
         ]
         #pad(top: mm(tokens.margin.top_mm + 8), bottom: mm(24),
              left: mm(tokens.margin.inner_mm + 4),

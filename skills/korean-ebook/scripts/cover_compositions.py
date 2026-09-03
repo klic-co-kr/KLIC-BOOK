@@ -1,5 +1,9 @@
 """cover_compositions — 표지 변조 프로파일 엔진.
 
+결정성: 모든 시드는 문자열(제목/프로파일명/variant/장번호)이다 —
+PYTHONHASHSEED 무관. 단 random.Random(str)의 시드 혼합은 CPython 구현
+디테일이라 파이썬 버전이 바뀌면 같은 책의 모티프 배치가 바뀔 수 있다.
+
 골격(V1~V5)은 구조를 정하고, 프로파일은 변조축(타이틀 앵커·모티프 유형·
 밀도·액센트 회귀)을 정한다. 프로파일 선택은 제목 해시로 결정적 — 같은 책은
 같은 표지, 책마다 달라진다. opt-in(cover_composition: true)일 때만 개입하고
@@ -76,10 +80,6 @@ PROFILES: list[Profile] = [
     ("일수이석",         "bottom", "lines",   0.35, 2, 1.2),
 ]
 
-# 앵커 → V5/V1 계열 타이틀 블록 dy 산출용 기준 높이 비율
-ANCHOR_RATIO = {"top": 0.16, "mid": 0.42, "bottom": None}  # None = 기본 하단 앵커
-
-
 def pick_profile(title: str) -> Profile:
     """제목 해시로 프로파일 1개 선택 — 결정적."""
     h = int(hashlib.sha1(("composition:" + title).encode()).hexdigest(), 16)
@@ -87,7 +87,7 @@ def pick_profile(title: str) -> Profile:
 
 
 def motif_block(profile: Profile, *, variant: int, w: float, h: float,
-                brand: str, mute: str, pale: str) -> str:
+                brand: str, pale: str) -> str:
     """프로파일 모티프축을 typst 조각으로 — 골김·책 크기·팔레트에 맞춘다.
 
     dots/squares: 격자 필드. circles: 겹치는 원. lines: 수평선 필드.

@@ -127,13 +127,18 @@ def convert(md: str) -> str:
         return c.replace('\x02', '*')
     def _table_block(m):
         block = m.group(0)
-        if not re.search(r'^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$', block, flags=re.M):
+        # 구분행은 대시 2연속 이상(--+) — 결측 표기 '-' 단독 데이터 행과
+        # 구분한다(적대검토 — 대시 행 소리없이 삭제 결함).
+        _sep = re.compile(r'^\s*\|?[\s:|-]*--[\s:|-]*\|?\s*$', re.M)
+        if not _sep.search(block):
             return block  # 구분행 없음 — 표 아님
         rows = []
         for line in block.split('\n'):
-            if not line.strip() or re.match(r'^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$', line):
+            if not line.strip() or _sep.match(line):
                 continue
-            rows.append([c.strip() for c in line.strip().strip('|').split('|')])
+            # GFM \| 이스케이프 보호 — split 후 복원(열 시프트 방지)
+            cells = line.strip().strip('|').replace('\\|', '\x01').split('|')
+            rows.append([c.strip().replace('\x01', '|') for c in cells])
         if not rows:
             return block
         ncols = max(len(r) for r in rows)
@@ -142,7 +147,12 @@ def convert(md: str) -> str:
             # 렌더 폭 가중 길이 — 한국어 음절은 라틴 대문자 대비 약 1.8배 폭.
             return sum(1.8 if ord(ch) > 0x2E7F else 1.0 for ch in s)
 
-        _num_cell = re.compile(r'^[0-9.,+\-–—±∗▲†‡%~x×\s]*$')
+        _num_cell = re.compile(r'^[0-9.,+\-−–—±∗▲†‡%~x×\s]*$')
+
+        def _bare(c: str) -> str:
+            # 열 분류용 클린 셀 — 강조(*)·코드(백틱) 마커는 제외한다.
+            # **70,303**을 텍스트열로 오분류하면 숫자 열이 폭을 도둑맞는다.
+            return c.replace('*', '').replace('`', '')
 
         def _col_fr(cells: list[str]) -> str:
             # 콘텐츠 인지 열 폭. 균등 1fr에서는 무분할 라틴 토큰
@@ -152,13 +162,21 @@ def convert(md: str) -> str:
             nonempty = [c for c in cells if c]
             if not nonempty:
                 return '1fr'
-            if all(_num_cell.match(c) for c in nonempty):
-                w = max(0.55, min(0.8, max(_wlen(c) for c in nonempty) / 7.0))
+            bare = [_bare(c) for c in nonempty]
+            # 필요폭 절대산정(상대 단위) — 셀 x-inset 7pt×2와 글폭 인자
+            # 5.3pt/단위를 더한 값에 비례해 fr을 준다. typst fr은 비례
+            # 배분이라 합이 1일 필요 없다. 좁은 숫자 열이 inset에 잠식돼
+            # 오버플로하던 결함(evoharness p17·HoH p17 실측)의 근본 수정.
+            def _need(s: str) -> float:
+                return _wlen(s) * 5.3 + 14.0
+            if all(_num_cell.match(b) for b in bare):
+                w = max(_need(b) for b in bare)
             else:
-                cellw = max(_wlen(c) for c in nonempty) / 9.0
-                tokw = max(_wlen(t) for c in nonempty for t in re.split(r'[\s·()/]+', c)) / 6.0
-                w = min(2.4, max(1.2, cellw, tokw))
-            return f'{w:.2f}'.rstrip('0').rstrip('.') + 'fr'
+                cellw = min(max(_need(b) for b in bare), 90.0)  # 포장 가능 분량 상환
+                tokw = max(_need(tk) for b in bare
+                           for tk in re.split(r'[\s·()/]+', b))
+                w = max(cellw, tokw)
+            return f'{w:.1f}'.rstrip('0').rstrip('.') + 'fr'
 
         col_fr = []
         for c in range(ncols):
@@ -177,9 +195,11 @@ def convert(md: str) -> str:
         # table에 width 인자가 없어 block으로 감싼다. 헤더 채움·줄무늬·굵게는
         # base.typ의 set/show 규칙이 담당.
         body_cells = ', '.join(_row(r) for r in rows[1:])
+        # 정규식의 \n?가 마지막 개행까지 소비하므로 stash 뒤에 개행을
+        # 되돌린다 — 없으면 다음 행(헤딩·인용)과 접착해 변환을 파괴한다.
         return stash_str(
             f'#block(width: 100%)[#table(columns: ({", ".join(col_fr)}), '
-            f'table.header({_row(rows[0])}), {body_cells})]')
+            f'table.header({_row(rows[0])}), {body_cells})]') + "\n"
     md = re.sub(r'(?:^[ \t]*\|.*\|[ \t]*$\n?)+', _table_block, md, flags=re.M)
     # 3. 블록 수식 $$...$$ → #mitex
     md = re.sub(r'\$\$(.+?)\$\$', lambda m: f'#mitex[`{m.group(1).strip()}`]',
