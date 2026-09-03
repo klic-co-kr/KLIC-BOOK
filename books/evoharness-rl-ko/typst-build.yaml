@@ -14,6 +14,8 @@ chapters:
   - manuscript/06-제6장-관련-연구와-시리즈의-자리.md
   - manuscript/07-맺음말.md
 cover: auto
+cover_variant: 5
+cover_composition: true
 
 cover_series: "AGENT RUNTIME PAPERS"
 cover_notes:
