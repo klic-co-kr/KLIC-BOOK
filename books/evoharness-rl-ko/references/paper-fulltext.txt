@@ -1,0 +1,1520 @@
+
+
+EvoHarness-RL: Learning Self-Evolving Runtime Harness for Long-Horizon LLM Agents
+
+##### Report GitHub Issue
+ ×
+
+ Title:
+
+Content selection saved. Describe the issue below:
+
+ Description:
+
+ Submit without GitHub
+ Submit in GitHub
+
+ arXiv is now an independent nonprofit!
+ Learn more
+ ×
+
+ Back to arXiv
+
+ Why HTML?
+
+ Report Issue
+
+ Back to Abstract
+
+ Download PDF
+
+Abstract
+
+1 Introduction
+
+2 Method
+
+2.1 Unified Harness Abstraction: Belief, Progress, and Experience
+
+2.2 Agent-Harness Action Protocol
+
+2.3 Environment Adapter for BPE Harness Grounding
+
+Belief (BtB_{t}) and track instantiation.
+
+Progress (PtP_{t}) and commit instantiation.
+
+Experience (EtE_{t}), recall, and note instantiation.
+
+2.4 Cost-Aware Harness Optimization
+
+Supervised harness fine-tuning.
+
+Cost-aware GRPO.
+
+3 Experiments
+
+3.1 Experiment Setup
+
+Environments.
+
+Baselines.
+
+3.2 Main Results
+
+3.3 Ablation Results
+
+3.4 Generalization Analysis
+
+4 Analysis of Agent-Harness Evolution Dynamics
+
+4.1 Harness Internalization and Annealing
+
+4.2 Harness Evolution
+
+5 Related Work
+
+Harness Engineering.
+
+Memory and Self-Evolving Agents.
+
+6 Conclusion
+
+References
+
+A Training Dynamics
+
+Action-specific harness annealing.
+
+Reward improvement during coordination learning.
+
+B Qualitative Case Study
+
+C Implementation Details
+
+Model roles.
+
+Action parsing and execution.
+
+Harness grounding.
+
+SFT data construction.
+
+GRPO training.
+
+D Prompts
+
+D.1 Runtime Harness Prompt
+
+D.2 Experience-Store Consolidation Prompts
+
+ License: CC BY-NC-ND 4.0
+
+arXiv:2608.05446v1 [cs.LG] 05 Aug 2026
+
+\microtypesetup
+
+expansion=false
+
+# EvoHarness-RL: Learning Self-Evolving Runtime Harness for Long-Horizon LLM Agents
+
+Xuying Ning
+
+Affiliation: University of Illinois Urbana–Champaign
+
+Dongqi Fu
+
+Affiliation: Meta AI
+
+Tianxin Wei
+
+Affiliation: University of Illinois Urbana–Champaign
+
+Hanqing Zeng
+
+Affiliation: Meta AI
+
+Yuanchen Bei
+
+Affiliation: University of Illinois Urbana–Champaign
+
+Bingxuan Li
+
+Affiliation: University of Illinois Urbana–Champaign
+
+Zihao Li
+
+Affiliation: University of Illinois Urbana–Champaign
+
+Qifan Wang
+
+Affiliation: Meta AI
+
+Xiang Shen
+
+Affiliation: Meta AI
+
+Yifan Wu
+
+Affiliation: Meta AI
+
+Jiayi Liu
+
+Affiliation: Meta AI
+
+Hong Li
+
+Affiliation: Meta AI
+
+Yinglong Xia
+
+Affiliation: Meta AI
+
+Xiangjun Fan
+
+Affiliation: Meta AI
+
+Hanghang Tong
+
+Affiliation: University of Illinois Urbana–Champaign
+
+Jingrui He
+
+Affiliation: University of Illinois Urbana–Champaign
+
+###### Abstract
+
+Long-horizon LLM agents increasingly rely on external execution support to maintain state, track progress, invoke tools, verify outcomes, and reuse experience across interactions. However, effective harness use raises two coupled challenges: state formation from noisy interaction traces and runtime control over external-state access. Existing agents usually handle both through prompts, heuristics, or domain-specific conventions, leaving the external workspace and its usage policy manually engineered. To address this, we study the problem of harness policy learning, where agents learn harness policies offline and deploy them to construct and update external harness state online during runtime task execution. We introduce EvoHarness-RL, which exposes Belief, Progress, and Experience (BPE) as policy-facing harness state. Supervised harness fine-tuning teaches the base agent the harness action space and how to construct useful external state, while cost-aware GRPO explores coordination policies to selectively read, update, and consolidate that state during long-horizon interaction. Instantiated on ALFWorld with a Qwen3-8B LLM, EvoHarness-RL reaches 96.9% success and reveals two key dynamics: harness annealing, where training internalizes recurring harness-use patterns into the model policy and shifts the agent from frequent harness calls toward selective external-state access, and harness evolution, where progress updates and experience consolidation refine the harness into a compact, task-adaptive state substrate. These results suggest that long-horizon agents benefit from trainable policies for constructing and coordinating with external harness workspaces, beyond simply adding stronger tools or larger memories.
+
+## 1 Introduction
+
+LLM-based agents are increasingly deployed in long-horizon interactive settings,
+where they need to move beyond one-step problem solving toward reliable task execution over extended interaction. In tasks such as embodied interaction, web navigation,
+software engineering, and workflow automation (Shridhar et al., 2021; Hong et al., 2026; Yang et al., 2024; Zhou et al., 2024)
+agents need to maintain beliefs about the environment, track completed and pending subgoals, recover from failed actions, and reuse procedures from prior experience. Long-horizon execution therefore depends on diverse forms of external support, including memory, tools, state trackers, verifiers, and execution logs (Suzgun et al., 2026; Schick et al., 2023; Ning et al., 2026; Wei et al., 2025; Jiang et al., 2026)
+. As these components become more prevalent and more specialized, a central question arises: how can agents learn to form useful external state and efficiently leverage such support as part of their own decision process?
+
+We refer to this runtime layer as the external harness: the collection of prompts, tools, retrieval modules, memories, state trackers, execution feedback, and control-flow mechanisms that supports agent execution. Modern agent frameworks and product systems expose
+increasingly rich harness components (Young, 2025; Ning et al., 2026; Lee et al., 2026),
+and recent harness-engineering methods further optimize harness state,
+implementations, or trace-driven adaptations (Lou et al., 2026; Jiang et al., 2026; Lee et al., 2026; Chen et al., 2026).
+In parallel, self-evolving agents show that past trajectories can be distilled
+into reusable memories, workflows, or skills (Shinn et al., 2023; Wang et al., 2024; Ouyang et al., 2026).
+However, a complementary bottleneck remains underexplored: even when external components are carefully designed or adapted, the agent’s runtime policy for using them is often specified through prompts, heuristics, or fixed conventions. As a result, the agent may be surrounded by useful external support, but it is rarely trained to decide when to form, access, update, and consolidate that support as part of its own decision process.
+
+We propose EvoHarness-RL, a trainable coordination layer for learning how agents
+construct and use external harness state. EvoHarness-RL abstracts heterogeneous
+harness components into a unified, policy-facing BPE workspace, motivated by
+three recurring needs in long-horizon interaction: Belief for maintaining
+the current environment state, Progress for tracking completed and
+pending subgoals, and Experience for reusing knowledge across
+episodes (Singh et al., 2026; Wang et al., 2026; Shinn et al., 2023). The agent interacts
+with this workspace through compact harness meta-actions to query belief, commit
+progress, recall experience, and write new insights.
+
+[CAPTION] Figure 1: 
+Overview of EvoHarness-RL.
+Long-horizon agents rely on complex external execution support, but existing harness designs are often heterogeneous and manually controlled.
+EvoHarness-RL studies harness policy learning by abstracting this external workspace into three policy-facing states: Belief for environment state, Progress for execution status and subgoal structure, and Experience for reusable cross-episode knowledge.
+The agent learns to coordinate with this workspace through compact harness actions, deciding when to track, commit, recall, or note external state during runtime interaction.
+
+Our training recipe consists of two stages with different purposes. First, supervised harness fine-tuning familiarizes the base model with the semantics of the BPE action protocol, and teaches it to externalize useful belief, progress, and experience state from interaction traces. Second, since harness actions consume the same interaction budget as environment actions, effective agents need to learn not only how to construct external state, but also when external-state access is worth its cost. Cost-aware GRPO (Shao et al., 2024) optimizes the resulting policy with rewards for task success, efficiency, action diversity, repetition avoidance, and valid action formatting. This stage explores when to read, update, or consolidate harness state under an interaction budget, turning harness use from a prompt-time scaffold into a learned runtime policy decision.
+
+We instantiate the general EvoHarness-RL framework in ALFWorld (Shridhar et al., 2021)
+through a domain-specific environment adapter. The adapter preserves the shared
+BPE interface while grounding Belief, Progress, and Experience as a world-state
+tracker, a committed subgoal plan, and a cross-episode skill bank for embodied
+household tasks.
+Experiments show that BPE is useful both
+before and after training: prompt-time BPE already improves stateful
+long-horizon tasks, while SFT and GRPO further amplify performance, reaching
+96.9% success on the ALFWorld seen split and 86.6% on the unseen split. Beyond
+final success, our analysis reveals two dynamics: harness annealing,
+where training internalizes recurring harness-use patterns into the model policy, shifting the agent from frequent scaffold-like calls toward selective external-state access, and harness evolution, where the online progress updates and cross-episode experience consolidation refine the harness into a compact, task-adaptive state substrate.
+
+Our contributions are four-fold:
+
+• 
+
+We introduce EvoHarness-RL, a trainable agent-harness coordination
+layer based on BPE (Belief, Progress, and Experience) and a compact set of
+harness meta-actions.
+
+• 
+
+We develop a two-stage training recipe that first bootstraps harness
+use from expert demonstrations and then optimizes cost-aware harness
+coordination with GRPO.
+
+• 
+
+We show that BPE helps at both inference and training time:
+prompt-time BPE improves stateful tasks, while SFT and GRPO substantially
+improve seen and unseen ALFWorld success rate.
+
+• 
+
+We analyze two co-evolutionary dynamics: harness annealing, where
+training turns frequent scaffold use into selective state access, and
+harness evolution, where the experience store is refined through retrieval,
+consolidation, and forgetting.
+
+## 2 Method
+
+We introduce EvoHarness-RL, a trainable coordination layer for harness policy
+learning. EvoHarness-RL consists of a unified BPE external-state abstraction
+(Section 2.1), a compact agent-harness action protocol
+(Section 2.2), its embodied instantiation in ALFWorld (Shridhar et al., 2021)
+(Section 2.3), and a two-stage training pipeline for
+cost-aware agent-harness coordination (Section 2.4).
+
+### 2.1 Unified Harness Abstraction: Belief, Progress, and Experience
+
+A trainable harness interface should expose enough external state to support
+long-horizon execution, while remaining compact enough for policy learning.
+Concrete harness implementations may contain many domain-specific components,
+such as state trackers, execution logs, task plans, verifier feedback, episodic
+memories, or skill libraries.
+Despite their diversity, these components address a small set of recurring
+failure modes in long-horizon interaction: agents may lose track of what is
+currently true in the environment, forget what has already been done or what
+should be attempted next, and repeatedly rediscover procedures or mistakes that
+could have been reused from prior attempts (Shinn et al., 2023; Wang et al., 2026; Singh et al., 2026). Motivated by these three needs, we
+organize the policy-facing role of external harness state into three compact functional
+roles: Belief, Progress, and Experience (BPE).
+Formally, at each step tt, the harness renders
+
+ | 
+ | ℋt=(Bt,Pt,Et),\mathcal{H}_{t}=(\hbox{\pagecolor{beliefbg}$B_{t}$},\hbox{\pagecolor{progressbg}$P_{t}$},\hbox{\pagecolor{experiencebg}$E_{t}$}),
+ | 
+ | (1)
+
+where the components correspond to environment estimate, execution state, and experience.
+
+Belief (BtB_{t})
+
+stores task-relevant facts inferred from interaction,
+such as object states, locations, and relations. It provides a persistent
+estimate of the current environment so the policy does not need to rely only
+on transient context-window memory.
+
+Progress (PtP_{t})
+
+records task decomposition and execution status
+through subgoal-status records (gi,σi)(g_{i},\sigma_{i}). It externalizes what has
+been attempted, what remains open, and where execution may be blocked,
+turning implicit reasoning traces into inspectable task state.
+
+Experience (EtE_{t})
+
+maintains cross-episode knowledge, such as skills,
+failure modes, search priors, and high-level strategies. It supports reuse
+across attempts by providing relevant prior experience during execution and
+storing new insights for later consolidation.
+
+### 2.2 Agent-Harness Action Protocol
+
+Given the BPE state, the policy needs a compact way to read from and write to
+the external workspace. A fully domain-specific harness API may expose many
+operations, but it would make the learned behavior difficult to transfer or
+analyze. Conversely, a single generic memory action would hide the functional
+structure of the workspace. We therefore define a small set of harness
+meta-actions that cover the main information flows between the agent and BPE:
+
+ | 
+ | 𝒜bpe={track,commit,recall,note}.\mathcal{A}_{\mathrm{bpe}}=\{\hbox{\pagecolor{trackbg}{track}},\hbox{\pagecolor{commitbg}{commit}},\hbox{\pagecolor{recallbg}{recall}},\hbox{\pagecolor{notebg}{note}}\}.
+ | 
+ | (2)
+
+trackreads task-relevant belief from BtB_{t}; commit writes a
+subgoal or execution update into PtP_{t}; recall retrieves reusable
+knowledge from EtE_{t}; and note records a new insight for later
+experience consolidation into EtE_{t}.
+
+During interaction, the policy chooses from both environment actions and harness
+actions:
+
+ | 
+ | 𝒜=𝒜env∪𝒜bpe.\mathcal{A}=\mathcal{A}_{\mathrm{env}}\cup\mathcal{A}_{\mathrm{bpe}}.
+ | 
+ | (3)
+
+At step tt, the policy receives the environment observation oto_{t}, the rendered
+harness state ℋt\mathcal{H}_{t}, and task context ctc_{t}, then samples
+
+ | 
+ | at∼πθ(⋅∣ot,ℋt,ct).a_{t}\sim\pi_{\theta}(\cdot\mid o_{t},\mathcal{H}_{t},c_{t}).
+ | 
+ | (4)
+
+If at∈𝒜enva_{t}\in\mathcal{A}_{\mathrm{env}}, the action advances the task
+environment and yields a new observation. If
+at∈𝒜bpea_{t}\in\mathcal{A}_{\mathrm{bpe}}, the action queries or updates the external
+workspace and returns a new harness view. Since both action types consume the same interaction budget, the agent needs to learn
+when harness access is worth its cost; we optimize this coordination
+in Section 2.4.
+
+[CAPTION] Figure 2: 
+Overview of the training pipeline of EvoHarness-RL.
+Starting from an SFT checkpoint, the policy generates GRPO rollouts by interleaving environment actions with BPE harness actions.
+Rewards combine task success, efficiency, diversity, and spam and format penalties to optimize cost-aware harness coordination.
+
+### 2.3 Environment Adapter for BPE Harness Grounding
+
+BPE is a functional interface rather than a fixed internal schema. Different
+tasks may require different harness implementations, but they can expose the
+same policy-facing roles: Belief, Progress, and Experience. We therefore use an
+environment adapter to bridge domain-specific signals with the general BPE
+interface. The adapter processes observations, action results, tool outputs, and
+verifier feedback, maintains the internal harness stores, and renders selected
+views as (Bt,Pt,Et)(B_{t},P_{t},E_{t}) for the policy. It also grounds the four harness
+actions in the target environment. Thus, the internal implementation remains
+domain-specific, while the trainable agent-harness coordination layer is shared.
+
+We instantiate this adapter in ALFWorld (Shridhar et al., 2021). The adapter keeps
+domain-specific internal stores for belief, progress, and experience, and
+renders them as the policy-facing BPE state (Bt,Pt,Et)(B_{t},P_{t},E_{t}).
+Appendix C provides implementation details, and
+Appendix B gives a concrete trajectory-level example.
+
+#### Belief (BtB_{t}) and track instantiation.
+
+For embodied household tasks, Belief is grounded as an internal world-state
+store that is updated in the background after each environment step. The adapter
+uses the agent’s actions and environment observations to maintain task-relevant
+facts such as object states, locations, and spatial relations. This state is not
+fully exposed to the policy by default. Instead, the policy can issue
+track[object] to inspect a specific object or
+track[world] to obtain a compact global summary. Thus, Belief
+provides persistent environment state, while access to that state remains a
+selective harness action.
+
+#### Progress (PtP_{t}) and commit instantiation.
+
+Progress is grounded as a committed execution record. In ALFWorld, this is
+implemented as a bounded list of subgoal-status entries, which is sufficient for
+mostly sequential household tasks. For example, a clean-and-place task may
+involve locating the target object, picking it up, cleaning it, and placing it in
+the target receptacle. The policy uses commit[subgoal] to
+externalize the current execution step, making attempted, pending, or blocked
+progress visible to later decisions.
+
+#### Experience (EtE_{t}), recall, and note instantiation.
+
+Experience is grounded as a cross-episode skill store, organized into general
+skills, task-specific skills, common mistakes, and object-location search
+priors. It evolves at two different timescales. During an episode, the policy
+uses recall[query] to retrieve relevant prior knowledge, which
+also updates the usage counts of retrieved entries. The policy can also issue
+note[insight] to write newly observed lessons into a temporary
+note buffer, while successful object searches update object-location priors
+online. During parallel rollout collection, the main skill store is kept fixed
+within each batch, and all note buffers and completed-trajectory summaries are
+accumulated in the background. At epoch boundaries, a consolidation model merges
+this evidence into the skill store through add, update, and remove operations.
+
+### 2.4 Cost-Aware Harness Optimization
+
+#### Supervised harness fine-tuning.
+
+We first bootstrap the policy with supervised fine-tuning on successful teacher
+trajectories collected using the same BPE interface. At each step, the teacher
+observes the task objective, current observation, admissible environment actions,
+recent history, and active harness views, then outputs a single next action in
+the format <think>...</think><action>...</action>. The action can be
+either an ALFWorld command or a BPE harness action. We fine-tune Qwen3-8B on
+these next-action demonstrations, teaching the model both task-solving behavior
+and the basic semantics of when to track, commit,
+recall, or note. The experience accumulated during teacher
+rollouts initializes the skill store used in subsequent GRPO (Shao et al., 2024).
+
+#### Cost-aware GRPO.
+
+We optimize the policy using Group Relative Policy Optimization (GRPO) initialized from a Supervised Fine-Tuning (SFT) checkpoint. The trajectory-level reward R⁡(τ)R(\tau) combines a dominant sparse success signal with dense auxiliary shaping terms designed to cultivate adaptive harness usage:
+
+ | 
+ | R⁡(τ)=\displaystyle R(\tau)={}
+ | Rsucc​(τ)⏟task success+λeff​Reff​(τ)⏟efficiency bonus+λdiv​(u)​Rdiv​(τ)⏟action diversity−λspam​Rspam​(τ)⏟spam penalty−λinv​Rinv​(τ)⏟format penalty.\displaystyle\underbrace{R_{\mathrm{succ}}(\tau)}_{\text{task success}}+\underbrace{\lambda_{\mathrm{eff}}R_{\mathrm{eff}}(\tau)}_{\text{efficiency bonus}}+\underbrace{\lambda_{\mathrm{div}}(u)R_{\mathrm{div}}(\tau)}_{\text{action diversity}}-\underbrace{\lambda_{\mathrm{spam}}R_{\mathrm{spam}}(\tau)}_{\text{spam penalty}}-\underbrace{\lambda_{\mathrm{inv}}R_{\mathrm{inv}}(\tau)}_{\text{format penalty}}.
+ | 
+ | (5)
+
+Task completion acts as the strict gatekeeper: Rsucc​(τ)=10⋅𝟏​[solved]R_{\mathrm{succ}}(\tau)=10\cdot\mathbf{1}[\text{solved}], and the efficiency bonus Reff​(τ)=max⁡(0,1−|τ|/Tmax)R_{\mathrm{eff}}(\tau)=\max(0,1-|\tau|/T_{\max}) is only granted upon success, naturally penalizing redundant harness queries.
+
+To prevent policy collapse, where the agent either ignores 𝒜bpe\mathcal{A}_{\mathrm{bpe}} or falls into infinite repetitive loops, we introduce a time-dependent vocabulary diversity bonus:
+
+ | 
+ | Rdiv(τ)=|{verb⁡(at):at∈τ}||τ|,λdiv(u)=λdivmax2(1+cosπ​uU),R_{\mathrm{div}}(\tau)=\frac{|\{\mathrm{verb}(a_{t}):a_{t}\in\tau\}|}{|\tau|},\quad\lambda_{\mathrm{div}}(u)=\frac{\lambda_{\mathrm{div}}^{\max}}{2}\left(1+\cos\frac{\pi u}{U}\right),
+ | 
+ | (6)
+
+where uu is the current RL epoch and UU is the annealing horizon. This curriculum encourages broad exploration of harness actions early in training, before gracefully decaying to force specialization and efficient task resolution. Finally, RspamR_{\mathrm{spam}} and RinvR_{\mathrm{inv}} apply fixed penalties for degenerate repetitions or malformed syntax.
+
+## 3 Experiments
+
+We evaluate EvoHarness-RL on ALFWorld to study its effectiveness against frozen and trainable baselines, the contribution of each BPE component, and generalization to unseen environments. We further analyze how harness use changes during training and how the external experience store evolves over time.
+
+### 3.1 Experiment Setup
+
+#### Environments.
+
+We evaluate on ALFWorld (Shridhar et al., 2021), a text-based game aligned with the ALFRED embodied AI benchmark. Agents must complete multi-step household tasks by navigating rooms and manipulating objects through text commands. We focus on six distinct task families requiring varied levels of state tracking: simple pick-and-place (Pick), object inspection under light (Look), cleaning-before-placing (Clean), heating-before-placing (Heat), cooling-before-placing (Cool), and placing two objects (Pick2). We report the success rate on the standard validation set as Ouyang et al. (2026).
+
+#### Baselines.
+
+We compare EvoHarness-RL against three categories of competitive methods. First, we include frontier models (Claude Opus 4.5, GPT-4.1, GPT-5) evaluated with standard prompting and with our prompt-time harness to measure how strong base policies benefit from explicit BPE structures. Second, we evaluate frozen memory and agentic methods, including ReAct (Yao et al., 2022), ExpeL (Zhao et al., 2024), ReasoningBank (Ouyang et al., 2025), MemP (Fang et al., 2026), Dynamic Cheatsheet (Suzgun et al., 2026), ACE (Zhang et al., 2025), and SkillOS-base (Ouyang et al., 2026), which utilize external memory or experience pools without parameter updates. Third, we consider trainable methods, including standard GRPO (Shao et al., 2024), SkillOS (Ouyang et al., 2026), and SkillRL (Xia et al., 2026), which integrate memory mechanisms or structural optimization directly into training. We compare these against our own variants: EvoHarness-Base (inference-time), EvoHarness-SFT (supervised harness learning), and EvoHarness-RL (cost-aware GRPO). The implementation details are provided in Appendix C.
+
+### 3.2 Main Results
+
+[CAPTION] Table 1: Main results on ALFWorld. We report success rates on the 140-task seen split.
+∗\astdenotes frozen inference-time methods, and ▲\blacktriangledenotes trainable methods.
+Δ\Delta denotes the absolute average-SR gain over the corresponding ReAct baseline.
+†/‡ indicate results reported by SkillOS/SkillRL, respectively.
+
+ | Approach
+ | Backbone / Variant
+ | ALFWorld SR (%)
+
+ | Pick
+ | Look
+ | Clean
+ | Heat
+ | Cool
+ | Pick2
+ | Avg.
+ | Δ\Delta
+
+ | Frontier models
+
+ | ReAct
+ | Claude Opus 4.5∗\ast
+ | 100.0
+ | 92.3
+ | 96.3
+ | 100.0
+ | 88.0
+ | 100.0
+ | 96.4
+ | –
+
+ | + EvoHarness-Base
+ | Claude Opus 4.5∗\ast
+ | 100.0
+ | 100.0
+ | 100.0
+ | 93.8
+ | 96.0
+ | 100.0
+ | 98.5
+ | +2.1
+
+ | ReAct
+ | GPT-4.1∗\ast
+ | 82.9
+ | 61.5
+ | 44.4
+ | 43.8
+ | 4.0
+ | 41.7
+ | 47.9
+ | –
+
+ | + EvoHarness-Base
+ | GPT-4.1∗\ast
+ | 82.9
+ | 61.5
+ | 63.0
+ | 75.0
+ | 72.0
+ | 62.5
+ | 70.0
+ | +22.1
+
+ | ReAct
+ | GPT-5∗\ast
+ | 74.3
+ | 53.8
+ | 48.1
+ | 62.5
+ | 60.0
+ | 58.3
+ | 60.7
+ | –
+
+ | + EvoHarness-Base
+ | GPT-5∗\ast
+ | 97.1
+ | 76.9
+ | 85.2
+ | 93.8
+ | 88.0
+ | 62.5
+ | 85.0
+ | +25.7
+
+ | Open-source small models
+
+ | ReAct
+ | Qwen3-8B∗\ast
+ | 78.1
+ | 46.2
+ | 33.3
+ | 37.5
+ | 29.3
+ | 47.2
+ | 47.9
+ | –
+
+ | ExpeL
+ | Qwen3-8B∗\ast
+ | 91.4
+ | 76.9
+ | 14.8
+ | 43.8
+ | 28.0
+ | 45.8
+ | 49.3
+ | +1.4
+
+ | ReasoningBank†
+ | Qwen3-8B∗\ast
+ | 83.8
+ | 48.7
+ | 49.4
+ | 39.6
+ | 41.3
+ | 54.2
+ | 55.7
+ | +7.8
+
+ | MemP†
+ | Qwen3-8B∗\ast
+ | 80.0
+ | 43.6
+ | 24.7
+ | 33.3
+ | 38.7
+ | 48.6
+ | 49.7
+ | +1.8
+
+ | Dynamic Cheatsheet
+ | Qwen3-8B∗\ast
+ | 88.6
+ | 53.8
+ | 29.6
+ | 37.5
+ | 20.0
+ | 66.7
+ | 52.1
+ | +4.2
+
+ | ACE
+ | Qwen3-8B∗\ast
+ | 85.7
+ | 38.5
+ | 29.6
+ | 37.5
+ | 36.0
+ | 58.3
+ | 51.4
+ | +3.5
+
+ | SkillOS-base†
+ | Qwen3-8B∗\ast
+ | 79.0
+ | 41.0
+ | 45.7
+ | 37.5
+ | 38.7
+ | 55.6
+ | 53.1
+ | +5.2
+
+ | GRPO
+ | Qwen3-8B▲\blacktriangle
+ | 87.5
+ | 71.4
+ | 72.7
+ | 70.0
+ | 48.1
+ | 43.5
+ | 65.6
+ | +17.7
+
+ | SkillOS†
+ | Qwen3-8B▲\blacktriangle
+ | 95.2
+ | 71.8
+ | 74.1
+ | 72.9
+ | 77.3
+ | 77.8
+ | 80.2
+ | +32.3
+
+ | SkillRL‡
+ | Qwen2.5-7B▲\blacktriangle
+ | 97.9
+ | 71.4
+ | 90.0
+ | 90.0
+ | 95.5
+ | 87.5
+ | 89.9
+ | +42.0
+
+ | Ours: EvoHarness-RL on Qwen3-8B
+
+ | EvoHarness-Base
+ | Inference-time harness∗\ast
+ | 71.4
+ | 53.8
+ | 63.0
+ | 50.0
+ | 48.0
+ | 41.7
+ | 56.4
+ | +8.5
+
+ | EvoHarness-SFT
+ | Learned harness calls▲\blacktriangle
+ | 80.0
+ | 53.8
+ | 88.9
+ | 75.0
+ | 40.0
+ | 62.5
+ | 68.6
+ | +20.7
+
+ | EvoHarness-RL
+ | SFT init + GRPO optimization▲\blacktriangle
+ | 100.0
+ | 92.9
+ | 95.5
+ | 100.0
+ | 92.6
+ | 100.0
+ | 96.9
+ | +49.0
+
+Table 1 demonstrates that EvoHarness-RL on Qwen3-8B achieves state of the art performance with a 96.9% average success rate, yielding a +49.0 absolute improvement over the base ReAct model. This optimization allows the 8B model to effectively match top frontier models like Claude Opus 4.5. Our method also decisively outperforms all competitive baselines, including static memory approaches and strong trainable agents like SkillOS (80.2%) and SkillRL (89.9%). The progression from prompt time scaffolding (56.4%) to SFT (68.6%) and finally GRPO (96.9%) clearly validates our two stage training pipeline, showing that optimization transforms the harness from a static tool into a highly effective decision interface.
+Additionally, the top block of the table shows that the BPE framework provides universal benefits across model scales. Applying the explicit harness significantly elevates struggling frontier policies, boosting GPT-4.1 by +22.1 and GPT-5 by +25.7. Even for Claude Opus 4.5, which is already near the performance ceiling, the harness pushes the success rate to 98.5%. This confirms that externalizing belief, progress, and experience is broadly critical for reliable long horizon task execution regardless of the base model size.
+
+### 3.3 Ablation Results
+
+[CAPTION] Table 2: BPE component ablation on ALFWorld. The top block provides learned-policy references, while the bottom block removes one component at a time from the Qwen3-8B inference time harness.
+
+ | Variant
+ | Interface / Policy
+ | ALFWorld SR (%)
+
+ | Pick
+ | Look
+ | Clean
+ | Heat
+ | Cool
+ | Pick2
+ | Avg.
+
+ | Reference: learned EvoHarness-RL policies
+
+ | EvoHarness-SFT
+ | Full BPE, supervised harness policy
+ | 80.0
+ | 53.8
+ | 88.9
+ | 75.0
+ | 40.0
+ | 62.5
+ | 68.6
+
+ | EvoHarness-RL
+ | Full BPE, SFT init + GRPO optimization
+ | 100.0
+ | 92.9
+ | 95.5
+ | 100.0
+ | 92.6
+ | 100.0
+ | 96.9
+
+ | Inference-time BPE ablation on frozen Qwen3-8B
+
+ | EvoHarness-Base
+ | Belief + Progress + Experience
+ | 71.4
+ | 53.8
+ | 63.0
+ | 50.0
+ | 48.0
+ | 41.7
+ | 56.4
+
+ | w/o Belief
+ | Remove object/state tracking
+ | 74.3
+ | 53.8
+ | 40.7
+ | 75.0
+ | 20.0
+ | 37.5
+ | 50.0
+
+ | w/o Progress
+ | Remove subgoal/progress tracking
+ | 68.6
+ | 53.8
+ | 44.4
+ | 68.8
+ | 32.0
+ | 37.5
+ | 50.7
+
+ | w/o Experience
+ | Remove recall, notes, and skill bank
+ | 65.7
+ | 53.8
+ | 40.7
+ | 62.5
+ | 28.0
+ | 41.7
+ | 48.6
+
+To isolate the contribution of each BPE component, we ablate one module at a time from the inference-time harness (Table 2). Removing the environment belief disables explicit object tracking, leading to severe performance drops on tasks requiring localization and state verification, such as Clean and Cool. Ablating task progress prevents subgoal commitment, which disproportionately degrades performance on long-horizon tasks with dependent subgoals like Pick2. Finally, disabling reusable experience removes skill recall and mistake avoidance, yielding the lowest overall average success rate (48.6%) and heavily impacting complex state-change tasks like Heat. Ultimately, the absence of any single component significantly harms execution, confirming that Belief, Progress, and Experience function synergistically as a unified state interface rather than as isolated memory tricks.
+
+[CAPTION] Table 3: 
+Generalization results on ALFWorld unseen tasks. We compare ReAct with prompt-time, SFT, and GRPO-optimized EvoHarness-RL variants.
+
+ | 
+
+ | Approach
+ | Backbone / Variant
+ | ALFWorld Unseen SR (%)
+
+ | Pick
+ | Look
+ | Clean
+ | Heat
+ | Cool
+ | Pick2
+ | Avg.
+
+ | ReAct
+ | Qwen3-8B∗\ast
+ | 66.7
+ | 50.0
+ | 48.4
+ | 47.8
+ | 52.4
+ | 29.4
+ | 50.0
+
+ | EvoHarness-Base
+ | Prompt-time harness∗\ast
+ | 83.3
+ | 38.9
+ | 87.1
+ | 91.3
+ | 90.5
+ | 58.8
+ | 77.6
+
+ | EvoHarness-SFT
+ | Learned harness calls▲\blacktriangle
+ | 70.8
+ | 66.7
+ | 80.6
+ | 69.6
+ | 47.6
+ | 76.5
+ | 69.4
+
+ | EvoHarness-RL
+ | SFT init + GRPO optimization▲\blacktriangle
+ | 70.8
+ | 94.4
+ | 87.1
+ | 87.0
+ | 95.2
+ | 88.2
+ | 86.6
+
+### 3.4 Generalization Analysis
+
+We test EvoHarness-RL on the ALFWorld unseen split
+(Table 3). Qwen3-8B ReAct achieves 50.0%
+success, while the prompt-time BPE harness improves zero-shot performance to
+77.6%, showing the benefit of state externalization.
+EvoHarness-SFT drops to 69.4%, likely because supervised imitation
+learns teacher harness-use patterns from seen trajectories without
+optimizing when access is worthwhile in novel environments.
+In contrast, the full RL-optimized policy reaches 86.6%, suggesting that
+cost-aware GRPO recalibrates harness access and learns a broadly useful
+strategy rather than memorizing training environments.
+
+## 4 Analysis of Agent-Harness Evolution Dynamics
+
+We analyze two training dynamics of EvoHarness-RL: policy-side harness annealing and harness-side experience evolution. More detailed analyses are provided in Appendix A.
+
+### 4.1 Harness Internalization and Annealing
+
+[CAPTION] Figure 3: 
+Harness usage anneals during GRPO. The policy starts with frequent cognitive-tool calls, then stabilizes near one harness call per episode.
+
+Figure 3 shows a clear annealing pattern during GRPO. The SFT-initialized agent begins with frequent harness calls, using BPE as an explicit scaffold to track state, recall procedures, and narrow the search space toward better trajectories. As RL progresses, usage drops quickly and stabilizes near one call per episode. This suggests that GRPO gradually internalizes routine scaffolded behaviors into the policy, while preserving harness access only when the expected benefit outweighs its step cost. Thus, EvoHarness-RL shifts from scaffolded exploration to selective, cost-aware coordination.
+
+### 4.2 Harness Evolution
+
+[CAPTION] Figure 4: 
+Experience-store evolution. The skill bank expands during exploration, then stabilizes into a compact mixture of general, task-specific, mistake-correction, and search-priority skills.
+
+Figure 4 shows how the runtime harness evolves through its cross-episode Experience store. While belief and progress are updated within episodes, Experience is reshaped across episodes through accumulation, consolidation, and forgetting. The skill bank expands rapidly early in training with general strategies, task-specific procedures, common mistakes, and search priorities; later, growth becomes selective as redundant entries are merged, rarely useful skills are evicted, and frequently recalled knowledge is preserved. The final bank remains compact yet diverse, suggesting that the harness becomes a task-adaptive state substrate rather than passive append-only memory. This complements harness annealing: the policy learns when to use external state, while the harness evolves what reusable experience it can provide.
+
+## 5 Related Work
+
+#### Harness Engineering.
+
+The execution capability of an LLM agent is heavily shaped by its external harness, the surrounding framework that determines how it observes, reasons, and uses tools. Early paradigms introduced explicit reasoning and action loops and basic tool augmentation (Yao et al., 2022; Schick et al., 2023), which have since evolved into more complex execution environments with specialized observation renderers, file system access, and execution feedback (Yang et al., 2024; Zhou et al., 2024; Ning et al., 2026). Because these external components are critical to long horizon task success, recent work has increasingly focused on optimizing the harness itself. Frameworks such as Harness-1 externalize search state into environment side memory (Jiang et al., 2026), while Meta-Harness and HarnessX use offline search and trace driven adaptation to discover effective harness configurations (Lee et al., 2026; Chen et al., 2026). However, these approaches largely treat the harness as an environment side construct or a prompt time convention engineered by human developers or offline search algorithms. In contrast, EvoHarness-RL treats harness access as a first class, learnable policy decision. Rather than simply providing the agent with a better fixed scaffold, we train the underlying policy to actively control, query, and coordinate with the external workspace.
+
+#### Memory and Self-Evolving Agents.
+
+Successfully navigating extended interactions requires agents to maintain both within-episode state and cross-episode knowledge. Prior memory-augmented agents have typically focused on the latter, accumulating past trajectories, reflections, or task summaries to inform future episodes (Shinn et al., 2023; Li et al., 2025). Because raw episodic logs are often noisy, later systems increasingly distill experience into structured procedural memory, such as workflows, code libraries, or reusable skills (Wang et al., 2024; Wang et al., 2025). Recent advances further suggest that these experience repositories must be actively curated, refined, consolidated, or forgotten, rather than treated as append-only logs (Xia et al., 2026; Ouyang et al., 2026). However, existing self-evolving agents generally separate cross-episode skill curation from real-time within-episode state tracking, such as maintaining environmental belief and monitoring subgoal progress. EvoHarness-RL addresses this limitation by abstracting the external workspace into a unified BPE (Belief, Progress, Experience) interface. This design enables the policy to evolve not only how it uses long-term experience, but also how it synchronizes that experience with active environmental belief and execution progress, leading to the dynamic we call harness evolution.
+
+## 6 Conclusion
+
+We introduced
+We introduced EvoHarness-RL, a trainable coordination layer that teaches long-horizon agents to construct and use external harness states. By organizing the workspace into Belief, Progress, and Experience, and optimizing when to query, update, and consolidate it, EvoHarness-RL turns harness use from a manual prompting convention into a learned runtime policy. Results on ALFWorld show that cost-aware agent-harness coordination improves task success and reveals useful dynamics of harness annealing and evolution.
+
+## References
+
+Chen et al. (2026)
+
+Tingyang Chen, Shuo Lu, Kang Zhao, Weicheng Meng, Hanlin Teng, Tianhao Li, Chao Li, Xule Liu, Jian Liang, Zhizhong Zhang, et al.
+
+Harnessx: A composable, adaptive, and evolvable agent harness foundry.
+
+arXiv preprint arXiv:2606.14249, 2026.
+
+Fang et al. (2026)
+
+Runnan Fang, Yuan Liang, Xiaobin Wang, Jialong Wu, Shuofei Qiao, Pengjun Xie, Fei Huang, Huajun Chen, and Ningyu Zhang.
+
+Memp: Exploring agent procedural memory.
+
+In Findings of the Association for Computational Linguistics: ACL 2026, pages 17490–17502, 2026.
+
+Hong et al. (2026)
+
+Yining Hong, Rui Sun, Bingxuan Li, Xingcheng Yao, Maxine Wu, Alexander Chien, Da Yin, Ying Nian Wu, Zhecan Wang, and Kai-Wei Chang.
+
+Embodied web agents: Bridging physical-digital realms for integrated agent intelligence.
+
+Advances in Neural Information Processing Systems, 38, 2026.
+
+Jiang et al. (2026)
+
+Pengcheng Jiang, Zhiyi Shi, Kelly Hong, Xueqiang Xu, Jiashuo Sun, Jimeng Sun, Hammad Bashir, and Jiawei Han.
+
+Harness-1: Reinforcement learning for search agents with state-externalizing harnesses.
+
+arXiv preprint arXiv:2606.02373, 2026.
+
+Lee et al. (2026)
+
+Yoonho Lee, Roshen Nair, Qizheng Zhang, Kangwook Lee, Omar Khattab, and Chelsea Finn.
+
+Meta-harness: End-to-end optimization of model harnesses.
+
+arXiv preprint arXiv:2603.28052, 2026.
+
+Li et al. (2025)
+
+Yangning Li, Weizhi Zhang, Yuyao Yang, Wei-Chieh Huang, Yaozu Wu, Junyu Luo, Yuanchen Bei, Henry Peng Zou, Xiao Luo, Yusheng Zhao, et al.
+
+A survey of rag-reasoning systems in large language models.
+
+In Findings of the Association for Computational Linguistics: EMNLP 2025, pages 12120–12145, 2025.
+
+Lou et al. (2026)
+
+Xinghua Lou, Miguel Lázaro-Gredilla, Antoine Dedieu, Carter Wendelken, Wolfgang Lehrach, and Kevin P Murphy.
+
+Autoharness: improving llm agents by automatically synthesizing a code harness.
+
+arXiv preprint arXiv:2603.03329, 2026.
+
+Ning et al. (2026)
+
+Xuying Ning, Katherine Tieu, Dongqi Fu, Tianxin Wei, Zihao Li, Yuanchen Bei, Jiaru Zou, Mengting Ai, Zhining Liu, Ting-Wei Li, et al.
+
+Code as agent harness.
+
+arXiv preprint arXiv:2605.18747, 2026.
+
+Ouyang et al. (2025)
+
+Siru Ouyang, Jun Yan, I Hsu, Yanfei Chen, Ke Jiang, Zifeng Wang, Rujun Han, Long T Le, Samira Daruki, Xiangru Tang, et al.
+
+Reasoningbank: Scaling agent self-evolving with reasoning memory.
+
+arXiv preprint arXiv:2509.25140, 2025.
+
+Ouyang et al. (2026)
+
+Siru Ouyang, Jun Yan, Yanfei Chen, Rujun Han, Zifeng Wang, Bhavana Dalvi Mishra, Rui Meng, Chun-Liang Li, Yizhu Jiao, Kaiwen Zha, et al.
+
+Skillos: Learning skill curation for self-evolving agents.
+
+arXiv preprint arXiv:2605.06614, 2026.
+
+Schick et al. (2023)
+
+Timo Schick, Jane Dwivedi-Yu, Roberto Dessì, Roberta Raileanu, Maria Lomeli, Eric Hambro, Luke Zettlemoyer, Nicola Cancedda, and Thomas Scialom.
+
+Toolformer: Language models can teach themselves to use tools.
+
+Advances in neural information processing systems, 36:68539–68551, 2023.
+
+Shao et al. (2024)
+
+Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan Zhang, YK Li, Yang Wu, et al.
+
+Deepseekmath: Pushing the limits of mathematical reasoning in open language models.
+
+arXiv preprint arXiv:2402.03300, 2024.
+
+Shinn et al. (2023)
+
+Noah Shinn, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao.
+
+Reflexion: Language agents with verbal reinforcement learning.
+
+Advances in neural information processing systems, 36:8634–8652, 2023.
+
+Shridhar et al. (2021)
+
+Mohit Shridhar, Xingdi Yuan, Marc-Alexandre Côté, Yonatan Bisk, Adam Trischler, and Matthew Hausknecht.
+
+ALFWorld: Aligning text and embodied environments for interactive learning.
+
+In International Conference on Learning Representations, 2021.
+
+https://openreview.net/forum?id=0IOX0YcCdTn.
+
+Singh et al. (2026)
+
+Joykirat Singh, Zaid Khan, Archiki Prasad, Justin Chih-Yao Chen, Akshay Nambi, Hyunji Lee, Elias Stengel-Eskin, and Mohit Bansal.
+
+Agent-brace: Decoupling beliefs from actions in long-horizon tasks via verbalized state uncertainty.
+
+arXiv preprint arXiv:2605.11436, 2026.
+
+Suzgun et al. (2026)
+
+Mirac Suzgun, Mert Yuksekgonul, Federico Bianchi, Dan Jurafsky, and James Zou.
+
+Dynamic cheatsheet: Test-time learning with adaptive memory.
+
+In Proceedings of the 19th Conference of the European Chapter of the Association for Computational Linguistics (Volume 1: Long Papers), pages 7080–7106, 2026.
+
+Wang et al. (2024)
+
+Guanzhi Wang, Yuqi Xie, Yunfan Jiang, Ajay Mandlekar, Chaowei Xiao, Yuke Zhu, Linxi Fan, and Anima Anandkumar.
+
+Voyager: An open-ended embodied agent with large language models.
+
+Transactions on Machine Learning Research, 2024.
+
+ISSN 2835-8856.
+
+https://openreview.net/forum?id=ehfRiF0R3a.
+
+Wang et al. (2025)
+
+Jiayu Wang, Yifei Ming, Riya Dulepet, Qinglin Chen, Austin Xu, Zixuan Ke, Frederic Sala, Aws Albarghouthi, Caiming Xiong, and Shafiq Joty.
+
+Liveresearchbench: A live benchmark for user-centric deep research in the wild.
+
+arXiv preprint arXiv:2510.14240, 2025.
+
+Wang et al. (2026)
+
+Taiyi Wang, Sian Gooding, Florian Hartmann, Oriana Riva, and Edward Grefenstette.
+
+A subgoal-driven framework for improving long-horizon llm agents.
+
+arXiv preprint arXiv:2603.19685, 2026.
+
+Wei et al. (2025)
+
+Tianxin Wei, Noveen Sachdeva, Benjamin Coleman, Zhankui He, Yuanchen Bei, Xuying Ning, Mengting Ai, Yunzhe Li, Jingrui He, Ed H Chi, et al.
+
+Evo-memory: Benchmarking llm agent test-time learning with self-evolving memory.
+
+arXiv preprint arXiv:2511.20857, 2025.
+
+Xia et al. (2026)
+
+Peng Xia, Jianwen Chen, Hanyang Wang, Jiaqi Liu, Kaide Zeng, Yu Wang, Siwei Han, Yiyang Zhou, Xujiang Zhao, Haifeng Chen, et al.
+
+Skillrl: Evolving agents via recursive skill-augmented reinforcement learning.
+
+arXiv preprint arXiv:2602.08234, 2026.
+
+Yang et al. (2024)
+
+John Yang, Carlos Jimenez, Alexander Wettig, Kilian Lieret, Shunyu Yao, Karthik Narasimhan, and Ofir Press.
+
+Swe-agent: Agent-computer interfaces enable automated software engineering.
+
+Advances in Neural Information Processing Systems, 37:50528–50652, 2024.
+
+Yao et al. (2022)
+
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, and Yuan Cao.
+
+React: Synergizing reasoning and acting in language models.
+
+arXiv preprint arXiv:2210.03629, 2022.
+
+Young (2025)
+
+Justin Young.
+
+Effective harnesses for long-running agents.
+
+Anthropic Engineering Blog, November 2025.
+
+https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents.
+
+Accessed: 2026-05-11.
+
+Zhang et al. (2025)
+
+Qizheng Zhang, Changran Hu, Shubhangi Upasani, Boyuan Ma, Fenglu Hong, Vamsidhar Kamanuru, Jay Rainton, Chen Wu, Mengmeng Ji, Hanchen Li, et al.
+
+Agentic context engineering: Evolving contexts for self-improving language models.
+
+arXiv preprint arXiv:2510.04618, 2025.
+
+Zhao et al. (2024)
+
+Andrew Zhao, Daniel Huang, Quentin Xu, Matthieu Lin, Yong-Jin Liu, and Gao Huang.
+
+Expel: Llm agents are experiential learners.
+
+In Proceedings of the AAAI Conference on Artificial Intelligence, volume 38, pages 19632–19642, 2024.
+
+Zhou et al. (2024)
+
+Shuyan Zhou, Frank F Xu, Hao Zhu, Xuhui Zhou, Robert Lo, Abishek Sridhar, Xianyi Cheng, Tianyue Ou, Yonatan Bisk, Daniel Fried, et al.
+
+Webarena: A realistic web environment for building autonomous agents.
+
+In International Conference on Learning Representations, volume 2024, pages 15585–15606, 2024.
+
+## Appendix A Training Dynamics
+
+We provide additional analyses of learned agent–harness coordination by decomposing harness usage by action type and comparing the training reward trajectory against standard GRPO.
+
+[CAPTION] Figure 5: 
+Action-specific harness annealing. Different BPE actions decay at different rates, while the success rate is still rising.
+
+#### Action-specific harness annealing.
+
+Figure 5 shows that different BPE actions are not pruned uniformly during training. The policy initially uses all harness actions, consistent with the SFT scaffold where the agent frequently queries experience, tracks state, commits progress, and writes notes. During GRPO, however, these actions are selectively retained. Recall remains the most persistent action, indicating that cross-episode experience continues to provide useful search priors even after many routine behaviors are internalized. In contrast, commit and note rapidly decay toward zero, suggesting that the policy no longer needs to externalize every intermediate plan or write frequent new insights once stable task strategies emerge. Track follows an intermediate pattern: it is useful for early state disambiguation, but gradually decreases as the agent learns more direct environment-interaction patterns.
+
+This action-level pattern is environment-dependent. In ALFWorld, tasks share reusable household procedures and object-search priors, making the Experience component especially valuable. In more visually grounded embodied environments, the agent may rely more heavily on Belief to maintain scene graphs, object states, or spatial relations. In software-engineering or workflow environments, Progress may become more important for tracking subtasks, test status, dependency resolution, and unfinished branches. Therefore, EvoHarness-RL should not be interpreted as learning a fixed universal harness-action distribution. Instead, it learns which parts of BPE are worth accessing under the cost structure and state demands of a given environment.
+
+[CAPTION] Figure 6: 
+Training reward dynamics. EvoHarness-RL achieves higher reward than standard GRPO throughout training, suggesting more efficient agent–harness coordination.
+
+#### Reward improvement during coordination learning.
+
+Figure 6 shows that EvoHarness-RL consistently outperforms standard GRPO during training. Its reward increases faster and reaches a higher plateau, while standard GRPO improves more slowly and remains substantially lower. Together with the action-specific annealing pattern in Figure 5, this suggests that the reduction in harness calls is not caused by policy collapse or failure to use the harness. Rather, the agent learns to use the harness more selectively: BPE first serves as a scaffold for exploration and state management, and GRPO then encourages the policy to internalize recurring scaffolded behaviors while preserving selective access to the most useful external state.
+
+## Appendix B Qualitative Case Study
+
+We provide a qualitative ALFWorld trajectory to illustrate how the learned policy coordinates with the BPE harness during long-horizon execution. In this task, the agent must clean a kettle and place it on the dining table. The trajectory shows a natural commit →\rightarrow recall →\rightarrow act →\rightarrow note loop: the agent first commits to the subgoal of finding the kettle, recalls task and object-location priors from the skill bank, verifies these priors through environment interaction, and then writes corrective evidence when the recalled hint is stale. Although the skill bank suggests that the kettle is on a countertop, the agent does not blindly follow this prior after repeated failed searches; instead, it explores stoveburners, finds the kettle, and records that the recalled hint was incorrect. The case study shows that the harness is used as a source of reusable but revisable experience rather than as a fixed oracle, enabling the agent to combine cross-episode priors with current-episode grounding and self-correction.
+
+Case Study: Skill Loop with Self-Correction
+
+Task: clean some kettle and put it in diningtable.
+
+Type: pick_clean_then_place_in_recep
+ SUCCESS — score 1.0, 30 turns
+
+Skills
+
+[cle_001] Phase-ordered plan: locate →\to clean →\to place;
+[cle_006] object-location priors.
+
+Avoid
+
+[err_002] Blindly trusting stale hints;
+[err_003] repeatedly searching the same locations.
+
+Agent Trajectory with Harness-Guided Reasoning
+
+Step 1
+
+Obs: Initial task received. 
+Think: Register the first subgoal before acting; decompose the task into locate, clean, and place. 
+Harness: commit [find kettle]
+
+Step 2
+
+Obs: The agent needs a search strategy for the kettle. 
+Think: Recall both the general clean-task procedure and likely kettle locations. 
+Harness: recall [how to do clean task] →\to recall [where to find kettle] 
+Return: kettle: countertop; avoid revisiting the same failed locations.
+
+Step 3
+
+Obs: countertop 1 empty; countertop 2 empty; stoveburner 1 has only a pan; stoveburner 2 has only a pot; stoveburner 3 contains the kettle. 
+Think: The recalled countertop hint fails twice. Following [err_003], the agent avoids looping and falls back on the prior that kettles are often on stoveburners. 
+Action: go to countertop 1 →\to go to countertop 2 →\to go to stoveburner 3.
+
+Step 4
+
+Obs: The kettle is found at stoveburner 3, contradicting the recalled countertop prior. 
+Think: Use the current trajectory as corrective evidence instead of blindly trusting stale memory. 
+Action: take kettle 1 from stoveburner 3. 
+Harness: note [kettle found at stoveburner 3; recalled hint said countertop].
+
+Step 5
+
+Obs: The kettle is held by the agent. 
+Think: Continue the phase-ordered clean task: clean the kettle, then place it on the dining table. 
+Harness: commit [clean kettle with sinkbasin]. 
+Action: go to sinkbasin 1 →\to clean kettle 1 with sinkbasin 1 →\to go to diningtable 1 →\to move kettle 1 to diningtable 1.
+
+Result:
+SUCCESS —
+The trajectory exhibits the full harness loop:
+commit →\to recall →\to act →\to note.
+The recalled hint was wrong; the agent detected the contradiction, adapted, and wrote corrective evidence back to the skill bank.
+
+## Appendix C Implementation Details
+
+This section records the concrete implementation choices used in our ALFWorld experiments. We follow the BPE interface and cost-aware optimization objective defined in Section 2, and focus here on details needed to reproduce the system.
+
+#### Model roles.
+
+The trainable policy is Qwen3-8B. It is the only model updated during SFT and GRPO, and the only model executed inside the rollout loop. At each step, the policy emits a response in the form
+<think>...</think><action>...</action>; the parsed action is then dispatched either to ALFWorld or to the BPE harness. We use Claude Opus as the teacher for SFT trajectory collection and as the consolidation model for the experience store. During GRPO, consolidation is run outside the rollout loop at epoch boundaries, so the policy rollout itself remains a Qwen3-8B interaction with the environment and the current harness state.
+
+#### Action parsing and execution.
+
+The environment wrapper first extracts the content inside the <action> tag. If the action matches an admissible ALFWorld command, it is executed in the environment. Otherwise, the wrapper checks whether it matches one of the harness-action patterns, such as track [object], commit [subgoal], recall [query], or note [insight]. Malformed outputs, missing action tags, or actions outside both spaces return failure feedback and are counted by the invalid-action penalty. We disable the base trainer’s built-in invalid-action penalty and apply all reward shaping in our own reward function.
+
+#### Harness grounding.
+
+The ALFWorld harness is implemented with lightweight deterministic components whenever possible. The belief tracker is a rule-based parser over action–observation pairs; it updates object state flags and object-location relations without an LLM call. The progress tracker keeps a bounded committed-plan list and updates it only when the policy emits commit. The experience store uses keyword-overlap retrieval for recall, increments usage counts for retrieved entries, and buffers note outputs for later consolidation. Successful object pickup actions also update the object-location priority map. Each skill category is capacity-bounded and uses LFU eviction, so frequently recalled entries are retained while rarely used entries are removed.
+
+#### SFT data construction.
+
+We collect SFT data by running the teacher model with the same BPE action
+interface on 500 ALFWorld training games and keeping only successful episodes.
+This yields 87 trajectories and 1,153 next-action conversation pairs, with an
+average length of 26.5 turns per episode. The data covers all six ALFWorld task
+families: pick-two (28), pick-place (17), clean (15), heat (11), light (8), and
+cool (8). Each example contains the task objective, current observation,
+admissible commands, recent action history, and active harness views, while the
+target is the teacher’s next <think> and <action> response.
+The teacher uses 405 harness calls in total, about 18% of all turns, distributed
+as commit (202), recall (114), note (55), and
+track (34). The resulting SFT checkpoint initializes GRPO, and the
+experience store accumulated during collection is used as the initial skill bank.
+
+#### GRPO training.
+
+GRPO starts from the SFT checkpoint and samples multiple trajectories per prompt. Rewards are normalized within each group, and the policy is optimized with a KL penalty to the SFT reference. During rollout collection, trajectory summaries and note buffers are accumulated but not consolidated immediately. At the end of each epoch, the consolidation model updates the experience store from the buffered evidence. This keeps the skill bank stable within a rollout batch while still allowing cross-episode harness evolution over training. The detailed configuration is provided in the Table 4.
+
+ | Setting
+ | Value
+
+ | Environment
+ | ALFWorld
+
+ | Task families
+ | Pick, Look, Clean, Heat, Cool, Pick2
+
+ | Policy model
+ | Qwen3-8B
+
+ | Teacher / consolidation model
+ | Claude Opus
+
+ | Policy output format
+ | <think>...</think><action>...</action>
+
+ | Max episode steps TmaxT_{\max}
+ | 70
+
+ | Belief tracker
+ | Rule-based action–observation parser
+
+ | Belief edge capacity
+ | 48
+
+ | Progress cap |Ct||C_{t}|
+ | 8 subgoals
+
+ | Recall top-kreck_{\mathrm{rec}}
+ | 3 per category
+
+ | Experience categories
+ | General, task-specific, mistakes, search priors
+
+ | Experience capacity KmaxK_{\max}
+ | 80 per category
+
+ | Skill eviction
+ | LFU by usage count
+
+ | Initial skill usage count
+ | 1
+
+ | RL algorithm
+ | GRPO
+
+ | Initialization πref\pi_{\mathrm{ref}}
+ | SFT checkpoint
+
+ | Group size GG
+ | 8
+
+ | Prompts per step
+ | 16
+
+ | Trajectories per step
+ | 128
+
+ | Total epochs / annealing horizon UU
+ | 150
+
+ | Optimizer
+ | AdamW
+
+ | Learning rate
+ | 1×10−61\times 10^{-6}
+
+ | KL coefficient β\beta
+ | 0.01
+
+ | Gradient clipping
+ | 1.0
+
+ | Max prompt length
+ | 12,288 tokens
+
+ | Max response length
+ | 512 tokens
+
+ | Inference engine
+ | vLLM, TP=4
+
+ | Hardware
+ | 8 NVIDIA H200 GPUs
+
+ | Success reward scale
+ | 10.0
+
+ | Efficiency weight λeff\lambda_{\mathrm{eff}}
+ | 1.0
+
+ | Max diversity weight λdivmax\lambda_{\mathrm{div}}^{\max}
+ | 0.5
+
+ | Spam penalty weight λspam\lambda_{\mathrm{spam}}
+ | 0.1
+
+ | Spam penalty cap
+ | 10
+
+ | Invalid-action penalty λinv\lambda_{\mathrm{inv}}
+ | 0.1
+
+[CAPTION] Table 4: Implementation and training hyperparameters for EvoHarness-RL on ALFWorld.
+
+## Appendix D Prompts
+
+We reproduce the key prompts that instantiate the BPE harness on ALFWorld. They
+fall into two families: the runtime harness prompt that the policy
+πθ\pi_{\theta} sees at every step (defining how 𝒜bpe\mathcal{A}_{\mathrm{bpe}} is
+exposed), and the consolidation prompt that the summarizer LLM uses to
+evolve the experience store EtE_{t} at epoch boundaries. Both the SFT teacher and
+the GRPO policy see the same runtime prompt, and both the SFT-time and GRPO-time
+skill consolidation go through the same experience-store interface, so the two
+stages are prompt-consistent by construction. We lightly abridge the verbatim
+text to fit the page.
+
+### D.1 Runtime Harness Prompt
+
+The system prompt below defines both the environment action set
+𝒜env\mathcal{A}_{\mathrm{env}} and the four harness meta-actions
+𝒜bpe={commit,track,recall,note}\mathcal{A}_{\mathrm{bpe}}=\{{\color[rgb]{0.6484,0.4492,0.0977}\textbf{commit}},{\color[rgb]{0.6484,0.4492,0.0977}\textbf{track}},{\color[rgb]{0.6484,0.4492,0.0977}\textbf{recall}},{\color[rgb]{0.6484,0.4492,0.0977}\textbf{note}}\},
+grounding commit to Progress PtP_{t}, track to Belief BtB_{t}, and
+recall/note to Experience EtE_{t}. It also encodes when each action
+should be used, including the mandatory note conditions that drive
+experience writing when recalled hints are empty or stale.
+
+Harness system prompt (policy-facing)
+
+You are an autonomous intelligent agent operating in the ALFWorld text-based household environment. You must complete tasks by interacting with objects in rooms.
+You will receive: OBJECTIVE, OBSERVATION, ADMISSIBLE COMMANDS, PREVIOUS ACTION(S).
+## Environment Actions (choose EXACTLY from ADMISSIBLE COMMANDS)
+- go to <recep>, take <obj> from <recep>, put <obj> in/on <recep>
+- open/close <recep>, heat/cool/clean <obj> with <appliance>, use <tool>
+- examine/look/inventory
+## Harness Actions (cognitive tools — always available, each costs one step)
+### Plan
+- commit [subgoal]: Register ONE subgoal. Use at task start and when switching subgoals. e.g. commit [find egg]
+### Perception
+- track [object]: Query a specific object — where it was seen, its state, and which locations you have visited. e.g. track [egg]
+### Experience
+- recall [query]: Retrieve past experience. What you get depends on the query:
+ recall [where to find X] →\rightarrow search hints (object→\rightarrowlocation)
+ recall [how to do Y task] →\rightarrow procedures, general skills, common mistakes
+ recall [mistakes to avoid] →\rightarrow common pitfalls and fixes
+- note [insight]: Record a generalizable discovery for future episodes. e.g. note [food usually in fridge or countertop]
+## When to Use Harness
+- commit at task start and when switching subgoals.
+- recall in all three modes throughout the episode (not just “where to find”).
+- track to recall objects seen earlier but not interacted with (esp. pick-two tasks).
+- note is MANDATORY when: (1) RECALLED HINTS was empty and you found the object →\rightarrow note [<obj> found in <loc>]; (2) object found in a location NOT in RECALLED HINTS →\rightarrow note [found <obj> in <loc>, recalled hints said <X> instead]; (3) recall [how to do X] returned empty and you finished →\rightarrow note [for <task type>: <procedure that worked>].
+## Output Format (MANDATORY)
+<think>Brief reasoning in 1-2 sentences.</think>
+<action>your action here</action>
+Rules: exactly one action per turn; environment actions must match ADMISSIBLE COMMANDS; harness actions are always available.
+
+At each step the policy additionally receives a per-turn user message carrying the
+current context xtx_{t} and the rendered harness views hth_{t} (the committed plan,
+the last recalled hints, and any track/recall results):
+
+Per-turn user template
+
+OBJECTIVE: {task_description}
+OBSERVATION: {current_observation}
+ADMISSIBLE COMMANDS: {admissible_commands}
+PREVIOUS ACTION(S): {action_history}
+{harness_views} # PLAN, RECALLED HINTS, track/recall results
+
+### D.2 Experience-Store Consolidation Prompts
+
+All prompts in this subsection are executed by the external summarizer LLM, not by
+the policy. The note-consolidation prompt is the online path: buffered
+note insights are not written to EtE_{t} directly; at each consolidation point
+the summarizer receives the recent notes plus a compact view of the existing skill
+bank and decides, per note, whether to add, update,
+remove, or skip a skill. This is the mechanism by which
+policy-written evidence is turned into structured, deduplicated, and
+self-correcting skills (including removal of stale priors), realizing the
+co-adaptive experience loop of Section 2. The remaining four
+batch-induction prompts seed the initial skill bank ESFTE^{\mathrm{SFT}} and
+periodically rebuild whole categories from accumulated trajectory batches. All
+five share the JSON-only output convention and populate the four categories of
+StS_{t}.
+
+Note-consolidation prompt
+
+You are a skill manager for a household task agent. You receive raw notes from the agent’s recent episodes. Your job is to maintain a clean, deduplicated, conflict-free skill bank.
+CURRENT TASK TYPE: {task_type}
+RAW NOTES FROM AGENT: {notes_text}
+EXISTING SKILLS (id | title | principle): {existing_skills}
+For each note, decide ONE of:
+1. ADD — genuinely new knowledge not covered by any existing skill.
+2. UPDATE — refines / corrects / extends an existing skill (reference skill_id).
+3. REMOVE — contradicts / invalidates an existing (wrong) skill (reference skill_id).
+4. SKIP — trivial, redundant, or too episode-specific.
+Return a JSON object with keys: adds[], updates[], removes[], search_priorities{}.
+Rules: prefer UPDATE over ADD on overlap; use REMOVE only when a note clearly invalidates an existing skill; keep principles short and concrete; extract object→\rightarrowlocation mappings into search_priorities; return empty lists/objects if nothing to change. Return ONLY the JSON object.
+
+General-skills induction prompt
+
+You are an expert at distilling agent behavior patterns into concise, actionable skills.
+Analyze these trajectories from an agent operating in ALFWorld household environments.
+SUCCESSFUL TRAJECTORIES: {success_data}
+FAILED TRAJECTORIES: {failure_data}
+Generate 5-7 GENERAL SKILLS that apply across ALL task types. Each skill should be: (1) concise (1-2 sentences); (2) actionable (clear what to do); (3) derived from what works in successes and what fails in failures.
+Format as a JSON array of {skill_id, title, principle, when_to_apply}. Return ONLY the JSON array.
+
+Task-specific-skills induction prompt
+
+You are an expert at distilling agent behavior patterns into concise, actionable skills.
+Task Type: {task_type}
+SUCCESSFUL TRAJECTORIES: {success_data}
+FAILED TRAJECTORIES: {failure_data}
+Generate 4-6 TASK-SPECIFIC SKILLS for {task_type} tasks. Each skill should be specific to this task type.
+Format as a JSON array of {skill_id, title, principle, when_to_apply}. Return ONLY the JSON array.
+
+Common-mistakes induction prompt
+
+You are an expert at analyzing agent failures.
+FAILED TRAJECTORIES: {failure_data}
+Generate 3-5 COMMON MISTAKES to avoid. Format as a JSON array of {mistake_id, description, why_it_happens, how_to_avoid}. Return ONLY the JSON array.
+
+Search-priorities induction prompt
+
+You are analyzing where objects are typically found in household environments.
+From these successful trajectories, extract which receptacles commonly contain which object types.
+TRAJECTORIES: {trajectory_data}
+Generate a JSON object mapping object categories to ordered lists of receptacles (most likely first), e.g. {“food”: [“fridge”, “countertop”, “diningtable”], “tool”: [“drawer”, “shelf”]}. Only include categories with clear patterns. Return ONLY the JSON object.
+
+ Experimental support, please
+ view the build logs
+ for errors. Generated by
+
+ L
+ A
+ T
+ E
+
+ xml
+
+ .
+
+## Instructions for reporting errors
+
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below:
+
+Click the "Report Issue" (
+
+ ) button, located in the page header.
+
+Tip: You can select the relevant text first, to include it in your report.
+
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all.
+
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+
+ We gratefully acknowledge support from
+ our major funders,
+ member institutions, ,
+ and all contributors.
+
+ About
+ ·
+ Help
+ ·
+ Contact
+ ·
+ Subscribe
+ ·
+ Copyright
+ ·
+ Privacy
+ ·
+ Accessibility
+ ·
+ Operational Status (opens in new tab)
+
+Major funding support from
+
