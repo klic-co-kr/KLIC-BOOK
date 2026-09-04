@@ -1,0 +1,15 @@
+{"task": "polish-doc-g4-low", "tier": "M",
+ "phase": "review", "round": {"adversary": 0, "review": 0}, "spawns": 3,
+ "claims": [
+  {"claim": "IANIRA_RE 정의+사용 존재(grep -c ≥ 2)", "status": "pending", "evidence": "구현 보고: grep -c = 2"},
+  {"claim": "구 계수 body.count(\"이 아니라\") 제거(grep -F 0행)", "status": "pending", "evidence": "구현 보고: 0행"},
+  {"claim": "SCAFFOLD_START 여는 괄호 클래스 {1,2} 반영", "status": "pending", "evidence": "구현 보고: 35행 1건"},
+  {"claim": "test_korean_lint.py 19 passed(15+4)", "status": "pending", "evidence": "메인 재실행: 19 passed"},
+  {"claim": "테스트 diff 추가 전용 — 기존 15함수 본문 무변경", "status": "pending", "evidence": "구현 보고: 삭제라인 0"},
+  {"claim": "3곳 용어 통일 '~ 아니라' 대조 / 구 '이 아니라' 빈도 0행", "status": "pending", "evidence": "구현 보고: 3파일 히트"},
+  {"claim": "IANIRA_CAP = 20 무변경", "status": "pending", "evidence": "구현 보고: grep 1행"},
+  {"claim": "git diff에 qc_gate.py·build.py·style_pick.py 부재", "status": "pending", "evidence": "구현 보고: diff --stat 4파일"},
+  {"claim": "설치본 동기화 diff 0 + 19 pass", "status": "pending", "evidence": "구현 보고: 콘텐츠 diff 0(.pytest_cache 캐시 제외), 설치본 19 passed"},
+  {"claim": "기존 검사 라인 git diff 무변경(패턴 정의·메시지 8종·SKIP_LINE)", "status": "pending", "evidence": "구현 보고: §4 범위 3블록만"}
+ ],
+ "bundle": "polish-doc-g4-low/plan.md", "next": "review"}

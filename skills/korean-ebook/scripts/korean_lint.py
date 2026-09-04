@@ -31,8 +31,8 @@ POSSESSIVE_CHAIN = re.compile(r"\S*의\s+\S*의\s+\S*의\s+\S")
 EM_DASH = "—"
 EM_DASH_PER_1K = 6.0   # 1000자당 엠대시 상한 — fluent-korean "엠대시 자제"
 CHAIN_PER_1K = 1.0     # 1000자당 '의' 3연쇄 상한
-# 문두 스캐폴딩 — 접속 부사로 여는 기계 구조 (polish-doc)
-SCAFFOLD_START = re.compile(r"(?:^|[.!?…]\s+)(먼저|또한|마지막으로)\s*,")
+# 문두 스캐폴딩 — 접속 부사로 여는 기계 구조 (polish-doc) · 여는 따옴표·괄호 직후 포함
+SCAFFOLD_START = re.compile(r"(?:^|[.!?…]\s+)(?:[\"'“‘『「(\[]{1,2}[ \t]*)?(먼저|또한|마지막으로)\s*,")
 # 헤지 — 근거 없는 한정·지시 남설 (polish-doc)
 HEDGE = {
     "라고 할 수 있": "근거 없는 한정 — 단정 '~다' 또는 근거 숫자 병기",
@@ -41,7 +41,8 @@ HEDGE = {
 # 번역투 직역 조사 밀도 (polish-doc) — 출간 7권 실측 0.2~0.5/1000자의 4배
 TRANSLATION_PARTICLE = ("에 대한", "을 통해", "의 경우")
 PARTICLE_PER_1K = 2.0
-# '이 아니라' 대조 재구성 남발 (polish-doc) — 실측 파일당 최대 24
+# '~ 아니라' 대조 재구성 남발 (polish-doc) — 이·가·은·는 어형 합산, 실측 파일당 최대 42
+IANIRA_RE = re.compile(r"(?:이|가|은|는)\s*아니라")
 IANIRA_CAP = 20
 
 SKIP_LINE = re.compile(r"^(#|>|\||-\s|\*\s|\d+\.\s|```)")
@@ -85,8 +86,8 @@ def lint_text(text: str) -> list:
     ptot = sum(body.count(p) for p in TRANSLATION_PARTICLE)
     if ptot / chars * 1000 > PARTICLE_PER_1K:
         warns.append(f"번역투 조사 {ptot}곳({ptot/chars*1000:.1f}/1000자) — 직역 조사 풀기")
-    if (ianira := body.count("이 아니라")) > IANIRA_CAP:
-        warns.append(f"'이 아니라' {ianira}회(문서 상한 {IANIRA_CAP}) — 대조 재구성 줄이기")
+    if (ianira := len(IANIRA_RE.findall(body))) > IANIRA_CAP:
+        warns.append(f"'~ 아니라' 대조 {ianira}회(문서 상한 {IANIRA_CAP}, '이 아니라' 포함) — 대조 재구성 줄이기")
     return warns
 
 

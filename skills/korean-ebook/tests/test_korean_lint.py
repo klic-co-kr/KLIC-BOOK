@@ -77,3 +77,20 @@ def test_ianira_at_cap_not_warned():
 
 def test_new_patterns_respect_skip_lines():
     assert lint_text("## 먼저, 시작\n\n- 또한, 둘\n\n> 마지막으로, 셋\n\n본문은 정상입니다.") == []
+
+
+def test_scaffold_quoted_open_detected():
+    assert "문두 스캐폴딩" in _w("“먼저, 이 방법을 살펴봅시다.")
+
+
+def test_scaffold_paren_quote_open_detected():
+    assert "문두 스캐폴딩" in _w("('또한, 둘째 축이다.')")
+
+
+def test_scaffold_mid_sentence_still_ignored():
+    assert "문두 스캐폴딩" not in _w("이는 또한, 다른 문제와 이어진다.")
+
+
+def test_ianira_variant_counted():
+    text = " ".join(f"결과는 {i}의 문제가 아니라 {i+1}의 문제다." for i in range(21))
+    assert "'~ 아니라' 대조" in _w(text)
