@@ -1,15 +1,17 @@
 {"task": "polish-doc-g4", "tier": "M",
- "phase": "review", "round": {"adversary": 0, "review": 0}, "spawns": 3,
+ "phase": "done", "round": {"adversary": 0, "review": 0}, "spawns": 3,
  "claims": [
-  {"claim": "korean_lint.py 신규 심볼 4종 존재", "status": "pending", "evidence": ""},
-  {"claim": "기존 6패턴 정규식·메시지·임계값 git diff 무변경", "status": "pending", "evidence": ""},
-  {"claim": "test_korean_lint.py 13테스트(8+5) 전량 pass", "status": "pending", "evidence": ""},
-  {"claim": "스킬 전체 pytest 회귀 0 fail", "status": "pending", "evidence": ""},
-  {"claim": "git diff에 qc_gate.py 부재", "status": "pending", "evidence": ""},
-  {"claim": "korean-style.md 상단 polish-doc 원천 표기 존재", "status": "pending", "evidence": ""},
-  {"claim": "Never-cut 문구 verbatim 존재: 데이터 버리면서 줄이기는 실패다", "status": "pending", "evidence": ""},
-  {"claim": "자기 리비전 절(korean-style.md)·G4행 갱신(SKILL.md) 존재", "status": "pending", "evidence": ""},
-  {"claim": "설치본 4파일 동기화 diff 차이 0", "status": "pending", "evidence": ""},
-  {"claim": "G4 표 신규 4행 용어가 경고 메시지 용어와 일치", "status": "pending", "evidence": ""}
+  {"claim": "korean_lint.py 신규 심볼 4종 존재", "status": "verified", "evidence": "grep -c = 9 (korean_lint.py:35-45)"},
+  {"claim": "기존 6패턴 정규식·메시지·임계값 git diff 무변경", "status": "verified", "evidence": "리뷰 diff 제거행 2건(문서 갱신행)뿐, lint 제거행 0"},
+  {"claim": "test_korean_lint.py 전량 pass — 15건(기존 8+신규 5+경계 2)", "status": "verified", "evidence": "python3 -m pytest tests/test_korean_lint.py -q → 15 passed EXIT=0 (13→15: 리뷰 LOW-1 경계 테스트 2건 메인 추가)"},
+  {"claim": "스킬 전체 pytest 회귀 0 fail", "status": "verified", "evidence": "python3 -m pytest -q → 341 passed EXIT=0"},
+  {"claim": "git diff에 qc_gate.py 부재", "status": "verified", "evidence": "git diff --name-only 4파일(lint·test·korean-style·SKILL)뿐"},
+  {"claim": "korean-style.md 상단 polish-doc 원천 표기 존재", "status": "verified", "evidence": "grep -c = 2 (docs/korean-style.md)"},
+  {"claim": "Never-cut 문구 verbatim 존재: 데이터 버리면서 줄이기는 실패다", "status": "verified", "evidence": "grep -F 1행 (korean-style.md)"},
+  {"claim": "자기 리비전 절(korean-style.md)·G4행 갱신(SKILL.md) 존재", "status": "verified", "evidence": "grep 각 1건 — 리뷰 확인"},
+  {"claim": "설치본 4파일 동기화 diff 차이 0", "status": "verified", "evidence": "diff -rq -x __pycache__ -x .pytest_cache → SYNC_OK, 설치본 15 passed"},
+  {"claim": "G4 표 신규 4행 용어가 경고 메시지 용어와 일치", "status": "verified", "evidence": "리뷰 대조 — korean-style.md:78-81 vs korean_lint.py:75-89"}
  ],
- "bundle": "polish-doc-g4/plan.md", "next": "review"}
+ "bundle": "polish-doc-g4/plan.md", "next": null,
+ "commit": "a6e0eb7",
+ "low_deferred": "LOW-2 괄호 문두 recall 공백·LOW-3 '가/는/은 아니라' 변형 미계수 — plan 범위 내, 후속 옵션"}
