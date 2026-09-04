@@ -43,3 +43,37 @@ def test_heading_list_quote_excluded():
 
 def test_clean_prose_no_warns():
     assert lint_text("에이전트는 도구를 호출하고, 결과를 검증한 뒤 상태를 전진시킵니다.") == []
+
+
+def test_scaffold_detected():
+    assert "문두 스캐폴딩" in _w("먼저, 이 방법을 살펴봅시다.")
+
+
+def test_hedge_detected():
+    assert "헤지" in _w("이것이 핵심이라고 할 수 있습니다.")
+
+
+def test_particle_density_detected():
+    filler = "이 장의 논증은 앞선 실험 결과와 일치한다. "
+    spiked = filler * 45 + "값에 대한 검증을 통해 오류의 경우 무시한다."
+    assert "번역투 조사" in _w(spiked)
+
+
+def test_particle_density_below_threshold_not_warned():
+    filler = "이 장의 논증은 앞선 실험 결과와 일치한다. "
+    clean = filler * 150 + "값에 대한 검증을 통해 오류의 경우 무시한다."
+    assert "번역투 조사" not in _w(clean)
+
+
+def test_ianira_cap_detected():
+    text = " ".join(f"이것은 {i}번이 아니라 {i+1}번 시도다." for i in range(21))
+    assert "'이 아니라'" in _w(text)
+
+
+def test_ianira_at_cap_not_warned():
+    text = " ".join(f"이것은 {i}번이 아니라 {i+1}번 시도다." for i in range(20))
+    assert "'이 아니라'" not in _w(text)
+
+
+def test_new_patterns_respect_skip_lines():
+    assert lint_text("## 먼저, 시작\n\n- 또한, 둘\n\n> 마지막으로, 셋\n\n본문은 정상입니다.") == []

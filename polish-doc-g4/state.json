@@ -1,0 +1,15 @@
+{"task": "polish-doc-g4", "tier": "M",
+ "phase": "review", "round": {"adversary": 0, "review": 0}, "spawns": 3,
+ "claims": [
+  {"claim": "korean_lint.py 신규 심볼 4종 존재", "status": "pending", "evidence": ""},
+  {"claim": "기존 6패턴 정규식·메시지·임계값 git diff 무변경", "status": "pending", "evidence": ""},
+  {"claim": "test_korean_lint.py 13테스트(8+5) 전량 pass", "status": "pending", "evidence": ""},
+  {"claim": "스킬 전체 pytest 회귀 0 fail", "status": "pending", "evidence": ""},
+  {"claim": "git diff에 qc_gate.py 부재", "status": "pending", "evidence": ""},
+  {"claim": "korean-style.md 상단 polish-doc 원천 표기 존재", "status": "pending", "evidence": ""},
+  {"claim": "Never-cut 문구 verbatim 존재: 데이터 버리면서 줄이기는 실패다", "status": "pending", "evidence": ""},
+  {"claim": "자기 리비전 절(korean-style.md)·G4행 갱신(SKILL.md) 존재", "status": "pending", "evidence": ""},
+  {"claim": "설치본 4파일 동기화 diff 차이 0", "status": "pending", "evidence": ""},
+  {"claim": "G4 표 신규 4행 용어가 경고 메시지 용어와 일치", "status": "pending", "evidence": ""}
+ ],
+ "bundle": "polish-doc-g4/plan.md", "next": "review"}
