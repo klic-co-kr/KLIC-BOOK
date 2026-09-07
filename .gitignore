@@ -30,3 +30,9 @@ books/product-design-psychology/
 
 # 설득의 구조 — 개인 소장용 재제작(OCR 전문 포함), 스캔 이미지 150MB 포함
 books/persuasion-structure-ko/
+
+# effort-router 과업 상태(§5) — state.json만 미커밋, 계획·대조 기록은 버전관리
+docs/task-id/**/state.json
+
+# kv-cache-handbook — diagram 펜스 빌드 산물(재생성 대상)
+books/kv-cache-handbook-ko/manuscript/*/assets/

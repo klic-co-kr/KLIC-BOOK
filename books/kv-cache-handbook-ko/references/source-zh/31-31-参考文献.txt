@@ -1,0 +1,41 @@
+参考文献
+
+
+主要论文与现行实现资料
+
+[1] A. Vaswani 等。Attention Is All You Need（《注意力就是你所需要的一切》）。NeurIPS 2017。
+arXiv:1706.03762。
+
+[2] N. Shazeer。Fast Transformer Decoding: One Write-Head is All You Need（《快速 Transformer 解
+码：只需一个写入头》）。arXiv:1911.02150，2019。
+
+[3] J. Ainslie 等。GQA: Training Generalized Multi-Query Transformer Models from Multi-Head
+Checkpoints（《GQA：从多头模型检查点训练广义多查询 Transformer 模型》）。EMNLP 2023。
+arXiv:2305.13245。
+
+[4] DeepSeek-AI 等。DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts
+Language Model（《DeepSeek-V2：强大、经济且高效的混合专家语言模型》）。arXiv:2405.04434，2024。
+
+[5] W. Kwon 等。Efficient Memory Management for Large Language Model Serving with
+PagedAttention（《使用 PagedAttention 高效管理大语言模型推理服务的内存》）。SOSP 2023。
+DOI:10.1145/3600006.3613165；arXiv:2309.06180。
+
+[6] NVIDIA Transformer Engine 文档。PyTorch 注意力／推理参数；解码期间的 K/V 缓存。查阅于 2026 年
+9 月。
+
+[7] vLLM 文档。自动前缀缓存、缓存配置，以及前缀缓存隔离／安全。现行文档查阅于 2026 年 9 月。
+
+[8] NVIDIA TensorRT-LLM 文档。KV 缓存系统、复用、优先级淘汰及主机卸载。现行文档查阅于 2026 年 9 月。
+
+[9] vLLM 文档。KV 卸载使用指南与多层卸载 API。现行文档查阅于 2026 年 9 月。
+
+[10] vLLM 文档。量化 KV 缓存与 CacheConfig 存储数据类型选项。现行文档查阅于 2026 年 9 月。
+
+[11] C. Hooper 等。KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache
+Quantization（《KVQuant：通过 KV 缓存量化迈向千万级上下文长度的大语言模型推理》）。
+arXiv:2401.18079，2024。
+
+
+
+
+                                        @techNmak

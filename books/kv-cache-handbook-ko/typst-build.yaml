@@ -1,0 +1,55 @@
+style: practical
+short_title: "KV 캐시의 이해"
+title: "KV 캐시의 이해"
+subtitle: "자기회귀 디코딩에서 최신 대규모 언어모델 추론까지 — Understanding AI 핸드북 02 한국어판"
+author: "원문 techNmak · 한국어판 KLIC"
+date: "2026-09"
+cover: auto
+cover_variant: 5
+cover_composition: true
+opener_composition: true
+cover_series: "KLIC BOOKS"
+cover_notes:
+  - "· 원리 → 비용 → 아키텍처 → 블록 관리 → 재사용·정밀도 → 종합"
+  - "· KV 캐시가 왜 성립하고, 무엇을 절약하며, 어떤 비용이 남는지"
+  - "· Understanding AI 핸드북 02 한국어판"
+chapters:
+  - manuscript/00-frontmatter/00-title.md
+  - manuscript/00-frontmatter/01-preface.md
+  - manuscript/01-principles/00-part-introduction.md
+  - manuscript/01-principles/ch01-autoregressive/index.md
+  - manuscript/01-principles/ch02-recompute/index.md
+  - manuscript/01-principles/ch03-mechanism/index.md
+  - manuscript/01-principles/ch04-per-layer/index.md
+  - manuscript/01-principles/ch05-prefill-decode/index.md
+  - manuscript/01-principles/ch06-stepwise-decode/index.md
+  - manuscript/02-cost/00-part-introduction.md
+  - manuscript/02-cost/ch07-memory-formula/index.md
+  - manuscript/02-cost/ch08-memory-worked-example/index.md
+  - manuscript/02-cost/ch09-context-length/index.md
+  - manuscript/02-cost/ch10-what-it-saves/index.md
+  - manuscript/03-architecture/00-part-introduction.md
+  - manuscript/03-architecture/ch11-mha/index.md
+  - manuscript/03-architecture/ch12-mqa/index.md
+  - manuscript/03-architecture/ch13-gqa/index.md
+  - manuscript/03-architecture/ch14-one-formula/index.md
+  - manuscript/03-architecture/ch15-mla/index.md
+  - manuscript/03-architecture/ch16-rope/index.md
+  - manuscript/04-block-management/00-part-introduction.md
+  - manuscript/04-block-management/ch17-requests/index.md
+  - manuscript/04-block-management/ch18-fragmentation/index.md
+  - manuscript/04-block-management/ch19-paged-attention/index.md
+  - manuscript/04-block-management/ch20-block-size/index.md
+  - manuscript/05-reuse-tiering-precision/00-part-introduction.md
+  - manuscript/05-reuse-tiering-precision/ch21-prefix-cache/index.md
+  - manuscript/05-reuse-tiering-precision/ch22-prefix-limits/index.md
+  - manuscript/05-reuse-tiering-precision/ch23-prefix-security/index.md
+  - manuscript/05-reuse-tiering-precision/ch24-eviction/index.md
+  - manuscript/05-reuse-tiering-precision/ch25-offload/index.md
+  - manuscript/05-reuse-tiering-precision/ch26-quantization/index.md
+  - manuscript/05-reuse-tiering-precision/ch27-quant-cost/index.md
+  - manuscript/06-synthesis/00-part-introduction.md
+  - manuscript/06-synthesis/ch28-misconceptions/index.md
+  - manuscript/06-synthesis/ch29-production-frame/index.md
+  - manuscript/06-synthesis/ch30-full-frame/index.md
+  - manuscript/07-backmatter/00-references.md
