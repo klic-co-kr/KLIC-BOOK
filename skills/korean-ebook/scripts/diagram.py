@@ -19,6 +19,7 @@
          python3 scripts/diagram.py render <chapter.md> --out /tmp
 """
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -54,16 +55,49 @@ def R(x, y, w, h, fill="none", stroke=INK, sw=1.5, rx=6, dash=None):
     return (f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}" '
             f'fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{d}/>')
 
-def L(x1, y1, x2, y2, stroke=INK, sw=1.7, dash=None, marker="ah"):
+def L(x1, y1, x2, y2, stroke=INK, sw=1.7, dash=None, marker="ah", casing=False):
     d = f' stroke-dasharray="{dash}"' if dash else ""
     m = f' marker-end="url(#{marker})"' if marker else ""
-    return (f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
+    line = (f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
             f'stroke="{stroke}" stroke-width="{sw}"{d}{m}/>')
+    if casing:  # 케이싱 — 흰 언더 스트로크가 교차선을 깔끔히 끊는다
+        c = (f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
+             f'stroke="#ffffff" stroke-width="{sw + 2.6:.2f}"/>')
+        return c + line
+    return line
 
-def P(d, stroke=INK, sw=1.7, fill="none", marker=None, dash=None):
+def P(d, stroke=INK, sw=1.7, fill="none", marker=None, dash=None, casing=False):
     m = f' marker-end="url(#{marker})"' if marker else ""
     dd = f' stroke-dasharray="{dash}"' if dash else ""
-    return f'<path d="{d}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{dd}{m}/>'
+    path = f'<path d="{d}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{dd}{m}/>'
+    if casing:
+        c = f'<path d="{d}" fill="none" stroke="#ffffff" stroke-width="{sw + 2.6:.2f}"/>'
+        return c + path
+    return path
+
+def _elbow(pts, r=12):
+    """축정렬 다각선의 꺾임을 반경 r의 둥근 엘보(Q 베지어)로 벼려낸 path d.
+
+    카탈로그 '둥근 엘보' — 직각 꺾임마다 꺾임점에서 양쪽 선분으로 r만큼
+    물러난 지점을 잇는 2차 베지어. 인접 선분 길이의 절반을 넘기지 않는다.
+    """
+    if len(pts) < 3:
+        return "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in pts)
+    def _toward(p, q, dist):
+        dx, dy = q[0] - p[0], q[1] - p[1]
+        ln = max(math.hypot(dx, dy), 1e-6)
+        return (p[0] + dx / ln * dist, p[1] + dy / ln * dist)
+    d = f"M {pts[0][0]:.1f} {pts[0][1]:.1f}"
+    for i in range(1, len(pts) - 1):
+        x1, y1 = pts[i]
+        rin = min(r,
+                  math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]) / 2,
+                  math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]) / 2)
+        a = _toward((x1, y1), pts[i - 1], rin)
+        b = _toward((x1, y1), pts[i + 1], rin)
+        d += f" L {a[0]:.1f} {a[1]:.1f} Q {x1:.1f} {y1:.1f} {b[0]:.1f} {b[1]:.1f}"
+    d += f" L {pts[-1][0]:.1f} {pts[-1][1]:.1f}"
+    return d
 
 def C(x, y, r, fill, stroke=INK, sw=1.5):
     return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"/>'
@@ -211,11 +245,11 @@ def _render_flow(f):
         mk = {"ok": "ah-blue", "fail": "ah-red", "back": "ah-gray"}.get(e.get("kind", ""), "ah")
         dash = "5,4" if e.get("kind") in ("fail", "back") else None
         if e.get("side") == "left":
-            ops.append(P(f"M {a[0]-170} {a[1]} L 90 {a[1]} L 90 {b[1]} L {b[0]-176} {b[1]}",
-                         col, 1.6, marker=mk, dash=dash))
+            pts = [(a[0] - 170, a[1]), (90, a[1]), (90, b[1]), (b[0] - 176, b[1])]
+            ops.append(P(_elbow(pts), col, 1.6, marker=mk, dash=dash, casing=True))
         elif e.get("side") == "right":
-            ops.append(P(f"M {a[0]+170} {a[1]} L 750 {a[1]} L 750 {b[1]} L {b[0]+176} {b[1]}",
-                         col, 1.6, marker=mk, dash=dash))
+            pts = [(a[0] + 170, a[1]), (750, a[1]), (750, b[1]), (b[0] + 176, b[1])]
+            ops.append(P(_elbow(pts), col, 1.6, marker=mk, dash=dash, casing=True))
         else:
             ops.append(L(a[0], a[1] + 24, b[0], b[1] - 26, col, 1.7, dash, mk))
         if e.get("label"):
