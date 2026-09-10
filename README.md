@@ -14,6 +14,7 @@
 | [AI 에이전트 깊이 이해하기](books/ai-agent-book-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/ai-agent-book-ko/AI_에이전트_깊이_이해하기_ai-agent-book-ko.pdf) |
 | [NHN FactoryX 실전 설계](books/factoryx-ai-infrastructure/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/factoryx-ai-infrastructure/build/NHN_FactoryX_실전_설계_nhn-factoryx-ai-infrastructure-ko.pdf) |
 | [대규모 언어모델(LLM) 강좌 2025](books/llm-lecture-2025/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/llm-lecture-2025/LLM_강좌_2025_한국어번역판.pdf) |
+| [절차 그래프의 이해 — LLM 에이전트를 위한 자기진화 실행 구조](books/procedural-graphs-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/procedural-graphs-ko/절차_그래프의_이해.pdf) |
 
 ## 🎓 강의
 
@@ -23,7 +24,7 @@
 
 | 스킬 | 설명 |
 | --- | --- |
-| [korean-ebook](skills/korean-ebook/) | Markdown 원고 → 한국어 출판형 PDF. **typst 엔진**(한국어 CJK + 수식 mitex 네이티브). 스타일 팩 4종 + QC 게이트(G1·G2·G3). 구 WeasyPrint 판(26.08.09) 대체·이름 계승. Claude 호환 |
+| [korean-ebook](skills/korean-ebook/) | Markdown 원고 → 한국어 출판형 PDF. **typst 엔진**(한국어 CJK + 수식 mitex 네이티브). 스타일 팩 4종(practical·essay·business·lecture) + QC 게이트 5종(G1 판면·G2 폰트·G3 글자수·G4 문체·G5 정합성) + diagram·infographic 펜스 벡터 도식 엔진(에지 기법은 [카탈로그](https://fiv.co.kr/diagram/) 규칙 채택). 구 WeasyPrint 판(26.08.09) 대체·이름 계승. Claude 호환 |
 | [korean-ebook-to-skill](skills/korean-ebook-to-skill/) | 한국어 책에서 AI가 진짜 가치를 판단해 추출(방법론·연구·해결책·원칙·안티패턴)하는 근거-chained 쿼리 지식층 스킬. 부록C 사례 회상율로 품질 검증. Claude 호환 |
 | [forward-deployed-engineer](skills/forward-deployed-engineer/) | FDE 책에서 추출한 참조형 쿼리 스킬 1개(통찰 55개, 회상 28.3%). korean-ebook-to-skill 변환기의 첫 예시 산출물 |
 | [pdf-to-md](skills/pdf-to-md/) | PDF 책(텍스트·스캔 혼합)을 챕터별 정제 Markdown으로 변환. pymupdf + PaddleOCR PP-Structure. korean-ebook 역방향 입력층(외부 PDF → MD → korean-ebook-to-skill). Claude 호환 |
@@ -80,4 +81,5 @@ unzip forward-deployed-engineer-skill-v1.0.zip -d ~/.claude/skills/
 - `books/<책-슬러그>/` — 책 한 권 단위. 자체 `README.md`(소개+목차), 챕터, 표지, 통권 PDF.
 - `lectures/<강의-슬러그>/` — 강의 단위.
 - `skills/<스킬-슬러그>/` — 재사용 가능한 에이전트 스킬. `SKILL.md`(Claude)와 `agents/openai.yaml`(Codex)을 함께 두어 양쪽 호환.
+- `.claude/skills/` — 프로젝트 단위 스킬 설치. 저장소 `skills/` 원본의 상대경로 심링크로, 클론하면 이 프로젝트의 Claude Code 세션에서 4개 스킬이 곧바로 동작한다.
 - 루트 `README.md`는 색인만 담당. 본문은 각 폴더로.
