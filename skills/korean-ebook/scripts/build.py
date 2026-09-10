@@ -176,7 +176,7 @@ COVER_AUTO = """// 자동 표지 v3 — KLIC 자체 문법: 비대칭 좌측 정
 {notes}
 // 저자·발행 — 하단 한 줄, 좌우 분할(비대칭 마감)
 #place(bottom + left, dx: 26mm, dy: -16mm)[
-  #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
+  #box(width: {w}mm * 0.48)[#text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]]
 ]
 {imprint}
 """
@@ -233,7 +233,7 @@ COVER_V2 = """// 자동 표지 변형2 — 이중 프레임 문고형: 얇은 �
 // 저자·발행 — 하단 중앙 수직 스택
 #place(bottom + center, dy: -22mm)[
   #align(center, stack(dir: ttb, spacing: 2.2mm,
-    text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]{imprint_items}))
+    box(width: {w}mm * 0.48)[text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]]{imprint_items}))
 ]
 """
 
@@ -278,7 +278,7 @@ COVER_V3 = """// 자동 표지 변형3 — 수평 밴드형: 상단 브랜드 �
 {notes}
 // 저자 좌·발행 우
 #place(bottom + left, dx: 24mm, dy: -16mm)[
-  #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
+  #box(width: {w}mm * 0.48)[#text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]]
 ]
 {imprint}
 """
@@ -340,7 +340,7 @@ COVER_V4 = """// 자동 표지 변형4 — 엣지 포인트: 우상단 코너에
 {notes}
 // 저자 좌·발행 우
 #place(bottom + left, dx: 26mm, dy: -16mm)[
-  #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
+  #box(width: {w}mm * 0.48)[#text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]]
 ]
 {imprint}
 """
@@ -396,7 +396,7 @@ COVER_V5 = """// 자동 표지 변형5 — 위계 격자형: 얇은 외곽 프�
 {notes}
 // 저자 — 하단 좌측
 #place(bottom + left, dx: 26mm, dy: -16mm)[
-  #text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]
+  #box(width: {w}mm * 0.48)[#text(size: 10.5pt, fill: ink)[{author_bold} #text(fill: mute)[ 지음]]]
 ]
 {imprint}
 """

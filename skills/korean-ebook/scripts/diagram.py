@@ -197,7 +197,7 @@ def _render_flow(f):
         fill, st = _fill_pair(n.get("tone", ""))
         kind = n.get("kind", "box")
         if kind == "gate":
-            ops.append(P(f"M {cx} {y-34} l 78 22 l -78 22 l -78 -22 z", fill, st, 1.8))
+            ops.append(P(f"M {cx} {y-34} l 78 22 l -78 22 l -78 -22 z", st, 1.8, fill))
             ops.append(T(cx, y, n["label"], 13, st, "middle", "bold"))
         elif kind == "note":
             ops.append(R(cx - 170, y - 18, 340, 36, fill, st, 1.3, 6, dash="5,3"))

@@ -30,6 +30,9 @@ LATIN_ALLOW = {
     "SKILL", "LLC", "DST", "DSTC", "SGD", "CTF", "CI", "PR", "JSON", "NOOP",
     "ADD", "UPDATE", "DELETE", "ACL", "ICLR", "EMNLP", "TACL", "AAAI",
     "SIGDIAL", "TRIPY", "UIST", "TRADE", "BACKGROUND", "TELEMETRY", "REST", "DB",
+    # 절차 그래프 정독서(procedural-graphs-ko G5 실전 보정)
+    "PG", "BFCL", "RAP", "AWM", "EM", "ACT", "SOAR", "KLIC", "CFO",
+    "MC", "GDV", "ALF",
 }
 
 # ALL-CAPS 2자 이상 — 뒤에 한글이 붙은 OCR 침입(RASS, WAS 같은)도 잡는다.
