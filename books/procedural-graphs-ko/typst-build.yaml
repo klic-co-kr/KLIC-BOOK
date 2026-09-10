@@ -1,0 +1,28 @@
+style: lecture
+short_title: "절차 그래프의 이해"
+title: "절차 그래프의 이해"
+subtitle: "LLM 에이전트를 위한 자기진화 실행 구조 — Procedural Graphs 한국어판"
+author: "원문 Yuxing Lu·Yicheng Chen·Shanchan Wu·Sercan Ö. Arık (Google) · 한국어판 KLIC"
+date: "2026-09"
+cover: auto
+cover_variant: 5
+cover_composition: true
+opener_composition: true
+cover_series: "KLIC BOOKS"
+cover_notes:
+  - "· 문제 → 프레임워크 → 실험 → 진화 → 효율성 → 실무 시사점"
+  - "· 절차 그래프가 무엇을 명시화하고, 어떻게 진화하며, 어디서 이득이 되는지"
+  - "· arXiv 2609.09153 논문 정독서 한국어판"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/01-왜-절차-그래프인가.md
+  - manuscript/02-관련-연구.md
+  - manuscript/03-절차-그래프-프레임워크.md
+  - manuscript/04-실험-설계.md
+  - manuscript/05-주요-결과.md
+  - manuscript/06-장기-의사결정과-생존.md
+  - manuscript/07-그래프-구축-전략.md
+  - manuscript/08-자기진화-10라운드.md
+  - manuscript/09-효율성-분석.md
+  - manuscript/10-결론-실무-시사점.md
+  - manuscript/11-부록-프롬프트와-알고리즘.md
