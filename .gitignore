@@ -39,3 +39,6 @@ books/kv-cache-handbook-ko/manuscript/*/assets/
 
 # diagram 펜스 재생성 산물(SVG 래스터화 중간물) — 조립 시 생성
 books/*/assets/diagrams/
+
+# claude-mem 플러그인 자동 생성 컨텍스트 스텁 — 저장소 미추적 관례
+CLAUDE.md
