@@ -15,6 +15,7 @@
 | [NHN FactoryX 실전 설계](books/factoryx-ai-infrastructure/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/factoryx-ai-infrastructure/build/NHN_FactoryX_실전_설계_nhn-factoryx-ai-infrastructure-ko.pdf) |
 | [대규모 언어모델(LLM) 강좌 2025](books/llm-lecture-2025/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/llm-lecture-2025/LLM_강좌_2025_한국어번역판.pdf) |
 | [절차 그래프의 이해 — LLM 에이전트를 위한 자기진화 실행 구조](books/procedural-graphs-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/procedural-graphs-ko/절차_그래프의_이해.pdf) |
+| [결정론적 가드레일 — 확률적 AI 에이전트를 형식 검증으로 묶다](books/lean-guardrails-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/lean-guardrails-ko/결정론적_가드레일.pdf) |
 
 ## 🎓 강의
 

@@ -1,0 +1,30 @@
+style: lecture
+short_title: "결정론적 가드레일"
+title: "결정론적 가드레일"
+subtitle: "확률적 AI 에이전트를 형식 검증으로 묶다 — Lean-Agent Protocol 정독과 한국 IT 각색"
+author: "원문 Devakh Rashie·Veda Rashi(Thomas Jefferson HSST) · 한국어 각색 KLIC"
+date: "2026-09"
+cover: auto
+cover_composition: true
+opener_composition: true
+cover_series: "KLIC BOOKS"
+cover_notes:
+  - "· 위기 → 계보 → Lean 4 → Aristotle → 승인 루프 → 규제·보안 → 시장"
+  - "· 전자정부·CMS/PMS·Slack·웹디자인·Flutter·React Native·TypeScript·Rust·Go·Python 각색"
+  - "· arXiv 2604.01483 정독 + 관련 논문 10편 한국어 각색"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/01-위기의-정체.md
+  - manuscript/02-가드레일의-세-계보.md
+  - manuscript/03-Lean-4의-문법.md
+  - manuscript/04-Aristotle과-자동-형식화.md
+  - manuscript/05-결정론적-승인-루프.md
+  - manuscript/06-규제-매핑-한국-금융으로.md
+  - manuscript/07-설명할-권리와-역방향-형식화.md
+  - manuscript/08-공격-표면과-WASM-샌드박스.md
+  - manuscript/09-시장과-선례.md
+  - manuscript/10-전자정부프레임워크의-가드레일.md
+  - manuscript/11-CMS-PMS-Slack의-가드레일.md
+  - manuscript/12-Flutter-React-Native-TypeScript.md
+  - manuscript/13-Rust-Go-Python.md
+  - manuscript/14-로드맵과-결론.md
