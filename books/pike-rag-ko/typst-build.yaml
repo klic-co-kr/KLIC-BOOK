@@ -1,0 +1,31 @@
+style: lecture
+short_title: "검색을 넘어 지식으로"
+title: "검색을 넘어 지식으로"
+subtitle: "질문 네 유형·시스템 다섯 단계 — PIKE-RAG(arXiv 2501.11551) 정독"
+author: "원문 Jinyu Wang·Jingjing Fu·Rui Wang·Lei Song·Jiang Bian(Microsoft Research Asia) · 한국어 각색 KLIC"
+date: "2026-09"
+cover: auto
+cover_composition: true
+opener_composition: true
+cover_series: "KLIC BOOKS"
+cover_notes:
+  - "· 산업 현장의 질문을 네 유형으로 나누고, RAG 시스템을 L0~L4 다섯 단계로 세우다"
+  - "· 지식 원자화 · 지식 인지 과제 분해 · 훈련 가능한 분해기 — 원문 5개 절 정독"
+  - "· HotpotQA·2WikiMultiHopQA·MuSiQue·LawBench 실측 해설 + 원문 그림 18종 한글 도식"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/01-검색만으로는-부족했다.md
+  - manuscript/02-네-가지-질문과-다섯-단계.md
+  - manuscript/03-프레임워크의-해부.md
+  - manuscript/04-L0-지식베이스-만들기.md
+  - manuscript/05-L1-사실을-가려내는-시스템.md
+  - manuscript/06-L2-지식을-원자로-쪼개다.md
+  - manuscript/07-L2-아는-만큼-나눈다.md
+  - manuscript/08-L2-분해기를-가르치다.md
+  - manuscript/09-L3-미래를-묻는-질문.md
+  - manuscript/10-L4-관점을-늘리는-에이전트들.md
+  - manuscript/11-벤치마크-오픈도메인.md
+  - manuscript/12-법률-벤치마크와-분해기-파인튜닝.md
+  - manuscript/13-세-가지-실패-사례와-해법.md
+  - manuscript/14-한국-IT-현장에서-읽는-PIKE-RAG.md
+  - manuscript/15-맺음말.md

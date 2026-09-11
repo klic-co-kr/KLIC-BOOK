@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 10. 지식 원자화와 지식 인지형 과제 분해</title><desc id="desc">청크에는 질문 색인을 만들고, 사용자 질문은 확보한 지식에 맞춰 단계적으로 분해. PIKE-RAG 원문 그림 10의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">10 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">지식 원자화와 지식 인지형 과제 분해</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">청크에는 질문 색인을 만들고, 사용자 질문은 확보한 지식에 맞춰 단계적으로 분해</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 10 / PDF 17쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="236" width="866" height="443" rx="18" fill="#EDF4FD"/>
+<rect x="64" y="236" width="6" height="443" rx="3" fill="#2465BF"/>
+<text x="90" y="282" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#2465BF" text-anchor="start">(a) 지식 인지형 해결 흐름</text>
+<rect x="956" y="236" width="900" height="443" rx="18" fill="#EAF6F5"/>
+<rect x="956" y="236" width="6" height="443" rx="3" fill="#087F8C"/>
+<text x="982" y="282" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">(b) 지식 원자화</text>
+<rect x="91" y="349" width="186" height="78" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="184.0" y="395.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#2465BF" text-anchor="middle">원래 질문</text>
+<rect x="337" y="349" width="238" height="78" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="456.0" y="395.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#2465BF" text-anchor="middle">추가 검색 필요?</text>
+<rect x="631" y="349" width="270" height="78" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="766.0" y="395.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#2465BF" text-anchor="middle">원자 지식 검색</text>
+<path d="M 284,388 L 326,388" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 583,388 L 621,388" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<text x="603" y="336" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="19" font-weight="700" fill="#2465BF" text-anchor="middle">예</text>
+<rect x="631" y="501" width="270" height="78" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="766.0" y="547.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#2465BF" text-anchor="middle">유용한 질문 선택</text>
+<rect x="337" y="501" width="238" height="78" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="456.0" y="547.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#2465BF" text-anchor="middle">원문 청크 누적</text>
+<rect x="91" y="501" width="186" height="78" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="184.0" y="547.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#7254AA" text-anchor="middle">답변 생성</text>
+<path d="M 766,436 L 766,492" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 622,540 L 585,540" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 451,492 L 451,437" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 340,411 L 307,411 L 307,469 L 184,469 L 184,492" fill="none" stroke="#7254AA" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<text x="187" y="458" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="700" fill="#7254AA" text-anchor="middle">아니요</text>
+<text x="94" y="640" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="400" fill="#5E7185" text-anchor="start">후보가 없거나 근거가 충분하면 반복을 종료</text>
+<g transform="translate(999,364) scale(1.515625)" fill="none" stroke="#087F8C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M19 6H43L56 19V60H19Z" fill="white"/><path d="M43 6V19H56"/>
+<path d="M27 29H47"/>
+<path d="M27 36H47"/>
+<path d="M27 43H47"/>
+<path d="M27 50H47"/>
+</g>
+<text x="1049" y="516" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#087F8C" text-anchor="middle">원문 청크</text>
+<path d="M 1117,419 L 1164,419" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<rect x="1180" y="361" width="271" height="123" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1315.5" y="403.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="middle">LLM 기반</text>
+<text x="1315.5" y="441.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">답할 수 있는 질문 생성</text>
+<line x1="1462" y1="419" x2="1487" y2="419" stroke="#087F8C" stroke-width="2" stroke-linecap="round"/>
+<path d="M 1487,419 L 1487,362 L 1510,362" fill="none" stroke="#087F8C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<path d="M 1487,419 L 1487,443 L 1510,443" fill="none" stroke="#087F8C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<path d="M 1487,419 L 1487,524 L 1510,524" fill="none" stroke="#087F8C" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<rect x="1520" y="330" width="303" height="64" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1671.5" y="369.35" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">원자 질문 1</text>
+<rect x="1520" y="411" width="303" height="64" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1671.5" y="450.35" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">원자 질문 2</text>
+<rect x="1520" y="492" width="303" height="64" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1671.5" y="531.35" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">원자 질문 …</text>
+<text x="991" y="614" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="start">각 질문을 해당 원문 청크에 연결하여 저장</text>
+<rect x="64" y="710" width="866" height="399" rx="18" fill="#FFF6E6"/>
+<rect x="64" y="710" width="6" height="399" rx="3" fill="#A46A14"/>
+<text x="90" y="756" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#A46A14" text-anchor="start">(c) 원자화 예시 · 논문의 인물 문서</text>
+<rect x="92" y="800" width="810" height="127" rx="12" fill="#FFFFFF"/>
+<text x="115" y="839" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">Oskar Roehler는 작가 Gisela Elsner와</text>
+<text x="115" y="882" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">작가 Klaus Roehler의 아들이다.</text>
+<rect x="95" y="965" width="380" height="93" rx="14" fill="#FFFFFF" stroke="#FFF6E6" stroke-width="3"/>
+<text x="285.0" y="1020.25" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#A46A14" text-anchor="middle">부모는 누구인가?</text>
+<rect x="511" y="965" width="380" height="93" rx="14" fill="#FFFFFF" stroke="#FFF6E6" stroke-width="3"/>
+<text x="701.0" y="1020.25" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#A46A14" text-anchor="middle">어머니는 누구인가?</text>
+<path d="M 499,934 L 499,950 L 285,950 L 285,957" fill="none" stroke="#A46A14" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-amber)"/>
+<path d="M 499,950 L 701,950 L 701,957" fill="none" stroke="#A46A14" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-amber)"/>
+<rect x="956" y="710" width="900" height="399" rx="18" fill="#F3EEFA"/>
+<rect x="956" y="710" width="6" height="399" rx="3" fill="#7254AA"/>
+<text x="982" y="756" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#7254AA" text-anchor="start">(d) 두 단계로 필요한 근거 연결</text>
+<text x="984" y="801" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#122B46" text-anchor="start">질문: 영화 Atomised 감독의 어머니는 누구인가?</text>
+<rect x="987" y="843" width="307" height="92" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="1140.5" y="885.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#7254AA" text-anchor="middle">감독 검색</text>
+<text x="1140.5" y="923.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">Oskar Roehler</text>
+<rect x="1357" y="843" width="453" height="92" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="1583.5" y="885.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#7254AA" text-anchor="middle">부모 관계 검색</text>
+<text x="1583.5" y="923.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">Gisela Elsner · Klaus Roehler</text>
+<path d="M 1304,889 L 1347,889" fill="none" stroke="#7254AA" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<rect x="1148" y="994" width="542" height="79" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="1419.0" y="1043.3" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#7254AA" text-anchor="middle">답변: Gisela Elsner</text>
+<path d="M 1583,944 L 1583,975 L 1419,975 L 1419,985" fill="none" stroke="#7254AA" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+</svg>

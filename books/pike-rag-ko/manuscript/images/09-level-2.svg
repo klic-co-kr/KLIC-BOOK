@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 9. L2 · 연결·추론형 질문 해결</title><desc id="desc">여러 문서의 근거를 모으고, 다음 검색 방향을 문맥에 맞춰 갱신. PIKE-RAG 원문 그림 9의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">09 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">L2 · 연결·추론형 질문 해결</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">여러 문서의 근거를 모으고, 다음 검색 방향을 문맥에 맞춰 갱신</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 9 / PDF 16쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="290" width="418" height="409" rx="18" fill="#EAF6F5"/>
+<rect x="64" y="290" width="6" height="409" rx="3" fill="#087F8C"/>
+<text x="90" y="336" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">지식 추출</text>
+<g transform="translate(366,382) scale(1.046875)" fill="none" stroke="#087F8C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M6 8H58L39 31V53L25 60V31Z" fill="white"/>
+</g>
+<text x="90" y="452" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">문맥 보존 청크 분할</text>
+<text x="90" y="504" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">자동 태깅</text>
+<text x="90" y="556" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">원자 지식 생성</text>
+<path d="M 488,481 L 511,481" fill="none" stroke="#122B46" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="522" y="290" width="418" height="409" rx="18" fill="#EDF4FD"/>
+<rect x="522" y="290" width="6" height="409" rx="3" fill="#2465BF"/>
+<text x="548" y="336" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#2465BF" text-anchor="start">지식 검색</text>
+<g transform="translate(824,382) scale(1.046875)" fill="none" stroke="#2465BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="27" cy="27" r="18"/><path d="M40 40L58 58" stroke-width="5"/>
+</g>
+<text x="548" y="452" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">텍스트 검색</text>
+<text x="548" y="504" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">임베딩 검색</text>
+<text x="548" y="556" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">정제 지식 검색</text>
+<path d="M 946,481 L 969,481" fill="none" stroke="#122B46" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="980" y="290" width="418" height="409" rx="18" fill="#FFF6E6"/>
+<rect x="980" y="290" width="6" height="409" rx="3" fill="#A46A14"/>
+<text x="1006" y="336" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#A46A14" text-anchor="start">지식 조직화</text>
+<g transform="translate(1282,382) scale(1.046875)" fill="none" stroke="#A46A14" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="5" y="10" width="54" height="45" rx="3" fill="white"/>
+<path d="M23 10V55"/>
+<path d="M41 10V55"/>
+<path d="M5 23H59"/>
+<path d="M5 34H59"/>
+<path d="M5 45H59"/>
+</g>
+<text x="1006" y="452" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">지식 재정렬</text>
+<text x="1006" y="504" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">지식 집계</text>
+<path d="M 1404,481 L 1427,481" fill="none" stroke="#122B46" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="1438" y="290" width="418" height="409" rx="18" fill="#F3EEFA"/>
+<rect x="1438" y="290" width="6" height="409" rx="3" fill="#7254AA"/>
+<text x="1464" y="336" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#7254AA" text-anchor="start">지식 중심 추론</text>
+<g transform="translate(1740,382) scale(1.046875)" fill="none" stroke="#7254AA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M30 10C18 0 11 10 12 20C0 21 0 36 9 40C5 54 17 61 29 53V13 M34 10C46 0 53 10 52 20C64 21 64 36 55 40C59 54 47 61 35 53V13 M13 22L24 28 M9 40L23 38 M51 22L40 28 M55 40L41 38"/>
+</g>
+<text x="1464" y="452" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">다단계 추론</text>
+<text x="1464" y="504" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">비교</text>
+<text x="1464" y="556" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">요약</text>
+<rect x="498" y="815" width="962" height="211" rx="18" fill="#EDF4FD"/>
+<rect x="498" y="815" width="6" height="211" rx="3" fill="#2465BF"/>
+<text x="524" y="861" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#2465BF" text-anchor="start">과제 분해·조정</text>
+<text x="529" y="912" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#2465BF" text-anchor="start">질문 + 누적 문맥 → 다음 원자 질의 → 검색 → 근거 추가</text>
+<text x="529" y="972" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">현재 확보한 지식을 반영해 다음 단계를 반복 갱신</text>
+<rect x="65" y="841" width="323" height="133" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<g transform="translate(85,864) scale(0.65625)" fill="none" stroke="#2465BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="18" r="11" fill="white"/><path d="M9 58V49C9 29 55 29 55 49V58Z" fill="white"/>
+</g>
+<text x="142" y="916.95" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#2465BF" text-anchor="start">사용자 질문</text>
+<rect x="1533" y="841" width="323" height="133" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<g transform="translate(1553,864) scale(0.65625)" fill="none" stroke="#7254AA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="27"/><path d="M17 31L27 42L48 21" stroke-width="5"/>
+</g>
+<text x="1610" y="916.95" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#7254AA" text-anchor="start">최종 답변</text>
+<path d="M 397,907 L 487,907" fill="none" stroke="#2465BF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 1468,907 L 1523,907" fill="none" stroke="#7254AA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<path d="M 819,813 L 819,760 L 731,760 L 731,707" fill="none" stroke="#2465BF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 1647,707 L 1647,770 L 1402,770 L 1402,806" fill="none" stroke="#7254AA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<path d="M 934,815 L 934,742 L 273,742 L 273,707" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)" stroke-dasharray="6 7"/>
+<path d="M 934,815 L 934,742 L 1189,742 L 1189,707" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)" stroke-dasharray="6 7"/>
+<rect x="64" y="1060" width="1792" height="64" rx="12" fill="#EDF4FD"/>
+<text x="88" y="1101" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#2465BF" text-anchor="start">L1에서 더해진 핵심: 원자 지식 생성, 반복 과제 분해, 여러 근거를 연결하는 추론</text>
+</svg>

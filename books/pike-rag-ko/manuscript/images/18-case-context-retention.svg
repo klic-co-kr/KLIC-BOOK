@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 18. 사례 C · 원문 문맥을 끝까지 보존</title><desc id="desc">짧은 중간 답만 남기지 않고, 선택한 청크의 풍부한 근거를 유지. PIKE-RAG 원문 그림 18의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">18 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">사례 C · 원문 문맥을 끝까지 보존</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">짧은 중간 답만 남기지 않고, 선택한 청크의 풍부한 근거를 유지</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 18 / PDF 34쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="245" width="1792" height="132" rx="18" fill="#F0F3F7"/>
+<rect x="64" y="245" width="6" height="132" rx="3" fill="#64748B"/>
+<text x="90" y="291" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#64748B" text-anchor="start">원래 질문 · 논문 사례</text>
+<text x="91" y="340" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#122B46" text-anchor="start">Ernie Watts는 어느 지역에서 태어났는가?</text>
+<rect x="64" y="411" width="864" height="630" rx="18" fill="#FFF0ED"/>
+<rect x="64" y="411" width="6" height="630" rx="3" fill="#B94F4C"/>
+<text x="90" y="457" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#B94F4C" text-anchor="start">Self-Ask · 논문의 오류 사례</text>
+<rect x="960" y="411" width="896" height="630" rx="18" fill="#EAF6F5"/>
+<rect x="960" y="411" width="6" height="630" rx="3" fill="#087F8C"/>
+<text x="986" y="457" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">PIKE-RAG · 논문의 해결 경로</text>
+<rect x="99" y="511" width="794" height="110" rx="14" fill="#FFFFFF" stroke="#FFF0ED" stroke-width="3"/>
+<text x="496.0" y="553.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#B94F4C" text-anchor="middle">검색 문서에서 다른 인물을 고름</text>
+<text x="496.0" y="591.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">축구선수 문서가 있었지만 음악가로 해석</text>
+<path d="M 496,628 L 496,671" fill="none" stroke="#B94F4C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-coral)"/>
+<rect x="99" y="681" width="794" height="110" rx="14" fill="#FFFFFF" stroke="#FFF0ED" stroke-width="3"/>
+<text x="496.0" y="723.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#B94F4C" text-anchor="middle">중간 답변만 남김</text>
+<text x="496.0" y="761.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">검색한 청크는 다음 문맥에 유지하지 않음</text>
+<path d="M 496,798 L 496,841" fill="none" stroke="#B94F4C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-coral)"/>
+<rect x="99" y="851" width="794" height="135" rx="14" fill="#FFFFFF" stroke="#FFF0ED" stroke-width="3"/>
+<g transform="translate(119,874) scale(0.65625)" fill="none" stroke="#B94F4C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="27"/><path d="M21 21L43 43 M43 21L21 43" stroke-width="4"/>
+</g>
+<text x="176" y="927.6" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="700" fill="#B94F4C" text-anchor="start">잘못된 인물의 출생지로 진행 → 오답</text>
+<rect x="995" y="511" width="826" height="110" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1408.0" y="553.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="middle">간결한 원자 질문 목록에서 선택</text>
+<text x="1408.0" y="591.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">관련된 축구선수 문서의 원자 질문을 고름</text>
+<path d="M 1408,628 L 1408,671" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<rect x="995" y="681" width="826" height="110" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1408.0" y="723.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="middle">선택한 원문 청크 전체를 보존</text>
+<text x="1408.0" y="761.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">인물 식별과 출생지 근거를 다음 단계에도 유지</text>
+<path d="M 1408,798 L 1408,841" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<rect x="995" y="851" width="826" height="135" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<g transform="translate(1015,874) scale(0.65625)" fill="none" stroke="#087F8C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="27"/><path d="M17 31L27 42L48 21" stroke-width="5"/>
+</g>
+<text x="1072" y="891.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="start">올바른 근거를 재사용</text>
+<text x="1072" y="928.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="start">논문에서 보고한 답변: West Berkshire</text>
+<rect x="64" y="1060" width="1792" height="64" rx="12" fill="#EAF6F5"/>
+<text x="88" y="1101" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#087F8C" text-anchor="start">짧은 중간 답만 유지하지 않고, 선택한 원문 청크를 후속 검색·추론의 문맥에 남깁니다.</text>
+</svg>

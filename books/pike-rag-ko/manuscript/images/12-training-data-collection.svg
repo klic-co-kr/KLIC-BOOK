@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 12. 과제 분해기 학습 데이터 수집</title><desc id="desc">문맥 표본, 생성 질의, 선택 경로, 답변 평가를 함께 기록. PIKE-RAG 원문 그림 12의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">12 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">과제 분해기 학습 데이터 수집</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">문맥 표본, 생성 질의, 선택 경로, 답변 평가를 함께 기록</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 12 / PDF 19쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="282" width="418" height="389" rx="18" fill="#EAF6F5"/>
+<rect x="64" y="282" width="6" height="389" rx="3" fill="#087F8C"/>
+<text x="90" y="328" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">1 문맥 샘플링</text>
+<g transform="translate(236,386) scale(1.15625)" fill="none" stroke="#087F8C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M19 6H43L56 19V60H19Z" fill="white"/><path d="M43 6V19H56"/>
+<path d="M27 29H47"/>
+<path d="M27 36H47"/>
+<path d="M27 43H47"/>
+<path d="M27 50H47"/>
+</g>
+<text x="90" y="526" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">질문과 누적 문맥에</text>
+<text x="90" y="569" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">선택한 문맥 표본 추가</text>
+<path d="M 491,467 L 510,467" fill="none" stroke="#122B46" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="522" y="282" width="418" height="389" rx="18" fill="#EDF4FD"/>
+<rect x="522" y="282" width="6" height="389" rx="3" fill="#2465BF"/>
+<text x="548" y="328" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#2465BF" text-anchor="start">2 생성 질의 저장</text>
+<g transform="translate(694,386) scale(1.15625)" fill="none" stroke="#2465BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="22" y="3" width="20" height="16" rx="3" fill="white"/><path d="M32 19V32H10V42 M32 32V42 M32 32H54V42"/><rect x="2" y="42" width="16" height="17" rx="3" fill="white"/><rect x="24" y="42" width="16" height="17" rx="3" fill="white"/><rect x="46" y="42" width="16" height="17" rx="3" fill="white"/>
+</g>
+<text x="548" y="526" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">분해기가 제안한</text>
+<text x="548" y="569" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">여러 원자 질의를 저장</text>
+<path d="M 949,467 L 968,467" fill="none" stroke="#122B46" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="980" y="282" width="418" height="389" rx="18" fill="#FFF6E6"/>
+<rect x="980" y="282" width="6" height="389" rx="3" fill="#A46A14"/>
+<text x="1006" y="328" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#A46A14" text-anchor="start">3 선택 경로 저장</text>
+<g transform="translate(1152,386) scale(1.15625)" fill="none" stroke="#A46A14" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M7 6H48L58 16V59H7Z" fill="white"/><path d="M19 6V25H45V6 M18 59V38H47V59 M38 11V20"/>
+</g>
+<text x="1006" y="526" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">검색 후 선택한</text>
+<text x="1006" y="569" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">원자 질문의 순서를 기록</text>
+<path d="M 1407,467 L 1426,467" fill="none" stroke="#122B46" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="1438" y="282" width="418" height="389" rx="18" fill="#F3EEFA"/>
+<rect x="1438" y="282" width="6" height="389" rx="3" fill="#7254AA"/>
+<text x="1464" y="328" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#7254AA" text-anchor="start">4 답변 평가 저장</text>
+<g transform="translate(1610,386) scale(1.15625)" fill="none" stroke="#7254AA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="27"/><path d="M17 31L27 42L48 21" stroke-width="5"/>
+</g>
+<text x="1464" y="526" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">생성 답변을 정답과 비교해</text>
+<text x="1464" y="569" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#122B46" text-anchor="start">평가 점수를 기록</text>
+<rect x="64" y="746" width="745" height="335" rx="18" fill="#F3EEFA"/>
+<rect x="64" y="746" width="6" height="335" rx="3" fill="#7254AA"/>
+<text x="90" y="792" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#7254AA" text-anchor="start">답변 평가의 입력</text>
+<rect x="95" y="826" width="345" height="54" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="267.5" y="860.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#7254AA" text-anchor="middle">사용자 질문</text>
+<rect x="95" y="896" width="345" height="54" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="267.5" y="930.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#7254AA" text-anchor="middle">생성 답변</text>
+<rect x="95" y="966" width="345" height="54" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="267.5" y="1000.7" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#7254AA" text-anchor="middle">정답</text>
+<g transform="translate(584,883) scale(1.1875)" fill="none" stroke="#7254AA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="27"/><path d="M17 31L27 42L48 21" stroke-width="5"/>
+</g>
+<text x="623" y="1030" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#7254AA" text-anchor="middle">평가 점수</text>
+<path d="M 452,852 L 518,852 L 518,921 L 570,921" fill="none" stroke="#7254AA" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<path d="M 452,922 L 518,922 L 518,921 L 570,921" fill="none" stroke="#7254AA" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<path d="M 452,992 L 518,992 L 518,921 L 570,921" fill="none" stroke="#7254AA" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<rect x="962" y="746" width="894" height="335" rx="18" fill="#EAF6F5"/>
+<rect x="962" y="746" width="6" height="335" rx="3" fill="#087F8C"/>
+<text x="988" y="792" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">학습용 상호작용 기록</text>
+<text x="996" y="845" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="700" fill="#087F8C" text-anchor="start">사용자 질문</text>
+<text x="996" y="907" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="400" fill="#122B46" text-anchor="start">선택한 원자 질문의 경로: q¹ → q² → …</text>
+<text x="996" y="969" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="400" fill="#122B46" text-anchor="start">답변 평가 점수</text>
+<text x="996" y="1041" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="400" fill="#5E7185" text-anchor="start">서로 다른 문맥과 경로를 함께 수집</text>
+<path d="M 820,915 L 950,915" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<path d="M 1647,680 L 1647,736" fill="none" stroke="#7254AA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+</svg>

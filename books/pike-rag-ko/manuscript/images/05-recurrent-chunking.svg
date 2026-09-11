@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 5. 앞 문맥을 이어 가는 반복 청크 분할</title><desc id="desc">앞부분의 요약을 다음 분할에 전달하여 문서의 흐름을 유지. PIKE-RAG 원문 그림 5의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">05 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">앞 문맥을 이어 가는 반복 청크 분할</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">앞부분의 요약을 다음 분할에 전달하여 문서의 흐름을 유지</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 5 / PDF 13쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="251" width="1792" height="745" rx="18" fill="#EAF6F5"/>
+<rect x="64" y="251" width="6" height="745" rx="3" fill="#087F8C"/>
+<text x="90" y="297" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">반복 분할 · 요약을 다음 청크의 문맥으로 전달</text>
+<rect x="110" y="425" width="352" height="134" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="286.0" y="467.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="700" fill="#087F8C" text-anchor="middle">앞부분 요약</text>
+<text x="286.0" y="505.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">문서 앞부분에서 문맥 준비</text>
+<g transform="translate(232,767) scale(1.5)" fill="none" stroke="#64748B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M19 6H43L56 19V60H19Z" fill="white"/><path d="M43 6V19H56"/>
+<path d="M27 29H47"/>
+<path d="M27 36H47"/>
+<path d="M27 43H47"/>
+<path d="M27 50H47"/>
+</g>
+<text x="286" y="917" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="400" fill="#5E7185" text-anchor="middle">줄 번호가 있는 원문</text>
+<path d="M 286,761 L 286,568" fill="none" stroke="#64748B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-gray)"/>
+<path d="M 469,488 L 529,488" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<text x="501.0" y="391" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">요약 전달</text>
+<rect x="540" y="425" width="352" height="134" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="716.0" y="467.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="700" fill="#087F8C" text-anchor="middle">분할 1</text>
+<text x="716.0" y="505.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">현재 내용과 앞 문맥을 함께 사용</text>
+<g transform="translate(662,767) scale(1.5)" fill="none" stroke="#64748B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M19 6H43L56 19V60H19Z" fill="white"/><path d="M43 6V19H56"/>
+<path d="M27 29H47"/>
+<path d="M27 36H47"/>
+<path d="M27 43H47"/>
+<path d="M27 50H47"/>
+</g>
+<text x="716" y="917" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="400" fill="#5E7185" text-anchor="middle">줄 번호가 있는 원문</text>
+<rect x="540" y="652" width="352" height="85" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="716.0" y="702.9" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#2465BF" text-anchor="middle">청크 1 + 요약 1</text>
+<path d="M 716,568 L 716,645" fill="none" stroke="#2465BF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 766,803 L 917,803 L 917,603 L 862,603 L 862,568" fill="none" stroke="#64748B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-gray)"/>
+<path d="M 899,488 L 959,488" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<text x="931.0" y="391" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">요약 전달</text>
+<rect x="970" y="425" width="352" height="134" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1146.0" y="467.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="700" fill="#087F8C" text-anchor="middle">분할 2</text>
+<text x="1146.0" y="505.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">현재 내용과 앞 문맥을 함께 사용</text>
+<g transform="translate(1092,767) scale(1.5)" fill="none" stroke="#64748B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M19 6H43L56 19V60H19Z" fill="white"/><path d="M43 6V19H56"/>
+<path d="M27 29H47"/>
+<path d="M27 36H47"/>
+<path d="M27 43H47"/>
+<path d="M27 50H47"/>
+</g>
+<text x="1146" y="917" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="400" fill="#5E7185" text-anchor="middle">줄 번호가 있는 원문</text>
+<rect x="970" y="652" width="352" height="85" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="1146.0" y="702.9" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#2465BF" text-anchor="middle">청크 2 + 요약 2</text>
+<path d="M 1146,568 L 1146,645" fill="none" stroke="#2465BF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 1196,803 L 1347,803 L 1347,603 L 1292,603 L 1292,568" fill="none" stroke="#64748B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-gray)"/>
+<path d="M 1329,488 L 1389,488" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<text x="1361.0" y="391" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">요약 전달</text>
+<rect x="1400" y="425" width="352" height="134" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1576.0" y="467.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="700" fill="#087F8C" text-anchor="middle">분할 3</text>
+<text x="1576.0" y="505.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">현재 내용과 앞 문맥을 함께 사용</text>
+<g transform="translate(1522,767) scale(1.5)" fill="none" stroke="#64748B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M19 6H43L56 19V60H19Z" fill="white"/><path d="M43 6V19H56"/>
+<path d="M27 29H47"/>
+<path d="M27 36H47"/>
+<path d="M27 43H47"/>
+<path d="M27 50H47"/>
+</g>
+<text x="1576" y="917" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="400" fill="#5E7185" text-anchor="middle">줄 번호가 있는 원문</text>
+<rect x="1400" y="652" width="352" height="85" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="1576.0" y="702.9" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#2465BF" text-anchor="middle">청크 3 + 요약 3</text>
+<path d="M 1576,568 L 1576,645" fill="none" stroke="#2465BF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 1626,803 L 1777,803 L 1777,603 L 1722,603 L 1722,568" fill="none" stroke="#64748B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-gray)"/>
+<rect x="563" y="329" width="321" height="46" rx="23.0" fill="#EDF4FD"/>
+<text x="723.5" y="359.35" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#2465BF" text-anchor="middle">요약 1 → 다음 문맥</text>
+<rect x="993" y="329" width="321" height="46" rx="23.0" fill="#EDF4FD"/>
+<text x="1153.5" y="359.35" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#2465BF" text-anchor="middle">요약 2 → 다음 문맥</text>
+<rect x="1423" y="329" width="321" height="46" rx="23.0" fill="#EDF4FD"/>
+<text x="1583.5" y="359.35" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#2465BF" text-anchor="middle">요약 3 → 다음 문맥</text>
+<rect x="64" y="1047" width="1792" height="64" rx="12" fill="#EAF6F5"/>
+<text x="88" y="1088" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#087F8C" text-anchor="start">처리한 부분을 제거하고 요약을 갱신하며 반복합니다. 청크의 크기는 내용·구조에 맞춰 조정할 수 있습니다.</text>
+</svg>

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 13. 문맥 탐색과 분야 맞춤 분해기 학습</title><desc id="desc">이미 유망한 문맥을 활용하면서, 다른 문맥과 분해 경로도 탐색. PIKE-RAG 원문 그림 13의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">13 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">문맥 탐색과 분야 맞춤 분해기 학습</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">이미 유망한 문맥을 활용하면서, 다른 문맥과 분해 경로도 탐색</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 13 / PDF 19쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="249" width="826" height="739" rx="18" fill="#EDF4FD"/>
+<rect x="64" y="249" width="6" height="739" rx="3" fill="#2465BF"/>
+<text x="90" y="295" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#2465BF" text-anchor="start">(a) 문맥 샘플링 · 활용과 탐색</text>
+<rect x="106" y="361" width="313" height="52" rx="26.0" fill="#EDF4FD"/>
+<text x="262.5" y="395.05" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="700" fill="#2465BF" text-anchor="middle">활용 · 유망한 근거</text>
+<rect x="487" y="361" width="352" height="52" rx="26.0" fill="#EAF6F5"/>
+<text x="663.0" y="395.05" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="700" fill="#087F8C" text-anchor="middle">탐색 · 덜 살핀 문맥</text>
+<line x1="145" y1="507" x2="350" y2="475" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="350" y1="475" x2="554" y2="519" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="554" y1="519" x2="768" y2="467" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="145" y1="507" x2="243" y2="627" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="350" y1="475" x2="243" y2="627" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="554" y1="519" x2="447" y2="678" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="768" y1="467" x2="686" y2="638" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="243" y1="627" x2="447" y2="678" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="447" y1="678" x2="686" y2="638" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="243" y1="627" x2="134" y2="773" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="447" y1="678" x2="375" y2="834" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="686" y1="638" x2="705" y2="812" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="134" y1="773" x2="375" y2="834" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<line x1="375" y1="834" x2="705" y2="812" stroke="#DCE5ED" stroke-width="3" stroke-linecap="round"/>
+<circle cx="145" cy="507" r="22" fill="#F0F3F7" stroke="#64748B" stroke-width="2"/>
+<circle cx="350" cy="475" r="22" fill="#EDF4FD" stroke="#2465BF" stroke-width="2"/>
+<circle cx="554" cy="519" r="22" fill="#F0F3F7" stroke="#64748B" stroke-width="2"/>
+<circle cx="768" cy="467" r="22" fill="#EAF6F5" stroke="#087F8C" stroke-width="2"/>
+<circle cx="243" cy="627" r="22" fill="#F0F3F7" stroke="#64748B" stroke-width="2"/>
+<circle cx="447" cy="678" r="22" fill="#EDF4FD" stroke="#2465BF" stroke-width="2"/>
+<circle cx="686" cy="638" r="22" fill="#EAF6F5" stroke="#087F8C" stroke-width="2"/>
+<circle cx="134" cy="773" r="22" fill="#F0F3F7" stroke="#64748B" stroke-width="2"/>
+<circle cx="375" cy="834" r="22" fill="#EDF4FD" stroke="#2465BF" stroke-width="2"/>
+<circle cx="705" cy="812" r="22" fill="#EAF6F5" stroke="#087F8C" stroke-width="2"/>
+<path d="M 350,498 L 447,655" fill="none" stroke="#2465BF" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 447,703 L 375,810" fill="none" stroke="#2465BF" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 768,492 L 686,613" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)" stroke-dasharray="7 7"/>
+<path d="M 686,664 L 705,787" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)" stroke-dasharray="7 7"/>
+<text x="104" y="941" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#2465BF" text-anchor="start">UCB: 점수와 방문 빈도를 고려해 문맥을 선택</text>
+<rect x="925" y="249" width="931" height="739" rx="18" fill="#F3EEFA"/>
+<rect x="925" y="249" width="6" height="739" rx="3" fill="#7254AA"/>
+<text x="951" y="295" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#7254AA" text-anchor="start">(b) 수집한 경로로 분해기 학습</text>
+<rect x="967" y="371" width="846" height="118" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="1390.0" y="440.15" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#7254AA" text-anchor="middle">서로 다른 분해 경로 + 답변 점수</text>
+<path d="M 1390,498 L 1390,543" fill="none" stroke="#7254AA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<rect x="967" y="554" width="846" height="116" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="1390.0" y="621.45" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#7254AA" text-anchor="middle">질문·앞선 경로 → 다음 질의 / 종료 여부</text>
+<path d="M 1390,679 L 1390,721" fill="none" stroke="#7254AA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<rect x="980" y="735" width="208" height="62" rx="31.0" fill="#F3EEFA"/>
+<text x="1084.0" y="775.45" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#7254AA" text-anchor="middle">SFT</text>
+<rect x="1222" y="735" width="577" height="62" rx="31.0" fill="#F0F3F7"/>
+<text x="1510.5" y="774.05" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="700" fill="#64748B" text-anchor="middle">DPO · CPO 등 선호도 학습</text>
+<path d="M 1390,807 L 1390,848" fill="none" stroke="#7254AA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<rect x="967" y="861" width="846" height="86" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="1390.0" y="914.5" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="30" font-weight="700" fill="#7254AA" text-anchor="middle">분야 특화 과제 분해기</text>
+<rect x="64" y="1047" width="1792" height="64" rx="12" fill="#F0F3F7"/>
+<text x="88" y="1088" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#64748B" text-anchor="start">그림의 선호도 학습은 확장 선택지입니다. 이 버전 6.4절에 제시된 분해기 학습 실험은 SFT입니다.</text>
+</svg>

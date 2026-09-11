@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 17. 사례 B · 질문과 원문의 표현 차이</title><desc id="desc">같은 관계도 질문과 문서에서는 서로 다른 문장 형태로 표현될 수 있음. PIKE-RAG 원문 그림 17의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">17 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">사례 B · 질문과 원문의 표현 차이</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">같은 관계도 질문과 문서에서는 서로 다른 문장 형태로 표현될 수 있음</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 17 / PDF 33쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="245" width="1792" height="132" rx="18" fill="#F0F3F7"/>
+<rect x="64" y="245" width="6" height="132" rx="3" fill="#64748B"/>
+<text x="90" y="291" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#64748B" text-anchor="start">원문에 기록된 관계</text>
+<text x="91" y="340" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#122B46" text-anchor="start">Oskar Roehler는 Gisela Elsner와 Klaus Roehler의 아들이다.</text>
+<rect x="64" y="411" width="864" height="630" rx="18" fill="#FFF0ED"/>
+<rect x="64" y="411" width="6" height="630" rx="3" fill="#B94F4C"/>
+<text x="90" y="457" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#B94F4C" text-anchor="start">Self-Ask · 논문의 오류 사례</text>
+<rect x="960" y="411" width="896" height="630" rx="18" fill="#EAF6F5"/>
+<rect x="960" y="411" width="6" height="630" rx="3" fill="#087F8C"/>
+<text x="986" y="457" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">PIKE-RAG · 논문의 해결 경로</text>
+<rect x="99" y="512" width="794" height="110" rx="14" fill="#FFFFFF" stroke="#FFF0ED" stroke-width="3"/>
+<text x="496.0" y="554.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#B94F4C" text-anchor="middle">단일 후속 질문</text>
+<text x="496.0" y="592.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">Oskar Roehler의 어머니는 누구인가?</text>
+<path d="M 496,629 L 496,672" fill="none" stroke="#B94F4C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-coral)"/>
+<rect x="99" y="682" width="794" height="110" rx="14" fill="#FFFFFF" stroke="#FFF0ED" stroke-width="3"/>
+<text x="496.0" y="724.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#B94F4C" text-anchor="middle">원문의 표현과 잘 맞지 않는 검색</text>
+<text x="496.0" y="762.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">질문: “어머니” / 원문: “두 사람의 아들”</text>
+<path d="M 496,799 L 496,842" fill="none" stroke="#B94F4C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-coral)"/>
+<rect x="99" y="852" width="794" height="128" rx="14" fill="#FFFFFF" stroke="#FFF0ED" stroke-width="3"/>
+<g transform="translate(119,875) scale(0.65625)" fill="none" stroke="#B94F4C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="27"/><path d="M21 21L43 43 M43 21L21 43" stroke-width="4"/>
+</g>
+<text x="176" y="925.45" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#B94F4C" text-anchor="start">해당 사례에서 목표 근거 검색 실패</text>
+<rect x="995" y="512" width="826" height="110" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1408.0" y="554.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="middle">여러 표현의 원자 질의 제안</text>
+<text x="1408.0" y="592.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">부모는 누구? · 어머니는 누구? · 가족 정보는?</text>
+<path d="M 1408,629 L 1408,672" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<rect x="995" y="682" width="826" height="110" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="1408.0" y="724.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="middle">원자 질문 색인으로 표현 차이 연결</text>
+<text x="1408.0" y="762.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">“부모는 누구인가?”에서 원문 청크에 도달</text>
+<path d="M 1408,799 L 1408,842" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<rect x="995" y="852" width="826" height="128" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<g transform="translate(1015,875) scale(0.65625)" fill="none" stroke="#087F8C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="32" r="27"/><path d="M17 31L27 42L48 21" stroke-width="5"/>
+</g>
+<text x="1072" y="892.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="start">부모 관계를 담은 근거 확보</text>
+<text x="1072" y="929.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="start">어머니: Gisela Elsner</text>
+<rect x="64" y="1060" width="1792" height="64" rx="12" fill="#EAF6F5"/>
+<text x="88" y="1101" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#087F8C" text-anchor="start">원자 질문을 검색의 중간 연결점으로 사용해, 질문과 문서의 문장 형태 차이를 줄입니다.</text>
+</svg>

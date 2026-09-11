@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 15. L4 · 여러 관점으로 해결안 만들기</title><desc id="desc">근거 기반 추론에 여러 에이전트의 관점을 더하는 확장 구조. PIKE-RAG 원문 그림 15의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">15 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">L4 · 여러 관점으로 해결안 만들기</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">근거 기반 추론에 여러 에이전트의 관점을 더하는 확장 구조</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 15 / PDF 21쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="260" width="1792" height="209" rx="18" fill="#EAF6F5"/>
+<rect x="64" y="260" width="6" height="209" rx="3" fill="#087F8C"/>
+<text x="90" y="306" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">공유 지식과 근거 기반 처리</text>
+<rect x="92" y="349" width="399" height="85" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<g transform="translate(112,372) scale(0.65625)" fill="none" stroke="#087F8C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M6 8H58L39 31V53L25 60V31Z" fill="white"/>
+</g>
+<text x="169" y="400.25" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#087F8C" text-anchor="start">지식 추출</text>
+<path d="M 498,390 L 524,390" fill="none" stroke="#122B46" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="533" y="349" width="399" height="85" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<g transform="translate(553,372) scale(0.65625)" fill="none" stroke="#2465BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="27" cy="27" r="18"/><path d="M40 40L58 58" stroke-width="5"/>
+</g>
+<text x="610" y="400.25" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#2465BF" text-anchor="start">지식 검색</text>
+<path d="M 939,390 L 965,390" fill="none" stroke="#122B46" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="974" y="349" width="399" height="85" rx="14" fill="#FFFFFF" stroke="#FFF6E6" stroke-width="3"/>
+<g transform="translate(994,372) scale(0.65625)" fill="none" stroke="#A46A14" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="5" y="10" width="54" height="45" rx="3" fill="white"/>
+<path d="M23 10V55"/>
+<path d="M41 10V55"/>
+<path d="M5 23H59"/>
+<path d="M5 34H59"/>
+<path d="M5 45H59"/>
+</g>
+<text x="1051" y="400.25" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#A46A14" text-anchor="start">지식 조직화</text>
+<path d="M 1380,390 L 1406,390" fill="none" stroke="#122B46" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-ink)"/>
+<rect x="1415" y="349" width="399" height="85" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<g transform="translate(1435,372) scale(0.65625)" fill="none" stroke="#7254AA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M30 10C18 0 11 10 12 20C0 21 0 36 9 40C5 54 17 61 29 53V13 M34 10C46 0 53 10 52 20C64 21 64 36 55 40C59 54 47 61 35 53V13 M13 22L24 28 M9 40L23 38 M51 22L40 28 M55 40L41 38"/>
+</g>
+<text x="1492" y="400.25" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#7254AA" text-anchor="start">지식 중심 추론</text>
+<rect x="496" y="524" width="944" height="420" rx="18" fill="#EDF4FD"/>
+<rect x="496" y="524" width="6" height="420" rx="3" fill="#2465BF"/>
+<text x="522" y="570" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#2465BF" text-anchor="start">다중 에이전트 계획</text>
+<rect x="528" y="635" width="279" height="113" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<g transform="translate(548,658) scale(0.65625)" fill="none" stroke="#087F8C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="18" r="11" fill="white"/><path d="M9 58V49C9 29 55 29 55 49V58Z" fill="white"/>
+</g>
+<text x="605" y="700.95" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#087F8C" text-anchor="start">관점 A</text>
+<path d="M 667,757 L 667,792 L 968,792 L 968,816" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<rect x="828" y="635" width="279" height="113" rx="14" fill="#FFFFFF" stroke="#FFF6E6" stroke-width="3"/>
+<g transform="translate(848,658) scale(0.65625)" fill="none" stroke="#A46A14" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="18" r="11" fill="white"/><path d="M9 58V49C9 29 55 29 55 49V58Z" fill="white"/>
+</g>
+<text x="905" y="700.95" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#A46A14" text-anchor="start">관점 B</text>
+<path d="M 967,757 L 967,792 L 968,792 L 968,816" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<rect x="1128" y="635" width="279" height="113" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<g transform="translate(1148,658) scale(0.65625)" fill="none" stroke="#7254AA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="18" r="11" fill="white"/><path d="M9 58V49C9 29 55 29 55 49V58Z" fill="white"/>
+</g>
+<text x="1205" y="700.95" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#7254AA" text-anchor="start">관점 C</text>
+<path d="M 1267,757 L 1267,792 L 968,792 L 968,816" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<rect x="711" y="827" width="514" height="81" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<g transform="translate(731,850) scale(0.65625)" fill="none" stroke="#2465BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="32" cy="17" r="9" fill="white"/><circle cx="12" cy="28" r="6" fill="white"/><circle cx="52" cy="28" r="6" fill="white"/><path d="M18 58V45C18 27 46 27 46 45V58 M3 58V46C3 36 17 35 20 42 M61 58V46C61 36 47 35 44 42"/>
+</g>
+<text x="788" y="877.3" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#2465BF" text-anchor="start">통합 및 비교</text>
+<rect x="64" y="647" width="345" height="149" rx="14" fill="#FFFFFF" stroke="#EDF4FD" stroke-width="3"/>
+<text x="236.5" y="689.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#2465BF" text-anchor="middle">과제 분해·조정</text>
+<text x="236.5" y="727.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">질문과 문맥으로 방향 갱신</text>
+<rect x="1530" y="641" width="326" height="160" rx="14" fill="#FFFFFF" stroke="#F3EEFA" stroke-width="3"/>
+<text x="1693.0" y="683.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#7254AA" text-anchor="middle">제안·해결안</text>
+<text x="1693.0" y="721.0" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="middle">여러 관점의 근거 통합</text>
+<path d="M 416,721 L 486,721" fill="none" stroke="#2465BF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<path d="M 1234,867 L 1479,867 L 1479,721 L 1520,721" fill="none" stroke="#7254AA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<path d="M 1645,478 L 1645,495 L 1300,495 L 1300,516" fill="none" stroke="#7254AA" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-purple)"/>
+<path d="M 1638,811 L 1638,987 L 234,987 L 234,805" fill="none" stroke="#2465BF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)" stroke-dasharray="7 7"/>
+<rect x="64" y="1050" width="1792" height="64" rx="12" fill="#F3EEFA"/>
+<text x="88" y="1091" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#7254AA" text-anchor="start">전문가의 검토와 아이디어 발상을 돕는 확장 구조입니다. 곧바로 실행 가능한 정답을 보장하지 않습니다.</text>
+</svg>

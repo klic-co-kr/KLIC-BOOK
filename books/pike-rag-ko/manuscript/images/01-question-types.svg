@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1200" viewBox="0 0 1920 1200" role="img" aria-labelledby="title desc">
+<title id="title">그림 1. 질문 유형에 따라 달라지는 해결 방법</title><desc id="desc">어떤 근거가 있고, 그 근거로 무엇을 해야 하는가?. PIKE-RAG 원문 그림 1의 한글 재구성.</desc>
+<defs>
+<marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#122B46"/></marker>
+<marker id="a-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5E7185"/></marker>
+<marker id="a-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#087F8C"/></marker>
+<marker id="a-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#2465BF"/></marker>
+<marker id="a-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#A46A14"/></marker>
+<marker id="a-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#7254AA"/></marker>
+<marker id="a-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#B94F4C"/></marker>
+<marker id="a-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#64748B"/></marker>
+</defs>
+<rect x="0" y="0" width="1920" height="1200" rx="0" fill="#FFFFFF"/>
+<rect x="0" y="0" width="14" height="1200" rx="0" fill="#087F8C"/>
+<text x="64" y="53" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="20" font-weight="700" fill="#5E7185" text-anchor="start">PIKE-RAG  /  한국어 그림 해설</text>
+<rect x="1710" y="27" width="146" height="45" rx="22.5" fill="#EAF6F5"/>
+<text x="1783.0" y="56.85" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="middle">01 / 18</text>
+<text x="64" y="124" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="46" font-weight="700" fill="#122B46" text-anchor="start">질문 유형에 따라 달라지는 해결 방법</text>
+<text x="66" y="177" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="400" fill="#5E7185" text-anchor="start">어떤 근거가 있고, 그 근거로 무엇을 해야 하는가?</text>
+<line x1="64" y1="205" x2="1856" y2="205" stroke="#DCE5ED" stroke-width="2" stroke-linecap="round"/>
+<rect x="64" y="1140" width="1792" height="1" rx="0" fill="#DCE5ED"/>
+<text x="64" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="start">출처: Wang 외 · PIKE-RAG · arXiv:2501.11551v4 (2025-03-12) · 원문 그림 1 / PDF 6쪽</text>
+<text x="1856" y="1175" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="18" font-weight="400" fill="#5E7185" text-anchor="end">한글 재구성 · 원문 번호 유지</text>
+<rect x="64" y="236" width="820" height="360" rx="18" fill="#EAF6F5"/>
+<rect x="64" y="236" width="6" height="360" rx="3" fill="#087F8C"/>
+<text x="90" y="282" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#087F8C" text-anchor="start">1 사실 확인형</text>
+<text x="90" y="322" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="start">자료에 답이 명시되어 있음</text>
+<g transform="translate(103,377) scale(1.625)" fill="none" stroke="#087F8C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="5" y="10" width="54" height="45" rx="3" fill="white"/>
+<path d="M23 10V55"/>
+<path d="M41 10V55"/>
+<path d="M5 23H59"/>
+<path d="M5 34H59"/>
+<path d="M5 45H59"/>
+</g>
+<text x="242" y="375" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="700" fill="#087F8C" text-anchor="start">질문</text>
+<text x="242" y="419" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#122B46" text-anchor="start">승인 목록에 정리된 제품 수는?</text>
+<path d="M 213,430 L 235,430" fill="none" stroke="#087F8C" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-teal)"/>
+<rect x="242" y="456" width="579" height="86" rx="14" fill="#FFFFFF" stroke="#EAF6F5" stroke-width="3"/>
+<text x="531.5" y="508.45" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="700" fill="#087F8C" text-anchor="middle">명시된 목록·표에서 답 확인</text>
+<rect x="910" y="236" width="946" height="528" rx="18" fill="#FFF6E6"/>
+<rect x="910" y="236" width="6" height="528" rx="3" fill="#A46A14"/>
+<text x="936" y="282" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#A46A14" text-anchor="start">2 연결·추론형</text>
+<text x="936" y="322" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="start">여러 근거를 연결하거나 추가로 처리해야 함</text>
+<rect x="941" y="359" width="418" height="147" rx="12" fill="#FFFFFF"/>
+<g transform="translate(963,381) scale(0.703125)" fill="none" stroke="#A46A14" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M27 40L18 49C8 58-1 46 8 38L21 25C29 17 37 24 38 28 M37 24L46 15C56 6 65 18 56 26L43 39C35 47 27 40 26 36 M22 42L42 22"/>
+</g>
+<text x="1024" y="413" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#A46A14" text-anchor="start">연결형</text>
+<text x="963" y="461" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="400" fill="#122B46" text-anchor="start">제품 → 신청번호</text>
+<rect x="1388" y="359" width="418" height="147" rx="12" fill="#FFFFFF"/>
+<g transform="translate(1410,381) scale(0.703125)" fill="none" stroke="#A46A14" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="5" y="10" width="54" height="45" rx="3" fill="white"/>
+<path d="M23 10V55"/>
+<path d="M41 10V55"/>
+<path d="M5 23H59"/>
+<path d="M5 34H59"/>
+<path d="M5 45H59"/>
+</g>
+<text x="1471" y="413" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#A46A14" text-anchor="start">비교형</text>
+<text x="1410" y="461" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="400" fill="#122B46" text-anchor="start">승인일 비교 → 최신 제품</text>
+<rect x="941" y="533" width="418" height="147" rx="12" fill="#FFFFFF"/>
+<g transform="translate(963,555) scale(0.703125)" fill="none" stroke="#A46A14" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M7 7V57H59"/><path d="M16 46V31H23V46 M30 46V23H37V46 M44 46V13H51V46"/>
+</g>
+<text x="1024" y="587" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#A46A14" text-anchor="start">정량형</text>
+<text x="963" y="635" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="400" fill="#122B46" text-anchor="start">조건에 맞는 제품 → 개수 집계</text>
+<rect x="1388" y="533" width="418" height="147" rx="12" fill="#FFFFFF"/>
+<g transform="translate(1410,555) scale(0.703125)" fill="none" stroke="#A46A14" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M12 50H5V5H40V10 M18 56H11V11H46V16"/>
+<path d="M19 6H43L56 19V60H19Z" fill="white"/><path d="M43 6V19H56"/>
+<path d="M27 29H47"/>
+<path d="M27 36H47"/>
+<path d="M27 43H47"/>
+<path d="M27 50H47"/>
+</g>
+<text x="1471" y="587" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="28" font-weight="700" fill="#A46A14" text-anchor="start">요약형</text>
+<text x="1410" y="635" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="400" fill="#122B46" text-anchor="start">여러 임상자료 → 차이 요약</text>
+<rect x="64" y="625" width="820" height="401" rx="18" fill="#EDF4FD"/>
+<rect x="64" y="625" width="6" height="401" rx="3" fill="#2465BF"/>
+<text x="90" y="671" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#2465BF" text-anchor="start">3 예측형</text>
+<text x="90" y="711" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="start">자료에 없는 미래의 결과를 추정</text>
+<rect x="92" y="755" width="234" height="169" rx="14" fill="#FFFFFF"/>
+<text x="209" y="804" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#2465BF" text-anchor="middle">승인 이력</text>
+<g transform="translate(181,837) scale(0.78125)" fill="none" stroke="#2465BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M19 6H43L56 19V60H19Z" fill="white"/><path d="M43 6V19H56"/>
+<path d="M27 29H47"/>
+<path d="M27 36H47"/>
+<path d="M27 43H47"/>
+<path d="M27 50H47"/>
+</g>
+<path d="M 328,840 L 345,840" fill="none" stroke="#2465BF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<rect x="351" y="755" width="234" height="169" rx="14" fill="#FFFFFF"/>
+<text x="468" y="804" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#2465BF" text-anchor="middle">연도별 집계</text>
+<g transform="translate(440,837) scale(0.78125)" fill="none" stroke="#2465BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M7 7V57H59"/><path d="M16 46V31H23V46 M30 46V23H37V46 M44 46V13H51V46"/>
+</g>
+<path d="M 587,840 L 604,840" fill="none" stroke="#2465BF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#a-blue)"/>
+<rect x="610" y="755" width="234" height="169" rx="14" fill="#FFFFFF"/>
+<text x="727" y="804" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#2465BF" text-anchor="middle">미래 추정</text>
+<g transform="translate(699,837) scale(0.78125)" fill="none" stroke="#2465BF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M7 7V57H59"/><path d="M16 46V31H23V46 M30 46V23H37V46 M44 46V13H51V46"/>
+</g>
+<text x="96" y="980" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="700" fill="#2465BF" text-anchor="start">과거 근거 → 구조화 → 예측</text>
+<rect x="910" y="794" width="946" height="232" rx="18" fill="#F3EEFA"/>
+<rect x="910" y="794" width="6" height="232" rx="3" fill="#7254AA"/>
+<text x="936" y="840" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="29" font-weight="700" fill="#7254AA" text-anchor="start">4 창의형</text>
+<text x="936" y="880" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="21" font-weight="400" fill="#5E7185" text-anchor="start">자료의 근거를 종합해 새로운 계획을 제안</text>
+<g transform="translate(944,918) scale(0.859375)" fill="none" stroke="#7254AA" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M23 47V40C7 27 16 7 32 7C49 7 57 28 41 40V47Z" fill="white"/><path d="M23 53H41 M27 59H37 M32 18V31 M28 27L32 31L36 27"/>
+</g>
+<text x="1023" y="941" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="26" font-weight="700" fill="#7254AA" text-anchor="start">기존 사례 → 단계·기간 분석 → 개선 아이디어</text>
+<rect x="64" y="1055" width="1792" height="64" rx="12" fill="#F0F3F7"/>
+<text x="88" y="1096" font-family="Noto Sans CJK KR, NanumGothic, Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#64748B" text-anchor="start">같은 질문도 보유한 자료와 필요한 처리 과정에 따라 유형이 달라집니다.</text>
+</svg>
