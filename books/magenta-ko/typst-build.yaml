@@ -1,0 +1,31 @@
+style: lecture
+short_title: "루프를 닫다"
+title: "루프를 닫다"
+subtitle: "답에서 증명서로, 수학 추론과 Lean 검증 사이 — Magenta(arXiv 2609.11319) 정독"
+author: "원문 Joshua Ong Jun Leang·Haonan Li·Zheng Zhao·Xinyi Shang·Wenda Li·Zhengzhong Liu·Eric Xing·Shay B. Cohen·Eleonora Giunchiglia(MBZUAI·Edinburgh·UCL·Imperial) · 한국어 각색 KLIC"
+date: "2026-09"
+cover: auto
+cover_composition: true
+opener_composition: true
+cover_series: "KLIC BOOKS"
+cover_notes:
+  - "· 비형식 추론과 Lean 검증 사이 루프 — 명제 판사와 오류 귀인 판사가 닫는다"
+  - "· AIME 2025·2026·HMMT 2026 전 벤치마크 100% — 오픈 웨이트 7B로 IMO 2026 전 문제"
+  - "· 원문 그림 6종 9면 그대로 수록 + 표 7종 한국어 재구성, 오류 해부와 절제 분석 정독"
+chapters:
+  - manuscript/00-들어가며.md
+  - manuscript/01-검증-없는-답은-반쪽이다.md
+  - manuscript/02-일곱-구성요소로-본-파이프라인.md
+  - manuscript/03-루프는-이렇게-돈다.md
+  - manuscript/04-판사-둘과-보증의-경계.md
+  - manuscript/05-실험-설계-모델-벤치마크-예산.md
+  - manuscript/06-표로-보는-완승.md
+  - manuscript/07-7B가-IMO를-넘었다.md
+  - manuscript/08-명제-생성의-경제학.md
+  - manuscript/09-비용-곡선의-네-패널.md
+  - manuscript/10-바꿔-말해도-무너지지-않는다.md
+  - manuscript/11-판사를-끼웠을-때와-껐을-때.md
+  - manuscript/12-고치기와-다시-뽑기.md
+  - manuscript/13-오류의-해부.md
+  - manuscript/14-한국-현장에서-읽는-Magenta.md
+  - manuscript/15-맺음말.md
