@@ -44,6 +44,65 @@ def _ink_bbox(line: dict) -> tuple:
     return (x0, y0, x1, y1), text
 
 
+def check_cover_overflow(build: Path) -> list:
+    """G0 표지 텍스트 겹침 — cover-auto.typ를 임시 PDF로 컴파일해 텍스트
+    라인 bbox 쌍별 교차 검사. 자동 표지(cover-auto.typ)가 아니면 빈 목록.
+
+    판본 PDF 1쪽은 래스터 표지라 텍스트층이 없어 직접 검사가 불가하므로
+    표지 원본 typ을 재컴파일해 검사한다(루프를 닫다 실측: 2단 스택
+    타이틀 72+108pt와 고정 dy 부제가 교차 — 본문 게이트 G1은 판면 프레임
+    밖 유출만 보므로 표지 내부 충돌을 잡지 못했다)."""
+    typ_src = build / "cover-auto.typ"
+    if not typ_src.exists():
+        return []
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as td:
+        tmp_pdf = Path(td) / "cover-check.pdf"
+        proc = subprocess.run(
+            [typst_binary(), "compile", str(typ_src), str(tmp_pdf),
+             "--root", str(build)],
+            capture_output=True, text=True)
+        if proc.returncode != 0 or not tmp_pdf.exists():
+            return [f"표지 컴파일 실패로 겹침 검사 불가: {proc.stderr.strip()[:120]}"]
+        doc = fitz.open(tmp_pdf)
+        lines = []
+        for page in doc:
+            for blk in page.get_text("rawdict")["blocks"]:
+                for ln in blk.get("lines", []):
+                    bbox, txt = _ink_bbox(ln)
+                    if bbox:
+                        lines.append((bbox, txt))
+        doc.close()
+    out = []
+
+    def _tighten(b, vy=0.12, vx=0.06):
+        """라인 bbox를 잉크에 가깝게 수축 — CJK 글자 bbox는 엠박스 전체를
+        덮어 타이트한 스택(6mm 간격 대형 타이틀)에서도 30% 가까이 겹쳐
+        보인다(루프를 닫다 실측 26.8pt/85.9pt). 상하 12%·좌우 6% 안쪽
+        좌표로 판정해 엠박스 접촉은 오탐에서 제외하고 실제 충돌만 잡는다."""
+        x0, y0, x1, y1 = b
+        dy, dx = (y1 - y0) * vy, (x1 - x0) * vx
+        return x0 + dx, y0 + dy, x1 - dx, y1 - dy
+
+    for i in range(len(lines)):
+        for j in range(i + 1, len(lines)):
+            ax0, ay0, ax1, ay1 = _tighten(lines[i][0])
+            bx0, by0, bx1, by1 = _tighten(lines[j][0])
+            t1, t2 = lines[i][1], lines[j][1]
+            ix0, iy0 = max(ax0, bx0), max(ay0, by0)
+            ix1, iy1 = min(ax1, bx1), min(ay1, by1)
+            if ix1 <= ix0 or iy1 <= iy0:
+                continue
+            inter = (ix1 - ix0) * (iy1 - iy0)
+            small = min((ax1 - ax0) * (ay1 - ay0), (bx1 - bx0) * (by1 - by0))
+            # 인접 라인 어센더·디센더의 살붙음 오탐을 피해 작은 쪽
+            # 면적의 12% 이상이 침범할 때만 결함으로 판정.
+            if small > 0 and inter / small > 0.12:
+                out.append(f"표지 텍스트 겹침: '{t1[:18]}' × '{t2[:18]}'")
+    return out
+
+
 def check_overflow(pdf: Path, frame: tuple, skip_pages: int = 1) -> list:
     x0, y0, x1, y1 = frame
     tol = 3.0  # pt 허용 오차 — 글리프 어센트가 행 bbox를 프레임 위로
@@ -245,6 +304,7 @@ def run(book_dir: Path) -> int:
         print(f"[qc] 경고: draft/*.pdf {len(pdfs)}개 — {pdf.name}만 검사"
               f"(무시: {', '.join(p.name for p in pdfs[1:])})", file=sys.stderr)
     frame = load_frame(tokens_path)
+    cover = check_cover_overflow(build)
     overflow = check_overflow(pdf, frame)
     allowed_norm, allowed_raw = allowed_fonts(tokens)
     fonts = check_fonts(pdf, allowed_norm, allowed_raw)
@@ -278,11 +338,12 @@ def run(book_dir: Path) -> int:
     # gate-report.json을 읽는 downstream이 이 사실을 못 본다(최종 리뷰 Minor).
     unreviewed = check_review_sheets(build)
     igp = _infographic_pages(book_dir, pdf)
-    report = {"g1_overflow": overflow, "g2_fonts": fonts, "g3_band_warns": warns,
+    report = {"g0_cover": cover, "g1_overflow": overflow, "g2_fonts": fonts,
+              "g3_band_warns": warns,
               "g4_style_warns": style_warns, "ig_review_warns": unreviewed,
               "infographic_pages": igp,
               "g5_content_warns": content_warns, "g5_rescan_inventory": rescan,
-              "pass": not overflow and not fonts}
+              "pass": not cover and not overflow and not fonts}
     (book_dir / "gate-report.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     if igp["expected"]:
@@ -298,7 +359,7 @@ def run(book_dir: Path) -> int:
         if final.is_dir():
             for old in final.glob("*.pdf"):
                 old.unlink()
-        print(f"[qc] FAIL — gate-report.json 참조: {overflow[:3]} {fonts[:3]}",
+        print(f"[qc] FAIL — gate-report.json 참조: {cover[:3]} {overflow[:3]} {fonts[:3]}",
               file=sys.stderr)
         return 1
     final = book_dir / "final"

@@ -437,12 +437,16 @@ def make_auto_cover(cfg: dict, build: Path) -> str:
     if emph_pt > emph_max:
         k = emph_max / emph_pt
         head_pt, emph_pt = head_pt * k, emph_pt * k
-    # 행 높이 근사 0.42(캡 높이)는 실제 라인박스(어센더+디센더)보다 작아
-    # 부제 고정 dy가 타이틀과 겹쳤다(설득의 구조 V4 실측). 0.55로 여유.
-    block_h = (head_pt * 0.55 if head_word else 0) + 7 + emph_pt * 0.55
+    # 행 높이는 라인박스(어센더+디센더+리딩) 전체로 잡는다 — 0.42/0.55
+    # 캡높이 근사는 2단 스택에서 실제 블록의 절반만 세어 부제 고정 dy가
+    # 타이틀과 교차했다(루프를 닫다 V1 실측: 72+108pt 스택 잉크 높이
+    # 69.5mm인데 37.4mm로 추정해 부제가 '닫다' 위에 얹힘). 1.28 계수
+    # 풀행 높이 + 스택 간격 6mm로 원천 방어하고 G0 게이트가 지킨다.
+    line_k = 1.28
+    block_h = (head_pt * line_k if head_word else 0) + emph_pt * line_k
     # block_h는 pt 단위 — dy 체인은 mm이므로 환산해 더한다(적대검토:
     # 단위 혼합으로 sub_dy가 의도보다 +16mm 벌어졌다).
-    block_h_mm = block_h * 0.3528
+    block_h_mm = block_h * 0.3528 + (6.0 if head_word else 0.0)
 
     def _anchor_layout(title_dy_bottom: float, block_mm: float):
         """앵커별 (타이틀 side·dy, 부제 side·dy, 노트 bottom dy).

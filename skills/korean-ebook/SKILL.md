@@ -1,6 +1,6 @@
 ---
 name: korean-ebook
-description: "Markdown 원고를 한국어 출판형 PDF로 빌드 — 스타일 팩 4종(practical 신국판/essay 46판(B6)/business 백서판/lecture A4). typst 엔진(한국어 CJK + 수식 mitex 네이티브). QC 게이트(판면 오버플로 G1·폰트 계약 G2·글자수 밴드 G3) 통과 시에만 final/ 생성. 과거 WeasyPrint 판(26.08.09)을 대체해 이 이름을 계승했다."
+description: "Markdown 원고를 한국어 출판형 PDF로 빌드 — 스타일 팩 4종(practical 신국판/essay 46판(B6)/business 백서판/lecture A4). typst 엔진(한국어 CJK + 수식 mitex 네이티브). QC 게이트(표지 겹침 G0·판면 오버플로 G1·폰트 계약 G2·글자수 밴드 G3) 통과 시에만 final/ 생성. 과거 WeasyPrint 판(26.08.09)을 대체해 이 이름을 계승했다."
 ---
 
 # korean-ebook
@@ -96,6 +96,10 @@ md2typst 매핑: `##`→H1(`=`), `###`→H2(`==`), `####`→H3(`===`), `#####`�
   > 코드: {코드 저장소 URL}    <!-- 있을 때만 -->
   ```
 
+- **표지·발행 락업에는 저자를 나열하지 않는다** — 논문은 원문 저자가 많은 경우가 태반이라
+  `typst-build.yaml`의 `author:`에 전원을 실으면 표지 하단 락업이 4~5줄로 감기고 다른 표지
+  요소와 겹친다(루프를 닫다 실측). `author: "원문 arXiv {번호} · 한국어 각색 KLIC"` 형태의
+  짧은 식별자만 넣는다. 저자 전원·소속은 00장 인용 블록에만 실는다.
 - **논문집(논문 여러 편 수록)** — 들어가며가 아니라 각 장 머리에 같은 형식으로 건별 표기.
 - 예인쇄본(preprint)·진행 중 수치(TBD)는 식별자 자리와 본문 양쪽에서 미확정 상태로 명시.
 - 실례: `books/skill-state-ko/manuscript/00-들어가며.md:3`(단일 논문),
