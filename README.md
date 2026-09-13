@@ -16,6 +16,8 @@
 | [대규모 언어모델(LLM) 강좌 2025](books/llm-lecture-2025/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/llm-lecture-2025/LLM_강좌_2025_한국어번역판.pdf) |
 | [절차 그래프의 이해 — LLM 에이전트를 위한 자기진화 실행 구조](books/procedural-graphs-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/procedural-graphs-ko/절차_그래프의_이해.pdf) |
 | [결정론적 가드레일 — 확률적 AI 에이전트를 형식 검증으로 묶다](books/lean-guardrails-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/lean-guardrails-ko/결정론적_가드레일.pdf) |
+| [검색을 넘어 지식으로 — 질문 네 유형·시스템 다섯 단계](books/pike-rag-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/pike-rag-ko/검색을_넘어_지식으로.pdf) |
+| [루프를 닫다 — 답에서 증명서로, 수학 추론과 Lean 검증 사이](books/magenta-ko/) | [PDF](https://raw.githubusercontent.com/klic-co-kr/KLIC-BOOK/main/books/magenta-ko/루프를_닫다.pdf) |
 
 ## 🎓 강의
 
